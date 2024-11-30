@@ -634,9 +634,9 @@ in
               enabled = true;
             };
             "org/gnome/shell" = {
-              remember-mount-password = true;
-              last-selected-power-profile = "performance";
               disable-user-extensions = false;
+              last-selected-power-profile = "performance";
+              remember-mount-password = true;
               enabled-extensions = [
                 "Vitals@CoreCoding.com"
                 "appindicatorsupport@rgcjonas.gmail.com"
@@ -676,25 +676,25 @@ in
               number-position = "right";
             };
             "org/gnome/shell/extensions/vitals" = {
-              use-higher-precision = true;
               alphabetize = true;
               fixed-widths = false;
-              menu-centered = true;
               hide-icons = false;
               hide-zeros = false;
-              show-temperature = true;
-              show-voltage = true;
+              include-public-ip = true;
+              include-static-gpu-info = true;
+              include-static-info = true;
+              menu-centered = true;
+              show-battery = true;
               show-fan = true;
               show-memory = true;
-              show-processor = true;
-              show-system = true;
               show-network = true;
+              show-processor = true;
               show-storage = true;
-              show-battery = true;
-              include-static-gpu-info = true;
+              show-system = true;
+              show-temperature = true;
+              show-voltage = true;
               storage-path = "/";
-              include-public-ip = true;
-              include-static-info = true;
+              use-higher-precision = true;
               hot-sensors = [
                 "_processor_usage_"
                 "_memory_usage_"
@@ -703,55 +703,55 @@ in
               ];
             };
             "org/gnome/shell/extensions/clipboard-indicator" = {
+              cache-only-favorites = true;
+              clear-on-boot = true;
               confirm-clear = false;
-              strip-text = false;
+              disable-down-arrow = true;
               keep-selected-on-clear = false;
               paste-button = true;
-              clear-on-boot = true;
-              cache-only-favorites = true;
-              disable-down-arrow = true;
+              strip-text = false;
             };
             "org/gnome/shell/extensions/gsconnect" = {
               name = "Bitscoper-WorkStation";
             };
             "org/gnome/settings-daemon/plugins/power" = {
               idle-dim = false;
+              power-button-action = "interactive";
               power-saver-profile-on-low-battery = false;
               sleep-inactive-ac-type = "nothing";
               sleep-inactive-battery-type = "nothing";
-              power-button-action = "interactive";
             };
             "org/gnome/desktop/peripherals/keyboard" = {
               repeat = true;
             };
             "org/gnome/desktop/peripherals/touchpad" = {
-              send-events = "enabled";
+              click-method = "areas";
               disable-while-typing = true;
+              edge-scrolling-enabled = false;
+              natural-scroll = true;
+              send-events = "enabled";
               tap-to-click = true;
               two-finger-scrolling-enabled = true;
-              click-method = "areas";
-              natural-scroll = true;
-              edge-scrolling-enabled = false;
             };
             "org/gnome/desktop/peripherals/mouse" = {
+              accel-profile = "default";
               left-handed = false;
               natural-scroll = false;
-              accel-profile = "default";
             };
             "org/gnome/desktop/a11y/keyboard" = {
-              enable = false;
-              togglekeys-enable = true;
               bouncekeys-enable = false;
+              enable = false;
               slowkeys-enable = false;
               stickykeys-enable = false;
+              togglekeys-enable = true;
             };
             "org/gnome/desktop/a11y/mouse" = {
-              secondary-click-enabled = false;
               dwell-click-enabled = false;
+              secondary-click-enabled = false;
             };
             "org/gnome/desktop/a11y/interface" = {
-              show-status-shapes = false;
               high-contrast = false;
+              show-status-shapes = false;
             };
             "org/gnome/desktop/input-sources" = {
               per-window = false;
@@ -778,11 +778,11 @@ in
             };
             "org/gnome/desktop/privacy" = {
               disable-camera = false;
-              remember-recent-files = false;
+              old-files-age = pkgs.lib.gvariant.mkUint32 1;
               recent-files-max-age = pkgs.lib.gvariant.mkUint32 1;
+              remember-recent-files = false;
               remove-old-temp-files = true;
               remove-old-trash-files = true;
-              old-files-age = pkgs.lib.gvariant.mkUint32 1;
             };
             "org/gnome/desktop/remote-desktop/rdp" = {
               enable = true;
@@ -792,40 +792,40 @@ in
               automatic-timezone = false;
             };
             "org/gnome/desktop/interface" = {
-              color-scheme = "prefer-dark";
-              show-battery-percentage = true;
-              clock-show-weekday = true;
-              clock-show-date = true;
               clock-format = "12h";
-              locate-pointer = true;
+              clock-show-date = true;
+              clock-show-seconds = false;
+              clock-show-weekday = true;
+              color-scheme = "prefer-dark";
               cursor-blink = true;
+              enable-animations = true;
               enable-hot-corners = true;
               gtk-enable-primary-paste = true;
-              clock-show-seconds = false;
-              enable-animations = true;
               gtk-theme = "Adwaita-dark";
               icon-theme = "Adwaita";
+              locate-pointer = true;
+              show-battery-percentage = true;
             };
             "org/gnome/desktop/wm/preferences" = {
-              button-layout = "appmenu:minimize,maximize,close";
-              action-right-click-titlebar = "menu";
               action-double-click-titlebar = "toggle-maximize";
+              action-right-click-titlebar = "menu";
+              auto-raise = false;
+              button-layout = "appmenu:minimize,maximize,close";
               ction-middle-click-titlebar = "lower";
               focus-mode = "sloppy";
-              auto-raise = false;
               mouse-button-modifier = "<Super>";
               resize-with-right-button = true;
             };
             "org/gnome/mutter" = {
-              dynamic-workspaces = true;
-              workspaces-only-on-primary = false;
-              edge-tiling = true;
               attach-modal-dialogs = false;
               center-new-windows = false;
+              dynamic-workspaces = true;
+              edge-tiling = true;
+              workspaces-only-on-primary = false;
             };
             "org/gnome/desktop/screensaver" = {
-              lock-enabled = true;
               lock-delay = pkgs.lib.gvariant.mkUint32 0;
+              lock-enabled = true;
             };
             "org/gnome/desktop/notifications" = {
               show-in-lock-screen = true;
@@ -849,21 +849,21 @@ in
               sort-directories-first = true;
             };
             "org/gnome/Console" = {
-              theme = "night";
               audible-bell = true;
-              visual-bell = true;
-              use-system-font = false;
               custom-font = "NotoMono Nerd Font 10";
+              theme = "night";
+              use-system-font = false;
+              visual-bell = true;
             };
             "org/gnome/nautilus/preferences" = {
+              click-policy = "double";
+              date-time-format = "simple";
               default-folder-viewer = "icon-view";
+              recursive-search = "always";
               show-create-link = true;
               show-delete-permanently = true;
-              date-time-format = "simple";
-              recursive-search = "always";
-              show-image-thumbnails = "always";
               show-directory-item-counts = "always";
-              click-policy = "double";
+              show-image-thumbnails = "always";
             };
             "org/gnome/nautilus/icon-view" = {
               captions = [
@@ -887,29 +887,29 @@ in
               xmleditor-enabled = true;
             };
             "org/virt-manager/virt-manager/stats" = {
-              enable-disk-poll = true;
-              enable-net-poll = true;
-              enable-memory-poll = true;
               enable-cpu-poll = true;
+              enable-disk-poll = true;
+              enable-memory-poll = true;
+              enable-net-poll = true;
             };
             "org/virt-manager/virt-manager/confirm" = {
-              poweroff = true;
-              pause = true;
               delete-storage = true;
-              unapplied-dev = true;
-              removedev = true;
               forcepoweroff = true;
+              pause = true;
+              poweroff = true;
+              removedev = true;
+              unapplied-dev = true;
             };
             "org/virt-manager/virt-manager/console" = {
               auto-redirect = false;
               autoconnect = true;
             };
             "org/virt-manager/virt-manager/vmlist-fields" = {
-              host-cpu-usage = true;
-              network-traffic = true;
-              memory-usage = true;
-              disk-usage = true;
               cpu-usage = true;
+              disk-usage = true;
+              host-cpu-usage = true;
+              memory-usage = true;
+              network-traffic = true;
             };
             "org/virt-manager/virt-manager/new-vm" = {
               cpu-default = "host-passthrough";
@@ -923,8 +923,8 @@ in
               enable-spellchecking = true;
             };
             "apps/seahorse" = {
-              server-auto-retrieve = true;
               server-auto-publish = true;
+              server-auto-retrieve = true;
             };
             "org/gnome/GWeather4" = {
               temperature-unit = "centigrade";
@@ -940,8 +940,8 @@ in
               show-zeroes = true;
             };
             "app/drey/Dialect" = {
-              show-pronunciation = true;
               color-scheme = "dark";
+              show-pronunciation = true;
             };
             "org/gnome/simple-scan" = {
               postproc-enabled = true;
@@ -949,14 +949,25 @@ in
             "org/gnome/maps" = {
               show-scale = true;
             };
+            "org/gnome/meld" =
+              {
+                enable-space-drawer = true;
+                highlight-current-line = true;
+                highlight-syntax = true;
+                prefer-dark-theme = true;
+                show-line-numbers = true;
+                show-overview-map = true;
+                style-scheme = "meld-dark";
+                wrap-mode = "word";
+              };
             "org/gnome/gnome-system-monitor" = {
-              show-all-fs = true;
               cpu-smooth-graph = true;
+              kill-dialog = true;
               process-memory-in-iec = true;
               resources-memory-in-iec = true;
-              kill-dialog = true;
-              smooth-refresh = true;
+              show-all-fs = true;
               show-whose-processes = "all";
+              smooth-refresh = true;
             };
             "org/gnome/gnome-system-monitor/disktreenew" = {
               col-0-visible = true;
@@ -1173,6 +1184,7 @@ in
       luksmeta
       lynis
       mattermost-desktop
+      meld
       memcached
       meson
       metadata-cleaner
@@ -1490,11 +1502,7 @@ in
     enableDefaultPackages = false;
     packages = with pkgs; [
       corefonts
-      (nerdfonts.override {
-        fonts = [
-          "Noto"
-        ];
-      })
+      nerd-fonts.noto
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
