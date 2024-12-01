@@ -1436,6 +1436,7 @@ in
       pandas
       pillow
       pip
+      pyserial
       seaborn
       tkinter
     ]) ++
