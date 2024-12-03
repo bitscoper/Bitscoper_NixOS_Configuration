@@ -1211,6 +1211,7 @@ in
       onionshare
       opendkim
       openssh
+      openssl
       paper-clip
       pcre
       php83
