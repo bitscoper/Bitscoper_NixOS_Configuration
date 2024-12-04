@@ -1036,6 +1036,7 @@ in
       android-studio
       android-tools
       arduino
+      arduino-cli
       arduino-core
       arduino-ide
       arduino-language-server
@@ -1254,6 +1255,7 @@ in
       transmission_4-gtk
       tree
       tree-sitter
+      undollar
       ungoogled-chromium
       unicode-emoji
       unrar
