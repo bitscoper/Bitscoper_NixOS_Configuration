@@ -614,13 +614,6 @@ in
       package = pkgs.thunderbird;
     };
 
-    steam = {
-      enable = true;
-      dedicatedServer.openFirewall = true;
-      remotePlay.openFirewall = true;
-      localNetworkGameTransfers.openFirewall = true;
-    };
-
     dconf = {
       enable = true;
       profiles.user.databases = [
@@ -1191,6 +1184,7 @@ in
       metadata-cleaner
       # mixxx
       mousai
+      nano
       neofetch
       networkmanager
       networkmanagerapplet
@@ -1382,6 +1376,12 @@ in
             publisher = "richie5um2";
             version = "1.20.0";
             sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
+          }
+          {
+            name = "vscode-serial-monitor";
+            publisher = "ms-vscode";
+            version = "0.13.241018001";
+            sha256 = "K8d2e+7TThXReArKm6rf/AkPqRs5F8faWY47I0ScqIc=";
           }
           {
             name = "vscode-arduino-community";
