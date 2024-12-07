@@ -614,13 +614,6 @@ in
       package = pkgs.thunderbird;
     };
 
-    neovim = {
-      enable = true;
-      viAlias = true;
-      vimAlias = true;
-      defaultEditor = true;
-    };
-
     steam = {
       enable = true;
       dedicatedServer.openFirewall = true;
@@ -661,7 +654,6 @@ in
                 "dbeaver.desktop"
                 "arduino-ide.desktop"
                 "codium.desktop"
-                "nvim.desktop"
                 "org.fritzing.Fritzing.desktop"
                 "firefox.desktop"
                 "sdrangel.desktop"
@@ -1077,6 +1069,7 @@ in
       dive
       dmg2img
       dovecot
+      esptool
       evince
       exfatprogs
       extra-cmake-modules
@@ -1196,10 +1189,9 @@ in
       memcached
       meson
       metadata-cleaner
-      mixxx
+      # mixxx
       mousai
       neofetch
-      neovim-remote
       networkmanager
       networkmanagerapplet
       ninja
@@ -1218,6 +1210,8 @@ in
       php83
       pipewire
       pkg-config
+      platformio
+      platformio-core
       podman
       podman-compose
       podman-tui
@@ -1388,6 +1382,18 @@ in
             publisher = "richie5um2";
             version = "1.20.0";
             sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
+          }
+          {
+            name = "vscode-arduino-community";
+            publisher = "vscode-arduino";
+            version = "0.7.2";
+            sha256 = "/HdPJ6LBnyPhz7jeJ0MLRXO2L3bcAzM7J65nKsXsacY=";
+          }
+          {
+            name = "platformio-ide";
+            publisher = "platformio";
+            version = "3.3.3";
+            sha256 = "pcWKBqtpU7DVpiT7UF6Zi+YUKknyjtXFEf5nL9+xuSo=";
           }
         ];
       })
