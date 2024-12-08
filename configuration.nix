@@ -614,6 +614,13 @@ in
       package = pkgs.thunderbird;
     };
 
+    steam = {
+      enable = true;
+      dedicatedServer.openFirewall = true;
+      remotePlay.openFirewall = true;
+      localNetworkGameTransfers.openFirewall = true;
+    };
+
     dconf = {
       enable = true;
       profiles.user.databases = [
@@ -646,7 +653,7 @@ in
                 "thunderbird.desktop"
                 "dbeaver.desktop"
                 "arduino-ide.desktop"
-                "codium.desktop"
+                "code.desktop"
                 "org.fritzing.Fritzing.desktop"
                 "firefox.desktop"
                 "sdrangel.desktop"
@@ -1020,7 +1027,6 @@ in
       adwaita-qt6
       android-studio
       android-tools
-      arduino
       arduino-cli
       arduino-core
       arduino-ide
@@ -1041,7 +1047,6 @@ in
       btop
       btrfs-progs
       butt
-      clang
       clinfo
       cloudflare-warp
       cmake
@@ -1173,8 +1178,6 @@ in
       lorem
       loupe
       lsof
-      lua-language-server
-      luarocks
       luksmeta
       lynis
       mattermost-desktop
@@ -1191,6 +1194,7 @@ in
       ninja
       nix-diff
       nix-index
+      nixpkgs-fmt
       nmap
       obs-studio
       ollama
@@ -1254,6 +1258,7 @@ in
       virtiofsd
       vlc
       vlc-bittorrent
+      vscode-js-debug
       warp
       waydroid
       wayland
@@ -1279,7 +1284,7 @@ in
       yt-dlp
       zip
       (vscode-with-extensions.override {
-        vscode = vscodium;
+        # vscode = vscodium;
         vscodeExtensions = with vscode-extensions; [
           aaron-bond.better-comments
           adpyke.codesnap
@@ -1287,13 +1292,8 @@ in
           alefragnani.bookmarks
           alexisvt.flutter-snippets
           arrterian.nix-env-selector
-          asciidoctor.asciidoctor-vscode
-          b4dm4n.vscode-nixpkgs-fmt
-          bbenoist.nix
           bierner.github-markdown-preview
           bierner.markdown-mermaid
-          catppuccin.catppuccin-vsc
-          catppuccin.catppuccin-vsc-icons
           christian-kohler.path-intellisense
           codezombiech.gitignore
           coolbear.systemd-unit-file
@@ -1303,15 +1303,11 @@ in
           davidlday.languagetool-linter
           devsense.phptools-vscode
           devsense.profiler-php-vscode
-          donjayamanne.githistory
-          dracula-theme.theme-dracula
           ecmel.vscode-html-css
-          editorconfig.editorconfig
           esbenp.prettier-vscode
           firefox-devtools.vscode-firefox-debug
           formulahendry.auto-close-tag
           formulahendry.auto-rename-tag
-          formulahendry.code-runner
           foxundermoon.shell-format
           github.copilot
           github.copilot-chat
@@ -1325,10 +1321,8 @@ in
           jnoortheen.nix-ide
           jock.svg
           kamikillerto.vscode-colorize
-          llvm-vs-code-extensions.vscode-clangd
           mads-hartmann.bash-ide-vscode
           mechatroner.rainbow-csv
-          mhutchie.git-graph
           mishkinf.goto-next-previous-member
           moshfeu.compare-folders
           ms-azuretools.vscode-docker
@@ -1337,14 +1331,10 @@ in
           ms-python.debugpy
           ms-python.python
           ms-toolsai.datawrangler
-          ms-toolsai.jupyter
-          ms-toolsai.vscode-jupyter-slideshow
           ms-vscode-remote.remote-containers
           ms-vscode-remote.remote-ssh
           ms-vscode-remote.remote-ssh-edit
-          ms-vscode.cmake-tools
           ms-vscode.cpptools
-          ms-vscode.cpptools-extension-pack
           ms-vscode.hexeditor
           ms-vscode.live-server
           ms-vscode.makefile-tools
@@ -1354,21 +1344,15 @@ in
           ryu1kn.partial-diff
           shardulm94.trailing-spaces
           spywhere.guides
-          stylelint.vscode-stylelint
-          sumneko.lua
           tamasfe.even-better-toml
           timonwong.shellcheck
-          twxs.cmake
           tyriar.sort-lines
           vincaslt.highlight-matching-tag
           visualstudioexptteam.intellicode-api-usage-examples
           visualstudioexptteam.vscodeintellicode
           vscjava.vscode-gradle
-          waderyan.gitblame
           wmaurer.change-case
-          xaver.clang-format
           xdebug.php-debug
-          zaaack.markdown-editor
           zainchen.json
         ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
@@ -1488,7 +1472,6 @@ in
       tree-sitter-javascript
       tree-sitter-json
       tree-sitter-latex
-      tree-sitter-lua
       tree-sitter-make
       tree-sitter-markdown
       tree-sitter-markdown-inline
