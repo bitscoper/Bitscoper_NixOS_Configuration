@@ -1208,8 +1208,6 @@ in
       php83
       pipewire
       pkg-config
-      platformio
-      platformio-core
       podman
       podman-compose
       podman-tui
@@ -1359,12 +1357,6 @@ in
             publisher = "richie5um2";
             version = "1.20.0";
             sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
-          }
-          {
-            name = "platformio-ide";
-            publisher = "platformio";
-            version = "3.3.3";
-            sha256 = "pcWKBqtpU7DVpiT7UF6Zi+YUKknyjtXFEf5nL9+xuSo=";
           }
         ];
       })
