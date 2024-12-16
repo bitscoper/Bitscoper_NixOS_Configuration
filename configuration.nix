@@ -55,14 +55,20 @@ in
   };
 
   system = {
+    autoUpgrade = {
+      enable = false;
+      channel = "https://nixos.org/channels/nixos-unstable";
+      operation = "boot";
+      allowReboot = false;
+    };
+
     activationScripts = { };
+
     userActivationScripts = {
       stdio = {
-        text = ''
-          rm -f ~/Android/Sdk/platform-tools/adb
-          ln -s /run/current-system/sw/bin/adb ~/Android/Sdk/platform-tools/adb
-        '';
+        text = '' '';
         deps = [
+
         ];
       };
     };
@@ -70,12 +76,17 @@ in
 
   nix = {
     enable = true;
-    settings.experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
+    settings = {
+      max-jobs = 1;
+      experimental-features = [
+        "nix-command"
+      ];
+    };
   };
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    android_sdk.accept_license = true;
+  };
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
@@ -109,8 +120,10 @@ in
       enable = false;
       allowPing = true;
       allowedTCPPorts = [
+
       ];
       allowedUDPPorts = [
+
       ];
     };
   };
@@ -188,6 +201,7 @@ in
     targets.multi-user.wants = [
       "warp-svc.service"
     ];
+
     tmpfiles.rules = [
       "d /var/spool/samba 1777 root root -"
     ];
@@ -198,27 +212,26 @@ in
 
     dbus.enable = true;
 
-    xserver = {
-      enable = true;
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
-      xkb = {
-        layout = "us";
-        variant = "";
+    displayManager = {
+      sddm = {
+        enable = true;
+        wayland.enable = true;
       };
-      excludePackages = with pkgs; [
-        xterm
-      ];
     };
+    desktopManager.plasma6.enable = true;
 
     libinput.enable = true;
 
     pipewire = {
       enable = true;
+
       alsa.enable = true;
       alsa.support32Bit = true;
+
       pulse.enable = true;
+
       jack.enable = true;
+
       wireplumber.extraConfig.bluetoothEnhancements = {
         "monitor.bluez.properties" = {
           "bluez5.enable-sbc-xq" = true;
@@ -259,21 +272,25 @@ in
 
     udev.packages = with pkgs; [
       android-udev-rules
-      gnome-settings-daemon
       rtl-sdr
     ];
 
     logind = {
       killUserProcesses = true;
+
       lidSwitch = "ignore";
       lidSwitchDocked = "ignore";
       lidSwitchExternalPower = "ignore";
+
       powerKey = "poweroff";
       powerKeyLongPress = "poweroff";
+
       rebootKey = "reboot";
       rebootKeyLongPress = "reboot";
+
       suspendKey = "ignore";
       suspendKeyLongPress = "ignore";
+
       hibernateKey = "ignore";
       hibernateKeyLongPress = "ignore";
     };
@@ -522,14 +539,20 @@ in
       openFirewall = true;
     };
 
-    gnome.gnome-browser-connector.enable = true;
+    ollama = {
+      enable = true;
+      host = "0.0.0.0";
+      port = 11434;
+      openFirewall = true;
+    };
   };
 
   xdg.portal = {
     enable = true;
     wlr.enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gnome
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-wlr
+      kdePackages.xdg-desktop-portal-kde
     ];
   };
 
@@ -568,6 +591,7 @@ in
     nix-ld = {
       enable = true;
       libraries = with pkgs; [
+
       ];
     };
 
@@ -582,12 +606,10 @@ in
       completion.enable = true;
       enableLsColors = true;
       shellAliases = {
-        one_drive = "onedrive --sync";
         clean_build = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --upgrade-all";
       };
       loginShellInit = ''
         setfacl --modify user:jellyfin:--x ~
-        gsettings set org.gnome.shell app-picker-layout "[]"
       '';
       shellInit = ''
     '';
@@ -602,6 +624,12 @@ in
 
     virt-manager.enable = true;
 
+    partition-manager.enable = true;
+
+    kde-pim.enable = true;
+
+    kdeconnect.enable = true;
+
     firefox = {
       enable = true;
       languagePacks = [
@@ -614,13 +642,6 @@ in
       package = pkgs.thunderbird;
     };
 
-    steam = {
-      enable = true;
-      dedicatedServer.openFirewall = true;
-      remotePlay.openFirewall = true;
-      localNetworkGameTransfers.openFirewall = true;
-    };
-
     dconf = {
       enable = true;
       profiles.user.databases = [
@@ -629,250 +650,6 @@ in
           settings = {
             "system/locale" = {
               region = "en_US.UTF-8";
-            };
-            "org/gnome/system/location" = {
-              enabled = true;
-            };
-            "org/gnome/shell" = {
-              disable-user-extensions = false;
-              last-selected-power-profile = "performance";
-              remember-mount-password = true;
-              enabled-extensions = [
-                "Vitals@CoreCoding.com"
-                "appindicatorsupport@rgcjonas.gmail.com"
-                "blur-my-shell@aunetx"
-                "clipboard-indicator@tudmotu.com"
-                "desktop-cube@schneegans.github.com"
-                "gsconnect@andyholmes.github.io"
-                "osd-volume-number@deminder"
-                "places-menu@gnome-shell-extensions.gcampax.github.com"
-              ];
-              favorite-apps = [
-                "org.gnome.Console.desktop"
-                "org.gnome.Nautilus.desktop"
-                "thunderbird.desktop"
-                "dbeaver.desktop"
-                "arduino-ide.desktop"
-                "code.desktop"
-                "org.fritzing.Fritzing.desktop"
-                "firefox.desktop"
-                "sdrangel.desktop"
-                "sdrpp.desktop"
-                "vlc.desktop"
-                "virt-manager.desktop"
-              ];
-            };
-            "org/gnome/shell/app-switcher" = {
-              current-workspace-only = false;
-            };
-            "org/gnome/shell/extensions/appindicator" = {
-              legacy-tray-enabled = true;
-              tray-pos = "right";
-            };
-            "org/gnome/shell/extensions/osd-volume-number" = {
-              adapt-panel-menu = true;
-              icon-position = "left";
-              number-position = "right";
-            };
-            "org/gnome/shell/extensions/vitals" = {
-              alphabetize = true;
-              fixed-widths = false;
-              hide-icons = false;
-              hide-zeros = false;
-              include-public-ip = true;
-              include-static-gpu-info = true;
-              include-static-info = true;
-              menu-centered = true;
-              show-battery = true;
-              show-fan = true;
-              show-memory = true;
-              show-network = true;
-              show-processor = true;
-              show-storage = true;
-              show-system = true;
-              show-temperature = true;
-              show-voltage = true;
-              storage-path = "/";
-              use-higher-precision = true;
-              hot-sensors = [
-                "_processor_usage_"
-                "_memory_usage_"
-                "__network-rx_max__"
-                "__network-tx_max__"
-              ];
-            };
-            "org/gnome/shell/extensions/clipboard-indicator" = {
-              cache-only-favorites = true;
-              clear-on-boot = true;
-              confirm-clear = false;
-              disable-down-arrow = true;
-              keep-selected-on-clear = false;
-              paste-button = true;
-              strip-text = false;
-            };
-            "org/gnome/shell/extensions/gsconnect" = {
-              name = "Bitscoper-WorkStation";
-            };
-            "org/gnome/settings-daemon/plugins/power" = {
-              idle-dim = false;
-              power-button-action = "interactive";
-              power-saver-profile-on-low-battery = false;
-              sleep-inactive-ac-type = "nothing";
-              sleep-inactive-battery-type = "nothing";
-            };
-            "org/gnome/desktop/peripherals/keyboard" = {
-              repeat = true;
-            };
-            "org/gnome/desktop/peripherals/touchpad" = {
-              click-method = "areas";
-              disable-while-typing = true;
-              edge-scrolling-enabled = false;
-              natural-scroll = true;
-              send-events = "enabled";
-              tap-to-click = true;
-              two-finger-scrolling-enabled = true;
-            };
-            "org/gnome/desktop/peripherals/mouse" = {
-              accel-profile = "default";
-              left-handed = false;
-              natural-scroll = false;
-            };
-            "org/gnome/desktop/a11y/keyboard" = {
-              bouncekeys-enable = false;
-              enable = false;
-              slowkeys-enable = false;
-              stickykeys-enable = false;
-              togglekeys-enable = true;
-            };
-            "org/gnome/desktop/a11y/mouse" = {
-              dwell-click-enabled = false;
-              secondary-click-enabled = false;
-            };
-            "org/gnome/desktop/a11y/interface" = {
-              high-contrast = false;
-              show-status-shapes = false;
-            };
-            "org/gnome/desktop/input-sources" = {
-              per-window = false;
-              show-all-sources = true;
-              xkb-options = [
-                "terminate:ctrl_alt_bksp"
-                "lv3:ralt_switch"
-                "compose:rctrl"
-              ];
-              sources = [
-                (pkgs.lib.gvariant.mkTuple [ "xkb" "us" ])
-                (pkgs.lib.gvariant.mkTuple [ "ibus" "OpenBangla" ])
-                (pkgs.lib.gvariant.mkTuple [ "xkb" "bd" ])
-                (pkgs.lib.gvariant.mkTuple [ "xkb" "ara" ])
-                (pkgs.lib.gvariant.mkTuple [ "xkb" "ru" ])
-              ];
-            };
-            "org/gnome/desktop/sound" = {
-              allow-volume-above-100-percent = true;
-              event-sounds = true;
-            };
-            "org/gnome/desktop/session" = {
-              idle-delay = pkgs.lib.gvariant.mkUint32 0;
-            };
-            "org/gnome/desktop/privacy" = {
-              disable-camera = false;
-              old-files-age = pkgs.lib.gvariant.mkUint32 1;
-              recent-files-max-age = pkgs.lib.gvariant.mkUint32 1;
-              remember-recent-files = false;
-              remove-old-temp-files = true;
-              remove-old-trash-files = true;
-            };
-            "org/gnome/desktop/remote-desktop/rdp" = {
-              enable = true;
-              view-only = false;
-            };
-            "org/gnome/desktop/datetime" = {
-              automatic-timezone = false;
-            };
-            "org/gnome/desktop/interface" = {
-              clock-format = "12h";
-              clock-show-date = true;
-              clock-show-seconds = false;
-              clock-show-weekday = true;
-              color-scheme = "prefer-dark";
-              cursor-blink = true;
-              enable-animations = true;
-              enable-hot-corners = true;
-              gtk-enable-primary-paste = true;
-              gtk-theme = "Adwaita-dark";
-              icon-theme = "Adwaita";
-              locate-pointer = true;
-              show-battery-percentage = true;
-            };
-            "org/gnome/desktop/wm/preferences" = {
-              action-double-click-titlebar = "toggle-maximize";
-              action-right-click-titlebar = "menu";
-              auto-raise = false;
-              button-layout = "appmenu:minimize,maximize,close";
-              ction-middle-click-titlebar = "lower";
-              focus-mode = "sloppy";
-              mouse-button-modifier = "<Super>";
-              resize-with-right-button = true;
-            };
-            "org/gnome/mutter" = {
-              attach-modal-dialogs = false;
-              center-new-windows = false;
-              dynamic-workspaces = true;
-              edge-tiling = true;
-              workspaces-only-on-primary = false;
-            };
-            "org/gnome/desktop/screensaver" = {
-              lock-delay = pkgs.lib.gvariant.mkUint32 0;
-              lock-enabled = true;
-            };
-            "org/gnome/desktop/notifications" = {
-              show-in-lock-screen = true;
-            };
-            "org/gnome/desktop/search-providers" = {
-              disable-external = false;
-            };
-            "org/gnome/desktop/media-handling" = {
-              autorun-never = false;
-            };
-            "org/gnome/desktop/file-sharing" = {
-              require-password = "always";
-            };
-            "org/gtk/settings/file-chooser" = {
-              clock-format = "12h";
-              show-hidden = true;
-              sort-directories-first = true;
-            };
-            "org/gtk/gtk4/settings/file-chooser" = {
-              show-hidden = true;
-              sort-directories-first = true;
-            };
-            "org/gnome/Console" = {
-              audible-bell = true;
-              custom-font = "NotoMono Nerd Font 10";
-              theme = "night";
-              use-system-font = false;
-              visual-bell = true;
-            };
-            "org/gnome/nautilus/preferences" = {
-              click-policy = "double";
-              date-time-format = "simple";
-              default-folder-viewer = "icon-view";
-              recursive-search = "always";
-              show-create-link = true;
-              show-delete-permanently = true;
-              show-directory-item-counts = "always";
-              show-image-thumbnails = "always";
-            };
-            "org/gnome/nautilus/icon-view" = {
-              captions = [
-                "size"
-                "date_modified"
-                "none"
-              ];
-            };
-            "org/gnome/nautilus/list-view" = {
-              use-tree-view = true;
             };
             "org/virt-manager/virt-manager/connections" = {
               autoconnect = [
@@ -913,98 +690,11 @@ in
             "org/virt-manager/virt-manager/new-vm" = {
               cpu-default = "host-passthrough";
             };
-            "org/gnome/Snapshot" = {
-              play-shutter-sound = true;
-              show-composition-guidelines = true;
-            };
-            "org/gnome/evince/default" = {
-              continuous = true;
-              enable-spellchecking = true;
-            };
-            "apps/seahorse" = {
-              server-auto-publish = true;
-              server-auto-retrieve = true;
-            };
-            "org/gnome/GWeather4" = {
-              temperature-unit = "centigrade";
-            };
             "com/github/huluti/Curtail" = {
               file-attributes = true;
               metadata = false;
               new-file = true;
               recursive = true;
-            };
-            "org/gnome/calculator" = {
-              show-thousands = true;
-              show-zeroes = true;
-            };
-            "app/drey/Dialect" = {
-              color-scheme = "dark";
-              show-pronunciation = true;
-            };
-            "org/gnome/simple-scan" = {
-              postproc-enabled = true;
-            };
-            "org/gnome/maps" = {
-              show-scale = true;
-            };
-            "org/gnome/meld" =
-              {
-                enable-space-drawer = true;
-                highlight-current-line = true;
-                highlight-syntax = true;
-                prefer-dark-theme = true;
-                show-line-numbers = true;
-                show-overview-map = true;
-                style-scheme = "meld-dark";
-                wrap-mode = "word";
-              };
-            "org/gnome/gnome-system-monitor" = {
-              cpu-smooth-graph = true;
-              kill-dialog = true;
-              process-memory-in-iec = true;
-              resources-memory-in-iec = true;
-              show-all-fs = true;
-              show-whose-processes = "all";
-              smooth-refresh = true;
-            };
-            "org/gnome/gnome-system-monitor/disktreenew" = {
-              col-0-visible = true;
-              col-1-visible = true;
-              col-2-visible = true;
-              col-3-visible = true;
-              col-4-visible = true;
-              col-5-visible = true;
-              col-6-visible = true;
-            };
-            "org/gnome/gnome-system-monitor/proctree" = {
-              col-0-visible = true;
-              col-1-visible = true;
-              col-2-visible = true;
-              col-3-visible = true;
-              col-4-visible = true;
-              col-5-visible = true;
-              col-6-visible = true;
-              col-7-visible = true;
-              col-8-visible = true;
-              col-9-visible = true;
-              col-10-visible = true;
-              col-11-visible = true;
-              col-12-visible = true;
-              col-13-visible = true;
-              col-14-visible = true;
-              col-15-visible = true;
-              col-16-visible = true;
-              col-17-visible = true;
-              col-18-visible = true;
-              col-19-visible = true;
-              col-20-visible = true;
-              col-21-visible = true;
-              col-22-visible = true;
-              col-23-visible = true;
-              col-24-visible = true;
-              col-25-visible = true;
-              col-26-visible = true;
             };
           };
         }
@@ -1022,10 +712,8 @@ in
     };
     systemPackages = with pkgs; [
       acl
-      adwaita-icon-theme
-      adwaita-qt
-      adwaita-qt6
-      android-studio
+      agi
+      android-backup-extractor
       android-tools
       arduino-cli
       arduino-core
@@ -1035,12 +723,9 @@ in
       aribb25
       audacity
       avahi
-      baobab
       bat
-      binary
       bind
       bleachbit
-      blender
       bluez
       bluez-tools
       bridge-utils
@@ -1051,7 +736,6 @@ in
       cloudflare-warp
       cmake
       cockpit
-      collision
       cryptsetup
       cups
       cups-filters
@@ -1060,18 +744,15 @@ in
       curl
       curtail
       d-spy
+      dart
       dbeaver-bin
       dbus
       dconf-editor
-      dialect
       dive
       dmg2img
       dovecot
       esptool
-      evince
       exfatprogs
-      extra-cmake-modules
-      eyedropper
       faac
       faad2
       fd
@@ -1092,56 +773,19 @@ in
       git-doc
       glib
       glibc
-      gnome-autoar
-      gnome-backgrounds
-      gnome-browser-connector
-      gnome-calculator
-      gnome-characters
-      gnome-clocks
-      gnome-color-manager
-      gnome-console
-      gnome-control-center
-      gnome-decoder
-      gnome-desktop
-      gnome-disk-utility
-      gnome-epub-thumbnailer
-      gnome-extensions-cli
-      gnome-firmware
-      gnome-font-viewer
-      gnome-frog
-      gnome-graphs
-      gnome-keyring
-      gnome-logs
-      gnome-maps
-      gnome-monitor-config
-      gnome-multi-writer
-      gnome-nettool
-      gnome-network-displays
-      gnome-obfuscate
-      gnome-online-accounts
-      gnome-remote-desktop
-      gnome-session
-      gnome-shell
-      gnome-shell-extensions
-      gnome-system-monitor
-      gnome-tecla
-      gnome-themes-extra
-      gnome-tweaks
-      gnome-user-docs
-      gnome-user-share
-      gnome-video-effects
-      gnome-weather
       gnumake
       gource
       gpredict
       gpsd
+      gradle
+      gradle-completion
       gtk3
       guestfs-tools
-      gvfs
       gzip
-      hieroglyphic
       icecast
+      iconv
       iftop
+      inotify-tools
       jdk
       jellyfin
       jellyfin-ffmpeg
@@ -1153,7 +797,6 @@ in
       kubectl
       kubernetes
       kubernetes-helm
-      letterpress
       libGL
       libaom
       libappimage
@@ -1164,6 +807,7 @@ in
       libgcc
       libguestfs
       libheif
+      libiconvReal
       libnotify
       libopus
       libosinfo
@@ -1175,22 +819,15 @@ in
       libvpx
       libwebp
       logrotate
-      lorem
-      loupe
       lsof
       luksmeta
       lynis
       mattermost-desktop
-      meld
       memcached
-      meson
-      metadata-cleaner
-      # mixxx
-      mousai
+      mixxx
       nano
       neofetch
       networkmanager
-      networkmanagerapplet
       ninja
       nix-diff
       nix-index
@@ -1203,9 +840,8 @@ in
       opendkim
       openssh
       openssl
-      paper-clip
       pcre
-      php83
+      php84
       pipewire
       pkg-config
       podman
@@ -1213,28 +849,22 @@ in
       podman-tui
       postfix
       power-profiles-daemon
-      python312Full
+      python312Full # python313Full
       qpwgraph
-      raider
       rar
-      remmina
+      readline
       ripgrep
       rpPPPoE
-      rtl-sdr
       rtl-sdr-librtlsdr
       sane-backends
       schroedinger
       screen
       sdrangel
       sdrpp
-      seahorse
-      share-preview
-      simple-scan
       smartmontools
       spice-gtk
-      switcheroo
+      spice-protocol
       swtpm
-      sysprof
       telegram-desktop
       texliveFull
       thermald
@@ -1242,12 +872,12 @@ in
       tor
       tor-browser
       torsocks
-      transmission_4-gtk
       tree
       tree-sitter
       undollar
       ungoogled-chromium
       unicode-emoji
+      universal-android-debloater
       unrar
       unzip
       usbtop
@@ -1257,7 +887,6 @@ in
       vlc
       vlc-bittorrent
       vscode-js-debug
-      warp
       waydroid
       wayland
       wayland-protocols
@@ -1278,7 +907,6 @@ in
       xoscope
       xvidcore
       yaml-language-server
-      yelp
       yt-dlp
       zip
       (vscode-with-extensions.override {
@@ -1361,18 +989,6 @@ in
         ];
       })
     ] ++
-    (with gnome; [
-      gvfs
-      nixos-gsettings-overrides
-    ]) ++
-    (with gnomeExtensions; [
-      appindicator
-      blur-my-shell
-      clipboard-indicator
-      desktop-cube
-      gsconnect
-      vitals
-    ]) ++
     (with gst_all_1; [
       gst-editing-services
       gst-libav
@@ -1383,32 +999,79 @@ in
       gst-rtsp-server
       gst-vaapi
       gstreamer
+    ])
+    ++
+    (with androidenv.androidPkgs; [
+      # build-tools
+      emulator
+      platform-tools
+      tools
     ]) ++
-    (with php83Extensions; [
+    (with php84Extensions; [
+      ast
+      bz2
       calendar
+      ctype
       curl
+      dba
       dom
+      ds
+      enchant
+      event
       exif
+      ffi
       fileinfo
       filter
       ftp
       gd
+      gettext
+      gnupg
+      grpc
+      iconv
+      imagick
       imap
+      inotify
+      intl
+      ldap
+      mailparse
       mbstring
       memcached
+      meminfo
+      memprof
       mysqli
+      mysqlnd
       opcache
       openssl
+      pcntl
+      pdo
+      pdo_mysql
+      pdo_pgsql
       pgsql
+      posix
+      pspell
+      readline
       session
+      simplexml
+      smbclient
       sockets
       sodium
+      tokenizer
+      uuid
+      vld
+      xdebug
       xml
+      xmlreader
+      xmlwriter
       xsl
       yaml
       zip
+      zlib
+    ]) ++
+    (with php84Packages; [
+
     ]) ++
     (with python312Packages; [
+      # python313Packages
       black
       matplotlib
       numpy
@@ -1461,18 +1124,292 @@ in
       tree-sitter-sql
       tree-sitter-toml
       tree-sitter-yaml
+    ]) ++
+    (with kdePackages; [
+      accessibility-inspector
+      accounts-qt
+      akonadi
+      akonadi-calendar
+      akonadi-calendar-tools
+      akonadi-contacts
+      akonadi-import-wizard
+      akonadi-mime
+      akonadi-search
+      akonadiconsole
+      akregator
+      analitza
+      ark
+      attica
+      audiocd-kio
+      baloo
+      baloo-widgets
+      bluedevil
+      bluez-qt
+      breeze
+      breeze-grub
+      breeze-gtk
+      breeze-icons
+      breeze-plymouth
+      calendarsupport
+      colord-kde
+      dolphin
+      dolphin-plugins
+      drkonqi
+      eventviews
+      extra-cmake-modules
+      ffmpegthumbs
+      filelight
+      frameworkintegration
+      gwenview
+      incidenceeditor
+      isoimagewriter
+      k3b
+      kaccounts-integration
+      kaccounts-providers
+      kaddressbook
+      kalarm
+      kalgebra
+      kalzium
+      kamera
+      kapptemplate
+      karchive
+      kauth
+      kbackup
+      kbookmarks
+      kcalc
+      kcalendarcore
+      kcalutils
+      kcharselect
+      kcmutils
+      kcodecs
+      kcolorchooser
+      kcolorpicker
+      kcolorscheme
+      kcompletion
+      kconfig
+      kconfigwidgets
+      kcontacts
+      kcoreaddons
+      kcrash
+      kcron
+      kdav
+      kdbusaddons
+      kde-gtk-config
+      kdebugsettings
+      kdeconnect-kde
+      kdecoration
+      kded
+      kdeedu-data
+      kdegraphics-thumbnailers
+      kdenetwork-filesharing
+      kdenlive
+      kdepim-addons
+      kdepim-runtime
+      kdeplasma-addons
+      kdesu
+      kdf
+      kdiagram
+      kdialog
+      kdnssd
+      keysmith
+      kfilemetadata
+      kfind
+      kget
+      kgpg
+      kgraphviewer
+      kguiaddons
+      khealthcertificate
+      khelpcenter
+      ki18n
+      kiconthemes
+      kidentitymanagement
+      kimageannotator
+      kimageformats
+      kimagemapeditor
+      kimap
+      kinfocenter
+      kio
+      kio-admin
+      kio-extras
+      kio-fuse
+      kio-gdrive
+      kio-zeroconf
+      kjournald
+      kldap
+      kleopatra
+      kmag
+      kmail
+      kmail-account-wizard
+      kmailtransport
+      kmbox
+      kmenuedit
+      kmime
+      kmousetool
+      kmouth
+      kmplot
+      knotifications
+      knotifyconfig
+      kolourpaint
+      kompare
+      kongress
+      konsole
+      kontact
+      kontactinterface
+      kontrast
+      konversation
+      kopeninghours
+      korganizer
+      kparts
+      kpeople
+      kpimtextedit
+      kpipewire
+      kpkpass
+      kplotting
+      kpmcore
+      kpublictransport
+      krdc
+      krdp
+      krecorder
+      krfb
+      kruler
+      ksanecore
+      kscreen
+      kscreenlocker
+      kservice
+      ksmtp
+      ksshaskpass
+      kstatusnotifieritem
+      ksvg
+      ksystemlog
+      ksystemstats
+      ktimer
+      ktnef
+      ktorrent
+      kunitconversion
+      kup
+      kwallet
+      kwallet-pam
+      kwalletmanager
+      kwayland
+      kweather
+      kweathercore
+      kwidgetsaddons
+      kwin
+      kwindowsystem
+      kxmlgui
+      kzones
+      layer-shell-qt
+      libgravatar
+      libkcddb
+      libkcompactdisc
+      libkdcraw
+      libkdepim
+      libkexiv2
+      libkgapi
+      libkleo
+      libkomparediff2
+      libksane
+      libkscreen
+      libksieve
+      libksysguard
+      libktorrent
+      libplasma
+      libqaccessibilityclient
+      mailcommon
+      mailimporter
+      markdownpart
+      mbox-importer
+      messagelib
+      mimetreeparser
+      mlt
+      networkmanager-qt
+      okular
+      partitionmanager
+      phonon
+      phonon-vlc
+      pim-data-exporter
+      pim-sieve-editor
+      pimcommon
+      plasma-activities
+      plasma-activities-stats
+      plasma-browser-integration
+      plasma-desktop
+      plasma-disks
+      plasma-firewall
+      plasma-integration
+      plasma-nm
+      plasma-systemmonitor
+      plasma-vault
+      plasma-wayland-protocols
+      plasma-workspace
+      plasma-workspace-wallpapers
+      plymouth-kcm
+      polkit-kde-agent-1
+      polkit-qt-1
+      poppler
+      powerdevil
+      print-manager
+      prison
+      qca
+      qtcharts
+      qtconnectivity
+      qtgraphs
+      qtgrpc
+      qthttpserver
+      qtimageformats
+      qtkeychain
+      qtlanguageserver
+      qtlocation
+      qtmqtt
+      qtmultimedia
+      qtnetworkauth
+      qtpositioning
+      qtremoteobjects
+      qtsensors
+      qtserialbus
+      qtserialport
+      qtshadertools
+      qtspeech
+      qtspell
+      qtsvg
+      qttools
+      qttranslations
+      qtutilities
+      qtvirtualkeyboard
+      qtwayland
+      qtwebchannel
+      qtwebengine
+      qtwebsockets
+      qtwebview
+      quazip
+      qwlroots
+      qxlsx
+      sddm-kcm
+      signon-kwallet-extension
+      signond
+      skanpage
+      solid
+      sonnet
+      spectacle
+      step
+      svgpart
+      sweeper
+      syndication
+      syntax-highlighting
+      systemsettings
+      taglib
+      tokodon
+      wayland
+      wayland-protocols
+      waylib
+      wayqt
+      xwaylandvideobridge
+      yakuake
     ]);
-    gnome.excludePackages = (with pkgs; [
-      geary
-      gnome-calendar
-      gnome-connections
-      gnome-contacts
-      gnome-music
-      gnome-text-editor
-      gnome-tour
-      epiphany
-      totem
-    ]) ++ (with pkgs.gnome; [
+    plasma6.excludePackages = (with pkgs.kdePackages; [
+      elisa
+      kate
+    ]) ++ (with pkgs; [
 
     ]);
   };
@@ -1491,10 +1428,16 @@ in
   };
 
   home-manager.users.bitscoper = {
-    programs.git = {
+    qt = {
       enable = true;
-      userName = "Abdullah As-Sadeed";
-      userEmail = "bitscoper@gmail.com";
+    };
+
+    programs = {
+      git = {
+        enable = true;
+        userName = "Abdullah As-Sadeed";
+        userEmail = "bitscoper@gmail.com";
+      };
     };
 
     home.stateVersion = "24.11";
