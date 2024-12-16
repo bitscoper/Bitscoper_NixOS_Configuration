@@ -6,7 +6,9 @@
 }:
 let
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
+
   secrets = import ./secrets.nix;
+
   existingLibraryPaths = builtins.getEnv "LD_LIBRARY_PATH";
 in
 {
@@ -19,6 +21,7 @@ in
     loader = {
       efi.canTouchEfiVariables = true;
       timeout = 2;
+
       systemd-boot = {
         enable = true;
         consoleMode = "max";
@@ -26,11 +29,14 @@ in
         memtest86.enable = true;
       };
     };
+
     initrd = {
+      enable = true;
       luks.devices."luks-023f8417-62dd-4e65-b327-6c33b065486b".device = "/dev/disk/by-uuid/023f8417-62dd-4e65-b327-6c33b065486b";
       network.ssh.enable = true;
       verbose = true;
     };
+
     kernelPackages = pkgs.linuxPackages_zen;
     extraModprobeConfig = "options kvm_intel nested=1";
     kernelParams = [
@@ -41,12 +47,14 @@ in
       # "rd.udev.log_level=3"
       # "udev.log_priority=3"
     ];
+    consoleLogLevel = 5; # KERN_NOTICE
+
     tmp.cleanOnBoot = true;
+
     plymouth = {
       enable = true;
       theme = "bgrt";
     };
-    consoleLogLevel = 5; # KERN_NOTICE
   };
 
   time = {
@@ -83,6 +91,7 @@ in
       ];
     };
   };
+
   nixpkgs.config = {
     allowUnfree = true;
     android_sdk.accept_license = true;
@@ -104,6 +113,7 @@ in
     supportedLocales = [
       "all"
     ];
+
     inputMethod = {
       enable = true;
       type = "ibus";
@@ -115,7 +125,9 @@ in
 
   networking = {
     hostName = "Bitscoper-WorkStation";
+
     networkmanager.enable = true;
+
     firewall = {
       enable = false;
       allowPing = true;
@@ -299,16 +311,20 @@ in
 
     avahi = {
       enable = true;
+
       nssmdns4 = true;
+
       publish = {
         enable = true;
         userServices = true;
       };
+
       openFirewall = true;
     };
 
     openssh = {
       enable = true;
+
       listenAddresses = [
         {
           addr = "0.0.0.0";
@@ -318,7 +334,9 @@ in
         22
       ];
       allowSFTP = true;
+
       banner = "Bitscoper-WorkStation";
+
       settings = {
         PermitRootLogin = "yes";
         PasswordAuthentication = true;
@@ -327,12 +345,14 @@ in
         UseDns = true;
         LogLevel = "ERROR";
       };
+
       openFirewall = true;
     };
     sshd.enable = true;
 
     printing = {
       enable = true;
+
       listenAddresses = [
         "*:631"
       ];
@@ -342,11 +362,14 @@ in
         "all"
       ];
       defaultShared = true;
+
       cups-pdf.enable = true;
       drivers = with pkgs; [
         gutenprint
       ];
+
       startWhenNeeded = true;
+
       extraConf = ''
         DefaultLanguage en
         ServerName Bitscoper-WorkStation
@@ -363,35 +386,59 @@ in
         DirtyCleanInterval 30
         LogTimeFormat standard
       '';
+
       logLevel = "warn";
+
       openFirewall = true;
     };
     ipp-usb.enable = true;
 
     system-config-printer.enable = true;
 
-    # services.samba = {
-    #   package = pkgs.sambaFull;
-    #   enable = true;
-    #   settings = ''
-    #     load printers = yes
-    #     printing = cups
-    #     printcap name = cups
-    #   '';
-    #   shares = {
-    #     printers = {
-    #       comment = "All Printers";
-    #       path = "/var/spool/samba";
-    #       public = "yes";
-    #       browseable = "yes";
-    #       "guest ok" = "yes";
-    #       writable = "no";
-    #       printable = "yes";
-    #       "create mode" = 0700;
-    #     };
-    #   };
-    #   openFirewall = true;
-    # };
+    samba = {
+      enable = true;
+      package = pkgs.sambaFull;
+
+      smbd.enable = true;
+      nmbd.enable = true;
+      winbindd.enable = true;
+      nsswins = true;
+      usershares.enable = true;
+
+      settings = {
+        global = {
+          "server string" = "Bitscoper-WorkStation";
+          "netbios name" = "Bitscoper-WorkStation";
+          "hosts allow" = "0.0.0.0/0 ::/0";
+          "hosts deny" = "";
+
+          "load printers" = "yes";
+          "printing" = "cups";
+          "printcap name" = "cups";
+
+          security = "user";
+
+          workgroup = "BITSCOPER";
+        };
+
+        printers = {
+          comment = "All Printers";
+          path = "/var/spool/samba";
+          public = "yes";
+          browseable = "yes";
+          "guest ok" = "yes";
+          writable = "no";
+          printable = "yes";
+          "create mode" = 0700;
+        };
+
+        public = { };
+
+        private = { };
+      };
+
+      openFirewall = true;
+    };
 
     samba-wsdd = {
       enable = true;
@@ -528,9 +575,11 @@ in
     tor = {
       enable = false;
       enableGeoIP = true;
+
       settings = {
         ContactInfo = "bitscoper@Bitscoper-WorkStation";
       };
+
       openFirewall = true;
     };
 
@@ -608,11 +657,13 @@ in
       shellAliases = {
         clean_build = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --upgrade-all";
       };
+
       loginShellInit = ''
         setfacl --modify user:jellyfin:--x ~
       '';
-      shellInit = ''
-    '';
+
+      shellInit = '' '';
+
       interactiveShellInit = ''
         PROMPT_COMMAND="history -a"
       '';
@@ -651,6 +702,7 @@ in
             "system/locale" = {
               region = "en_US.UTF-8";
             };
+
             "org/virt-manager/virt-manager/connections" = {
               autoconnect = [
                 "qemu:///system"
@@ -690,6 +742,7 @@ in
             "org/virt-manager/virt-manager/new-vm" = {
               cpu-default = "host-passthrough";
             };
+
             "com/github/huluti/Curtail" = {
               file-attributes = true;
               metadata = false;
@@ -706,10 +759,12 @@ in
     variables = pkgs.lib.mkForce {
       LD_LIBRARY_PATH = "${pkgs.glib.out}/lib/:${pkgs.libGL}/lib/:${pkgs.stdenv.cc.cc.lib}/lib:${existingLibraryPaths}";
     };
+
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
       CHROME_EXECUTABLE = "chromium";
     };
+
     systemPackages = with pkgs; [
       acl
       agi
@@ -831,6 +886,9 @@ in
       ninja
       nix-diff
       nix-index
+      nixos-bgrt-plymouth
+      nixos-icons
+      nix-bash-completions
       nixpkgs-fmt
       nmap
       obs-studio
@@ -1427,6 +1485,25 @@ in
     ];
   };
 
+  documentation = {
+    enable = true;
+    dev.enable = true;
+    doc.enable = true;
+    info.enable = true;
+
+    man = {
+      enable = true;
+      generateCaches = true;
+      man-db.enable = true;
+    };
+
+    nixos = {
+      enable = true;
+      includeAllModules = true;
+      options.warningsAreErrors = false;
+    };
+  };
+
   home-manager.users.bitscoper = {
     qt = {
       enable = true;
@@ -1445,6 +1522,3 @@ in
 
   system.stateVersion = "24.11";
 }
-
-# BUTT: libfdk-aac-2.dll not loaded
-# KiCad: Saving Library Tables - Permission Denied
