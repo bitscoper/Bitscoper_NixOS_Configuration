@@ -85,10 +85,10 @@ in
   nix = {
     enable = true;
     settings = {
-      max-jobs = 1;
       experimental-features = [
         "nix-command"
       ];
+      # max-jobs = 1;
     };
   };
 
@@ -116,10 +116,16 @@ in
 
     inputMethod = {
       enable = true;
-      type = "ibus";
-      ibus.engines = with pkgs.ibus-engines; [
-        openbangla-keyboard
-      ];
+      type = "fcitx5";
+
+      fcitx5 = {
+        waylandFrontend = true;
+        plasma6Support = true;
+
+        addons = with pkgs; [
+          fcitx5-openbangla-keyboard
+        ];
+      };
     };
   };
 
@@ -229,6 +235,8 @@ in
         enable = true;
         wayland.enable = true;
       };
+
+      defaultSession = "plasma";
     };
     desktopManager.plasma6.enable = true;
 
@@ -598,9 +606,7 @@ in
 
   xdg.portal = {
     enable = true;
-    wlr.enable = true;
     extraPortals = with pkgs; [
-      xdg-desktop-portal-wlr
       kdePackages.xdg-desktop-portal-kde
     ];
   };
@@ -635,8 +641,6 @@ in
   };
 
   programs = {
-    nix-index.enableBashIntegration = true;
-
     nix-ld = {
       enable = true;
       libraries = with pkgs; [
@@ -645,6 +649,8 @@ in
     };
 
     appimage.enable = true;
+
+    nix-index.enableBashIntegration = true;
 
     ssh = {
       startAgent = true;
@@ -669,6 +675,17 @@ in
       '';
     };
 
+    gnupg = {
+      agent = {
+        enable = true;
+        enableSSHSupport = false;
+        enableBrowserSocket = true;
+        enableExtraSocket = true;
+      };
+
+      dirmngr.enable = true;
+    };
+
     adb.enable = true;
 
     system-config-printer.enable = true;
@@ -686,11 +703,6 @@ in
       languagePacks = [
         "en-US"
       ];
-    };
-
-    thunderbird = {
-      enable = true;
-      package = pkgs.thunderbird;
     };
 
     dconf = {
@@ -815,7 +827,6 @@ in
       ffmpeg-full
       fh
       file
-      file-roller
       flutter
       fritzing
       fwupd
@@ -834,7 +845,6 @@ in
       gpsd
       gradle
       gradle-completion
-      gtk3
       guestfs-tools
       gzip
       icecast
@@ -898,6 +908,7 @@ in
       opendkim
       openssh
       openssl
+      patchelf
       pcre
       php84
       pipewire
@@ -953,7 +964,6 @@ in
       wireplumber
       wireshark
       wl-clipboard
-      wlroots
       wordpress
       wpscan
       x264
@@ -1184,7 +1194,6 @@ in
       tree-sitter-yaml
     ]) ++
     (with kdePackages; [
-      accessibility-inspector
       accounts-qt
       akonadi
       akonadi-calendar
@@ -1229,7 +1238,6 @@ in
       kalgebra
       kalzium
       kamera
-      kapptemplate
       karchive
       kauth
       kbackup
@@ -1254,7 +1262,6 @@ in
       kdbusaddons
       kde-gtk-config
       kdebugsettings
-      kdeconnect-kde
       kdecoration
       kded
       kdeedu-data
@@ -1269,12 +1276,9 @@ in
       kdiagram
       kdialog
       kdnssd
-      keysmith
       kfilemetadata
       kfind
       kget
-      kgpg
-      kgraphviewer
       kguiaddons
       khealthcertificate
       khelpcenter
@@ -1304,12 +1308,9 @@ in
       kmime
       kmousetool
       kmouth
-      kmplot
       knotifications
       knotifyconfig
-      kolourpaint
       kompare
-      kongress
       konsole
       kontact
       kontactinterface
@@ -1327,7 +1328,6 @@ in
       kpublictransport
       krdc
       krdp
-      krecorder
       krfb
       kruler
       ksanecore
@@ -1382,7 +1382,6 @@ in
       mlt
       networkmanager-qt
       okular
-      partitionmanager
       phonon
       phonon-vlc
       pim-data-exporter
@@ -1440,7 +1439,6 @@ in
       qtwebsockets
       qtwebview
       quazip
-      qwlroots
       qxlsx
       sddm-kcm
       signon-kwallet-extension
@@ -1456,13 +1454,11 @@ in
       syntax-highlighting
       systemsettings
       taglib
-      tokodon
       wayland
       wayland-protocols
       waylib
       wayqt
       xwaylandvideobridge
-      yakuake
     ]);
     plasma6.excludePackages = (with pkgs.kdePackages; [
       elisa
@@ -1505,10 +1501,6 @@ in
   };
 
   home-manager.users.bitscoper = {
-    qt = {
-      enable = true;
-    };
-
     programs = {
       git = {
         enable = true;
