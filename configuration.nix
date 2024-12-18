@@ -637,6 +637,7 @@ in
       "uucp"
       "video"
       "wheel"
+      "wireshark"
     ];
   };
 
@@ -678,9 +679,10 @@ in
     gnupg = {
       agent = {
         enable = true;
-        enableSSHSupport = false;
         enableBrowserSocket = true;
         enableExtraSocket = true;
+        enableSSHSupport = false;
+        pinentryPackage = pkgs.pinentry-qt;
       };
 
       dirmngr.enable = true;
@@ -870,6 +872,7 @@ in
       libdvdnav
       libdvdread
       libgcc
+      libgpg-error
       libguestfs
       libheif
       libiconvReal
@@ -1053,6 +1056,18 @@ in
             publisher = "richie5um2";
             version = "1.20.0";
             sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
+          }
+          {
+            name = "platformio-ide";
+            publisher = "platformio";
+            version = "3.3.3";
+            sha256 = "pcWKBqtpU7DVpiT7UF6Zi+YUKknyjtXFEf5nL9+xuSo=";
+          }
+          {
+            name = "vscode-serial-monitor";
+            publisher = "ms-vscode";
+            version = "0.13.1";
+            sha256 = "qZKCNG5EdMwzE9y3WVxaPMdTP9Y0xbe8kozjU7v44OI=";
           }
         ];
       })
