@@ -315,7 +315,9 @@ in
 
     udev.packages = with pkgs; [
       android-udev-rules
+      game-devices-udev-rules
       rtl-sdr
+      usb-blaster-udev-rules
     ];
 
     avahi = {
@@ -943,6 +945,8 @@ in
       php84
       pipewire
       pkg-config
+      platformio
+      platformio-core
       podman
       podman-compose
       podman-tui
