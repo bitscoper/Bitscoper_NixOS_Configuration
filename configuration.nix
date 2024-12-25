@@ -821,6 +821,7 @@ in
       aribb25
       audacity
       avahi
+      avrdude
       bat
       bind
       bleachbit
@@ -909,6 +910,7 @@ in
       libopus
       libosinfo
       libreoffice-fresh
+      libtinfo
       libusb1
       libuuid
       libva-utils
@@ -936,12 +938,13 @@ in
       obs-studio
       ollama
       onedrive
-      onionshare
+      onionshare-gui
       opendkim
       openssh
       openssl
       patchelf
       pcre
+      pgadmin4-desktopmode
       php84
       pipewire
       pkg-config
