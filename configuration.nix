@@ -9,7 +9,7 @@ let
 
   secrets = import ./secrets.nix;
 
-  existingLibraryPaths = builtins.getEnv "LD_LIBRARY_PATH";
+  # existingLibraryPaths = builtins.getEnv "LD_LIBRARY_PATH";
 in
 {
   imports = [
@@ -33,7 +33,13 @@ in
     initrd = {
       enable = true;
       luks.devices."luks-023f8417-62dd-4e65-b327-6c33b065486b".device = "/dev/disk/by-uuid/023f8417-62dd-4e65-b327-6c33b065486b";
+
+      systemd = {
+        enable = true;
+      };
+
       network.ssh.enable = true;
+
       verbose = true;
     };
 
@@ -53,7 +59,13 @@ in
 
     plymouth = {
       enable = true;
-      theme = "bgrt";
+      themePackages = [
+        pkgs.nixos-bgrt-plymouth
+      ];
+      theme = "nixos-bgrt";
+      extraConfig = ''
+        UseFirmwareBackground=true
+      '';
     };
   };
 
@@ -63,6 +75,8 @@ in
   };
 
   system = {
+    switch.enable = true;
+
     autoUpgrade = {
       enable = false;
       channel = "https://nixos.org/channels/nixos-unstable";
@@ -219,10 +233,6 @@ in
     targets.multi-user.wants = [
       "warp-svc.service"
     ];
-
-    tmpfiles.rules = [
-      "d /var/spool/samba 1777 root root -"
-    ];
   };
 
   services = {
@@ -253,15 +263,30 @@ in
     dbus.enable = true;
 
     displayManager = {
-      sddm = {
-        enable = true;
-        wayland.enable = true;
+      enable = true;
+      defaultSession = "hyprland-uwsm";
+      preStart = '' '';
+
+      autoLogin = {
+        enable = false;
+        user = null;
       };
 
-      defaultSession = "plasma";
+      logToJournal = true;
+      logToFile = true;
     };
 
-    desktopManager.plasma6.enable = true;
+    greetd = {
+      enable = true;
+      restart = true;
+
+      settings = {
+        default_session = {
+          command = "tuigreet --time --user-menu --greet-align center --asterisks --asterisks-char \"*\" --cmd \"uwsm start -S -F /run/current-system/sw/bin/Hyprland\"";
+          user = "greeter";
+        };
+      };
+    };
 
     libinput.enable = true;
 
@@ -323,12 +348,24 @@ in
     avahi = {
       enable = true;
 
+      ipv4 = true;
+      ipv6 = true;
       nssmdns4 = true;
+      nssmdns6 = true;
+
+      wideArea = true;
 
       publish = {
         enable = true;
+        domain = true;
+        addresses = true;
+        workstation = true;
+        hinfo = true;
         userServices = true;
       };
+
+      domainName = "Bitscoper";
+      hostName = config.networking.hostName;
 
       openFirewall = true;
     };
@@ -405,56 +442,6 @@ in
       openFirewall = true;
     };
     ipp-usb.enable = true;
-
-    samba = {
-      enable = true;
-      package = pkgs.sambaFull;
-
-      smbd.enable = true;
-      nmbd.enable = true;
-      winbindd.enable = true;
-      nsswins = true;
-      usershares.enable = true;
-
-      settings = {
-        global = {
-          "server string" = "Bitscoper-WorkStation";
-          "netbios name" = "Bitscoper-WorkStation";
-          "hosts allow" = "0.0.0.0/0 ::/0";
-          "hosts deny" = "";
-
-          "load printers" = "yes";
-          "printing" = "cups";
-          "printcap name" = "cups";
-
-          security = "user";
-
-          workgroup = "BITSCOPER";
-        };
-
-        printers = {
-          comment = "All Printers";
-          path = "/var/spool/samba";
-          public = "yes";
-          browseable = "yes";
-          "guest ok" = "yes";
-          writable = "no";
-          printable = "yes";
-          "create mode" = 0700;
-        };
-
-        public = { };
-
-        private = { };
-      };
-
-      openFirewall = true;
-    };
-
-    samba-wsdd = {
-      enable = true;
-      openFirewall = true;
-    };
 
     cockpit = {
       enable = true;
@@ -552,19 +539,6 @@ in
       '';
     };
 
-    tor = {
-      enable = false;
-      enableGeoIP = true;
-
-      settings = {
-        ContactInfo = "bitscoper@Bitscoper-WorkStation";
-      };
-
-      openFirewall = true;
-    };
-
-    nfs.server.enable = true;
-
     icecast = {
       enable = true;
       hostname = "Bitscoper-WorkStation";
@@ -598,46 +572,26 @@ in
       enable = true;
       openFirewall = true;
     };
-
     ollama = {
       enable = true;
       host = "0.0.0.0";
       port = 11434;
       openFirewall = true;
     };
-
-    static-web-server = {
-      enable = true;
-      listen = "[::]:80";
-      root = "/home/bitscoper/Public/";
-      configuration = {
-        general = {
-          health = false;
-          maintenance-mode = false;
-
-          grace-period = 0;
-
-          cache-control-headers = true;
-          redirect-trailing-slash = true;
-
-          directory-listing = true;
-          directory-listing-format = "html";
-
-          compression = true;
-          compression-level = "default";
-          compression-static = true;
-
-          log-level = "warn";
-        };
-      };
-    };
   };
 
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      kdePackages.xdg-desktop-portal-kde
-    ];
+  xdg = {
+    mime.enable = true;
+    icons.enable = true;
+    sounds.enable = true;
+    menus.enable = true;
+    autostart.enable = true;
+    portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-hyprland
+      ];
+    };
   };
 
   security = {
@@ -677,6 +631,26 @@ in
 
       ];
     };
+
+    uwsm = {
+      enable = true;
+      waylandCompositors = {
+        hyprland = {
+          prettyName = "Hyprland";
+          comment = "Hyprland compositor managed by UWSM";
+          binPath = "/run/current-system/sw/bin/Hyprland";
+        };
+      };
+    };
+
+    hyprland = {
+      enable = true;
+      withUWSM = true;
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
+      xwayland.enable = true;
+    };
+
+    hyprlock.enable = true;
 
     appimage.enable = true;
 
@@ -719,15 +693,22 @@ in
 
     adb.enable = true;
 
-    system-config-printer.enable = true;
-
     virt-manager.enable = true;
 
-    partition-manager.enable = true;
+    neovim = {
+      enable = true;
 
-    kde-pim.enable = true;
+      withPython3 = true;
+      withRuby = false;
+      withNodeJs = false;
 
-    kdeconnect.enable = true;
+      vimAlias = true;
+      viAlias = true;
+
+      defaultEditor = true;
+    };
+
+    nano.enable = false;
 
     firefox = {
       enable = true;
@@ -735,6 +716,8 @@ in
         "en-US"
       ];
     };
+
+    thunderbird.enable = true;
 
     dconf = {
       enable = true;
@@ -792,6 +775,14 @@ in
               new-file = true;
               recursive = true;
             };
+
+            "org/gnome/desktop/interface" = {
+              gtk-theme = "Adwaita";
+              icon-theme = "Flat-Remix-Red-Dark";
+              document-font-name = "Noto Sans Medium 11";
+              font-name = "Noto Sans Medium 11";
+              monospace-font-name = "Noto Sans Mono Medium 11";
+            };
           };
         }
       ];
@@ -800,7 +791,7 @@ in
 
   environment = {
     variables = pkgs.lib.mkForce {
-      LD_LIBRARY_PATH = "${pkgs.glib.out}/lib/:${pkgs.libGL}/lib/:${pkgs.stdenv.cc.cc.lib}/lib:${existingLibraryPaths}";
+      # LD_LIBRARY_PATH = "${pkgs.glib.out}/lib/:${pkgs.libGL}/lib/:${pkgs.stdenv.cc.cc.lib}/lib:${existingLibraryPaths}";
     };
 
     sessionVariables = {
@@ -809,6 +800,10 @@ in
     };
 
     systemPackages = with pkgs; [
+      # gimp-with-plugins
+      # gpredict
+      # jellyfin-media-player
+      # xoscope
       acl
       agi
       android-backup-extractor
@@ -820,17 +815,18 @@ in
       aribb24
       aribb25
       audacity
-      avahi
       avrdude
       bat
       bind
       bleachbit
+      blender
       bluez
       bluez-tools
       bridge-utils
       btop
       btrfs-progs
       butt
+      cargo
       clinfo
       cloudflare-warp
       cmake
@@ -866,30 +862,27 @@ in
       gcc
       gdb
       ghfetch
-      gimp-with-plugins
       git
       git-doc
       glib
       glibc
       gnumake
       gource
-      gpredict
       gpsd
       gradle
       gradle-completion
+      greetd.tuigreet
       guestfs-tools
       gzip
-      icecast
+      hyprpaper
+      hyprpicker
+      hyprpolkitagent
       iconv
       iftop
       inotify-tools
       jdk
-      jellyfin
-      jellyfin-ffmpeg
-      jellyfin-media-player
-      jellyfin-web
       keepassxc
-      kicad
+      kitty
       kompose
       kubectl
       kubernetes
@@ -926,23 +919,22 @@ in
       mixxx
       nano
       neofetch
-      networkmanager
+      networkmanagerapplet
       ninja
+      nix-bash-completions
       nix-diff
       nix-index
-      nixos-bgrt-plymouth
       nixos-icons
-      nix-bash-completions
       nixpkgs-fmt
       nmap
       obs-studio
-      ollama
       onedrive
       onionshare-gui
       opendkim
       openssh
       openssl
       patchelf
+      pavucontrol
       pcre
       pgadmin4-desktopmode
       php84
@@ -956,6 +948,7 @@ in
       postfix
       power-profiles-daemon
       python312Full # python313Full
+      qbittorrent
       qpwgraph
       rar
       readline
@@ -975,9 +968,7 @@ in
       texliveFull
       thermald
       tk
-      tor
       tor-browser
-      torsocks
       tree
       tree-sitter
       undollar
@@ -1009,7 +1000,6 @@ in
       xdg-utils
       xfsprogs
       xorg.xhost
-      xoscope
       xvidcore
       yaml-language-server
       yt-dlp
@@ -1118,12 +1108,12 @@ in
       gstreamer
     ])
     ++
-    (with androidenv.androidPkgs; [
-      # build-tools
-      emulator
-      platform-tools
-      tools
-    ]) ++
+    # (with androidenv.androidPkgs; [
+    #   # build-tools
+    #   emulator
+    #   platform-tools
+    #   tools
+    # ]) ++
     (with php84Extensions; [
       ast
       bz2
@@ -1150,7 +1140,7 @@ in
       inotify
       intl
       ldap
-      mailparse
+      # mailparse
       mbstring
       memcached
       meminfo
@@ -1180,7 +1170,7 @@ in
       xmlreader
       xmlwriter
       xsl
-      yaml
+      # yaml
       zip
       zlib
     ]) ++
@@ -1217,6 +1207,10 @@ in
       latexmk
       latexpand
     ]) ++
+    (with lua54Packages; [
+      lua
+      luarocks
+    ]) ++
     (with tree-sitter-grammars; [
       tree-sitter-bash
       tree-sitter-c
@@ -1231,6 +1225,7 @@ in
       tree-sitter-javascript
       tree-sitter-json
       tree-sitter-latex
+      tree-sitter-lua
       tree-sitter-make
       tree-sitter-markdown
       tree-sitter-markdown-inline
@@ -1241,279 +1236,6 @@ in
       tree-sitter-sql
       tree-sitter-toml
       tree-sitter-yaml
-    ]) ++
-    (with kdePackages; [
-      accounts-qt
-      akonadi
-      akonadi-calendar
-      akonadi-calendar-tools
-      akonadi-contacts
-      akonadi-import-wizard
-      akonadi-mime
-      akonadi-search
-      akonadiconsole
-      akregator
-      analitza
-      ark
-      attica
-      audiocd-kio
-      baloo
-      baloo-widgets
-      bluedevil
-      bluez-qt
-      breeze
-      breeze-grub
-      breeze-gtk
-      breeze-icons
-      breeze-plymouth
-      calendarsupport
-      colord-kde
-      dolphin
-      dolphin-plugins
-      drkonqi
-      eventviews
-      extra-cmake-modules
-      ffmpegthumbs
-      filelight
-      frameworkintegration
-      gwenview
-      incidenceeditor
-      isoimagewriter
-      k3b
-      kaccounts-integration
-      kaccounts-providers
-      kaddressbook
-      kalarm
-      kalgebra
-      kalzium
-      kamera
-      karchive
-      kauth
-      kbackup
-      kbookmarks
-      kcalc
-      kcalendarcore
-      kcalutils
-      kcharselect
-      kcmutils
-      kcodecs
-      kcolorchooser
-      kcolorpicker
-      kcolorscheme
-      kcompletion
-      kconfig
-      kconfigwidgets
-      kcontacts
-      kcoreaddons
-      kcrash
-      kcron
-      kdav
-      kdbusaddons
-      kde-gtk-config
-      kdebugsettings
-      kdecoration
-      kded
-      kdeedu-data
-      kdegraphics-thumbnailers
-      kdenetwork-filesharing
-      kdenlive
-      kdepim-addons
-      kdepim-runtime
-      kdeplasma-addons
-      kdesu
-      kdf
-      kdiagram
-      kdialog
-      kdnssd
-      kfilemetadata
-      kfind
-      kget
-      kguiaddons
-      khealthcertificate
-      khelpcenter
-      ki18n
-      kiconthemes
-      kidentitymanagement
-      kimageannotator
-      kimageformats
-      kimagemapeditor
-      kimap
-      kinfocenter
-      kio
-      kio-admin
-      kio-extras
-      kio-fuse
-      kio-gdrive
-      kio-zeroconf
-      kjournald
-      kldap
-      kleopatra
-      kmag
-      kmail
-      kmail-account-wizard
-      kmailtransport
-      kmbox
-      kmenuedit
-      kmime
-      kmousetool
-      kmouth
-      knotifications
-      knotifyconfig
-      kompare
-      konsole
-      kontact
-      kontactinterface
-      kontrast
-      konversation
-      kopeninghours
-      korganizer
-      kparts
-      kpeople
-      kpimtextedit
-      kpipewire
-      kpkpass
-      kplotting
-      kpmcore
-      kpublictransport
-      krdc
-      krdp
-      krfb
-      kruler
-      ksanecore
-      kscreen
-      kscreenlocker
-      kservice
-      ksmtp
-      ksshaskpass
-      kstatusnotifieritem
-      ksvg
-      ksystemlog
-      ksystemstats
-      ktimer
-      ktnef
-      ktorrent
-      kunitconversion
-      kup
-      kwallet
-      kwallet-pam
-      kwalletmanager
-      kwayland
-      kweather
-      kweathercore
-      kwidgetsaddons
-      kwin
-      kwindowsystem
-      kxmlgui
-      kzones
-      layer-shell-qt
-      libgravatar
-      libkcddb
-      libkcompactdisc
-      libkdcraw
-      libkdepim
-      libkexiv2
-      libkgapi
-      libkleo
-      libkomparediff2
-      libksane
-      libkscreen
-      libksieve
-      libksysguard
-      libktorrent
-      libplasma
-      libqaccessibilityclient
-      mailcommon
-      mailimporter
-      markdownpart
-      mbox-importer
-      messagelib
-      mimetreeparser
-      mlt
-      networkmanager-qt
-      okular
-      phonon
-      phonon-vlc
-      pim-data-exporter
-      pim-sieve-editor
-      pimcommon
-      plasma-activities
-      plasma-activities-stats
-      plasma-browser-integration
-      plasma-desktop
-      plasma-disks
-      plasma-firewall
-      plasma-integration
-      plasma-nm
-      plasma-systemmonitor
-      plasma-vault
-      plasma-wayland-protocols
-      plasma-workspace
-      plasma-workspace-wallpapers
-      plymouth-kcm
-      polkit-kde-agent-1
-      polkit-qt-1
-      poppler
-      powerdevil
-      print-manager
-      prison
-      qca
-      qtcharts
-      qtconnectivity
-      qtgraphs
-      qtgrpc
-      qthttpserver
-      qtimageformats
-      qtkeychain
-      qtlanguageserver
-      qtlocation
-      qtmqtt
-      qtmultimedia
-      qtnetworkauth
-      qtpositioning
-      qtremoteobjects
-      qtsensors
-      qtserialbus
-      qtserialport
-      qtshadertools
-      qtspeech
-      qtspell
-      qtsvg
-      qttools
-      qttranslations
-      qtutilities
-      qtvirtualkeyboard
-      qtwayland
-      qtwebchannel
-      qtwebengine
-      qtwebsockets
-      qtwebview
-      quazip
-      qxlsx
-      sddm-kcm
-      signon-kwallet-extension
-      signond
-      skanpage
-      solid
-      sonnet
-      spectacle
-      step
-      svgpart
-      sweeper
-      syndication
-      syntax-highlighting
-      systemsettings
-      taglib
-      wayland
-      wayland-protocols
-      waylib
-      wayqt
-      xwaylandvideobridge
-    ]);
-    plasma6.excludePackages = (with pkgs.kdePackages; [
-      elisa
-      kate
-    ]) ++ (with pkgs; [
-
     ]);
   };
 
@@ -1550,6 +1272,12 @@ in
   };
 
   home-manager.users.bitscoper = {
+    wayland.windowManager.hyprland.systemd.enable = false;
+
+    wayland.windowManager.hyprland.plugins = [ ];
+
+    wayland.windowManager.hyprland.settings = { };
+
     programs = {
       git = {
         enable = true;
