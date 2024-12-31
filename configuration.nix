@@ -106,10 +106,18 @@ in
     };
   };
 
-  nixpkgs.config = {
-    allowUnfree = true;
-    android_sdk.accept_license = true;
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      android_sdk.accept_license = true;
+    };
+
+    # overlays = [
+    #
+    # ];
   };
+
+  appstream.enable = true;
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
@@ -236,6 +244,11 @@ in
   };
 
   services = {
+    asusd = {
+      enable = true;
+      enableUserService = true;
+    };
+
     fwupd.enable = true;
 
     power-profiles-daemon.enable = true;
@@ -384,6 +397,8 @@ in
       allowSFTP = true;
 
       banner = "Bitscoper-WorkStation";
+
+      authorizedKeysInHomedir = true;
 
       settings = {
         PermitRootLogin = "yes";
@@ -581,13 +596,29 @@ in
   };
 
   xdg = {
-    mime.enable = true;
+    mime = {
+      enable = true;
+
+      addedAssociations = { };
+
+      removedAssociations = { };
+
+      defaultApplications = {
+        "application/pdf" = "firefox.desktop";
+      };
+    };
+
     icons.enable = true;
     sounds.enable = true;
+
     menus.enable = true;
     autostart.enable = true;
+
+    terminal-exec.enable = true;
+
     portal = {
       enable = true;
+      xdgOpenUsePortal = false; # Opening Programs
       extraPortals = with pkgs; [
         xdg-desktop-portal-hyprland
       ];
@@ -596,32 +627,47 @@ in
 
   security = {
     rtkit.enable = true;
+
+    polkit = {
+      enable = true;
+    };
+
     wrappers.spice-client-glib-usb-acl-helper.source = "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
   };
 
-  users.users.bitscoper = {
-    isNormalUser = true;
-    description = "Abdullah As-Sadeed";
-    extraGroups = [
-      "adbusers"
-      "audio"
-      "dialout"
-      "input"
-      "jellyfin"
-      "kvm"
-      "libvirtd"
-      "lp"
-      "networkmanager"
-      "plugdev"
-      "podman"
-      "qemu-libvirtd"
-      "scanner"
-      "tty"
-      "uucp"
-      "video"
-      "wheel"
-      "wireshark"
-    ];
+  users = {
+    enforceIdUniqueness = true;
+    mutableUsers = true;
+
+    motd = "Welcome";
+
+    users.bitscoper = {
+      isNormalUser = true;
+
+      name = "bitscoper";
+      description = "Abdullah As-Sadeed"; # Full Name
+
+      extraGroups = [
+        "adbusers"
+        "audio"
+        "dialout"
+        "input"
+        "jellyfin"
+        "kvm"
+        "libvirtd"
+        "lp"
+        "networkmanager"
+        "plugdev"
+        "podman"
+        "qemu-libvirtd"
+        "scanner"
+        "tty"
+        "uucp"
+        "video"
+        "wheel"
+        "wireshark"
+      ];
+    };
   };
 
   programs = {
@@ -656,14 +702,10 @@ in
 
     nix-index.enableBashIntegration = true;
 
-    ssh = {
-      startAgent = true;
-      agentTimeout = null;
-    };
-
     bash = {
       completion.enable = true;
       enableLsColors = true;
+
       shellAliases = {
         clean_build = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --upgrade-all";
       };
@@ -679,13 +721,20 @@ in
       '';
     };
 
+    ssh = {
+      startAgent = true;
+      agentTimeout = null;
+    };
+
     gnupg = {
       agent = {
         enable = true;
+
         enableBrowserSocket = true;
         enableExtraSocket = true;
         enableSSHSupport = false;
-        pinentryPackage = pkgs.pinentry-qt;
+
+        pinentryPackage = pkgs.pinentry-rofi;
       };
 
       dirmngr.enable = true;
@@ -693,7 +742,16 @@ in
 
     adb.enable = true;
 
+    waybar.enable = true;
+
+    nm-applet = {
+      enable = true;
+      indicator = true;
+    };
+
     virt-manager.enable = true;
+
+    system-config-printer.enable = true;
 
     neovim = {
       enable = true;
@@ -802,7 +860,6 @@ in
     systemPackages = with pkgs; [
       # gimp-with-plugins
       # gpredict
-      # jellyfin-media-player
       # xoscope
       acl
       agi
@@ -881,6 +938,7 @@ in
       iftop
       inotify-tools
       jdk
+      jellyfin-media-player
       keepassxc
       kitty
       kompose
@@ -919,7 +977,6 @@ in
       mixxx
       nano
       neofetch
-      networkmanagerapplet
       ninja
       nix-bash-completions
       nix-diff
@@ -931,7 +988,6 @@ in
       onedrive
       onionshare-gui
       opendkim
-      openssh
       openssl
       patchelf
       pavucontrol
@@ -953,6 +1009,7 @@ in
       rar
       readline
       ripgrep
+      rofi-wayland
       rpPPPoE
       rtl-sdr-librtlsdr
       sane-backends
@@ -984,6 +1041,7 @@ in
       vlc
       vlc-bittorrent
       vscode-js-debug
+      waybar-mpris
       waydroid
       wayland
       wayland-protocols
@@ -1272,11 +1330,13 @@ in
   };
 
   home-manager.users.bitscoper = {
-    wayland.windowManager.hyprland.systemd.enable = false;
+    wayland.windowManager.hyprland = {
+      systemd.enable = false;
 
-    wayland.windowManager.hyprland.plugins = [ ];
+      plugins = [ ];
 
-    wayland.windowManager.hyprland.settings = { };
+      settings = { };
+    };
 
     programs = {
       git = {
