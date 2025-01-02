@@ -358,6 +358,8 @@ in
       usb-blaster-udev-rules
     ];
 
+    blueman.enable = true;
+
     avahi = {
       enable = true;
 
@@ -886,6 +888,7 @@ in
       butt
       cargo
       clinfo
+      cliphist
       cloudflare-warp
       cmake
       cockpit
@@ -932,6 +935,7 @@ in
       greetd.tuigreet
       guestfs-tools
       gzip
+      hyprls
       hyprpaper
       hyprpicker
       hyprpolkitagent
@@ -973,6 +977,7 @@ in
       lsof
       luksmeta
       lynis
+      mako
       mattermost-desktop
       memcached
       mixxx
@@ -1031,6 +1036,7 @@ in
       tor-browser
       tree
       tree-sitter
+      udiskie
       undollar
       ungoogled-chromium
       unicode-emoji
@@ -1251,6 +1257,7 @@ in
       tkinter
     ]) ++
     (with texlivePackages; [
+      fontawesome5
       latex
       latex-fonts
       latex-git-log
@@ -1304,6 +1311,7 @@ in
     enableDefaultPackages = false;
     packages = with pkgs; [
       corefonts
+      font-awesome
       nerd-fonts.noto
       noto-fonts
       noto-fonts-cjk-sans
