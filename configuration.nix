@@ -295,7 +295,7 @@ in
 
       settings = {
         default_session = {
-          command = "tuigreet --time --user-menu --greet-align center --asterisks --asterisks-char \"*\" --cmd \"uwsm start -S -F /run/current-system/sw/bin/Hyprland\"";
+          command = "tuigreet --time --user-menu --greet-align center --asterisks --asterisks-char \"*\" --cmd -- uwsm start -S -F /run/current-system/sw/bin/Hyprland";
           user = "greeter";
         };
       };
@@ -880,6 +880,7 @@ in
       bluez
       bluez-tools
       bridge-utils
+      brightnessctl
       btop
       btrfs-progs
       butt
@@ -998,12 +999,12 @@ in
       pkg-config
       platformio
       platformio-core
+      playerctl
       podman
       podman-compose
       podman-tui
       postfix
-      power-profiles-daemon
-      python312Full # python313Full
+      python313Full
       qbittorrent
       qpwgraph
       rar
@@ -1020,6 +1021,7 @@ in
       smartmontools
       spice-gtk
       spice-protocol
+      superfile
       swtpm
       telegram-desktop
       texliveFull
@@ -1046,6 +1048,7 @@ in
       wayland
       wayland-protocols
       wayland-utils
+      wev
       wget
       wireplumber
       wireshark
@@ -1235,8 +1238,7 @@ in
     (with php84Packages; [
 
     ]) ++
-    (with python312Packages; [
-      # python313Packages
+    (with python313Packages; [
       black
       matplotlib
       numpy
