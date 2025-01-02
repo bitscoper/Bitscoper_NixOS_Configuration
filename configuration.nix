@@ -295,7 +295,7 @@ in
 
       settings = {
         default_session = {
-          command = "tuigreet --time --user-menu --greet-align center --asterisks --asterisks-char \"*\" --cmd -- uwsm start -S -F /run/current-system/sw/bin/Hyprland";
+          command = "tuigreet --time --user-menu --greet-align center --asterisks --asterisks-char \"*\" --cmd \"uwsm start -S -F /run/current-system/sw/bin/Hyprland\"";
           user = "greeter";
         };
       };
@@ -992,6 +992,7 @@ in
       openssl
       patchelf
       pavucontrol
+      pciutils
       pcre
       pgadmin4-desktopmode
       php84
