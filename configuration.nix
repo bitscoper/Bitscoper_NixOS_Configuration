@@ -194,27 +194,26 @@ in
     enableAllFirmware = true;
     enableRedistributableFirmware = true;
 
-    bluetooth = {
-      enable = true;
-      powerOnBoot = true;
-    };
-
-    pulseaudio.enable = false;
-
-    graphics = {
-      enable = true;
-
-      extraPackages = with pkgs; [
-        intel-media-driver
-        intel-compute-runtime
-      ];
-    };
-
     sensor.hddtemp = {
       enable = true;
       unit = "C";
       drives = [
         "/dev/disk/by-path/*"
+      ];
+    };
+
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
+
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+
+      extraPackages = with pkgs; [
+        intel-media-driver
+        intel-compute-runtime
       ];
     };
 
@@ -224,6 +223,8 @@ in
       enable = true;
       openFirewall = true;
     };
+
+    steam-hardware.enable = true;
   };
 
   virtualisation = {
@@ -271,6 +272,8 @@ in
   };
 
   services = {
+    flatpak.enable = false;
+
     asusd = {
       enable = true;
       enableUserService = true;
@@ -378,6 +381,8 @@ in
         };
       };
     };
+
+    pulseaudio.enable = false;
 
     udev.packages = with pkgs; [
       android-udev-rules
@@ -709,6 +714,12 @@ in
       ];
     };
 
+    java = {
+      enable = true;
+      package = pkgs.jdk23;
+      binfmt = true;
+    };
+
     uwsm = {
       enable = true;
       waylandCompositors = {
@@ -726,6 +737,8 @@ in
       portalPackage = pkgs.xdg-desktop-portal-hyprland;
       xwayland.enable = true;
     };
+
+    xwayland.enable = true;
 
     hyprlock.enable = true;
 
@@ -807,6 +820,17 @@ in
     };
 
     thunderbird.enable = true;
+
+    steam = {
+      enable = true;
+
+      protontricks.enable = true;
+      extest.enable = true;
+
+      localNetworkGameTransfers.openFirewall = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+    };
 
     dconf = {
       enable = true;
@@ -897,6 +921,7 @@ in
       aircrack-ng
       android-backup-extractor
       android-tools
+      anydesk
       aribb24
       aribb25
       audacity
@@ -961,7 +986,6 @@ in
       hyprpolkitagent
       iftop
       inotify-tools
-      jdk
       jellyfin-media-player
       john
       johnny
