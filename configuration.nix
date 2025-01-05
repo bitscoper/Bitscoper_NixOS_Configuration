@@ -154,11 +154,33 @@ in
   networking = {
     hostName = "Bitscoper-WorkStation";
 
-    networkmanager.enable = true;
+    wireless = {
+      dbusControlled = true;
+      userControlled.enable = true;
+    };
+
+    networkmanager = {
+      enable = true;
+
+      ethernet.macAddress = "permanent";
+
+      wifi = {
+        backend = "wpa_supplicant";
+
+        powersave = false;
+
+        scanRandMacAddress = true;
+        macAddress = "permanent";
+      };
+
+      logLevel = "WARN";
+    };
 
     firewall = {
       enable = false;
+
       allowPing = true;
+
       allowedTCPPorts = [
 
       ];
@@ -181,6 +203,7 @@ in
 
     graphics = {
       enable = true;
+
       extraPackages = with pkgs; [
         intel-media-driver
         intel-compute-runtime
@@ -206,10 +229,13 @@ in
   virtualisation = {
     libvirtd = {
       enable = true;
+
       qemu = {
         package = pkgs.qemu_kvm;
         runAsRoot = true;
+
         swtpm.enable = true;
+
         ovmf = {
           enable = true;
           packages = [
@@ -238,6 +264,7 @@ in
     packages = with pkgs; [
       cloudflare-warp
     ];
+
     targets.multi-user.wants = [
       "warp-svc.service"
     ];
@@ -328,6 +355,7 @@ in
             "hsp_ag"
             "hsp_hs"
           ];
+
           "bluez5.codecs" = [
             "aac"
             "aptx"
@@ -365,6 +393,7 @@ in
 
       ipv4 = true;
       ipv6 = true;
+
       nssmdns4 = true;
       nssmdns6 = true;
 
@@ -865,18 +894,14 @@ in
       # xoscope
       acl
       agi
+      aircrack-ng
       android-backup-extractor
       android-tools
-      arduino-cli
-      arduino-core
-      arduino-ide
-      arduino-language-server
       aribb24
       aribb25
       audacity
       avrdude
       bat
-      bind
       bleachbit
       blender
       bluez
@@ -885,13 +910,13 @@ in
       brightnessctl
       btop
       btrfs-progs
+      burpsuite
       butt
       cargo
       clinfo
       cliphist
       cloudflare-warp
       cmake
-      cockpit
       cryptsetup
       cups
       cups-filters
@@ -902,9 +927,7 @@ in
       d-spy
       dart
       dbeaver-bin
-      dbus
       dconf-editor
-      dive
       dmg2img
       dovecot
       esptool
@@ -914,11 +937,9 @@ in
       fd
       fdk_aac
       ffmpeg-full
-      fh
       file
       flutter
       fritzing
-      fwupd
       fwupd-efi
       gcc
       gdb
@@ -929,7 +950,6 @@ in
       glibc
       gnumake
       gource
-      gpsd
       gradle
       gradle-completion
       greetd.tuigreet
@@ -939,17 +959,14 @@ in
       hyprpaper
       hyprpicker
       hyprpolkitagent
-      iconv
       iftop
       inotify-tools
       jdk
       jellyfin-media-player
+      john
+      johnny
       keepassxc
       kitty
-      kompose
-      kubectl
-      kubernetes
-      kubernetes-helm
       libGL
       libaom
       libappimage
@@ -961,7 +978,6 @@ in
       libgpg-error
       libguestfs
       libheif
-      libiconvReal
       libnotify
       libopus
       libosinfo
@@ -980,9 +996,11 @@ in
       mako
       mattermost-desktop
       memcached
+      metasploit
       mixxx
       nano
       neofetch
+      networkmanagerapplet
       ninja
       nix-bash-completions
       nix-diff
@@ -1025,6 +1043,7 @@ in
       sdrangel
       sdrpp
       smartmontools
+      social-engineer-toolkit
       spice-gtk
       spice-protocol
       superfile
@@ -1032,7 +1051,6 @@ in
       telegram-desktop
       texliveFull
       thermald
-      tk
       tor-browser
       tree
       tree-sitter
@@ -1114,7 +1132,6 @@ in
           mishkinf.goto-next-previous-member
           moshfeu.compare-folders
           ms-azuretools.vscode-docker
-          ms-kubernetes-tools.vscode-kubernetes-tools
           ms-python.black-formatter
           ms-python.debugpy
           ms-python.python
