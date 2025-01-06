@@ -5,6 +5,27 @@
 , ...
 }:
 let
+  android-nixpkgs = pkgs.callPackage
+    (import (builtins.fetchGit {
+      url = "https://github.com/tadfisher/android-nixpkgs.git";
+    }))
+    {
+      channel = "stable";
+    };
+  android-sdk = android-nixpkgs.sdk (sdkPkgs: with sdkPkgs; [
+    build-tools-35-0-0
+    cmdline-tools-latest
+    emulator
+    extras-google-auto
+    extras-google-google-play-services
+    platform-tools
+    platforms-android-35
+    system-images-android-34-android-tv-x86
+    system-images-android-34-android-wear-x86-64
+    system-images-android-35-google-apis-playstore-x86-64
+  ]);
+  android-sdk-path = "${android-sdk}/share/android-sdk";
+
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
 
   secrets = import ./secrets.nix;
@@ -77,6 +98,16 @@ in
   system = {
     switch.enable = true;
 
+    tools = {
+      nixos-build-vms.enable = true;
+      nixos-enter.enable = true;
+      nixos-generate-config.enable = true;
+      nixos-install.enable = true;
+      nixos-option.enable = true;
+      nixos-rebuild.enable = true;
+      nixos-version.enable = true;
+    };
+
     autoUpgrade = {
       enable = false;
       channel = "https://nixos.org/channels/nixos-unstable";
@@ -88,7 +119,9 @@ in
 
     userActivationScripts = {
       stdio = {
-        text = '' '';
+        text = ''
+          sdkmanager --licenses
+        '';
         deps = [
 
         ];
@@ -98,11 +131,25 @@ in
 
   nix = {
     enable = true;
+    channel.enable = true;
+
     settings = {
       experimental-features = [
         "nix-command"
       ];
+
+      require-sigs = true;
+      sandbox = true;
+      auto-optimise-store = true;
+
+      cores = 0; # All
       # max-jobs = 1;
+    };
+
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      persistent = true;
     };
   };
 
@@ -274,12 +321,22 @@ in
   services = {
     flatpak.enable = false;
 
+    fwupd.enable = true;
+
     asusd = {
       enable = true;
       enableUserService = true;
     };
 
-    fwupd.enable = true;
+    acpid = {
+      enable = true;
+
+      powerEventCommands = '' '';
+      acEventCommands = '' '';
+      lidEventCommands = '' '';
+
+      logEvents = false;
+    };
 
     power-profiles-daemon.enable = true;
 
@@ -331,125 +388,107 @@ in
       };
     };
 
-    libinput.enable = true;
+    libinput = {
+      enable = true;
+
+      mouse = {
+        leftHanded = false;
+        disableWhileTyping = false;
+        tapping = true;
+        middleEmulation = true;
+        clickMethod = "buttonareas";
+        scrollMethod = "twofinger";
+        naturalScrolling = true;
+        horizontalScrolling = true;
+        tappingDragLock = true;
+        sendEventsMode = "enabled";
+      };
+
+      touchpad = {
+        leftHanded = false;
+        disableWhileTyping = false;
+        tapping = true;
+        middleEmulation = true;
+        clickMethod = "buttonareas";
+        scrollMethod = "twofinger";
+        naturalScrolling = true;
+        horizontalScrolling = true;
+        tappingDragLock = true;
+        sendEventsMode = "enabled";
+      };
+    };
 
     pipewire = {
       enable = true;
+      systemWide = false;
+      socketActivation = true;
+      audio.enable = true;
 
       alsa.enable = true;
       alsa.support32Bit = true;
-
       pulse.enable = true;
-
       jack.enable = true;
 
-      wireplumber.extraConfig.bluetoothEnhancements = {
-        "monitor.bluez.properties" = {
-          "bluez5.enable-sbc-xq" = true;
-          "bluez5.enable-msbc" = true;
-          "bluez5.enable-hw-volume" = true;
-          "bluez5.roles" = [
-            "a2dp_sink"
-            "a2dp_source"
-            "bap_sink"
-            "bap_source"
-            "hfp_ag"
-            "hfp_hf"
-            "hsp_ag"
-            "hsp_hs"
-          ];
+      wireplumber = {
+        enable = true;
 
-          "bluez5.codecs" = [
-            "aac"
-            "aptx"
-            "aptx_hd"
-            "aptx_ll"
-            "aptx_ll_duplex"
-            "faststream"
-            "faststream_duplex"
-            "lc3"
-            "lc3plus_h3"
-            "ldac"
-            "opus_05"
-            "opus_05_51"
-            "opus_05_71"
-            "opus_05_duplex"
-            "opus_05_pro"
-            "sbc"
-            "sbc_xq"
-          ];
+        extraConfig.bluetoothEnhancements = {
+          "monitor.bluez.properties" = {
+            "bluez5.enable-hw-volume" = true;
+
+            "bluez5.enable-sbc-xq" = true;
+            "bluez5.enable-msbc" = true;
+
+            "bluez5.roles" = [
+              "a2dp_sink"
+              "a2dp_source"
+              "bap_sink"
+              "bap_source"
+              "hfp_ag"
+              "hfp_hf"
+              "hsp_ag"
+              "hsp_hs"
+            ];
+
+            "bluez5.codecs" = [
+              "aac"
+              "aptx"
+              "aptx_hd"
+              "aptx_ll"
+              "aptx_ll_duplex"
+              "faststream"
+              "faststream_duplex"
+              "lc3"
+              "lc3plus_h3"
+              "ldac"
+              "opus_05"
+              "opus_05_51"
+              "opus_05_71"
+              "opus_05_duplex"
+              "opus_05_pro"
+              "sbc"
+              "sbc_xq"
+            ];
+          };
         };
       };
+
+      raopOpenFirewall = true;
     };
 
     pulseaudio.enable = false;
 
-    udev.packages = with pkgs; [
-      android-udev-rules
-      game-devices-udev-rules
-      rtl-sdr
-      usb-blaster-udev-rules
-    ];
-
     blueman.enable = true;
 
-    avahi = {
+    udev = {
       enable = true;
-
-      ipv4 = true;
-      ipv6 = true;
-
-      nssmdns4 = true;
-      nssmdns6 = true;
-
-      wideArea = true;
-
-      publish = {
-        enable = true;
-        domain = true;
-        addresses = true;
-        workstation = true;
-        hinfo = true;
-        userServices = true;
-      };
-
-      domainName = "Bitscoper";
-      hostName = config.networking.hostName;
-
-      openFirewall = true;
-    };
-
-    openssh = {
-      enable = true;
-
-      listenAddresses = [
-        {
-          addr = "0.0.0.0";
-        }
+      packages = with pkgs; [
+        android-udev-rules
+        game-devices-udev-rules
+        rtl-sdr
+        usb-blaster-udev-rules
       ];
-      ports = [
-        22
-      ];
-      allowSFTP = true;
-
-      banner = "Bitscoper-WorkStation";
-
-      authorizedKeysInHomedir = true;
-
-      settings = {
-        PermitRootLogin = "yes";
-        PasswordAuthentication = true;
-        X11Forwarding = false;
-        StrictModes = true;
-        UseDns = true;
-        LogLevel = "ERROR";
-      };
-
-      openFirewall = true;
     };
-    sshd.enable = true;
-
-    system-config-printer.enable = true;
 
     printing = {
       enable = true;
@@ -493,6 +532,82 @@ in
       openFirewall = true;
     };
     ipp-usb.enable = true;
+
+    system-config-printer.enable = true;
+
+    avahi = {
+      enable = true;
+
+      ipv4 = true;
+      ipv6 = true;
+
+      nssmdns4 = true;
+      nssmdns6 = true;
+
+      wideArea = true;
+
+      publish = {
+        enable = true;
+        domain = true;
+        addresses = true;
+        workstation = true;
+        hinfo = true;
+        userServices = true;
+      };
+
+      domainName = "Bitscoper";
+      hostName = config.networking.hostName;
+
+      openFirewall = true;
+    };
+
+    bind = {
+      enable = false;
+      listenOn = [
+        "any"
+      ];
+      ipv4Only = false;
+      listenOnIpv6 = [
+        "any"
+      ];
+      cacheNetworks = [
+        "127.0.0.0/24"
+        "::1/128"
+      ];
+      extraOptions = ''
+        recursion no;
+      '';
+    };
+
+    openssh = {
+      enable = true;
+
+      listenAddresses = [
+        {
+          addr = "0.0.0.0";
+        }
+      ];
+      ports = [
+        22
+      ];
+      allowSFTP = true;
+
+      banner = "Bitscoper-WorkStation";
+
+      authorizedKeysInHomedir = true;
+
+      settings = {
+        PermitRootLogin = "yes";
+        PasswordAuthentication = true;
+        X11Forwarding = false;
+        StrictModes = true;
+        UseDns = true;
+        LogLevel = "ERROR";
+      };
+
+      openFirewall = true;
+    };
+    sshd.enable = true;
 
     cockpit = {
       enable = true;
@@ -572,24 +687,6 @@ in
       maxConnections = 256;
     };
 
-    bind = {
-      enable = false;
-      listenOn = [
-        "any"
-      ];
-      ipv4Only = false;
-      listenOnIpv6 = [
-        "any"
-      ];
-      cacheNetworks = [
-        "127.0.0.0/24"
-        "::1/128"
-      ];
-      extraOptions = ''
-        recursion no;
-      '';
-    };
-
     icecast = {
       enable = true;
       hostname = "Bitscoper-WorkStation";
@@ -623,11 +720,18 @@ in
       enable = true;
       openFirewall = true;
     };
+
     ollama = {
       enable = true;
       host = "0.0.0.0";
       port = 11434;
       openFirewall = true;
+    };
+
+    logrotate = {
+      enable = true;
+      checkConfig = true;
+      allowNetworking = true;
     };
   };
 
@@ -837,6 +941,7 @@ in
       profiles.user.databases = [
         {
           lockAll = true;
+
           settings = {
             "system/locale" = {
               region = "en_US.UTF-8";
@@ -904,6 +1009,9 @@ in
 
   environment = {
     variables = pkgs.lib.mkForce {
+      ANDROID_SDK_ROOT = android-sdk-path;
+      ANDROID_HOME = android-sdk-path;
+
       # LD_LIBRARY_PATH = "${pkgs.glib.out}/lib/:${pkgs.libGL}/lib/:${pkgs.stdenv.cc.cc.lib}/lib:${existingLibraryPaths}";
     };
 
@@ -921,6 +1029,7 @@ in
       aircrack-ng
       android-backup-extractor
       android-tools
+      android-sdk # Custom
       anydesk
       aribb24
       aribb25
@@ -942,6 +1051,7 @@ in
       cliphist
       cloudflare-warp
       cmake
+      coreutils-full
       cryptsetup
       cups
       cups-filters
@@ -963,7 +1073,7 @@ in
       fdk_aac
       ffmpeg-full
       file
-      flutter
+      flutter327
       fritzing
       fwupd-efi
       gcc
@@ -989,6 +1099,7 @@ in
       jellyfin-media-player
       john
       johnny
+      jq
       keepassxc
       kitty
       libGL
@@ -1013,7 +1124,6 @@ in
       libvirt
       libvpx
       libwebp
-      logrotate
       lsof
       luksmeta
       lynis
@@ -1217,12 +1327,6 @@ in
       gstreamer
     ])
     ++
-    # (with androidenv.androidPkgs; [
-    #   # build-tools
-    #   emulator
-    #   platform-tools
-    #   tools
-    # ]) ++
     (with php84Extensions; [
       ast
       bz2
@@ -1320,6 +1424,12 @@ in
       lua
       luarocks
     ]) ++
+    # (with androidenv.androidPkgs; [
+    #   # build-tools
+    #   emulator
+    #   platform-tools
+    #   tools
+    # ]) ++
     (with tree-sitter-grammars; [
       tree-sitter-bash
       tree-sitter-c
