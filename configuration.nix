@@ -47,6 +47,7 @@ in
         enable = true;
         consoleMode = "max";
         configurationLimit = null;
+
         memtest86.enable = true;
       };
     };
@@ -80,10 +81,12 @@ in
 
     plymouth = {
       enable = true;
+
       themePackages = [
         pkgs.nixos-bgrt-plymouth
       ];
       theme = "nixos-bgrt";
+
       extraConfig = ''
         UseFirmwareBackground=true
       '';
@@ -639,14 +642,17 @@ in
     };
 
     postgresql = {
-      package = pkgs.postgresql;
       enable = true;
+      package = pkgs.postgresql;
+
       enableTCPIP = true;
+
       settings = pkgs.lib.mkForce {
         listen_addresses = "*";
         port = 5432;
         jit = true;
       };
+
       authentication = pkgs.lib.mkOverride 10 ''
         local all all trust
         host all all 0.0.0.0/0 md5
@@ -655,22 +661,27 @@ in
         host replication all 0.0.0.0/0 md5
         host replication all ::/0 md5
       '';
+
+      checkConfig = true;
+
       initialScript = pkgs.writeText "initScript" ''
         ALTER USER postgres WITH PASSWORD '${secrets.password_1_of_bitscoper}';
       '';
-      checkConfig = true;
     };
 
     mysql = {
-      package = pkgs.mariadb;
       enable = true;
+      package = pkgs.mariadb;
+
       settings = {
         mysqld = {
           bind-address = "0.0.0.0";
           port = 3306;
+
           sql_mode = "";
         };
       };
+
       initialScript = pkgs.writeText "initScript" ''
         grant all privileges on *.* to 'root'@'%' identified by password '${secrets.hashed_password_1_of_bitscoper}' with grant option;
         DELETE FROM mysql.user WHERE `Host`='localhost' AND `User`='root';
@@ -689,15 +700,18 @@ in
 
     icecast = {
       enable = true;
+
       hostname = "Bitscoper-WorkStation";
       listen = {
         address = "0.0.0.0";
         port = 17101;
       };
+
       admin = {
         user = "bitscoper";
         password = secrets.password_1_of_bitscoper;
       };
+
       extraConf = ''
         <location>Bitscoper-WorkStation</location>
         <admin>bitscoper@Bitscoper-WorkStation</admin>
@@ -725,6 +739,65 @@ in
       enable = true;
       host = "0.0.0.0";
       port = 11434;
+      openFirewall = true;
+    };
+
+    open-webui = {
+      enable = true;
+
+      host = "0.0.0.0";
+      port = 11111;
+
+      environment = {
+        ANONYMIZED_TELEMETRY = "False";
+        DO_NOT_TRACK = "True";
+
+        DEFAULT_LOCALE = "en";
+
+        ENABLE_ADMIN_CHAT_ACCESS = "True";
+        ENABLE_ADMIN_EXPORT = "True";
+        SHOW_ADMIN_DETAILS = "True";
+        ADMIN_EMAIL = "bitscoper@Bitscoper-WorkStation";
+
+        USER_PERMISSIONS_WORKSPACE_MODELS_ACCESS = "True";
+        USER_PERMISSIONS_WORKSPACE_KNOWLEDGE_ACCESS = "True";
+        USER_PERMISSIONS_WORKSPACE_PROMPTS_ACCESS = "True";
+        USER_PERMISSIONS_WORKSPACE_TOOLS_ACCESS = "True";
+
+        USER_PERMISSIONS_CHAT_TEMPORARY = "True";
+        USER_PERMISSIONS_CHAT_FILE_UPLOAD = "True";
+        USER_PERMISSIONS_CHAT_EDIT = "True";
+        USER_PERMISSIONS_CHAT_DELETE = "True";
+
+        ENABLE_CHANNELS = "True";
+
+        ENABLE_REALTIME_CHAT_SAVE = "True";
+
+        ENABLE_AUTOCOMPLETE_GENERATION = "True";
+        AUTOCOMPLETE_GENERATION_INPUT_MAX_LENGTH = "-1";
+
+        ENABLE_RAG_WEB_SEARCH = "True";
+        ENABLE_SEARCH_QUERY_GENERATION = "True";
+
+        ENABLE_TAGS_GENERATION = "True";
+
+        ENABLE_IMAGE_GENERATION = "True";
+
+        YOUTUBE_LOADER_LANGUAGE = "en";
+
+        ENABLE_MESSAGE_RATING = "True";
+
+        ENABLE_COMMUNITY_SHARING = "True";
+
+        ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION = "True";
+        WEBUI_SESSION_COOKIE_SAME_SITE = "strict";
+        WEBUI_SESSION_COOKIE_SECURE = "True";
+        WEBUI_AUTH = "False";
+
+        ENABLE_OLLAMA_API = "True";
+        OLLAMA_BASE_URL = "http://127.0.0.1:11434";
+      };
+
       openFirewall = true;
     };
 
@@ -882,7 +955,9 @@ in
         enableExtraSocket = true;
         enableSSHSupport = false;
 
-        pinentryPackage = pkgs.pinentry-rofi;
+        pinentryPackage = (pkgs.pinentry-rofi.override {
+          rofi = pkgs.rofi-wayland;
+        });
       };
 
       dirmngr.enable = true;
@@ -1022,14 +1097,13 @@ in
 
     systemPackages = with pkgs; [
       # gimp-with-plugins
-      # gpredict
       # xoscope
       acl
       agi
       aircrack-ng
       android-backup-extractor
-      android-tools
       android-sdk # Custom
+      android-tools
       anydesk
       aribb24
       aribb25
@@ -1069,6 +1143,7 @@ in
       exfatprogs
       faac
       faad2
+      fastfetch
       fd
       fdk_aac
       ffmpeg-full
@@ -1078,13 +1153,13 @@ in
       fwupd-efi
       gcc
       gdb
-      ghfetch
       git
       git-doc
       glib
       glibc
       gnumake
       gource
+      gpredict
       gradle
       gradle-completion
       greetd.tuigreet
@@ -1125,7 +1200,6 @@ in
       libvpx
       libwebp
       lsof
-      luksmeta
       lynis
       mako
       mattermost-desktop
@@ -1133,7 +1207,6 @@ in
       metasploit
       mixxx
       nano
-      neofetch
       networkmanagerapplet
       ninja
       nix-bash-completions
