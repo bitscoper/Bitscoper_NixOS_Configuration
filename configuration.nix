@@ -123,7 +123,8 @@ in
     userActivationScripts = {
       stdio = {
         text = ''
-          sdkmanager --licenses
+          rm -rf /home/bitscoper/.android/avd
+          ln -s /home/bitscoper/.config/.android/avd /home/bitscoper/.android/avd
         '';
         deps = [
 
@@ -812,12 +813,456 @@ in
     mime = {
       enable = true;
 
-      addedAssociations = { };
+      addedAssociations = config.xdg.mime.defaultApplications;
 
       removedAssociations = { };
 
       defaultApplications = {
+        "text/1d-interleaved-parityfec" = "code.desktop";
+        "text/cache-manifest" = "code.desktop";
+        "text/calendar" = "code.desktop";
+        "text/cql" = "code.desktop";
+        "text/cql-expression" = "code.desktop";
+        "text/cql-identifier" = "code.desktop";
+        "text/css" = "code.desktop";
+        "text/csv" = "code.desktop";
+        "text/csv-schema" = "code.desktop";
+        "text/directory" = "code.desktop";
+        "text/dns" = "code.desktop";
+        "text/ecmascript" = "code.desktop";
+        "text/encaprtp" = "code.desktop";
+        "text/enriched" = "code.desktop";
+        "text/example" = "code.desktop";
+        "text/fhirpath" = "code.desktop";
+        "text/flexfec" = "code.desktop";
+        "text/fwdred" = "code.desktop";
+        "text/gff3" = "code.desktop";
+        "text/grammar-ref-list" = "code.desktop";
+        "text/hl7v2" = "code.desktop";
+        "text/html" = "code.desktop";
+        "text/javascript" = "code.desktop";
+        "text/jcr-cnd" = "code.desktop";
+        "text/markdown" = "code.desktop";
+        "text/mizar" = "code.desktop";
+        "text/n3" = "code.desktop";
+        "text/parameters" = "code.desktop";
+        "text/parityfec" = "code.desktop";
+        "text/plain" = "code.desktop";
+        "text/provenance-notation" = "code.desktop";
+        "text/prs.fallenstein.rst" = "code.desktop";
+        "text/prs.lines.tag" = "code.desktop";
+        "text/prs.prop.logic" = "code.desktop";
+        "text/prs.texi" = "code.desktop";
+        "text/raptorfec" = "code.desktop";
+        "text/RED" = "code.desktop";
+        "text/rfc822-headers" = "code.desktop";
+        "text/richtext" = "code.desktop";
+        "text/rtf" = "code.desktop";
+        "text/rtp-enc-aescm128" = "code.desktop";
+        "text/rtploopback" = "code.desktop";
+        "text/rtx" = "code.desktop";
+        "text/SGML" = "code.desktop";
+        "text/shaclc" = "code.desktop";
+        "text/shex" = "code.desktop";
+        "text/spdx" = "code.desktop";
+        "text/strings" = "code.desktop";
+        "text/t140" = "code.desktop";
+        "text/tab-separated-values" = "code.desktop";
+        "text/troff" = "code.desktop";
+        "text/turtle" = "code.desktop";
+        "text/ulpfec" = "code.desktop";
+        "text/uri-list" = "code.desktop";
+        "text/vcard" = "code.desktop";
+        "text/vnd.a" = "code.desktop";
+        "text/vnd.abc" = "code.desktop";
+        "text/vnd.ascii-art" = "code.desktop";
+        "text/vnd.curl" = "code.desktop";
+        "text/vnd.debian.copyright" = "code.desktop";
+        "text/vnd.DMClientScript" = "code.desktop";
+        "text/vnd.dvb.subtitle" = "code.desktop";
+        "text/vnd.esmertec.theme-descriptor" = "code.desktop";
+        "text/vnd.exchangeable" = "code.desktop";
+        "text/vnd.familysearch.gedcom" = "code.desktop";
+        "text/vnd.ficlab.flt" = "code.desktop";
+        "text/vnd.fly" = "code.desktop";
+        "text/vnd.fmi.flexstor" = "code.desktop";
+        "text/vnd.gml" = "code.desktop";
+        "text/vnd.graphviz" = "code.desktop";
+        "text/vnd.hans" = "code.desktop";
+        "text/vnd.hgl" = "code.desktop";
+        "text/vnd.in3d.3dml" = "code.desktop";
+        "text/vnd.in3d.spot" = "code.desktop";
+        "text/vnd.IPTC.NewsML" = "code.desktop";
+        "text/vnd.IPTC.NITF" = "code.desktop";
+        "text/vnd.latex-z" = "code.desktop";
+        "text/vnd.motorola.reflex" = "code.desktop";
+        "text/vnd.ms-mediapackage" = "code.desktop";
+        "text/vnd.net2phone.commcenter.command" = "code.desktop";
+        "text/vnd.radisys.msml-basic-layout" = "code.desktop";
+        "text/vnd.senx.warpscript" = "code.desktop";
+        "text/vnd.si.uricatalogue" = "code.desktop";
+        "text/vnd.sun.j2me.app-descriptor" = "code.desktop";
+        "text/vnd.sosi" = "code.desktop";
+        "text/vnd.trolltech.linguist" = "code.desktop";
+        "text/vnd.vcf" = "code.desktop";
+        "text/vnd.wap.si" = "code.desktop";
+        "text/vnd.wap.sl" = "code.desktop";
+        "text/vnd.wap.wml" = "code.desktop";
+        "text/vnd.wap.wmlscript" = "code.desktop";
+        "text/vnd.zoo.kcl" = "code.desktop";
+        "text/vtt" = "code.desktop";
+        "text/wgsl" = "code.desktop";
+        "text/xml" = "code.desktop";
+        "text/xml-external-parsed-entity" = "code.desktop";
+
+        "image/aces" = "oculante.desktop";
+        "image/apng" = "oculante.desktop";
+        "image/avci" = "oculante.desktop";
+        "image/avcs" = "oculante.desktop";
+        "image/avif" = "oculante.desktop";
+        "image/bmp" = "oculante.desktop";
+        "image/cgm" = "oculante.desktop";
+        "image/dicom-rle" = "oculante.desktop";
+        "image/dpx" = "oculante.desktop";
+        "image/emf" = "oculante.desktop";
+        "image/example" = "oculante.desktop";
+        "image/fits" = "oculante.desktop";
+        "image/g3fax" = "oculante.desktop";
+        "image/gif" = "oculante.desktop";
+        "image/heic" = "oculante.desktop";
+        "image/heic-sequence" = "oculante.desktop";
+        "image/heif" = "oculante.desktop";
+        "image/heif-sequence" = "oculante.desktop";
+        "image/hej2k" = "oculante.desktop";
+        "image/hsj2" = "oculante.desktop";
+        "image/ief" = "oculante.desktop";
+        "image/j2c" = "oculante.desktop";
+        "image/jaii" = "oculante.desktop";
+        "image/jais" = "oculante.desktop";
+        "image/jls" = "oculante.desktop";
+        "image/jp2" = "oculante.desktop";
+        "image/jpeg" = "oculante.desktop";
+        "image/jph" = "oculante.desktop";
+        "image/jphc" = "oculante.desktop";
+        "image/jpm" = "oculante.desktop";
+        "image/jpx" = "oculante.desktop";
+        "image/jxl" = "oculante.desktop";
+        "image/jxr" = "oculante.desktop";
+        "image/jxrA" = "oculante.desktop";
+        "image/jxrS" = "oculante.desktop";
+        "image/jxs" = "oculante.desktop";
+        "image/jxsc" = "oculante.desktop";
+        "image/jxsi" = "oculante.desktop";
+        "image/jxss" = "oculante.desktop";
+        "image/ktx" = "oculante.desktop";
+        "image/ktx2" = "oculante.desktop";
+        "image/naplps" = "oculante.desktop";
+        "image/png" = "oculante.desktop";
+        "image/prs.btif" = "oculante.desktop";
+        "image/prs.pti" = "oculante.desktop";
+        "image/pwg-raster" = "oculante.desktop";
+        "image/svg+xml" = "oculante.desktop";
+        "image/t38" = "oculante.desktop";
+        "image/tiff" = "oculante.desktop";
+        "image/tiff-fx" = "oculante.desktop";
+        "image/vnd.adobe.photoshop" = "oculante.desktop";
+        "image/vnd.airzip.accelerator.azv" = "oculante.desktop";
+        "image/vnd.cns.inf2" = "oculante.desktop";
+        "image/vnd.dece.graphic" = "oculante.desktop";
+        "image/vnd.djvu" = "oculante.desktop";
+        "image/vnd.dwg" = "oculante.desktop";
+        "image/vnd.dxf" = "oculante.desktop";
+        "image/vnd.dvb.subtitle" = "oculante.desktop";
+        "image/vnd.fastbidsheet" = "oculante.desktop";
+        "image/vnd.fpx" = "oculante.desktop";
+        "image/vnd.fst" = "oculante.desktop";
+        "image/vnd.fujixerox.edmics-mmr" = "oculante.desktop";
+        "image/vnd.fujixerox.edmics-rlc" = "oculante.desktop";
+        "image/vnd.globalgraphics.pgb" = "oculante.desktop";
+        "image/vnd.microsoft.icon" = "oculante.desktop";
+        "image/vnd.mix" = "oculante.desktop";
+        "image/vnd.ms-modi" = "oculante.desktop";
+        "image/vnd.mozilla.apng" = "oculante.desktop";
+        "image/vnd.net-fpx" = "oculante.desktop";
+        "image/vnd.pco.b16" = "oculante.desktop";
+        "image/vnd.radiance" = "oculante.desktop";
+        "image/vnd.sealed.png" = "oculante.desktop";
+        "image/vnd.sealedmedia.softseal.gif" = "oculante.desktop";
+        "image/vnd.sealedmedia.softseal.jpg" = "oculante.desktop";
+        "image/vnd.svf" = "oculante.desktop";
+        "image/vnd.tencent.tap" = "oculante.desktop";
+        "image/vnd.valve.source.texture" = "oculante.desktop";
+        "image/vnd.wap.wbmp" = "oculante.desktop";
+        "image/vnd.xiff" = "oculante.desktop";
+        "image/vnd.zbrush.pcx" = "oculante.desktop";
+        "image/webp" = "oculante.desktop";
+        "image/wmf" = "oculante.desktop";
+        "image/x-emf" = "oculante.desktop";
+        "image/x-wmf" = "oculante.desktop";
+
+        "audio/1d-interleaved-parityfec" = "vlc.desktop";
+        "audio/32kadpcm" = "vlc.desktop";
+        "audio/3gpp" = "vlc.desktop";
+        "audio/3gpp2" = "vlc.desktop";
+        "audio/aac" = "vlc.desktop";
+        "audio/ac3" = "vlc.desktop";
+        "audio/AMR" = "vlc.desktop";
+        "audio/AMR-WB" = "vlc.desktop";
+        "audio/amr-wb+" = "vlc.desktop";
+        "audio/aptx" = "vlc.desktop";
+        "audio/asc" = "vlc.desktop";
+        "audio/ATRAC-ADVANCED-LOSSLESS" = "vlc.desktop";
+        "audio/ATRAC-X" = "vlc.desktop";
+        "audio/ATRAC3" = "vlc.desktop";
+        "audio/basic" = "vlc.desktop";
+        "audio/BV16" = "vlc.desktop";
+        "audio/BV32" = "vlc.desktop";
+        "audio/clearmode" = "vlc.desktop";
+        "audio/CN" = "vlc.desktop";
+        "audio/DAT12" = "vlc.desktop";
+        "audio/dls" = "vlc.desktop";
+        "audio/dsr-es201108" = "vlc.desktop";
+        "audio/dsr-es202050" = "vlc.desktop";
+        "audio/dsr-es202211" = "vlc.desktop";
+        "audio/dsr-es202212" = "vlc.desktop";
+        "audio/DV" = "vlc.desktop";
+        "audio/DVI4" = "vlc.desktop";
+        "audio/eac3" = "vlc.desktop";
+        "audio/encaprtp" = "vlc.desktop";
+        "audio/EVRC" = "vlc.desktop";
+        "audio/EVRC-QCP" = "vlc.desktop";
+        "audio/EVRC0" = "vlc.desktop";
+        "audio/EVRC1" = "vlc.desktop";
+        "audio/EVRCB" = "vlc.desktop";
+        "audio/EVRCB0" = "vlc.desktop";
+        "audio/EVRCB1" = "vlc.desktop";
+        "audio/EVRCNW" = "vlc.desktop";
+        "audio/EVRCNW0" = "vlc.desktop";
+        "audio/EVRCNW1" = "vlc.desktop";
+        "audio/EVRCWB" = "vlc.desktop";
+        "audio/EVRCWB0" = "vlc.desktop";
+        "audio/EVRCWB1" = "vlc.desktop";
+        "audio/EVS" = "vlc.desktop";
+        "audio/example" = "vlc.desktop";
+        "audio/flac" = "vlc.desktop";
+        "audio/flexfec" = "vlc.desktop";
+        "audio/fwdred" = "vlc.desktop";
+        "audio/G711-0" = "vlc.desktop";
+        "audio/G719" = "vlc.desktop";
+        "audio/G7221" = "vlc.desktop";
+        "audio/G722" = "vlc.desktop";
+        "audio/G723" = "vlc.desktop";
+        "audio/G726-16" = "vlc.desktop";
+        "audio/G726-24" = "vlc.desktop";
+        "audio/G726-32" = "vlc.desktop";
+        "audio/G726-40" = "vlc.desktop";
+        "audio/G728" = "vlc.desktop";
+        "audio/G729" = "vlc.desktop";
+        "audio/G7291" = "vlc.desktop";
+        "audio/G729D" = "vlc.desktop";
+        "audio/G729E" = "vlc.desktop";
+        "audio/GSM" = "vlc.desktop";
+        "audio/GSM-EFR" = "vlc.desktop";
+        "audio/GSM-HR-08" = "vlc.desktop";
+        "audio/iLBC" = "vlc.desktop";
+        "audio/ip-mr_v2.5" = "vlc.desktop";
+        "audio/L8" = "vlc.desktop";
+        "audio/L16" = "vlc.desktop";
+        "audio/L20" = "vlc.desktop";
+        "audio/L24" = "vlc.desktop";
+        "audio/LPC" = "vlc.desktop";
+        "audio/matroska" = "vlc.desktop";
+        "audio/MELP" = "vlc.desktop";
+        "audio/MELP600" = "vlc.desktop";
+        "audio/MELP1200" = "vlc.desktop";
+        "audio/MELP2400" = "vlc.desktop";
+        "audio/mhas" = "vlc.desktop";
+        "audio/midi-clip" = "vlc.desktop";
+        "audio/mobile-xmf" = "vlc.desktop";
+        "audio/MPA" = "vlc.desktop";
+        "audio/mp4" = "vlc.desktop";
+        "audio/MP4A-LATM" = "vlc.desktop";
+        "audio/mpa-robust" = "vlc.desktop";
+        "audio/mpeg" = "vlc.desktop";
+        "audio/mpeg4-generic" = "vlc.desktop";
+        "audio/ogg" = "vlc.desktop";
+        "audio/opus" = "vlc.desktop";
+        "audio/parityfec" = "vlc.desktop";
+        "audio/PCMA" = "vlc.desktop";
+        "audio/PCMA-WB" = "vlc.desktop";
+        "audio/PCMU" = "vlc.desktop";
+        "audio/PCMU-WB" = "vlc.desktop";
+        "audio/prs.sid" = "vlc.desktop";
+        "audio/QCELP" = "vlc.desktop";
+        "audio/raptorfec" = "vlc.desktop";
+        "audio/RED" = "vlc.desktop";
+        "audio/rtp-enc-aescm128" = "vlc.desktop";
+        "audio/rtploopback" = "vlc.desktop";
+        "audio/rtp-midi" = "vlc.desktop";
+        "audio/rtx" = "vlc.desktop";
+        "audio/scip" = "vlc.desktop";
+        "audio/SMV" = "vlc.desktop";
+        "audio/SMV0" = "vlc.desktop";
+        "audio/SMV-QCP" = "vlc.desktop";
+        "audio/sofa" = "vlc.desktop";
+        "audio/sp-midi" = "vlc.desktop";
+        "audio/speex" = "vlc.desktop";
+        "audio/t140c" = "vlc.desktop";
+        "audio/t38" = "vlc.desktop";
+        "audio/telephone-event" = "vlc.desktop";
+        "audio/TETRA_ACELP" = "vlc.desktop";
+        "audio/TETRA_ACELP_BB" = "vlc.desktop";
+        "audio/tone" = "vlc.desktop";
+        "audio/TSVCIS" = "vlc.desktop";
+        "audio/UEMCLIP" = "vlc.desktop";
+        "audio/ulpfec" = "vlc.desktop";
+        "audio/usac" = "vlc.desktop";
+        "audio/VDVI" = "vlc.desktop";
+        "audio/VMR-WB" = "vlc.desktop";
+        "audio/vnd.3gpp.iufp" = "vlc.desktop";
+        "audio/vnd.4SB" = "vlc.desktop";
+        "audio/vnd.audiokoz" = "vlc.desktop";
+        "audio/vnd.CELP" = "vlc.desktop";
+        "audio/vnd.cisco.nse" = "vlc.desktop";
+        "audio/vnd.cmles.radio-events" = "vlc.desktop";
+        "audio/vnd.cns.anp1" = "vlc.desktop";
+        "audio/vnd.cns.inf1" = "vlc.desktop";
+        "audio/vnd.dece.audio" = "vlc.desktop";
+        "audio/vnd.digital-winds" = "vlc.desktop";
+        "audio/vnd.dlna.adts" = "vlc.desktop";
+        "audio/vnd.dolby.heaac.1" = "vlc.desktop";
+        "audio/vnd.dolby.heaac.2" = "vlc.desktop";
+        "audio/vnd.dolby.mlp" = "vlc.desktop";
+        "audio/vnd.dolby.mps" = "vlc.desktop";
+        "audio/vnd.dolby.pl2" = "vlc.desktop";
+        "audio/vnd.dolby.pl2x" = "vlc.desktop";
+        "audio/vnd.dolby.pl2z" = "vlc.desktop";
+        "audio/vnd.dolby.pulse.1" = "vlc.desktop";
+        "audio/vnd.dra" = "vlc.desktop";
+        "audio/vnd.dts" = "vlc.desktop";
+        "audio/vnd.dts.hd" = "vlc.desktop";
+        "audio/vnd.dts.uhd" = "vlc.desktop";
+        "audio/vnd.dvb.file" = "vlc.desktop";
+        "audio/vnd.everad.plj" = "vlc.desktop";
+        "audio/vnd.hns.audio" = "vlc.desktop";
+        "audio/vnd.lucent.voice" = "vlc.desktop";
+        "audio/vnd.ms-playready.media.pya" = "vlc.desktop";
+        "audio/vnd.nokia.mobile-xmf" = "vlc.desktop";
+        "audio/vnd.nortel.vbk" = "vlc.desktop";
+        "audio/vnd.nuera.ecelp4800" = "vlc.desktop";
+        "audio/vnd.nuera.ecelp7470" = "vlc.desktop";
+        "audio/vnd.nuera.ecelp9600" = "vlc.desktop";
+        "audio/vnd.octel.sbc" = "vlc.desktop";
+        "audio/vnd.presonus.multitrack" = "vlc.desktop";
+        "audio/vnd.qcelp" = "vlc.desktop";
+        "audio/vnd.rhetorex.32kadpcm" = "vlc.desktop";
+        "audio/vnd.rip" = "vlc.desktop";
+        "audio/vnd.sealedmedia.softseal.mpeg" = "vlc.desktop";
+        "audio/vnd.vmx.cvsd" = "vlc.desktop";
+        "audio/vorbis" = "vlc.desktop";
+        "audio/vorbis-config" = "vlc.desktop";
+
+        "video/1d-interleaved-parityfec" = "vlc.desktop";
+        "video/3gpp" = "vlc.desktop";
+        "video/3gpp2" = "vlc.desktop";
+        "video/3gpp-tt" = "vlc.desktop";
+        "video/AV1" = "vlc.desktop";
+        "video/BMPEG" = "vlc.desktop";
+        "video/BT656" = "vlc.desktop";
+        "video/CelB" = "vlc.desktop";
+        "video/DV" = "vlc.desktop";
+        "video/encaprtp" = "vlc.desktop";
+        "video/evc" = "vlc.desktop";
+        "video/example" = "vlc.desktop";
+        "video/FFV1" = "vlc.desktop";
+        "video/flexfec" = "vlc.desktop";
+        "video/H261" = "vlc.desktop";
+        "video/H263" = "vlc.desktop";
+        "video/H263-1998" = "vlc.desktop";
+        "video/H263-2000" = "vlc.desktop";
+        "video/H264" = "vlc.desktop";
+        "video/H264-RCDO" = "vlc.desktop";
+        "video/H264-SVC" = "vlc.desktop";
+        "video/H265" = "vlc.desktop";
+        "video/H266" = "vlc.desktop";
+        "video/iso.segment" = "vlc.desktop";
+        "video/JPEG" = "vlc.desktop";
+        "video/jpeg2000" = "vlc.desktop";
+        "video/jxsv" = "vlc.desktop";
+        "video/matroska" = "vlc.desktop";
+        "video/matroska-3d" = "vlc.desktop";
+        "video/mj2" = "vlc.desktop";
+        "video/MP1S" = "vlc.desktop";
+        "video/MP2P" = "vlc.desktop";
+        "video/MP2T" = "vlc.desktop";
+        "video/mp4" = "vlc.desktop";
+        "video/MP4V-ES" = "vlc.desktop";
+        "video/MPV" = "vlc.desktop";
+        "video/mpeg" = "vlc.desktop";
+        "video/mpeg4-generic" = "vlc.desktop";
+        "video/nv" = "vlc.desktop";
+        "video/ogg" = "vlc.desktop";
+        "video/parityfec" = "vlc.desktop";
+        "video/pointer" = "vlc.desktop";
+        "video/quicktime" = "vlc.desktop";
+        "video/raptorfec" = "vlc.desktop";
+        "video/raw" = "vlc.desktop";
+        "video/rtp-enc-aescm128" = "vlc.desktop";
+        "video/rtploopback" = "vlc.desktop";
+        "video/rtx" = "vlc.desktop";
+        "video/scip" = "vlc.desktop";
+        "video/smpte291" = "vlc.desktop";
+        "video/SMPTE292M" = "vlc.desktop";
+        "video/ulpfec" = "vlc.desktop";
+        "video/vc1" = "vlc.desktop";
+        "video/vc2" = "vlc.desktop";
+        "video/vnd.CCTV" = "vlc.desktop";
+        "video/vnd.dece.hd" = "vlc.desktop";
+        "video/vnd.dece.mobile" = "vlc.desktop";
+        "video/vnd.dece.mp4" = "vlc.desktop";
+        "video/vnd.dece.pd" = "vlc.desktop";
+        "video/vnd.dece.sd" = "vlc.desktop";
+        "video/vnd.dece.video" = "vlc.desktop";
+        "video/vnd.directv.mpeg" = "vlc.desktop";
+        "video/vnd.directv.mpeg-tts" = "vlc.desktop";
+        "video/vnd.dlna.mpeg-tts" = "vlc.desktop";
+        "video/vnd.dvb.file" = "vlc.desktop";
+        "video/vnd.fvt" = "vlc.desktop";
+        "video/vnd.hns.video" = "vlc.desktop";
+        "video/vnd.iptvforum.1dparityfec-1010" = "vlc.desktop";
+        "video/vnd.iptvforum.1dparityfec-2005" = "vlc.desktop";
+        "video/vnd.iptvforum.2dparityfec-1010" = "vlc.desktop";
+        "video/vnd.iptvforum.2dparityfec-2005" = "vlc.desktop";
+        "video/vnd.iptvforum.ttsavc" = "vlc.desktop";
+        "video/vnd.iptvforum.ttsmpeg2" = "vlc.desktop";
+        "video/vnd.motorola.video" = "vlc.desktop";
+        "video/vnd.motorola.videop" = "vlc.desktop";
+        "video/vnd.mpegurl" = "vlc.desktop";
+        "video/vnd.ms-playready.media.pyv" = "vlc.desktop";
+        "video/vnd.nokia.interleaved-multimedia" = "vlc.desktop";
+        "video/vnd.nokia.mp4vr" = "vlc.desktop";
+        "video/vnd.nokia.videovoip" = "vlc.desktop";
+        "video/vnd.objectvideo" = "vlc.desktop";
+        "video/vnd.radgamettools.bink" = "vlc.desktop";
+        "video/vnd.radgamettools.smacker" = "vlc.desktop";
+        "video/vnd.sealed.mpeg1" = "vlc.desktop";
+        "video/vnd.sealed.mpeg4" = "vlc.desktop";
+        "video/vnd.sealed.swf" = "vlc.desktop";
+        "video/vnd.sealedmedia.softseal.mov" = "vlc.desktop";
+        "video/vnd.uvvu.mp4" = "vlc.desktop";
+        "video/vnd.youtube.yt" = "vlc.desktop";
+        "video/vnd.vivo" = "vlc.desktop";
+        "video/VP8" = "vlc.desktop";
+        "video/VP9" = "vlc.desktop";
+
         "application/pdf" = "firefox.desktop";
+
+        "font/collection" = "org.gnome.font-viewer.desktop";
+        "font/otf" = "org.gnome.font-viewer.desktop";
+        "font/sfnt" = "org.gnome.font-viewer.desktop";
+        "font/ttf" = "org.gnome.font-viewer.desktop";
+        "font/woff" = "org.gnome.font-viewer.desktop";
+        "font/woff2" = "org.gnome.font-viewer.desktop";
       };
     };
 
@@ -931,9 +1376,7 @@ in
         clean_build = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --upgrade-all";
       };
 
-      loginShellInit = ''
-        setfacl --modify user:jellyfin:--x ~
-      '';
+      loginShellInit = '' '';
 
       shellInit = '' '';
 
@@ -976,20 +1419,10 @@ in
 
     system-config-printer.enable = true;
 
-    neovim = {
+    nano = {
       enable = true;
-
-      withPython3 = true;
-      withRuby = false;
-      withNodeJs = false;
-
-      vimAlias = true;
-      viAlias = true;
-
-      defaultEditor = true;
+      nanorc = '' '';
     };
-
-    nano.enable = false;
 
     firefox = {
       enable = true;
@@ -1097,7 +1530,6 @@ in
 
     systemPackages = with pkgs; [
       # gimp-with-plugins
-      # xoscope
       acl
       agi
       aircrack-ng
@@ -1120,7 +1552,7 @@ in
       btrfs-progs
       burpsuite
       butt
-      cargo
+      clang
       clinfo
       cliphist
       cloudflare-warp
@@ -1157,12 +1589,14 @@ in
       git-doc
       glib
       glibc
+      gnome-font-viewer
       gnumake
       gource
       gpredict
       gradle
       gradle-completion
       greetd.tuigreet
+      grim
       guestfs-tools
       gzip
       hyprls
@@ -1216,6 +1650,7 @@ in
       nixpkgs-fmt
       nmap
       obs-studio
+      oculante
       onedrive
       onionshare-gui
       opendkim
@@ -1231,8 +1666,8 @@ in
       platformio
       platformio-core
       playerctl
-      podman
       podman-compose
+      podman-desktop
       podman-tui
       postfix
       python313Full
@@ -1249,6 +1684,7 @@ in
       screen
       sdrangel
       sdrpp
+      slurp
       smartmontools
       social-engineer-toolkit
       spice-gtk
@@ -1276,10 +1712,12 @@ in
       vlc-bittorrent
       vscode-js-debug
       waybar-mpris
+      waycheck
       waydroid
       wayland
       wayland-protocols
       wayland-utils
+      waylevel
       wev
       wget
       wireplumber
@@ -1293,6 +1731,7 @@ in
       xdg-utils
       xfsprogs
       xorg.xhost
+      xoscope
       xvidcore
       yaml-language-server
       yt-dlp
@@ -1456,7 +1895,7 @@ in
       xmlreader
       xmlwriter
       xsl
-      # yaml
+      yaml
       zip
       zlib
     ]) ++
@@ -1493,12 +1932,8 @@ in
       latexmk
       latexpand
     ]) ++
-    (with lua54Packages; [
-      lua
-      luarocks
-    ]) ++
     # (with androidenv.androidPkgs; [
-    #   # build-tools
+    #   build-tools
     #   emulator
     #   platform-tools
     #   tools
@@ -1517,7 +1952,6 @@ in
       tree-sitter-javascript
       tree-sitter-json
       tree-sitter-latex
-      tree-sitter-lua
       tree-sitter-make
       tree-sitter-markdown
       tree-sitter-markdown-inline
@@ -1571,6 +2005,24 @@ in
       plugins = [ ];
 
       settings = { };
+    };
+
+    xdg = {
+      mime.enable = true;
+
+      configFile."mimeapps.list".force = true;
+
+      mimeApps = {
+        enable = true;
+
+        associations = {
+          added = config.xdg.mime.addedAssociations;
+
+          removed = config.xdg.mime.removedAssociations;
+        };
+
+        defaultApplications = config.xdg.mime.defaultApplications;
+      };
     };
 
     programs = {
