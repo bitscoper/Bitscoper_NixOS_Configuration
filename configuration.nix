@@ -131,6 +131,8 @@ in
         ];
       };
     };
+
+    stateVersion = "24.11";
   };
 
   nix = {
@@ -697,6 +699,20 @@ in
       enableUnixSocket = false;
       maxMemory = 64; # Megabytes
       maxConnections = 256;
+    };
+
+    postfix = {
+      enable = true;
+    };
+
+    opendkim = {
+      enable = true;
+
+      selector = "default";
+    };
+
+    dovecot2 = {
+      enable = true;
     };
 
     icecast = {
@@ -1290,6 +1306,8 @@ in
       enable = true;
     };
 
+    pam.services.hyprlock = { };
+
     wrappers.spice-client-glib-usb-acl-helper.source = "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
   };
 
@@ -1408,8 +1426,6 @@ in
 
     adb.enable = true;
 
-    waybar.enable = true;
-
     nm-applet = {
       enable = true;
       indicator = true;
@@ -1501,14 +1517,6 @@ in
               new-file = true;
               recursive = true;
             };
-
-            "org/gnome/desktop/interface" = {
-              gtk-theme = "Adwaita";
-              icon-theme = "Flat-Remix-Red-Dark";
-              document-font-name = "Noto Sans Medium 11";
-              font-name = "Noto Sans Medium 11";
-              monospace-font-name = "Noto Sans Mono Medium 11";
-            };
           };
         }
       ];
@@ -1552,6 +1560,7 @@ in
       btrfs-progs
       burpsuite
       butt
+      certbot-full
       clang
       clinfo
       cliphist
@@ -1570,7 +1579,6 @@ in
       dbeaver-bin
       dconf-editor
       dmg2img
-      dovecot
       esptool
       exfatprogs
       faac
@@ -1599,6 +1607,7 @@ in
       grim
       guestfs-tools
       gzip
+      hyprcursor
       hyprls
       hyprpaper
       hyprpicker
@@ -1610,7 +1619,6 @@ in
       johnny
       jq
       keepassxc
-      kitty
       libGL
       libaom
       libappimage
@@ -1653,7 +1661,6 @@ in
       oculante
       onedrive
       onionshare-gui
-      opendkim
       openssl
       patchelf
       pavucontrol
@@ -1669,7 +1676,6 @@ in
       podman-compose
       podman-desktop
       podman-tui
-      postfix
       python313Full
       qbittorrent
       qpwgraph
@@ -1755,6 +1761,7 @@ in
           davidlday.languagetool-linter
           devsense.phptools-vscode
           devsense.profiler-php-vscode
+          dracula-theme.theme-dracula
           ecmel.vscode-html-css
           esbenp.prettier-vscode
           firefox-devtools.vscode-firefox-debug
@@ -1998,43 +2005,636 @@ in
     };
   };
 
-  home-manager.users.bitscoper = {
-    wayland.windowManager.hyprland = {
-      systemd.enable = false;
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
 
-      plugins = [ ];
+    backupFileExtension = "old";
 
-      settings = { };
-    };
+    users.bitscoper = {
+      home = {
+        pointerCursor = {
+          name = "Bibata-Modern-Classic";
+          package = pkgs.bibata-cursors;
+          size = 24;
 
-    xdg = {
-      mime.enable = true;
+          hyprcursor = {
+            enable = true;
+            size = config.home-manager.users.bitscoper.home.pointerCursor.size;
+          };
 
-      configFile."mimeapps.list".force = true;
-
-      mimeApps = {
-        enable = true;
-
-        associations = {
-          added = config.xdg.mime.addedAssociations;
-
-          removed = config.xdg.mime.removedAssociations;
+          gtk.enable = true;
         };
 
-        defaultApplications = config.xdg.mime.defaultApplications;
+        stateVersion = "24.11";
       };
-    };
 
-    programs = {
-      git = {
+      wayland.windowManager.hyprland = {
+        systemd.enable = false;
+
+        plugins = [ ];
+
+        settings = { };
+      };
+
+      xdg = {
+        mime.enable = true;
+
+        configFile."mimeapps.list".force = true;
+
+        mimeApps = {
+          enable = true;
+
+          associations = {
+            added = config.xdg.mime.addedAssociations;
+
+            removed = config.xdg.mime.removedAssociations;
+          };
+
+          defaultApplications = config.xdg.mime.defaultApplications;
+        };
+      };
+
+      gtk = {
         enable = true;
-        userName = "Abdullah As-Sadeed";
-        userEmail = "bitscoper@gmail.com";
+
+        theme = {
+          name = "Dracula";
+          package = pkgs.dracula-theme;
+        };
+
+        iconTheme = {
+          name = "Dracula";
+          package = pkgs.dracula-icon-theme;
+        };
+
+        cursorTheme = {
+          name = config.home-manager.users.bitscoper.home.pointerCursor.name;
+          package = config.home-manager.users.bitscoper.home.pointerCursor.package;
+          size = config.home-manager.users.bitscoper.home.pointerCursor.size;
+        };
+
+        font = {
+          name = "NotoSans Nerd Font";
+          package = pkgs.nerd-fonts.noto;
+          size = 11;
+        };
+
+        # gtk3.bookmarks = [
+        #
+        # ];
+      };
+
+      qt = {
+        enable = true;
+
+        platformTheme.name = "gtk";
+
+        style = {
+          name = "Dracula";
+          package = pkgs.dracula-qt5-theme;
+        };
+      };
+
+      programs = {
+        waybar = {
+          enable = true;
+          systemd = {
+            enable = true;
+            # target = ;
+          };
+
+          settings = {
+            top_bar = {
+              start_hidden = false;
+              reload_style_on_change = true;
+              position = "top";
+              exclusive = true;
+              layer = "top";
+              passthrough = false;
+              fixed-center = true;
+              spacing = 4;
+
+              modules-left = [
+                "power-profiles-daemon"
+                "idle_inhibitor"
+                "backlight"
+                "pulseaudio"
+                "bluetooth"
+                "network"
+              ];
+
+              modules-center = [
+                "clock"
+              ];
+
+              modules-right = [
+                "privacy"
+                "keyboard-state"
+                "systemd-failed-units"
+                "user"
+                "disk"
+                "memory"
+                "cpu"
+                "load"
+                "battery"
+              ];
+
+              power-profiles-daemon = {
+                format = "{icon}";
+                format-icons = {
+                  default = "";
+                  performance = "";
+                  balanced = "";
+                  power-saver = "";
+                };
+
+                tooltip = true;
+                tooltip-format = "Driver: {driver}\nProfile: {profile}";
+              };
+
+              idle_inhibitor = {
+                start-activated = false;
+
+                format = "{icon}";
+                format-icons = {
+                  activated = "";
+                  deactivated = "";
+                };
+
+                tooltip = true;
+                tooltip-format-activated = "{status}";
+                tooltip-format-deactivated = "{status}";
+              };
+
+              backlight = {
+                device = "intel_backlight";
+                interval = 1;
+
+                format = "{percent}% {icon}";
+                format-icons = [
+                  ""
+                  ""
+                  ""
+                  ""
+                  ""
+                  ""
+                  ""
+                  ""
+                  ""
+                ];
+
+                tooltip = true;
+                tooltip-format = "{percent}% {icon}";
+
+                on-scroll-up = "brightnessctl s +1%";
+                on-scroll-down = "brightnessctl s 1%-";
+                reverse-scrolling = false;
+                reverse-mouse-scrolling = false;
+                scroll-step = 1.0;
+              };
+
+              pulseaudio = {
+                format = "{volume}% {icon} {format_source}";
+                format-muted = "{icon} {format_source}";
+
+                format-bluetooth = "{volume}% {icon} 󰂱 {format_source}";
+                format-bluetooth-muted = "{icon} 󰂱 {format_source}";
+
+                format-source = " {volume}% ";
+                format-source-muted = "";
+
+                format-icons = {
+                  default = [
+                    ""
+                    ""
+                    ""
+                  ];
+                  default-muted = "";
+
+                  speaker = "󰓃";
+                  speaker-muted = "󰓄";
+
+                  headphone = "󰋋";
+                  headphone-muted = "󰟎";
+
+                  headset = "󰋎";
+                  headset-muted = "󰋐";
+
+                  hands-free = "󰏳";
+                  hands-free-muted = "󰗿";
+
+                  phone = "";
+                  phone-muted = "";
+
+                  portable = "";
+                  portable-muted = "";
+
+                  hdmi = "󰽟";
+                  hdmi-muted = "󰽠";
+
+                  hifi = "󰴸";
+                  hifi-muted = "󰓄";
+
+                  car = "󰄋";
+                  car-muted = "󰸜";
+                };
+
+                tooltip = true;
+                tooltip-format = "{desc}";
+
+                scroll-step = 1.0;
+                reverse-scrolling = false;
+                reverse-mouse-scrolling = false;
+                max-volume = 100;
+                on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+";
+                on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-";
+
+                on-click = "uwsm app -- pavucontrol";
+              };
+
+              bluetooth = {
+                format = "{status} {icon}";
+                format-disabled = "Disabled {icon}";
+                format-off = "Off {icon}";
+                format-on = "On {icon}";
+                format-connected = "{device_alias} {icon}";
+                format-connected-battery = "{device_alias} 󰂱 ({device_battery_percentage}%)";
+                format-icons = {
+                  no-controller = "󰂲";
+                  disabled = "󰂲";
+                  off = "󰂲";
+                  on = "󰂯";
+                  connected = "󰂱";
+                };
+
+                tooltip = true;
+                tooltip-format = "Status: {status}\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}";
+                tooltip-format-disabled = "Status: Disabled";
+                tooltip-format-off = "Status: Off";
+                tooltip-format-on = "Status: On\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}";
+                tooltip-format-connected = "Status: Connected\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}\nConnected Devices ({num_connections}): {device_enumerate}";
+                tooltip-format-connected-battery = "Status: Connected\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}\nConnected Devices ({num_connections}): {device_enumerate}";
+                tooltip-format-enumerate-connected = "\n\tAddress: {device_address} ({device_address_type})\n\tAlias: {device_alias}";
+                tooltip-format-enumerate-connected-battery = "\n\tAddress: {device_address} ({device_address_type})\n\tAlias: {device_alias}\n\tBattery: {device_battery_percentage}%";
+
+                on-click = "uwsm app -- blueman-manager";
+              };
+
+              network = {
+                interval = 1;
+
+                format = "{bandwidthUpBytes} {bandwidthDownBytes}";
+                format-disconnected = "Disconnected 󱘖";
+                format-linked = "No IP 󰀦";
+                format-ethernet = "{bandwidthUpBytes}   {bandwidthDownBytes}";
+                format-wifi = "{bandwidthUpBytes}   {bandwidthDownBytes}";
+
+                tooltip = true;
+                tooltip-format = "Interface: {ifname}\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation: {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
+                tooltip-format-disconnected = "Disconnected";
+                tooltip-format-ethernet = "Interface: {ifname}\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation= {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
+                tooltip-format-wifi = "Interface: {ifname}\nESSID: {essid}\nFrequency: {frequency} GHz\nStrength: {signaldBm} dBm ({signalStrength}%)\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation: {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
+
+                on-click = "uwsm app -- nm-connection-editor";
+              };
+
+              clock = {
+                timezone = "Asia/Dhaka";
+                locale = "en_US";
+                interval = 1;
+
+                format = "{:%I:%M:%S %p}";
+                format-alt = "{:%A, %B %d, %Y}";
+
+                tooltip = true;
+                tooltip-format = "<tt><small>{calendar}</small></tt>";
+
+                calendar = {
+                  mode = "year";
+                  mode-mon-col = 3;
+                  weeks-pos = "right";
+
+                  format = {
+                    months = "<b>{}</b>";
+                    days = "{}";
+                    weekdays = "<b>{}</b>";
+                    weeks = "<i>{:%U}</i>";
+                    today = "<u>{}</u>";
+                  };
+                };
+              };
+
+              privacy = {
+                icon-size = 16;
+                icon-spacing = 4;
+                transition-duration = 200;
+
+                modules = [
+                  {
+                    type = "screenshare";
+                    tooltip = true;
+                    tooltip-icon-size = 16;
+                  }
+                  {
+                    type = "audio-out";
+                    tooltip = true;
+                    tooltip-icon-size = 16;
+                  }
+                  {
+                    type = "audio-in";
+                    tooltip = true;
+                    tooltip-icon-size = 16;
+                  }
+                ];
+              };
+
+              keyboard-state = {
+                capslock = true;
+                numlock = true;
+
+                format = {
+                  capslock = "󰪛";
+                  numlock = "󰎠";
+                };
+              };
+
+              systemd-failed-units = {
+                system = true;
+                user = true;
+
+                hide-on-ok = false;
+
+                format = "{nr_failed_system}, {nr_failed_user} ";
+                format-ok = "";
+              };
+
+              user = {
+                interval = 1;
+                icon = false;
+
+                format = "{work_d}:{work_H}:{work_M}:{work_S}";
+
+                open-on-click = false;
+              };
+
+              disk = {
+                path = "/";
+                unit = "GB";
+                interval = 1;
+
+                format = "{percentage_used}% 󰋊";
+
+                tooltip = true;
+                tooltip-format = "Total: {specific_total} GB\nUsed: {specific_used} GB ({percentage_used}%)\nFree: {specific_free} GB ({percentage_free}%)";
+
+                on-click = "uwsm app -- kitty sh -c \"btop\"";
+              };
+
+              memory = {
+                interval = 1;
+
+                format = "{percentage}% ";
+
+                tooltip = true;
+                tooltip-format = "Used RAM: {used} GiB ({percentage}%)\nUsed Swap: {swapUsed} GiB ({swapPercentage}%)\nAvailable RAM: {avail} GiB\nAvailable Swap: {swapAvail} GiB";
+
+                on-click = "uwsm app -- kitty sh -c \"btop\"";
+              };
+
+              cpu = {
+                interval = 1;
+
+                format = "{usage}% ";
+
+                tooltip = true;
+
+                on-click = "uwsm app -- kitty sh -c \"btop\"";
+              };
+
+              load = {
+                interval = 1;
+
+                format = "{} ";
+
+                tooltip = true;
+
+                on-click = "uwsm app -- kitty sh -c \"btop\"";
+              };
+
+              battery = {
+                bat = "BAT0";
+                adapter = "AC0";
+                design-capacity = false;
+                weighted-average = true;
+                interval = 1;
+
+                full-at = 100;
+                states = {
+                  warning = 25;
+                  critical = 10;
+                };
+
+                format = "{capacity}% {icon}";
+                format-plugged = "{capacity}% ";
+                format-charging = "{capacity}% ";
+                format-full = "{capacity}% {icon}";
+                format-alt = "{time} {icon}";
+                format-time = "{H} h {m} min";
+                format-icons = [
+                  ""
+                  ""
+                  ""
+                  ""
+                  ""
+                ];
+
+                tooltip = true;
+                tooltip-format = "Capacity: {capacity}%\nPower: {power} W\n{timeTo}\nCycles: {cycles}\nHealth: {health}%";
+
+                on-click = "uwsm app -- kitty sh -c \"btop\"";
+              };
+            };
+
+            bottom_bar = {
+              start_hidden = false;
+              reload_style_on_change = true;
+              position = "bottom";
+              exclusive = true;
+              layer = "top";
+              passthrough = false;
+              fixed-center = true;
+
+              modules-left = [
+                "hyprland/workspaces"
+                "wlr/taskbar"
+              ];
+
+              modules-center = [
+                "hyprland/window"
+              ];
+
+              modules-right = [
+                "tray"
+              ];
+
+              "hyprland/workspaces" = {
+                all-outputs = false;
+                show-special = true;
+                special-visible-only = false;
+                active-only = false;
+                format = "{name}";
+                move-to-monitor = false;
+              };
+
+              "wlr/taskbar" = {
+                all-outputs = false;
+                active-first = true;
+                sort-by-app-id = false;
+                format = "{icon}";
+                icon-theme = "Dracula";
+                icon-size = 16;
+                markup = true;
+
+                tooltip = true;
+                tooltip-format = "Title: {title}\nName: {name}\nID: {app_id}\nState: {state}";
+
+                on-click = "activate";
+              };
+
+              "hyprland/window" = {
+                separate-outputs = true;
+                icon = false;
+
+                format = "{title}";
+              };
+
+              tray = {
+                show-passive-items = true;
+                reverse-direction = false;
+                icon-size = 16;
+                spacing = 8;
+              };
+            };
+          };
+
+          style = ''
+            @define-color background-darker rgba(30, 31, 41, 230);
+            @define-color background #282a36;
+            @define-color selection #44475a;
+            @define-color foreground #f8f8f2;
+            @define-color comment #6272a4;
+            @define-color cyan #8be9fd;
+            @define-color green #50fa7b;
+            @define-color orange #ffb86c;
+            @define-color pink #ff79c6;
+            @define-color purple #bd93f9;
+            @define-color red #ff5555;
+            @define-color yellow #f1fa8c;
+          '';
+        };
+
+        kitty = {
+          enable = true;
+
+          shellIntegration = {
+            mode = "no-rc";
+            enableBashIntegration = true;
+          };
+
+          settings = {
+            confirm_os_window_close = 0;
+
+            # Colors
+            foreground = "#f8f8f2";
+            background = "#282a36";
+            selection_foreground = "#ffffff";
+            selection_background = "#44475a";
+            url_color = "#8be9fd";
+            title_fg = "#f8f8f2";
+            title_bg = "#282a36";
+            margin_bg = "#6272a4";
+            margin_fg = "#44475a";
+            removed_bg = "#ff5555";
+            highlight_removed_bg = "#ff5555";
+            removed_margin_bg = "#ff5555";
+            added_bg = "#50fa7b";
+            highlight_added_bg = "#50fa7b";
+            added_margin_bg = "#50fa7b";
+            filler_bg = "#44475a";
+            hunk_margin_bg = "#44475a";
+            hunk_bg = "#bd93f9";
+            search_bg = "#8be9fd";
+            search_fg = "#282a36";
+            select_bg = "#f1fa8c";
+            select_fg = "#282a36";
+
+            # Splits/Windows
+            active_border_color = "#f8f8f2";
+            inactive_border_color = "#6272a4";
+
+            # Tab Bar Colors
+            active_tab_foreground = "#282a36";
+            active_tab_background = "#f8f8f2";
+            inactive_tab_foreground = "#282a36";
+            inactive_tab_background = "#6272a4";
+
+            # Marks
+            mark1_foreground = "#282a36";
+            mark1_background = "#ff5555";
+
+            # Cursor Colors
+            cursor = "#f8f8f2";
+            cursor_text_color = "#282a36";
+
+            # Black
+            color0 = "#21222c";
+            color8 = "#6272a4";
+
+            # Red
+            color1 = "#ff5555";
+            color9 = "#ff6e6e";
+
+            # Green
+            color2 = "#50fa7b";
+            color10 = "#69ff94";
+
+            # Yellow
+            color3 = "#f1fa8c";
+            color11 = "#ffffa5";
+
+            # Blue
+            color4 = "#bd93f9";
+            color12 = "#d6acff";
+
+            # Magenta
+            color5 = "#ff79c6";
+            color13 = "#ff92df";
+
+            # Cyan
+            color6 = "#8be9fd";
+            color14 = "#a4ffff";
+
+            # White
+            color7 = "#f8f8f2";
+            color15 = "#ffffff";
+          };
+
+          font = {
+            name = "NotoMono Nerd Font";
+            package = pkgs.nerd-fonts.noto;
+            size = 11;
+          };
+        };
+
+        git = {
+          enable = true;
+          userName = "Abdullah As-Sadeed";
+          userEmail = "bitscoper@gmail.com";
+        };
       };
     };
 
-    home.stateVersion = "24.11";
+    verbose = true;
   };
-
-  system.stateVersion = "24.11";
 }
