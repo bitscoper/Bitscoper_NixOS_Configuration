@@ -518,10 +518,10 @@ in
 
       extraConf = ''
         DefaultLanguage en
-        ServerName Bitscoper-WorkStation
+        ServerName ${config.networking.hostName}
         ServerAlias *
         ServerTokens Full
-        ServerAdmin bitscoper@Bitscoper-WorkStation
+        ServerAdmin bitscoper@${config.networking.hostName}
         BrowseLocalProtocols all
         BrowseWebIF On
         HostNameLookups On
@@ -561,7 +561,7 @@ in
         userServices = true;
       };
 
-      domainName = "Bitscoper";
+      domainName = config.networking.hostName;
       hostName = config.networking.hostName;
 
       openFirewall = true;
@@ -598,7 +598,7 @@ in
       ];
       allowSFTP = true;
 
-      banner = "Bitscoper-WorkStation";
+      banner = config.networking.hostName;
 
       authorizedKeysInHomedir = true;
 
@@ -703,22 +703,67 @@ in
 
     postfix = {
       enable = true;
+
+      enableSmtp = true;
+      enableSubmission = true;
+      enableSubmissions = true;
+
+      domain = config.networking.hostName;
+      hostname = config.networking.hostName;
+      origin = config.networking.hostName;
+
+      virtualMapType = "pcre";
+      aliasMapType = "pcre";
+      enableHeaderChecks = true;
+
+      setSendmail = true;
+
+      config = { };
     };
 
     opendkim = {
       enable = true;
 
+      domains = "csl:${config.networking.hostName}";
       selector = "default";
+
+      settings = { };
     };
 
     dovecot2 = {
       enable = true;
+      modules = with pkgs; [
+
+      ];
+
+      enableImap = true;
+      enablePop3 = true;
+      enableLmtp = true;
+      protocols = [
+        "imap"
+        "pop3"
+        "lmtp"
+      ];
+
+      enableQuota = true;
+      quotaPort = "12340";
+
+      enableDHE = true;
+
+      createMailUser = true;
+
+      enablePAM = true;
+      showPAMFailure = true;
+
+      pluginSettings = { };
+
+      extraConfig = '' '';
     };
 
     icecast = {
       enable = true;
 
-      hostname = "Bitscoper-WorkStation";
+      hostname = config.networking.hostName;
       listen = {
         address = "0.0.0.0";
         port = 17101;
@@ -730,8 +775,8 @@ in
       };
 
       extraConf = ''
-        <location>Bitscoper-WorkStation</location>
-        <admin>bitscoper@Bitscoper-WorkStation</admin>
+        <location>${config.networking.hostName}</location>
+        <admin>bitscoper@${config.networking.hostName}</admin>
         <authentication>
           <source-password>${secrets.password_2_of_bitscoper}</source-password>
           <relay-password>${secrets.password_2_of_bitscoper}</relay-password>
@@ -743,7 +788,7 @@ in
         <logging>
           <loglevel>2</loglevel>
         </logging>
-        <server-id>Bitscoper-WorkStation</server-id>
+        <server-id>${config.networking.hostName}</server-id>
       '';
     };
 
@@ -774,7 +819,7 @@ in
         ENABLE_ADMIN_CHAT_ACCESS = "True";
         ENABLE_ADMIN_EXPORT = "True";
         SHOW_ADMIN_DETAILS = "True";
-        ADMIN_EMAIL = "bitscoper@Bitscoper-WorkStation";
+        ADMIN_EMAIL = "bitscoper@${config.networking.hostName}";
 
         USER_PERMISSIONS_WORKSPACE_MODELS_ACCESS = "True";
         USER_PERMISSIONS_WORKSPACE_KNOWLEDGE_ACCESS = "True";
@@ -2234,7 +2279,7 @@ in
 
           extraConfig = {
             show-icons = true;
-            display-drun = "Search";
+            display-drun = "Applications";
 
             disable-history = false;
           };
@@ -2245,154 +2290,80 @@ in
             in
             {
               "*" = {
-                foreground = mkLiteral "#f8f8f2";
-                background-color = mkLiteral "#282a36";
-                active-background = mkLiteral "#6272a4";
-                urgent-background = mkLiteral "#ff5555";
-                urgent-foreground = mkLiteral "#282a36";
-                selected-background = mkLiteral "@active-background";
-                selected-urgent-background = mkLiteral "@urgent-background";
-                selected-active-background = mkLiteral "@active-background";
-                separatorcolor = mkLiteral "@active-background";
-                bordercolor = mkLiteral "@active-background";
-              };
+                back-ground-color = mkLiteral "#282a36";
+                active-background-color = mkLiteral "#6272a4";
+                foreground-color = mkLiteral "#f8f8f2";
 
-              "#window" = {
-                border = 1;
-                border-radius = 8;
-                border-color = mkLiteral "@bordercolor";
-                background-color = mkLiteral "@background-color";
-                padding = 16;
-              };
-
-              "#mainbox" = {
-                border = 0;
+                margin = 0;
+                background-color = mkLiteral "transparent";
                 padding = 0;
-              };
-
-              "#message" = {
-                border = mkLiteral "0px";
-                border-color = mkLiteral "@separatorcolor";
-                padding = mkLiteral "1px";
-              };
-
-              "#textbox" = {
-                text-color = mkLiteral "@foreground";
-              };
-
-              "#inputbar" = {
                 spacing = 0;
-                text-color = mkLiteral "@foreground";
-                padding = mkLiteral "1px";
+                text-color = mkLiteral "@foreground-color";
+              };
+
+              "window" = {
+                width = mkLiteral "768px";
+                border = mkLiteral "1px";
+                border-radius = mkLiteral "16px";
+                border-color = mkLiteral "@active-background-color";
+                background-color = mkLiteral "@back-ground-color";
+              };
+
+              "mainbox" = {
+                padding = mkLiteral "16px";
+              };
+
+              "inputbar" = {
+                border = mkLiteral "1px";
+                border-radius = mkLiteral "8px";
+                border-color = mkLiteral "@active-background-color";
+                background-color = mkLiteral "@back-ground-color";
+                padding = mkLiteral "8px";
+                spacing = mkLiteral "8px";
                 children = map mkLiteral [
                   "prompt"
-                  "textbox-prompt-colon"
                   "entry"
-                  "case-indicator"
                 ];
               };
 
-              "#case-indicator" = {
-                spacing = 0;
-                text-color = mkLiteral "@foreground";
+              "prompt" = {
+                text-color = mkLiteral "@foreground-color";
               };
 
-              "#entry" = {
-                spacing = 0;
-                text-color = mkLiteral "@foreground";
+              "entry" = {
+                placeholder-color = mkLiteral "@active-background-color";
+                placeholder = "Search";
               };
 
-              "#prompt" = {
-                spacing = 0;
-                text-color = mkLiteral "@foreground";
+              "listview" = {
+                margin = mkLiteral "16px 0 0";
+                fixed-height = false;
+                lines = 8;
+                columns = 2;
               };
 
-              "#textbox-prompt-colon" = {
-                margin = mkLiteral "0px 0.3em 0em 0em";
-                expand = false;
-                text-color = mkLiteral "@foreground";
-                str = ":";
+              "element" = {
+                border-radius = mkLiteral "8px";
+                padding = mkLiteral "8px";
+                spacing = mkLiteral "8px";
+                children = map mkLiteral [
+                  "element-icon"
+                  "element-text"
+                ];
               };
 
-              "#listview" = {
-                fixed-height = 0;
-                border = mkLiteral "0px";
-                border-color = mkLiteral "@bordercolor";
-                scrollbar = true;
-                spacing = mkLiteral "2px";
-                padding = mkLiteral "2px 0px 0px";
+              "element-icon" = {
+                vertical-align = mkLiteral "0.5";
+                size = mkLiteral "1em";
               };
 
-              "#sidebar" = {
-                border = mkLiteral "2px dash 0px 0px";
-                border-color = mkLiteral "@separatorcolor";
-              };
-
-              "#scrollbar" = {
-                width = mkLiteral "2px";
-                border = 0;
-                handle-width = mkLiteral "8px";
-                padding = 0;
-              };
-
-              "#element" = {
-                border = 0;
-                padding = mkLiteral "4px";
-              };
-
-              "#element.normal.normal" = {
-                background-color = mkLiteral "@background-color";
-                text-color = mkLiteral "@foreground";
-              };
-
-              "#element.normal.urgent" = {
-                background-color = mkLiteral "@urgent-background";
-                text-color = mkLiteral "@urgent-foreground";
-              };
-
-              "#element.normal.active" = {
-                background-color = mkLiteral "@active-background";
-                text-color = mkLiteral "@foreground";
-              };
-
-              "#element.selected.normal" = {
-                background-color = mkLiteral "@selected-background";
-                text-color = mkLiteral "@foreground";
-              };
-
-              "#element.selected.urgent" = {
-                background-color = mkLiteral "@selected-urgent-background";
-                text-color = mkLiteral "@foreground";
-              };
-
-              "#element.selected.active" = {
-                background-color = mkLiteral "@selected-active-background";
-                text-color = mkLiteral "@foreground";
-              };
-
-              "#element.alternate.normal" = {
-                background-color = mkLiteral "@background-color";
-                text-color = mkLiteral "@foreground";
-              };
-
-              "#element.alternate.urgent" = {
-                background-color = mkLiteral "@urgent-background";
-                text-color = mkLiteral "@foreground";
-              };
-
-              "#element.alternate.active" = {
-                background-color = mkLiteral "@active-background";
-                text-color = mkLiteral "@foreground";
-              };
-
-              "element-text, element-icon" = {
-                background-color = mkLiteral "inherit";
+              "element-text" = {
                 text-color = mkLiteral "inherit";
               };
 
-              "#button.selected" = {
-                background-color = mkLiteral "@selected-background";
-                text-color = mkLiteral "@foreground";
+              "element.selected" = {
+                background-color = mkLiteral "@active-background-color";
+                text-color = mkLiteral "@foreground-color";
               };
             };
         };
