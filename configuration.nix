@@ -1380,8 +1380,6 @@ in
 
     xwayland.enable = true;
 
-    hyprlock.enable = true;
-
     appimage.enable = true;
 
     nix-index.enableBashIntegration = true;
@@ -1598,6 +1596,7 @@ in
       glib
       glibc
       gnome-font-viewer
+      gnugrep
       gnumake
       gource
       gpredict
@@ -1609,7 +1608,6 @@ in
       gzip
       hyprcursor
       hyprls
-      hyprpaper
       hyprpicker
       hyprpolkitagent
       iftop
@@ -1643,7 +1641,6 @@ in
       libwebp
       lsof
       lynis
-      mako
       mattermost-desktop
       memcached
       metasploit
@@ -1682,7 +1679,6 @@ in
       rar
       readline
       ripgrep
-      rofi-wayland
       rpPPPoE
       rtl-sdr-librtlsdr
       sane-backends
@@ -2040,8 +2036,6 @@ in
       xdg = {
         mime.enable = true;
 
-        configFile."mimeapps.list".force = true;
-
         mimeApps = {
           enable = true;
 
@@ -2052,6 +2046,10 @@ in
           };
 
           defaultApplications = config.xdg.mime.defaultApplications;
+        };
+
+        configFile = {
+          "mimeapps.list".force = true;
         };
       };
 
@@ -2096,7 +2094,309 @@ in
         };
       };
 
+      services = {
+        mako = {
+          enable = true;
+
+          actions = true;
+
+          anchor = "top-right";
+          layer = "top";
+          margin = "10";
+          sort = "-time";
+          maxVisible = -1;
+          ignoreTimeout = false;
+          defaultTimeout = 0;
+
+          borderRadius = 8;
+          borderSize = 1;
+          borderColor = "#282a36";
+          backgroundColor = "#282a36";
+          padding = "4";
+          icons = true;
+          maxIconSize = 16;
+          markup = true;
+          font = "NotoSans Nerd Font 11";
+          textColor = "#f8f8f2";
+          format = "<b>%s</b>\\n%b";
+
+          extraConfig = ''
+            history=1
+
+            on-notify=none
+            on-button-left=dismiss
+            on-button-right=exec makoctl menu rofi -dmenu -p 'Choose Action'
+            on-button-middle=none
+            on-touch=exec  makoctl menu rofi -dmenu -p 'Choose Action'
+
+            [urgency=low]
+            border-color=#8be9fd
+
+            [urgency=normal]
+            border-color=#6272a4
+
+            [urgency=high]
+            border-color=#ff5555
+          '';
+        };
+
+        hyprpaper = {
+          enable = true;
+
+          importantPrefixes = [
+            "$"
+          ];
+
+          settings =
+            let
+              wallpaper_1 = builtins.fetchurl {
+                url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
+              };
+            in
+            {
+              ipc = "on";
+
+              splash = false;
+
+              preload =
+                [
+                  wallpaper_1
+                ];
+
+              wallpaper = [
+                ", ${wallpaper_1}"
+              ];
+            };
+        };
+      };
+
       programs = {
+        hyprlock = {
+          enable = true;
+
+          sourceFirst = true;
+          importantPrefixes = [
+            "$"
+            "monitor"
+            "size"
+            "source"
+          ];
+
+          settings = {
+            general = {
+              disable_loading_bar = true;
+              grace = 300;
+              hide_cursor = true;
+              no_fade_in = false;
+            };
+
+            background = [
+              {
+                path = "screenshot";
+                blur_passes = 3;
+                blur_size = 8;
+              }
+            ];
+
+            input-field = [
+              {
+                size = "200, 50";
+                position = "0, -80";
+                monitor = "";
+                dots_center = true;
+                fade_on_empty = false;
+                font_color = "rgb(202, 211, 245)";
+                inner_color = "rgb(91, 96, 120)";
+                outer_color = "rgb(24, 25, 38)";
+                outline_thickness = 5;
+                placeholder_text = "Password";
+                shadow_passes = 2;
+              }
+            ];
+          };
+
+          extraConfig = '' '';
+        };
+
+        rofi = {
+          enable = true;
+          package = pkgs.rofi-wayland;
+          plugins = with pkgs; [
+
+          ];
+
+          cycle = false;
+          terminal = "${pkgs.kitty}/bin/kitty";
+
+          location = "center";
+
+          font = "NotoSans Nerd Font 11";
+
+          extraConfig = {
+            show-icons = true;
+            display-drun = "Search";
+
+            disable-history = false;
+          };
+
+          theme =
+            let
+              inherit (config.home-manager.users.bitscoper.lib.formats.rasi) mkLiteral;
+            in
+            {
+              "*" = {
+                foreground = mkLiteral "#f8f8f2";
+                background-color = mkLiteral "#282a36";
+                active-background = mkLiteral "#6272a4";
+                urgent-background = mkLiteral "#ff5555";
+                urgent-foreground = mkLiteral "#282a36";
+                selected-background = mkLiteral "@active-background";
+                selected-urgent-background = mkLiteral "@urgent-background";
+                selected-active-background = mkLiteral "@active-background";
+                separatorcolor = mkLiteral "@active-background";
+                bordercolor = mkLiteral "@active-background";
+              };
+
+              "#window" = {
+                border = 1;
+                border-radius = 8;
+                border-color = mkLiteral "@bordercolor";
+                background-color = mkLiteral "@background-color";
+                padding = 16;
+              };
+
+              "#mainbox" = {
+                border = 0;
+                padding = 0;
+              };
+
+              "#message" = {
+                border = mkLiteral "0px";
+                border-color = mkLiteral "@separatorcolor";
+                padding = mkLiteral "1px";
+              };
+
+              "#textbox" = {
+                text-color = mkLiteral "@foreground";
+              };
+
+              "#inputbar" = {
+                spacing = 0;
+                text-color = mkLiteral "@foreground";
+                padding = mkLiteral "1px";
+                children = map mkLiteral [
+                  "prompt"
+                  "textbox-prompt-colon"
+                  "entry"
+                  "case-indicator"
+                ];
+              };
+
+              "#case-indicator" = {
+                spacing = 0;
+                text-color = mkLiteral "@foreground";
+              };
+
+              "#entry" = {
+                spacing = 0;
+                text-color = mkLiteral "@foreground";
+              };
+
+              "#prompt" = {
+                spacing = 0;
+                text-color = mkLiteral "@foreground";
+              };
+
+              "#textbox-prompt-colon" = {
+                margin = mkLiteral "0px 0.3em 0em 0em";
+                expand = false;
+                text-color = mkLiteral "@foreground";
+                str = ":";
+              };
+
+              "#listview" = {
+                fixed-height = 0;
+                border = mkLiteral "0px";
+                border-color = mkLiteral "@bordercolor";
+                scrollbar = true;
+                spacing = mkLiteral "2px";
+                padding = mkLiteral "2px 0px 0px";
+              };
+
+              "#sidebar" = {
+                border = mkLiteral "2px dash 0px 0px";
+                border-color = mkLiteral "@separatorcolor";
+              };
+
+              "#scrollbar" = {
+                width = mkLiteral "2px";
+                border = 0;
+                handle-width = mkLiteral "8px";
+                padding = 0;
+              };
+
+              "#element" = {
+                border = 0;
+                padding = mkLiteral "4px";
+              };
+
+              "#element.normal.normal" = {
+                background-color = mkLiteral "@background-color";
+                text-color = mkLiteral "@foreground";
+              };
+
+              "#element.normal.urgent" = {
+                background-color = mkLiteral "@urgent-background";
+                text-color = mkLiteral "@urgent-foreground";
+              };
+
+              "#element.normal.active" = {
+                background-color = mkLiteral "@active-background";
+                text-color = mkLiteral "@foreground";
+              };
+
+              "#element.selected.normal" = {
+                background-color = mkLiteral "@selected-background";
+                text-color = mkLiteral "@foreground";
+              };
+
+              "#element.selected.urgent" = {
+                background-color = mkLiteral "@selected-urgent-background";
+                text-color = mkLiteral "@foreground";
+              };
+
+              "#element.selected.active" = {
+                background-color = mkLiteral "@selected-active-background";
+                text-color = mkLiteral "@foreground";
+              };
+
+              "#element.alternate.normal" = {
+                background-color = mkLiteral "@background-color";
+                text-color = mkLiteral "@foreground";
+              };
+
+              "#element.alternate.urgent" = {
+                background-color = mkLiteral "@urgent-background";
+                text-color = mkLiteral "@foreground";
+              };
+
+              "#element.alternate.active" = {
+                background-color = mkLiteral "@active-background";
+                text-color = mkLiteral "@foreground";
+              };
+
+              "element-text, element-icon" = {
+                background-color = mkLiteral "inherit";
+                text-color = mkLiteral "inherit";
+              };
+
+              "#button.selected" = {
+                background-color = mkLiteral "@selected-background";
+                text-color = mkLiteral "@foreground";
+              };
+            };
+        };
+
         waybar = {
           enable = true;
           systemd = {
