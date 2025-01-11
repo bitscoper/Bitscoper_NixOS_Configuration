@@ -5,14 +5,14 @@
 , ...
 }:
 let
-  android-nixpkgs = pkgs.callPackage
+  android_nixpkgs = pkgs.callPackage
     (import (builtins.fetchGit {
       url = "https://github.com/tadfisher/android-nixpkgs.git";
     }))
     {
       channel = "stable";
     };
-  android-sdk = android-nixpkgs.sdk (sdkPkgs: with sdkPkgs; [
+  android_sdk = android_nixpkgs.sdk (sdkPkgs: with sdkPkgs; [
     build-tools-35-0-0
     cmdline-tools-latest
     emulator
@@ -24,13 +24,43 @@ let
     system-images-android-34-android-wear-x86-64
     system-images-android-35-google-apis-playstore-x86-64
   ]);
-  android-sdk-path = "${android-sdk}/share/android-sdk";
+  android_sdk_path = "${android_sdk}/share/android-sdk";
 
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
 
   secrets = import ./secrets.nix;
 
   # existingLibraryPaths = builtins.getEnv "LD_LIBRARY_PATH";
+
+  dracula_theme = {
+    hex = {
+      background = "#282A36";
+      current_line = "#44475A";
+      foreground = "#F8F8F2";
+      comment = "#6272A4";
+      cyan = "#8BE9FD";
+      green = "#50FA7B";
+      orange = "#FFB86C";
+      pink = "#FF79C6";
+      purple = "#BD93F9";
+      red = "#FF5555";
+      yellow = "#F1FA8C";
+    };
+
+    rgba = {
+      background = "rgba(40, 42, 54, 1.0)";
+      current_line = "rgba(68, 71, 90, 1.0)";
+      foreground = "rgba(248, 248, 242, 1.0)";
+      comment = "rgba(98, 114, 164, 1.0)";
+      cyan = "rgba(139, 233, 253, 1.0)";
+      green = "rgba(80, 250, 123, 1.0)";
+      orange = "rgba(255, 184, 108, 1.0)";
+      pink = "rgba(255, 121, 198, 1.0)";
+      purple = "rgba(189, 147, 249, 1.0)";
+      red = "rgba(255, 85, 85, 1.0)";
+      yellow = "rgba(241, 250, 140, 1.0)";
+    };
+  };
 in
 {
   imports = [
@@ -394,6 +424,16 @@ in
       };
     };
 
+    udev = {
+      enable = true;
+      packages = with pkgs; [
+        android-udev-rules
+        game-devices-udev-rules
+        rtl-sdr
+        usb-blaster-udev-rules
+      ];
+    };
+
     libinput = {
       enable = true;
 
@@ -486,14 +526,10 @@ in
 
     blueman.enable = true;
 
-    udev = {
+    udisks2 = {
       enable = true;
-      packages = with pkgs; [
-        android-udev-rules
-        game-devices-udev-rules
-        rtl-sdr
-        usb-blaster-udev-rules
-      ];
+
+      settings = { };
     };
 
     printing = {
@@ -1568,8 +1604,8 @@ in
 
   environment = {
     variables = pkgs.lib.mkForce {
-      ANDROID_SDK_ROOT = android-sdk-path;
-      ANDROID_HOME = android-sdk-path;
+      ANDROID_SDK_ROOT = android_sdk_path;
+      ANDROID_HOME = android_sdk_path;
 
       # LD_LIBRARY_PATH = "${pkgs.glib.out}/lib/:${pkgs.libGL}/lib/:${pkgs.stdenv.cc.cc.lib}/lib:${existingLibraryPaths}";
     };
@@ -1585,7 +1621,7 @@ in
       agi
       aircrack-ng
       android-backup-extractor
-      android-sdk # Custom
+      android_sdk # Custom
       android-tools
       anydesk
       aribb24
@@ -1744,7 +1780,6 @@ in
       tor-browser
       tree
       tree-sitter
-      udiskie
       undollar
       ungoogled-chromium
       unicode-emoji
@@ -2149,20 +2184,20 @@ in
           layer = "top";
           margin = "10";
           sort = "-time";
-          maxVisible = -1;
+          maxVisible = 5; # -1 = Disabled
           ignoreTimeout = false;
-          defaultTimeout = 0;
+          defaultTimeout = 0; # Disabled
 
           borderRadius = 8;
           borderSize = 1;
-          borderColor = "#282a36";
-          backgroundColor = "#282a36";
+          borderColor = "${dracula_theme.hex.comment}";
+          backgroundColor = "${dracula_theme.hex.background}";
           padding = "4";
           icons = true;
           maxIconSize = 16;
           markup = true;
           font = "NotoSans Nerd Font 11";
-          textColor = "#f8f8f2";
+          textColor = "${dracula_theme.hex.foreground}";
           format = "<b>%s</b>\\n%b";
 
           extraConfig = ''
@@ -2175,14 +2210,22 @@ in
             on-touch=exec  makoctl menu rofi -dmenu -p 'Choose Action'
 
             [urgency=low]
-            border-color=#8be9fd
+            border-color=${dracula_theme.hex.current_line}
 
             [urgency=normal]
-            border-color=#6272a4
+            border-color=${dracula_theme.hex.comment}
 
             [urgency=high]
-            border-color=#ff5555
+            border-color=${dracula_theme.hex.red}
           '';
+        };
+
+        udiskie = {
+          enable = true;
+
+          tray = "never";
+          automount = true;
+          notify = true;
         };
 
         hyprpaper = {
@@ -2223,39 +2266,146 @@ in
           importantPrefixes = [
             "$"
             "monitor"
-            "size"
             "source"
+            "size"
           ];
 
           settings = {
             general = {
               disable_loading_bar = true;
-              grace = 300;
-              hide_cursor = true;
+              immediate_render = true;
+              fractional_scaling = 2; # 2 = Auto
+
               no_fade_in = false;
+              no_fade_out = false;
+
+              hide_cursor = false;
+              text_trim = false;
+
+              grace = 0;
+              ignore_empty_input = true;
+            };
+
+            auth = {
+              pam = {
+                enabled = true;
+              };
             };
 
             background = [
               {
+                monitor = "";
                 path = "screenshot";
-                blur_passes = 3;
-                blur_size = 8;
+                blur_passes = 4;
+                blur_size = 4;
               }
             ];
 
+            label =
+              let
+                prayer_time_script = pkgs.runCommand "prayer-time-script"
+                  {
+                    buildInputs = with pkgs; [
+                      curl
+                      jq
+                    ];
+                  } ''
+                  cat > $out << 'EOF'
+                  #!/bin/bash
+
+                  # By Abdullah As-Sadeed
+
+                  api_response=$(curl -s "https://api.aladhan.com/v1/timingsByAddress/$(date +"%d-%m-%Y")?address=Dhaka,BD&method=1")
+
+                  prayer_times=$(echo "$api_response" | jq -r '.data.timings')
+
+                  next_prayer_name=""
+                  next_prayer_time=""
+                  for entry in $(echo "$prayer_times" | jq -r 'to_entries[] | "\(.key) \(.value)"'); do
+                      prayer_name=$(echo "$entry" | awk '{print $1}')
+                      prayer_time=$(echo "$entry" | awk '{print $2}')
+                      if [[ "$prayer_time" > "$(date +"%H:%M")" ]]; then
+                          next_prayer_name=$prayer_name
+                          next_prayer_time=$prayer_time
+                          break
+                      fi
+                  done
+
+                  if [ -z "$next_prayer_time" ]; then
+                      next_prayer_name=$(echo "$prayer_times" | jq -r 'to_entries[0] | .key')
+                      next_prayer_time=$(echo "$prayer_times" | jq -r 'to_entries[0] | .value')
+                  fi
+
+                  formatted_time=$(date -d "$next_prayer_time" +"%I:%M %p")
+
+                  output="$next_prayer_name at $formatted_time"
+
+                  echo "$output"
+
+                  EOF
+
+                  chmod +x $out
+                '';
+              in
+              [
+                {
+                  monitor = "";
+                  halign = "center";
+                  valign = "top";
+                  position = "0, -128";
+
+                  text_align = "center";
+                  font_family = "NotoSans Nerd Font";
+                  color = "${dracula_theme.rgba.foreground}";
+                  font_size = 72;
+                  text = "$TIME12";
+                }
+
+                {
+                  monitor = "";
+                  halign = "center";
+                  valign = "center";
+                  position = "0, 0";
+
+                  text_align = "center";
+                  font_family = "NotoSans Nerd Font";
+                  color = "${dracula_theme.rgba.foreground}";
+                  font_size = 16;
+                  text = "cmd[update:300000] bash ${prayer_time_script}";
+                }
+              ];
+
             input-field = [
               {
-                size = "200, 50";
-                position = "0, -80";
                 monitor = "";
-                dots_center = true;
-                fade_on_empty = false;
-                font_color = "rgb(202, 211, 245)";
-                inner_color = "rgb(91, 96, 120)";
-                outer_color = "rgb(24, 25, 38)";
-                outline_thickness = 5;
+                halign = "center";
+                valign = "bottom";
+                position = "0, 128";
+
+                size = "256, 48";
+                rounding = 16;
+                outline_thickness = 1;
+                # outer_color = "";
+                shadow_passes = 0;
+                hide_input = false;
+                inner_color = "${dracula_theme.rgba.current_line}";
+                font_family = "NotoSans Nerd Font";
+                font_color = "${dracula_theme.rgba.foreground}";
                 placeholder_text = "Password";
-                shadow_passes = 2;
+                dots_center = true;
+                dots_rounding = -1;
+
+                fade_on_empty = true;
+
+                invert_numlock = false;
+                # capslock_color = "";
+                # numlock_color = "";
+                # bothlock_color = "";
+
+                # check_color = "";
+                # fail_color = "";
+                fail_text = "<i>$FAIL <b>($ATTEMPTS)</b></i>";
+                fail_timeout = 2000;
               }
             ];
           };
@@ -2290,23 +2440,19 @@ in
             in
             {
               "*" = {
-                back-ground-color = mkLiteral "#282a36";
-                active-background-color = mkLiteral "#6272a4";
-                foreground-color = mkLiteral "#f8f8f2";
-
                 margin = 0;
                 background-color = mkLiteral "transparent";
                 padding = 0;
                 spacing = 0;
-                text-color = mkLiteral "@foreground-color";
+                text-color = mkLiteral "${dracula_theme.hex.foreground}";
               };
 
               "window" = {
                 width = mkLiteral "768px";
                 border = mkLiteral "1px";
                 border-radius = mkLiteral "16px";
-                border-color = mkLiteral "@active-background-color";
-                background-color = mkLiteral "@back-ground-color";
+                border-color = mkLiteral "${dracula_theme.hex.purple}";
+                background-color = mkLiteral "${dracula_theme.hex.background}";
               };
 
               "mainbox" = {
@@ -2316,8 +2462,8 @@ in
               "inputbar" = {
                 border = mkLiteral "1px";
                 border-radius = mkLiteral "8px";
-                border-color = mkLiteral "@active-background-color";
-                background-color = mkLiteral "@back-ground-color";
+                border-color = mkLiteral "${dracula_theme.hex.comment}";
+                background-color = mkLiteral "${dracula_theme.hex.current_line}";
                 padding = mkLiteral "8px";
                 spacing = mkLiteral "8px";
                 children = map mkLiteral [
@@ -2327,11 +2473,11 @@ in
               };
 
               "prompt" = {
-                text-color = mkLiteral "@foreground-color";
+                text-color = mkLiteral "${dracula_theme.hex.foreground}";
               };
 
               "entry" = {
-                placeholder-color = mkLiteral "@active-background-color";
+                placeholder-color = mkLiteral "${dracula_theme.hex.comment}";
                 placeholder = "Search";
               };
 
@@ -2362,8 +2508,7 @@ in
               };
 
               "element.selected" = {
-                background-color = mkLiteral "@active-background-color";
-                text-color = mkLiteral "@foreground-color";
+                background-color = mkLiteral "${dracula_theme.hex.current_line}";
               };
             };
         };
@@ -2571,7 +2716,7 @@ in
               };
 
               clock = {
-                timezone = "Asia/Dhaka";
+                timezone = config.time.timeZone;
                 locale = "en_US";
                 interval = 1;
 
@@ -2789,20 +2934,7 @@ in
             };
           };
 
-          style = ''
-            @define-color background-darker rgba(30, 31, 41, 230);
-            @define-color background #282a36;
-            @define-color selection #44475a;
-            @define-color foreground #f8f8f2;
-            @define-color comment #6272a4;
-            @define-color cyan #8be9fd;
-            @define-color green #50fa7b;
-            @define-color orange #ffb86c;
-            @define-color pink #ff79c6;
-            @define-color purple #bd93f9;
-            @define-color red #ff5555;
-            @define-color yellow #f1fa8c;
-          '';
+          style = '' '';
         };
 
         kitty = {
@@ -2813,89 +2945,101 @@ in
             enableBashIntegration = true;
           };
 
-          settings = {
-            confirm_os_window_close = 0;
-
-            # Colors
-            foreground = "#f8f8f2";
-            background = "#282a36";
-            selection_foreground = "#ffffff";
-            selection_background = "#44475a";
-            url_color = "#8be9fd";
-            title_fg = "#f8f8f2";
-            title_bg = "#282a36";
-            margin_bg = "#6272a4";
-            margin_fg = "#44475a";
-            removed_bg = "#ff5555";
-            highlight_removed_bg = "#ff5555";
-            removed_margin_bg = "#ff5555";
-            added_bg = "#50fa7b";
-            highlight_added_bg = "#50fa7b";
-            added_margin_bg = "#50fa7b";
-            filler_bg = "#44475a";
-            hunk_margin_bg = "#44475a";
-            hunk_bg = "#bd93f9";
-            search_bg = "#8be9fd";
-            search_fg = "#282a36";
-            select_bg = "#f1fa8c";
-            select_fg = "#282a36";
-
-            # Splits/Windows
-            active_border_color = "#f8f8f2";
-            inactive_border_color = "#6272a4";
-
-            # Tab Bar Colors
-            active_tab_foreground = "#282a36";
-            active_tab_background = "#f8f8f2";
-            inactive_tab_foreground = "#282a36";
-            inactive_tab_background = "#6272a4";
-
-            # Marks
-            mark1_foreground = "#282a36";
-            mark1_background = "#ff5555";
-
-            # Cursor Colors
-            cursor = "#f8f8f2";
-            cursor_text_color = "#282a36";
-
-            # Black
-            color0 = "#21222c";
-            color8 = "#6272a4";
-
-            # Red
-            color1 = "#ff5555";
-            color9 = "#ff6e6e";
-
-            # Green
-            color2 = "#50fa7b";
-            color10 = "#69ff94";
-
-            # Yellow
-            color3 = "#f1fa8c";
-            color11 = "#ffffa5";
-
-            # Blue
-            color4 = "#bd93f9";
-            color12 = "#d6acff";
-
-            # Magenta
-            color5 = "#ff79c6";
-            color13 = "#ff92df";
-
-            # Cyan
-            color6 = "#8be9fd";
-            color14 = "#a4ffff";
-
-            # White
-            color7 = "#f8f8f2";
-            color15 = "#ffffff";
-          };
-
           font = {
             name = "NotoMono Nerd Font";
             package = pkgs.nerd-fonts.noto;
             size = 11;
           };
+
+          keybindings = { };
+
+          settings = {
+            sync_to_monitor = "yes";
+
+            window_padding_width = "0 4 0 4";
+            confirm_os_window_close = 0;
+
+            enable_audio_bell = "yes";
+            detect_urls = "yes";
+            scrollback_lines = -1;
+            click_interval = -1;
+
+            # Colors
+            foreground = "${dracula_theme.hex.foreground}";
+            background = "${dracula_theme.hex.background}";
+            selection_foreground = "#ffffff";
+            selection_background = "${dracula_theme.hex.current_line}";
+            url_color = "${dracula_theme.hex.cyan}";
+            title_fg = "${dracula_theme.hex.foreground}";
+            title_bg = "${dracula_theme.hex.background}";
+            margin_bg = "${dracula_theme.hex.comment}";
+            margin_fg = "${dracula_theme.hex.current_line}";
+            removed_bg = "${dracula_theme.hex.red}";
+            highlight_removed_bg = "${dracula_theme.hex.red}";
+            removed_margin_bg = "${dracula_theme.hex.red}";
+            added_bg = "${dracula_theme.hex.green}";
+            highlight_added_bg = "${dracula_theme.hex.green}";
+            added_margin_bg = "${dracula_theme.hex.green}";
+            filler_bg = "${dracula_theme.hex.current_line}";
+            hunk_margin_bg = "${dracula_theme.hex.current_line}";
+            hunk_bg = "${dracula_theme.hex.purple}";
+            search_bg = "${dracula_theme.hex.cyan}";
+            search_fg = "${dracula_theme.hex.background}";
+            select_bg = "${dracula_theme.hex.yellow}";
+            select_fg = "${dracula_theme.hex.background}";
+
+            # Splits/Windows
+            active_border_color = "${dracula_theme.hex.foreground}";
+            inactive_border_color = "${dracula_theme.hex.comment}";
+
+            # Tab Bar Colors
+            active_tab_foreground = "${dracula_theme.hex.background}";
+            active_tab_background = "${dracula_theme.hex.foreground}";
+            inactive_tab_foreground = "${dracula_theme.hex.background}";
+            inactive_tab_background = "${dracula_theme.hex.comment}";
+
+            # Marks
+            mark1_foreground = "${dracula_theme.hex.background}";
+            mark1_background = "${dracula_theme.hex.red}";
+
+            # Cursor Colors
+            cursor = "${dracula_theme.hex.foreground}";
+            cursor_text_color = "${dracula_theme.hex.background}";
+
+            # Black
+            color0 = "#21222c";
+            color8 = "${dracula_theme.hex.comment}";
+
+            # Red
+            color1 = "${dracula_theme.hex.red}";
+            color9 = "#ff6e6e";
+
+            # Green
+            color2 = "${dracula_theme.hex.green}";
+            color10 = "#69ff94";
+
+            # Yellow
+            color3 = "${dracula_theme.hex.yellow}";
+            color11 = "#ffffa5";
+
+            # Blue
+            color4 = "${dracula_theme.hex.purple}";
+            color12 = "#d6acff";
+
+            # Magenta
+            color5 = "${dracula_theme.hex.pink}";
+            color13 = "#ff92df";
+
+            # Cyan
+            color6 = "${dracula_theme.hex.cyan}";
+            color14 = "#a4ffff";
+
+            # White
+            color7 = "${dracula_theme.hex.foreground}";
+            color15 = "#ffffff";
+          };
+
+          extraConfig = '' '';
         };
 
         git = {
