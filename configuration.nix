@@ -20,17 +20,20 @@ let
     extras-google-google-play-services
     platform-tools
     platforms-android-35
-    system-images-android-34-android-tv-x86
-    system-images-android-34-android-wear-x86-64
     system-images-android-35-google-apis-playstore-x86-64
   ]);
   android_sdk_path = "${android_sdk}/share/android-sdk";
 
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
 
-  secrets = import ./secrets.nix;
+  existing_library_paths = builtins.getEnv "LD_LIBRARY_PATH";
 
-  # existingLibraryPaths = builtins.getEnv "LD_LIBRARY_PATH";
+  font_name = {
+    mono = "NotoMono Nerd Font";
+    sans_serif = "NotoSans Nerd Font";
+    serif = "NotoSerif Nerd Font";
+    emoji = "Noto Color Emoji";
+  };
 
   dracula_theme = {
     hex = {
@@ -61,6 +64,8 @@ let
       yellow = "rgba(241, 250, 140, 1.0)";
     };
   };
+
+  secrets = import ./secrets.nix;
 in
 {
   imports = [
@@ -273,21 +278,26 @@ in
     };
   };
 
+  security = {
+    rtkit.enable = true;
+
+    polkit = {
+      enable = true;
+    };
+
+    pam.services.hyprlock = { };
+
+    wrappers.spice-client-glib-usb-acl-helper.source = "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
+  };
+
   hardware = {
     enableAllFirmware = true;
     enableRedistributableFirmware = true;
 
-    sensor.hddtemp = {
-      enable = true;
-      unit = "C";
-      drives = [
-        "/dev/disk/by-path/*"
-      ];
-    };
-
-    bluetooth = {
-      enable = true;
-      powerOnBoot = true;
+    cpu = {
+      intel = {
+        updateMicrocode = true;
+      };
     };
 
     graphics = {
@@ -298,6 +308,21 @@ in
         intel-media-driver
         intel-compute-runtime
       ];
+    };
+
+    sensor = {
+      hddtemp = {
+        enable = true;
+        unit = "C";
+        drives = [
+          "/dev/disk/by-path/*"
+        ];
+      };
+    };
+
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
     };
 
     rtl-sdr.enable = true;
@@ -906,6 +931,672 @@ in
     };
   };
 
+  programs = {
+    nix-ld = {
+      enable = true;
+      libraries = with pkgs; [
+
+      ];
+    };
+
+    java = {
+      enable = true;
+      package = pkgs.jdk23;
+      binfmt = true;
+    };
+
+    uwsm = {
+      enable = true;
+      waylandCompositors = {
+        hyprland = {
+          prettyName = "Hyprland";
+          comment = "Hyprland compositor managed by UWSM";
+          binPath = "/run/current-system/sw/bin/Hyprland";
+        };
+      };
+    };
+
+    hyprland = {
+      enable = true;
+      withUWSM = true;
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
+      xwayland.enable = true;
+    };
+
+    xwayland.enable = true;
+
+    appimage.enable = true;
+
+    nix-index.enableBashIntegration = true;
+
+    bash = {
+      completion.enable = true;
+      enableLsColors = true;
+
+      shellAliases = {
+        clean_build = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --upgrade-all";
+      };
+
+      loginShellInit = '' '';
+
+      shellInit = '' '';
+
+      interactiveShellInit = ''
+        PROMPT_COMMAND="history -a"
+      '';
+    };
+
+    ssh = {
+      startAgent = true;
+      agentTimeout = null;
+    };
+
+    gnupg = {
+      agent = {
+        enable = true;
+
+        enableBrowserSocket = true;
+        enableExtraSocket = true;
+        enableSSHSupport = false;
+
+        pinentryPackage = (pkgs.pinentry-rofi.override {
+          rofi = pkgs.rofi-wayland;
+        });
+      };
+
+      dirmngr.enable = true;
+    };
+
+    adb.enable = true;
+
+    nm-applet = {
+      enable = true;
+      indicator = true;
+    };
+
+    virt-manager.enable = true;
+
+    system-config-printer.enable = true;
+
+    nano = {
+      enable = true;
+      nanorc = '' '';
+    };
+
+    firefox = {
+      enable = true;
+      languagePacks = [
+        "en-US"
+      ];
+    };
+
+    thunderbird.enable = true;
+
+    steam = {
+      enable = true;
+      extraCompatPackages = with pkgs; [
+        proton-ge-bin
+      ];
+      protontricks.enable = true;
+
+      localNetworkGameTransfers.openFirewall = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+    };
+
+    dconf = {
+      enable = true;
+      profiles.user.databases = [
+        {
+          lockAll = true;
+
+          settings = {
+            "system/locale" = {
+              region = "en_US.UTF-8";
+            };
+
+            "org/virt-manager/virt-manager/connections" = {
+              autoconnect = [
+                "qemu:///system"
+              ];
+              uris = [
+                "qemu:///system"
+              ];
+            };
+            "org/virt-manager/virt-manager" = {
+              xmleditor-enabled = true;
+            };
+            "org/virt-manager/virt-manager/stats" = {
+              enable-cpu-poll = true;
+              enable-disk-poll = true;
+              enable-memory-poll = true;
+              enable-net-poll = true;
+            };
+            "org/virt-manager/virt-manager/confirm" = {
+              delete-storage = true;
+              forcepoweroff = true;
+              pause = true;
+              poweroff = true;
+              removedev = true;
+              unapplied-dev = true;
+            };
+            "org/virt-manager/virt-manager/console" = {
+              auto-redirect = false;
+              autoconnect = true;
+            };
+            "org/virt-manager/virt-manager/vmlist-fields" = {
+              cpu-usage = true;
+              disk-usage = true;
+              host-cpu-usage = true;
+              memory-usage = true;
+              network-traffic = true;
+            };
+            "org/virt-manager/virt-manager/new-vm" = {
+              cpu-default = "host-passthrough";
+            };
+
+            "com/github/huluti/Curtail" = {
+              file-attributes = true;
+              metadata = false;
+              new-file = true;
+              recursive = true;
+            };
+          };
+        }
+      ];
+    };
+  };
+
+  fonts = {
+    enableDefaultPackages = false;
+    packages = with pkgs; [
+      corefonts
+      font-awesome
+      nerd-fonts.noto
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
+      noto-fonts-color-emoji
+      noto-fonts-lgc-plus
+    ];
+
+    fontconfig = {
+      enable = true;
+
+      allowBitmaps = true;
+      allowType1 = false;
+      cache32Bit = true;
+
+      defaultFonts = {
+        monospace = [
+          font_name.mono
+        ];
+
+        sansSerif = [
+          font_name.sans_serif
+        ];
+
+        serif = [
+          font_name.serif
+        ];
+
+        emoji = [
+          font_name.emoji
+        ];
+      };
+
+      includeUserConf = true;
+    };
+  };
+
+  environment = {
+    variables = pkgs.lib.mkForce {
+      ANDROID_SDK_ROOT = android_sdk_path;
+      ANDROID_HOME = android_sdk_path;
+
+      # LD_LIBRARY_PATH = "${pkgs.glib.out}/lib/:${pkgs.libGL}/lib/:${pkgs.stdenv.cc.cc.lib}/lib:${existing_library_paths}";
+    };
+
+    sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+      CHROME_EXECUTABLE = "chromium";
+    };
+
+    systemPackages = with pkgs; [
+      # gimp-with-plugins
+      acl
+      agi
+      aircrack-ng
+      android-backup-extractor
+      android_sdk # Custom
+      android-tools
+      anydesk
+      aribb24
+      aribb25
+      audacity
+      avrdude
+      bat
+      bleachbit
+      blender
+      bluez
+      bluez-tools
+      bridge-utils
+      brightnessctl
+      btop
+      btrfs-progs
+      burpsuite
+      butt
+      certbot-full
+      clang
+      clinfo
+      cliphist
+      cloudflare-warp
+      cmake
+      coreutils-full
+      cryptsetup
+      cups
+      cups-filters
+      cups-pdf-to-pdf
+      cups-printers
+      curl
+      curtail
+      d-spy
+      dart
+      dbeaver-bin
+      dconf-editor
+      dmg2img
+      esptool
+      exfatprogs
+      faac
+      faad2
+      fastfetch
+      fd
+      fdk_aac
+      ffmpeg-full
+      file
+      flutter327
+      fritzing
+      fwupd-efi
+      gcc
+      gdb
+      git
+      git-doc
+      glib
+      glibc
+      gnome-font-viewer
+      gnugrep
+      gnumake
+      gource
+      gpredict
+      gradle
+      gradle-completion
+      greetd.tuigreet
+      grim
+      guestfs-tools
+      gzip
+      hyprcursor
+      hyprls
+      hyprpicker
+      hyprpolkitagent
+      iftop
+      inotify-tools
+      jellyfin-media-player
+      john
+      johnny
+      jq
+      keepassxc
+      libGL
+      libaom
+      libappimage
+      libde265
+      libdvdcss
+      libdvdnav
+      libdvdread
+      libgcc
+      libgpg-error
+      libguestfs
+      libheif
+      libnotify
+      libopus
+      libosinfo
+      libreoffice-fresh
+      libtinfo
+      libusb1
+      libuuid
+      libva-utils
+      libvirt
+      libvpx
+      libwebp
+      lsof
+      lynis
+      mattermost-desktop
+      memcached
+      metasploit
+      mixxx
+      nano
+      networkmanagerapplet
+      ninja
+      nix-bash-completions
+      nix-diff
+      nix-index
+      nixos-icons
+      nixpkgs-fmt
+      nmap
+      obs-studio
+      oculante
+      onedrive
+      onionshare-gui
+      openssl
+      patchelf
+      pavucontrol
+      pciutils
+      pcre
+      pgadmin4-desktopmode
+      php84
+      pipewire
+      pkg-config
+      platformio
+      platformio-core
+      playerctl
+      podman-compose
+      podman-desktop
+      podman-tui
+      python313Full
+      qbittorrent
+      qpwgraph
+      rar
+      readline
+      ripgrep
+      rpPPPoE
+      rtl-sdr-librtlsdr
+      sane-backends
+      schroedinger
+      screen
+      sdrangel
+      sdrpp
+      slurp
+      smartmontools
+      social-engineer-toolkit
+      spice-gtk
+      spice-protocol
+      superfile
+      swtpm
+      telegram-desktop
+      texliveFull
+      thermald
+      tor-browser
+      tree
+      tree-sitter
+      undollar
+      ungoogled-chromium
+      unicode-emoji
+      universal-android-debloater
+      unrar
+      unzip
+      usbtop
+      usbutils
+      virtio-win
+      virtiofsd
+      vlc
+      vlc-bittorrent
+      vscode-js-debug
+      waybar-mpris
+      waycheck
+      waydroid
+      wayland
+      wayland-protocols
+      wayland-utils
+      waylevel
+      wev
+      wget
+      wireplumber
+      wireshark
+      wl-clipboard
+      wordpress
+      wpscan
+      x264
+      x265
+      xdg-user-dirs
+      xdg-utils
+      xfsprogs
+      xorg.xhost
+      xoscope
+      xvidcore
+      yaml-language-server
+      yt-dlp
+      zip
+      (vscode-with-extensions.override {
+        # vscode = vscodium;
+        vscodeExtensions = with vscode-extensions; [
+          aaron-bond.better-comments
+          adpyke.codesnap
+          albymor.increment-selection
+          alefragnani.bookmarks
+          alexisvt.flutter-snippets
+          bierner.github-markdown-preview
+          bierner.markdown-mermaid
+          christian-kohler.path-intellisense
+          codezombiech.gitignore
+          coolbear.systemd-unit-file
+          dart-code.dart-code
+          dart-code.flutter
+          davidanson.vscode-markdownlint
+          davidlday.languagetool-linter
+          devsense.phptools-vscode
+          devsense.profiler-php-vscode
+          dracula-theme.theme-dracula
+          ecmel.vscode-html-css
+          esbenp.prettier-vscode
+          firefox-devtools.vscode-firefox-debug
+          formulahendry.auto-close-tag
+          formulahendry.auto-rename-tag
+          foxundermoon.shell-format
+          github.copilot
+          github.copilot-chat
+          github.vscode-github-actions
+          github.vscode-pull-request-github
+          grapecity.gc-excelviewer
+          gruntfuggly.todo-tree
+          ibm.output-colorizer
+          irongeek.vscode-env
+          james-yu.latex-workshop
+          jnoortheen.nix-ide
+          jock.svg
+          kamikillerto.vscode-colorize
+          mads-hartmann.bash-ide-vscode
+          mechatroner.rainbow-csv
+          mishkinf.goto-next-previous-member
+          moshfeu.compare-folders
+          ms-azuretools.vscode-docker
+          ms-python.black-formatter
+          ms-python.debugpy
+          ms-python.python
+          ms-toolsai.datawrangler
+          ms-vscode-remote.remote-containers
+          ms-vscode-remote.remote-ssh
+          ms-vscode-remote.remote-ssh-edit
+          ms-vscode.cpptools
+          ms-vscode.hexeditor
+          ms-vscode.live-server
+          ms-vscode.makefile-tools
+          oderwat.indent-rainbow
+          redhat.vscode-xml
+          redhat.vscode-yaml
+          ryu1kn.partial-diff
+          shardulm94.trailing-spaces
+          spywhere.guides
+          tamasfe.even-better-toml
+          timonwong.shellcheck
+          tyriar.sort-lines
+          vincaslt.highlight-matching-tag
+          visualstudioexptteam.intellicode-api-usage-examples
+          visualstudioexptteam.vscodeintellicode
+          vscjava.vscode-gradle
+          wmaurer.change-case
+          xdebug.php-debug
+          zainchen.json
+        ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+          {
+            name = "vscode-sort-json";
+            publisher = "richie5um2";
+            version = "1.20.0";
+            sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
+          }
+          {
+            name = "platformio-ide";
+            publisher = "platformio";
+            version = "3.3.3";
+            sha256 = "pcWKBqtpU7DVpiT7UF6Zi+YUKknyjtXFEf5nL9+xuSo=";
+          }
+          {
+            name = "vscode-serial-monitor";
+            publisher = "ms-vscode";
+            version = "0.13.1";
+            sha256 = "qZKCNG5EdMwzE9y3WVxaPMdTP9Y0xbe8kozjU7v44OI=";
+          }
+        ];
+      })
+    ] ++
+    (with gst_all_1; [
+      gst-editing-services
+      gst-libav
+      gst-plugins-bad
+      gst-plugins-base
+      gst-plugins-good
+      gst-plugins-ugly
+      gst-rtsp-server
+      gst-vaapi
+      gstreamer
+    ])
+    ++
+    (with php84Extensions; [
+      ast
+      bz2
+      calendar
+      ctype
+      curl
+      dba
+      dom
+      ds
+      enchant
+      event
+      exif
+      ffi
+      fileinfo
+      filter
+      ftp
+      gd
+      gettext
+      gnupg
+      grpc
+      iconv
+      imagick
+      imap
+      inotify
+      intl
+      ldap
+      # mailparse
+      mbstring
+      memcached
+      meminfo
+      memprof
+      mysqli
+      mysqlnd
+      opcache
+      openssl
+      pcntl
+      pdo
+      pdo_mysql
+      pdo_pgsql
+      pgsql
+      posix
+      pspell
+      readline
+      session
+      simplexml
+      smbclient
+      sockets
+      sodium
+      tokenizer
+      uuid
+      vld
+      xdebug
+      xml
+      xmlreader
+      xmlwriter
+      xsl
+      yaml
+      zip
+      zlib
+    ]) ++
+    (with php84Packages; [
+
+    ]) ++
+    (with python313Packages; [
+      black
+      datetime
+      matplotlib
+      numpy
+      pandas
+      pillow
+      pip
+      pyserial
+      requests
+      seaborn
+      tkinter
+    ]) ++
+    (with texlivePackages; [
+      fontawesome5
+      latex
+      latex-fonts
+      latex-git-log
+      latex-papersize
+      latexbangla
+      latexbug
+      latexcheat
+      latexcolors
+      latexconfig
+      latexdemo
+      latexdiff
+      latexfileversion
+      latexgit
+      latexindent
+      latexmk
+      latexpand
+    ]) ++
+    # (with androidenv.androidPkgs; [
+    #   build-tools
+    #   emulator
+    #   platform-tools
+    #   tools
+    # ]) ++
+    (with tree-sitter-grammars; [
+      tree-sitter-bash
+      tree-sitter-c
+      tree-sitter-cmake
+      tree-sitter-comment
+      tree-sitter-cpp
+      tree-sitter-css
+      tree-sitter-dart
+      tree-sitter-dockerfile
+      tree-sitter-html
+      tree-sitter-http
+      tree-sitter-javascript
+      tree-sitter-json
+      tree-sitter-latex
+      tree-sitter-make
+      tree-sitter-markdown
+      tree-sitter-markdown-inline
+      tree-sitter-nix
+      tree-sitter-php
+      tree-sitter-python
+      tree-sitter-regex
+      tree-sitter-sql
+      tree-sitter-toml
+      tree-sitter-yaml
+    ]);
+  };
+
   xdg = {
     mime = {
       enable = true;
@@ -1380,16 +2071,23 @@ in
     };
   };
 
-  security = {
-    rtkit.enable = true;
+  documentation = {
+    enable = true;
+    dev.enable = true;
+    doc.enable = true;
+    info.enable = true;
 
-    polkit = {
+    man = {
       enable = true;
+      generateCaches = true;
+      man-db.enable = true;
     };
 
-    pam.services.hyprlock = { };
-
-    wrappers.spice-client-glib-usb-acl-helper.source = "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
+    nixos = {
+      enable = true;
+      includeAllModules = true;
+      options.warningsAreErrors = false;
+    };
   };
 
   users = {
@@ -1424,660 +2122,6 @@ in
         "wheel"
         "wireshark"
       ];
-    };
-  };
-
-  programs = {
-    nix-ld = {
-      enable = true;
-      libraries = with pkgs; [
-
-      ];
-    };
-
-    java = {
-      enable = true;
-      package = pkgs.jdk23;
-      binfmt = true;
-    };
-
-    uwsm = {
-      enable = true;
-      waylandCompositors = {
-        hyprland = {
-          prettyName = "Hyprland";
-          comment = "Hyprland compositor managed by UWSM";
-          binPath = "/run/current-system/sw/bin/Hyprland";
-        };
-      };
-    };
-
-    hyprland = {
-      enable = true;
-      withUWSM = true;
-      portalPackage = pkgs.xdg-desktop-portal-hyprland;
-      xwayland.enable = true;
-    };
-
-    xwayland.enable = true;
-
-    appimage.enable = true;
-
-    nix-index.enableBashIntegration = true;
-
-    bash = {
-      completion.enable = true;
-      enableLsColors = true;
-
-      shellAliases = {
-        clean_build = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --upgrade-all";
-      };
-
-      loginShellInit = '' '';
-
-      shellInit = '' '';
-
-      interactiveShellInit = ''
-        PROMPT_COMMAND="history -a"
-      '';
-    };
-
-    ssh = {
-      startAgent = true;
-      agentTimeout = null;
-    };
-
-    gnupg = {
-      agent = {
-        enable = true;
-
-        enableBrowserSocket = true;
-        enableExtraSocket = true;
-        enableSSHSupport = false;
-
-        pinentryPackage = (pkgs.pinentry-rofi.override {
-          rofi = pkgs.rofi-wayland;
-        });
-      };
-
-      dirmngr.enable = true;
-    };
-
-    adb.enable = true;
-
-    nm-applet = {
-      enable = true;
-      indicator = true;
-    };
-
-    virt-manager.enable = true;
-
-    system-config-printer.enable = true;
-
-    nano = {
-      enable = true;
-      nanorc = '' '';
-    };
-
-    firefox = {
-      enable = true;
-      languagePacks = [
-        "en-US"
-      ];
-    };
-
-    thunderbird.enable = true;
-
-    steam = {
-      enable = true;
-
-      protontricks.enable = true;
-      extest.enable = true;
-
-      localNetworkGameTransfers.openFirewall = true;
-      remotePlay.openFirewall = true;
-      dedicatedServer.openFirewall = true;
-    };
-
-    dconf = {
-      enable = true;
-      profiles.user.databases = [
-        {
-          lockAll = true;
-
-          settings = {
-            "system/locale" = {
-              region = "en_US.UTF-8";
-            };
-
-            "org/virt-manager/virt-manager/connections" = {
-              autoconnect = [
-                "qemu:///system"
-              ];
-              uris = [
-                "qemu:///system"
-              ];
-            };
-            "org/virt-manager/virt-manager" = {
-              xmleditor-enabled = true;
-            };
-            "org/virt-manager/virt-manager/stats" = {
-              enable-cpu-poll = true;
-              enable-disk-poll = true;
-              enable-memory-poll = true;
-              enable-net-poll = true;
-            };
-            "org/virt-manager/virt-manager/confirm" = {
-              delete-storage = true;
-              forcepoweroff = true;
-              pause = true;
-              poweroff = true;
-              removedev = true;
-              unapplied-dev = true;
-            };
-            "org/virt-manager/virt-manager/console" = {
-              auto-redirect = false;
-              autoconnect = true;
-            };
-            "org/virt-manager/virt-manager/vmlist-fields" = {
-              cpu-usage = true;
-              disk-usage = true;
-              host-cpu-usage = true;
-              memory-usage = true;
-              network-traffic = true;
-            };
-            "org/virt-manager/virt-manager/new-vm" = {
-              cpu-default = "host-passthrough";
-            };
-
-            "com/github/huluti/Curtail" = {
-              file-attributes = true;
-              metadata = false;
-              new-file = true;
-              recursive = true;
-            };
-          };
-        }
-      ];
-    };
-  };
-
-  environment = {
-    variables = pkgs.lib.mkForce {
-      ANDROID_SDK_ROOT = android_sdk_path;
-      ANDROID_HOME = android_sdk_path;
-
-      # LD_LIBRARY_PATH = "${pkgs.glib.out}/lib/:${pkgs.libGL}/lib/:${pkgs.stdenv.cc.cc.lib}/lib:${existingLibraryPaths}";
-    };
-
-    sessionVariables = {
-      NIXOS_OZONE_WL = "1";
-      CHROME_EXECUTABLE = "chromium";
-    };
-
-    systemPackages = with pkgs; [
-      # gimp-with-plugins
-      acl
-      agi
-      aircrack-ng
-      android-backup-extractor
-      android_sdk # Custom
-      android-tools
-      anydesk
-      aribb24
-      aribb25
-      audacity
-      avrdude
-      bat
-      bleachbit
-      blender
-      bluez
-      bluez-tools
-      bridge-utils
-      brightnessctl
-      btop
-      btrfs-progs
-      burpsuite
-      butt
-      certbot-full
-      clang
-      clinfo
-      cliphist
-      cloudflare-warp
-      cmake
-      coreutils-full
-      cryptsetup
-      cups
-      cups-filters
-      cups-pdf-to-pdf
-      cups-printers
-      curl
-      curtail
-      d-spy
-      dart
-      dbeaver-bin
-      dconf-editor
-      dmg2img
-      esptool
-      exfatprogs
-      faac
-      faad2
-      fastfetch
-      fd
-      fdk_aac
-      ffmpeg-full
-      file
-      flutter327
-      fritzing
-      fwupd-efi
-      gcc
-      gdb
-      git
-      git-doc
-      glib
-      glibc
-      gnome-font-viewer
-      gnugrep
-      gnumake
-      gource
-      gpredict
-      gradle
-      gradle-completion
-      greetd.tuigreet
-      grim
-      guestfs-tools
-      gzip
-      hyprcursor
-      hyprls
-      hyprpicker
-      hyprpolkitagent
-      iftop
-      inotify-tools
-      jellyfin-media-player
-      john
-      johnny
-      jq
-      keepassxc
-      libGL
-      libaom
-      libappimage
-      libde265
-      libdvdcss
-      libdvdnav
-      libdvdread
-      libgcc
-      libgpg-error
-      libguestfs
-      libheif
-      libnotify
-      libopus
-      libosinfo
-      libreoffice-fresh
-      libtinfo
-      libusb1
-      libuuid
-      libva-utils
-      libvirt
-      libvpx
-      libwebp
-      lsof
-      lynis
-      mattermost-desktop
-      memcached
-      metasploit
-      mixxx
-      nano
-      networkmanagerapplet
-      ninja
-      nix-bash-completions
-      nix-diff
-      nix-index
-      nixos-icons
-      nixpkgs-fmt
-      nmap
-      obs-studio
-      oculante
-      onedrive
-      onionshare-gui
-      openssl
-      patchelf
-      pavucontrol
-      pciutils
-      pcre
-      pgadmin4-desktopmode
-      php84
-      pipewire
-      pkg-config
-      platformio
-      platformio-core
-      playerctl
-      podman-compose
-      podman-desktop
-      podman-tui
-      python313Full
-      qbittorrent
-      qpwgraph
-      rar
-      readline
-      ripgrep
-      rpPPPoE
-      rtl-sdr-librtlsdr
-      sane-backends
-      schroedinger
-      screen
-      sdrangel
-      sdrpp
-      slurp
-      smartmontools
-      social-engineer-toolkit
-      spice-gtk
-      spice-protocol
-      superfile
-      swtpm
-      telegram-desktop
-      texliveFull
-      thermald
-      tor-browser
-      tree
-      tree-sitter
-      undollar
-      ungoogled-chromium
-      unicode-emoji
-      universal-android-debloater
-      unrar
-      unzip
-      usbtop
-      usbutils
-      virtio-win
-      virtiofsd
-      vlc
-      vlc-bittorrent
-      vscode-js-debug
-      waybar-mpris
-      waycheck
-      waydroid
-      wayland
-      wayland-protocols
-      wayland-utils
-      waylevel
-      wev
-      wget
-      wireplumber
-      wireshark
-      wl-clipboard
-      wordpress
-      wpscan
-      x264
-      x265
-      xdg-user-dirs
-      xdg-utils
-      xfsprogs
-      xorg.xhost
-      xoscope
-      xvidcore
-      yaml-language-server
-      yt-dlp
-      zip
-      (vscode-with-extensions.override {
-        # vscode = vscodium;
-        vscodeExtensions = with vscode-extensions; [
-          aaron-bond.better-comments
-          adpyke.codesnap
-          albymor.increment-selection
-          alefragnani.bookmarks
-          alexisvt.flutter-snippets
-          bierner.github-markdown-preview
-          bierner.markdown-mermaid
-          christian-kohler.path-intellisense
-          codezombiech.gitignore
-          coolbear.systemd-unit-file
-          dart-code.dart-code
-          dart-code.flutter
-          davidanson.vscode-markdownlint
-          davidlday.languagetool-linter
-          devsense.phptools-vscode
-          devsense.profiler-php-vscode
-          dracula-theme.theme-dracula
-          ecmel.vscode-html-css
-          esbenp.prettier-vscode
-          firefox-devtools.vscode-firefox-debug
-          formulahendry.auto-close-tag
-          formulahendry.auto-rename-tag
-          foxundermoon.shell-format
-          github.copilot
-          github.copilot-chat
-          github.vscode-github-actions
-          github.vscode-pull-request-github
-          grapecity.gc-excelviewer
-          gruntfuggly.todo-tree
-          ibm.output-colorizer
-          irongeek.vscode-env
-          james-yu.latex-workshop
-          jnoortheen.nix-ide
-          jock.svg
-          kamikillerto.vscode-colorize
-          mads-hartmann.bash-ide-vscode
-          mechatroner.rainbow-csv
-          mishkinf.goto-next-previous-member
-          moshfeu.compare-folders
-          ms-azuretools.vscode-docker
-          ms-python.black-formatter
-          ms-python.debugpy
-          ms-python.python
-          ms-toolsai.datawrangler
-          ms-vscode-remote.remote-containers
-          ms-vscode-remote.remote-ssh
-          ms-vscode-remote.remote-ssh-edit
-          ms-vscode.cpptools
-          ms-vscode.hexeditor
-          ms-vscode.live-server
-          ms-vscode.makefile-tools
-          oderwat.indent-rainbow
-          redhat.vscode-xml
-          redhat.vscode-yaml
-          ryu1kn.partial-diff
-          shardulm94.trailing-spaces
-          spywhere.guides
-          tamasfe.even-better-toml
-          timonwong.shellcheck
-          tyriar.sort-lines
-          vincaslt.highlight-matching-tag
-          visualstudioexptteam.intellicode-api-usage-examples
-          visualstudioexptteam.vscodeintellicode
-          vscjava.vscode-gradle
-          wmaurer.change-case
-          xdebug.php-debug
-          zainchen.json
-        ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-          {
-            name = "vscode-sort-json";
-            publisher = "richie5um2";
-            version = "1.20.0";
-            sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
-          }
-          {
-            name = "platformio-ide";
-            publisher = "platformio";
-            version = "3.3.3";
-            sha256 = "pcWKBqtpU7DVpiT7UF6Zi+YUKknyjtXFEf5nL9+xuSo=";
-          }
-          {
-            name = "vscode-serial-monitor";
-            publisher = "ms-vscode";
-            version = "0.13.1";
-            sha256 = "qZKCNG5EdMwzE9y3WVxaPMdTP9Y0xbe8kozjU7v44OI=";
-          }
-        ];
-      })
-    ] ++
-    (with gst_all_1; [
-      gst-editing-services
-      gst-libav
-      gst-plugins-bad
-      gst-plugins-base
-      gst-plugins-good
-      gst-plugins-ugly
-      gst-rtsp-server
-      gst-vaapi
-      gstreamer
-    ])
-    ++
-    (with php84Extensions; [
-      ast
-      bz2
-      calendar
-      ctype
-      curl
-      dba
-      dom
-      ds
-      enchant
-      event
-      exif
-      ffi
-      fileinfo
-      filter
-      ftp
-      gd
-      gettext
-      gnupg
-      grpc
-      iconv
-      imagick
-      imap
-      inotify
-      intl
-      ldap
-      # mailparse
-      mbstring
-      memcached
-      meminfo
-      memprof
-      mysqli
-      mysqlnd
-      opcache
-      openssl
-      pcntl
-      pdo
-      pdo_mysql
-      pdo_pgsql
-      pgsql
-      posix
-      pspell
-      readline
-      session
-      simplexml
-      smbclient
-      sockets
-      sodium
-      tokenizer
-      uuid
-      vld
-      xdebug
-      xml
-      xmlreader
-      xmlwriter
-      xsl
-      yaml
-      zip
-      zlib
-    ]) ++
-    (with php84Packages; [
-
-    ]) ++
-    (with python313Packages; [
-      black
-      matplotlib
-      numpy
-      pandas
-      pillow
-      pip
-      pyserial
-      seaborn
-      tkinter
-    ]) ++
-    (with texlivePackages; [
-      fontawesome5
-      latex
-      latex-fonts
-      latex-git-log
-      latex-papersize
-      latexbangla
-      latexbug
-      latexcheat
-      latexcolors
-      latexconfig
-      latexdemo
-      latexdiff
-      latexfileversion
-      latexgit
-      latexindent
-      latexmk
-      latexpand
-    ]) ++
-    # (with androidenv.androidPkgs; [
-    #   build-tools
-    #   emulator
-    #   platform-tools
-    #   tools
-    # ]) ++
-    (with tree-sitter-grammars; [
-      tree-sitter-bash
-      tree-sitter-c
-      tree-sitter-cmake
-      tree-sitter-comment
-      tree-sitter-cpp
-      tree-sitter-css
-      tree-sitter-dart
-      tree-sitter-dockerfile
-      tree-sitter-html
-      tree-sitter-http
-      tree-sitter-javascript
-      tree-sitter-json
-      tree-sitter-latex
-      tree-sitter-make
-      tree-sitter-markdown
-      tree-sitter-markdown-inline
-      tree-sitter-nix
-      tree-sitter-php
-      tree-sitter-python
-      tree-sitter-regex
-      tree-sitter-sql
-      tree-sitter-toml
-      tree-sitter-yaml
-    ]);
-  };
-
-  fonts = {
-    enableDefaultPackages = false;
-    packages = with pkgs; [
-      corefonts
-      font-awesome
-      nerd-fonts.noto
-      noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-cjk-serif
-      noto-fonts-color-emoji
-      noto-fonts-lgc-plus
-    ];
-  };
-
-  documentation = {
-    enable = true;
-    dev.enable = true;
-    doc.enable = true;
-    info.enable = true;
-
-    man = {
-      enable = true;
-      generateCaches = true;
-      man-db.enable = true;
-    };
-
-    nixos = {
-      enable = true;
-      includeAllModules = true;
-      options.warningsAreErrors = false;
     };
   };
 
@@ -2153,7 +2197,7 @@ in
         };
 
         font = {
-          name = "NotoSans Nerd Font";
+          name = font_name.sans_serif;
           package = pkgs.nerd-fonts.noto;
           size = 11;
         };
@@ -2190,14 +2234,14 @@ in
 
           borderRadius = 8;
           borderSize = 1;
-          borderColor = "${dracula_theme.hex.comment}";
-          backgroundColor = "${dracula_theme.hex.background}";
+          borderColor = dracula_theme.hex.comment;
+          backgroundColor = dracula_theme.hex.background;
           padding = "4";
           icons = true;
           maxIconSize = 16;
           markup = true;
-          font = "NotoSans Nerd Font 11";
-          textColor = "${dracula_theme.hex.foreground}";
+          font = "${font_name.sans_serif} 11";
+          textColor = dracula_theme.hex.foreground;
           format = "<b>%s</b>\\n%b";
 
           extraConfig = ''
@@ -2301,79 +2345,33 @@ in
               }
             ];
 
-            label =
-              let
-                prayer_time_script = pkgs.runCommand "prayer-time-script"
-                  {
-                    buildInputs = with pkgs; [
-                      curl
-                      jq
-                    ];
-                  } ''
-                  cat > $out << 'EOF'
-                  #!/bin/bash
+            label = [
+              {
+                monitor = "";
+                halign = "center";
+                valign = "top";
+                position = "0, -128";
 
-                  # By Abdullah As-Sadeed
+                text_align = "center";
+                font_family = font_name.sans_serif;
+                color = dracula_theme.rgba.foreground;
+                font_size = 64;
+                text = "$TIME12";
+              }
 
-                  api_response=$(curl -s "https://api.aladhan.com/v1/timingsByAddress/$(date +"%d-%m-%Y")?address=Dhaka,BD&method=1")
+              {
+                monitor = "";
+                halign = "center";
+                valign = "center";
+                position = "0, 0";
 
-                  prayer_times=$(echo "$api_response" | jq -r '.data.timings')
-
-                  next_prayer_name=""
-                  next_prayer_time=""
-                  for entry in $(echo "$prayer_times" | jq -r 'to_entries[] | "\(.key) \(.value)"'); do
-                      prayer_name=$(echo "$entry" | awk '{print $1}')
-                      prayer_time=$(echo "$entry" | awk '{print $2}')
-                      if [[ "$prayer_time" > "$(date +"%H:%M")" ]]; then
-                          next_prayer_name=$prayer_name
-                          next_prayer_time=$prayer_time
-                          break
-                      fi
-                  done
-
-                  if [ -z "$next_prayer_time" ]; then
-                      next_prayer_name=$(echo "$prayer_times" | jq -r 'to_entries[0] | .key')
-                      next_prayer_time=$(echo "$prayer_times" | jq -r 'to_entries[0] | .value')
-                  fi
-
-                  formatted_time=$(date -d "$next_prayer_time" +"%I:%M %p")
-
-                  output="$next_prayer_name at $formatted_time"
-
-                  echo "$output"
-
-                  EOF
-
-                  chmod +x $out
-                '';
-              in
-              [
-                {
-                  monitor = "";
-                  halign = "center";
-                  valign = "top";
-                  position = "0, -128";
-
-                  text_align = "center";
-                  font_family = "NotoSans Nerd Font";
-                  color = "${dracula_theme.rgba.foreground}";
-                  font_size = 72;
-                  text = "$TIME12";
-                }
-
-                {
-                  monitor = "";
-                  halign = "center";
-                  valign = "center";
-                  position = "0, 0";
-
-                  text_align = "center";
-                  font_family = "NotoSans Nerd Font";
-                  color = "${dracula_theme.rgba.foreground}";
-                  font_size = 16;
-                  text = "cmd[update:300000] bash ${prayer_time_script}";
-                }
-              ];
+                text_align = "center";
+                font_family = font_name.sans_serif;
+                color = dracula_theme.rgba.foreground;
+                font_size = 16;
+                text = "$USER";
+              }
+            ];
 
             input-field = [
               {
@@ -2388,9 +2386,9 @@ in
                 # outer_color = "";
                 shadow_passes = 0;
                 hide_input = false;
-                inner_color = "${dracula_theme.rgba.current_line}";
-                font_family = "NotoSans Nerd Font";
-                font_color = "${dracula_theme.rgba.foreground}";
+                inner_color = dracula_theme.rgba.current_line;
+                font_family = font_name.sans_serif;
+                font_color = dracula_theme.rgba.foreground;
                 placeholder_text = "Password";
                 dots_center = true;
                 dots_rounding = -1;
@@ -2425,7 +2423,7 @@ in
 
           location = "center";
 
-          font = "NotoSans Nerd Font 11";
+          font = "${font_name.sans_serif} 11";
 
           extraConfig = {
             show-icons = true;
@@ -2444,15 +2442,15 @@ in
                 background-color = mkLiteral "transparent";
                 padding = 0;
                 spacing = 0;
-                text-color = mkLiteral "${dracula_theme.hex.foreground}";
+                text-color = mkLiteral dracula_theme.hex.foreground;
               };
 
               "window" = {
                 width = mkLiteral "768px";
                 border = mkLiteral "1px";
                 border-radius = mkLiteral "16px";
-                border-color = mkLiteral "${dracula_theme.hex.purple}";
-                background-color = mkLiteral "${dracula_theme.hex.background}";
+                border-color = mkLiteral dracula_theme.hex.purple;
+                background-color = mkLiteral dracula_theme.hex.background;
               };
 
               "mainbox" = {
@@ -2462,8 +2460,8 @@ in
               "inputbar" = {
                 border = mkLiteral "1px";
                 border-radius = mkLiteral "8px";
-                border-color = mkLiteral "${dracula_theme.hex.comment}";
-                background-color = mkLiteral "${dracula_theme.hex.current_line}";
+                border-color = mkLiteral dracula_theme.hex.comment;
+                background-color = mkLiteral dracula_theme.hex.current_line;
                 padding = mkLiteral "8px";
                 spacing = mkLiteral "8px";
                 children = map mkLiteral [
@@ -2473,11 +2471,11 @@ in
               };
 
               "prompt" = {
-                text-color = mkLiteral "${dracula_theme.hex.foreground}";
+                text-color = mkLiteral dracula_theme.hex.foreground;
               };
 
               "entry" = {
-                placeholder-color = mkLiteral "${dracula_theme.hex.comment}";
+                placeholder-color = mkLiteral dracula_theme.hex.comment;
                 placeholder = "Search";
               };
 
@@ -2508,7 +2506,7 @@ in
               };
 
               "element.selected" = {
-                background-color = mkLiteral "${dracula_theme.hex.current_line}";
+                background-color = mkLiteral dracula_theme.hex.current_line;
               };
             };
         };
@@ -2946,7 +2944,7 @@ in
           };
 
           font = {
-            name = "NotoMono Nerd Font";
+            name = font_name.mono;
             package = pkgs.nerd-fonts.noto;
             size = 11;
           };
@@ -2965,77 +2963,77 @@ in
             click_interval = -1;
 
             # Colors
-            foreground = "${dracula_theme.hex.foreground}";
-            background = "${dracula_theme.hex.background}";
+            foreground = dracula_theme.hex.foreground;
+            background = dracula_theme.hex.background;
             selection_foreground = "#ffffff";
-            selection_background = "${dracula_theme.hex.current_line}";
-            url_color = "${dracula_theme.hex.cyan}";
-            title_fg = "${dracula_theme.hex.foreground}";
-            title_bg = "${dracula_theme.hex.background}";
-            margin_bg = "${dracula_theme.hex.comment}";
-            margin_fg = "${dracula_theme.hex.current_line}";
-            removed_bg = "${dracula_theme.hex.red}";
-            highlight_removed_bg = "${dracula_theme.hex.red}";
-            removed_margin_bg = "${dracula_theme.hex.red}";
-            added_bg = "${dracula_theme.hex.green}";
-            highlight_added_bg = "${dracula_theme.hex.green}";
-            added_margin_bg = "${dracula_theme.hex.green}";
-            filler_bg = "${dracula_theme.hex.current_line}";
-            hunk_margin_bg = "${dracula_theme.hex.current_line}";
-            hunk_bg = "${dracula_theme.hex.purple}";
-            search_bg = "${dracula_theme.hex.cyan}";
-            search_fg = "${dracula_theme.hex.background}";
-            select_bg = "${dracula_theme.hex.yellow}";
-            select_fg = "${dracula_theme.hex.background}";
+            selection_background = dracula_theme.hex.current_line;
+            url_color = dracula_theme.hex.cyan;
+            title_fg = dracula_theme.hex.foreground;
+            title_bg = dracula_theme.hex.background;
+            margin_bg = dracula_theme.hex.comment;
+            margin_fg = dracula_theme.hex.current_line;
+            removed_bg = dracula_theme.hex.red;
+            highlight_removed_bg = dracula_theme.hex.red;
+            removed_margin_bg = dracula_theme.hex.red;
+            added_bg = dracula_theme.hex.green;
+            highlight_added_bg = dracula_theme.hex.green;
+            added_margin_bg = dracula_theme.hex.green;
+            filler_bg = dracula_theme.hex.current_line;
+            hunk_margin_bg = dracula_theme.hex.current_line;
+            hunk_bg = dracula_theme.hex.purple;
+            search_bg = dracula_theme.hex.cyan;
+            search_fg = dracula_theme.hex.background;
+            select_bg = dracula_theme.hex.yellow;
+            select_fg = dracula_theme.hex.background;
 
             # Splits/Windows
-            active_border_color = "${dracula_theme.hex.foreground}";
-            inactive_border_color = "${dracula_theme.hex.comment}";
+            active_border_color = dracula_theme.hex.foreground;
+            inactive_border_color = dracula_theme.hex.comment;
 
             # Tab Bar Colors
-            active_tab_foreground = "${dracula_theme.hex.background}";
-            active_tab_background = "${dracula_theme.hex.foreground}";
-            inactive_tab_foreground = "${dracula_theme.hex.background}";
-            inactive_tab_background = "${dracula_theme.hex.comment}";
+            active_tab_foreground = dracula_theme.hex.background;
+            active_tab_background = dracula_theme.hex.foreground;
+            inactive_tab_foreground = dracula_theme.hex.background;
+            inactive_tab_background = dracula_theme.hex.comment;
 
             # Marks
-            mark1_foreground = "${dracula_theme.hex.background}";
-            mark1_background = "${dracula_theme.hex.red}";
+            mark1_foreground = dracula_theme.hex.background;
+            mark1_background = dracula_theme.hex.red;
 
             # Cursor Colors
-            cursor = "${dracula_theme.hex.foreground}";
-            cursor_text_color = "${dracula_theme.hex.background}";
+            cursor = dracula_theme.hex.foreground;
+            cursor_text_color = dracula_theme.hex.background;
 
             # Black
             color0 = "#21222c";
-            color8 = "${dracula_theme.hex.comment}";
+            color8 = dracula_theme.hex.comment;
 
             # Red
-            color1 = "${dracula_theme.hex.red}";
+            color1 = dracula_theme.hex.red;
             color9 = "#ff6e6e";
 
             # Green
-            color2 = "${dracula_theme.hex.green}";
+            color2 = dracula_theme.hex.green;
             color10 = "#69ff94";
 
             # Yellow
-            color3 = "${dracula_theme.hex.yellow}";
+            color3 = dracula_theme.hex.yellow;
             color11 = "#ffffa5";
 
             # Blue
-            color4 = "${dracula_theme.hex.purple}";
+            color4 = dracula_theme.hex.purple;
             color12 = "#d6acff";
 
             # Magenta
-            color5 = "${dracula_theme.hex.pink}";
+            color5 = dracula_theme.hex.pink;
             color13 = "#ff92df";
 
             # Cyan
-            color6 = "${dracula_theme.hex.cyan}";
+            color6 = dracula_theme.hex.cyan;
             color14 = "#a4ffff";
 
             # White
-            color7 = "${dracula_theme.hex.foreground}";
+            color7 = dracula_theme.hex.foreground;
             color15 = "#ffffff";
           };
 
