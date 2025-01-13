@@ -89,7 +89,10 @@ in
 
     initrd = {
       enable = true;
-      luks.devices."luks-023f8417-62dd-4e65-b327-6c33b065486b".device = "/dev/disk/by-uuid/023f8417-62dd-4e65-b327-6c33b065486b";
+
+      kernelModules = [
+
+      ];
 
       systemd = {
         enable = true;
@@ -101,7 +104,17 @@ in
     };
 
     kernelPackages = pkgs.linuxPackages_zen;
+
+    kernelModules = [
+      "kvm-intel"
+    ];
+
+    extraModulePackages = [
+
+    ];
+
     extraModprobeConfig = "options kvm_intel nested=1";
+
     kernelParams = [
       "intel_iommu=on"
       "iommu=pt"
@@ -110,6 +123,7 @@ in
       # "rd.udev.log_level=3"
       # "udev.log_priority=3"
     ];
+
     consoleLogLevel = 5; # KERN_NOTICE
 
     tmp.cleanOnBoot = true;
@@ -195,6 +209,8 @@ in
   };
 
   nixpkgs = {
+    hostPlatform = "x86_64-linux";
+
     config = {
       allowUnfree = true;
       android_sdk.accept_license = true;
@@ -285,7 +301,9 @@ in
       enable = true;
     };
 
-    pam.services.hyprlock = { };
+    pam.services.hyprlock = {
+      fprintAuth = true;
+    };
 
     wrappers.spice-client-glib-usb-acl-helper.source = "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
   };
@@ -422,6 +440,14 @@ in
     };
 
     dbus.enable = true;
+
+    fprintd = {
+      enable = true;
+      # tod = {
+      #   enable = true;
+      #   driver = pkgs.libfprint-2-tod1-elan;
+      # };
+    };
 
     displayManager = {
       enable = true;
@@ -1111,7 +1137,6 @@ in
     enableDefaultPackages = false;
     packages = with pkgs; [
       corefonts
-      font-awesome
       nerd-fonts.noto
       noto-fonts
       noto-fonts-cjk-sans
@@ -1163,13 +1188,12 @@ in
     };
 
     systemPackages = with pkgs; [
-      # gimp-with-plugins
       acl
       agi
       aircrack-ng
       android-backup-extractor
-      android_sdk # Custom
       android-tools
+      android_sdk # Custom
       anydesk
       aribb24
       aribb25
@@ -1219,6 +1243,7 @@ in
       fwupd-efi
       gcc
       gdb
+      gimp-with-plugins
       git
       git-doc
       glib
@@ -1234,10 +1259,12 @@ in
       grim
       guestfs-tools
       gzip
+      hw-probe
       hyprcursor
       hyprls
       hyprpicker
       hyprpolkitagent
+      i2c-tools
       iftop
       inotify-tools
       jellyfin-media-player
@@ -1245,6 +1272,13 @@ in
       johnny
       jq
       keepassxc
+      kind
+      kubectl
+      kubectl-graph
+      kubectl-tree
+      kubectl-view-allocations
+      kubectl-view-secret
+      kubernetes
       libGL
       libaom
       libappimage
@@ -1252,6 +1286,8 @@ in
       libdvdcss
       libdvdnav
       libdvdread
+      libfprint
+      libfprint-tod
       libgcc
       libgpg-error
       libguestfs
@@ -1279,6 +1315,7 @@ in
       nix-bash-completions
       nix-diff
       nix-index
+      nix-info
       nixos-icons
       nixpkgs-fmt
       nmap
@@ -1546,7 +1583,6 @@ in
       tkinter
     ]) ++
     (with texlivePackages; [
-      fontawesome5
       latex
       latex-fonts
       latex-git-log
@@ -2480,7 +2516,7 @@ in
               };
 
               "listview" = {
-                margin = mkLiteral "16px 0 0";
+                margin = mkLiteral "16px 0px 0px 0px";
                 fixed-height = false;
                 lines = 8;
                 columns = 2;
@@ -2546,18 +2582,15 @@ in
                 "privacy"
                 "keyboard-state"
                 "systemd-failed-units"
-                "user"
                 "disk"
                 "memory"
                 "cpu"
-                "load"
                 "battery"
               ];
 
               power-profiles-daemon = {
                 format = "{icon}";
                 format-icons = {
-                  default = "";
                   performance = "";
                   balanced = "";
                   power-saver = "";
@@ -2740,8 +2773,8 @@ in
               };
 
               privacy = {
-                icon-size = 16;
-                icon-spacing = 4;
+                icon-size = 14;
+                icon-spacing = 8;
                 transition-duration = 200;
 
                 modules = [
@@ -2751,12 +2784,12 @@ in
                     tooltip-icon-size = 16;
                   }
                   {
-                    type = "audio-out";
+                    type = "audio-in";
                     tooltip = true;
                     tooltip-icon-size = 16;
                   }
                   {
-                    type = "audio-in";
+                    type = "audio-out";
                     tooltip = true;
                     tooltip-icon-size = 16;
                   }
@@ -2769,7 +2802,7 @@ in
 
                 format = {
                   capslock = "󰪛";
-                  numlock = "󰎠";
+                  numlock = "󰎦";
                 };
               };
 
@@ -2781,15 +2814,6 @@ in
 
                 format = "{nr_failed_system}, {nr_failed_user} ";
                 format-ok = "";
-              };
-
-              user = {
-                interval = 1;
-                icon = false;
-
-                format = "{work_d}:{work_H}:{work_M}:{work_S}";
-
-                open-on-click = false;
               };
 
               disk = {
@@ -2820,16 +2844,6 @@ in
                 interval = 1;
 
                 format = "{usage}% ";
-
-                tooltip = true;
-
-                on-click = "uwsm app -- kitty sh -c \"btop\"";
-              };
-
-              load = {
-                interval = 1;
-
-                format = "{} ";
 
                 tooltip = true;
 
@@ -2878,6 +2892,7 @@ in
               layer = "top";
               passthrough = false;
               fixed-center = true;
+              spacing = 0;
 
               modules-left = [
                 "hyprland/workspaces"
@@ -2903,11 +2918,11 @@ in
 
               "wlr/taskbar" = {
                 all-outputs = false;
-                active-first = true;
+                active-first = false;
                 sort-by-app-id = false;
                 format = "{icon}";
                 icon-theme = "Dracula";
-                icon-size = 16;
+                icon-size = 14;
                 markup = true;
 
                 tooltip = true;
@@ -2926,13 +2941,205 @@ in
               tray = {
                 show-passive-items = true;
                 reverse-direction = false;
-                icon-size = 16;
-                spacing = 8;
+                icon-size = 14;
+                spacing = 4;
               };
             };
           };
 
-          style = '' '';
+          style = ''
+            * {
+              font-family: ${font_name.sans_serif};
+              font-size: 14px;
+            }
+
+            window#waybar {
+              border: none;
+              background-color: transparent;
+            }
+
+            .modules-right > widget:last-child > #workspaces {
+              margin-right: 0;
+            }
+
+            .modules-left > widget:first-child > #workspaces {
+              margin-left: 0;
+            }
+
+            #power-profiles-daemon,
+            #idle_inhibitor,
+            #backlight,
+            #pulseaudio,
+            #bluetooth,
+            #network,
+            #keyboard-state,
+            #clock,
+            #privacy,
+            #systemd-failed-units,
+            #disk,
+            #memory,
+            #cpu,
+            #battery,
+            #window {
+              border-radius: 16px;
+              background-color: ${dracula_theme.hex.background};
+              padding: 2px 8px;
+              color: ${dracula_theme.hex.foreground};
+            }
+
+            #power-profiles-daemon.power-saver {
+              color: ${dracula_theme.hex.green};
+            }
+
+            #power-profiles-daemon.balanced {
+              color: ${dracula_theme.hex.cyan};
+            }
+
+            #power-profiles-daemon.performance {
+              color: ${dracula_theme.hex.foreground};
+            }
+
+            #idle_inhibitor.deactivated {
+              color: ${dracula_theme.hex.foreground};
+            }
+
+            #idle_inhibitor.activated {
+              color: ${dracula_theme.hex.cyan};
+            }
+
+            #pulseaudio.muted,
+            #pulseaudio.source-muted {
+              color: ${dracula_theme.hex.red};
+            }
+
+            #pulseaudio.bluetooth {
+              color: ${dracula_theme.hex.foreground};
+            }
+
+            #bluetooth.no-controller,
+            #bluetooth.disabled,
+            #bluetooth.off {
+              color: ${dracula_theme.hex.red};
+            }
+
+            #bluetooth.on,
+            #bluetooth.discoverable,
+            #bluetooth.pairable {
+              color: ${dracula_theme.hex.foreground};
+            }
+
+            #bluetooth.discovering,
+            #bluetooth.connected {
+              color: ${dracula_theme.hex.cyan};
+            }
+
+            #network.disabled,
+            #network.disconnected,
+            #network.linked {
+              color: ${dracula_theme.hex.red};
+            }
+
+            #network.etherenet,
+            #network.wifi {
+              color: ${dracula_theme.hex.foreground};
+            }
+
+            #privacy-item.audio-out {
+              color: ${dracula_theme.hex.foreground};
+            }
+
+            #privacy-item.audio-in,
+            #privacy-item.screenshare {
+              color: ${dracula_theme.hex.cyan};
+            }
+
+            #keyboard-state label {
+              margin: 0px 4px;
+            }
+
+            #keyboard-state label.locked {
+              color: ${dracula_theme.hex.cyan};
+            }
+
+            #systemd-failed-units.ok {
+              color: ${dracula_theme.hex.foreground};
+            }
+
+            #systemd-failed-units.degraded {
+              color: ${dracula_theme.hex.red};
+            }
+
+            #battery.plugged,
+            #battery.full {
+              color: ${dracula_theme.hex.foreground};
+            }
+
+            #battery.charging {
+              color: ${dracula_theme.hex.cyan};
+            }
+
+            #battery.warning {
+              color: ${dracula_theme.hex.yellow};
+            }
+
+            #battery.critical {
+              color: ${dracula_theme.hex.red};
+            }
+
+            #workspaces,
+            #taskbar,
+            #tray {
+              background-color: transparent;
+            }
+
+            button {
+              margin: 0px 2px;
+              border-radius: 16px;
+              background-color: ${dracula_theme.hex.background};
+              padding: 0px;
+              color: ${dracula_theme.hex.foreground};
+            }
+
+            button * {
+              padding: 0px 4px;
+            }
+
+            button.active {
+              background-color: ${dracula_theme.hex.current_line};
+            }
+
+            #window label {
+              padding: 0px 4px;
+              font-size: 11px;
+            }
+
+            #tray > widget {
+              border-radius: 16px;
+              background-color: ${dracula_theme.hex.background};
+              color: ${dracula_theme.hex.foreground};
+            }
+
+            #tray image {
+              padding: 0px 8px;
+            }
+
+            #tray > .passive {
+              -gtk-icon-effect: dim;
+            }
+
+            #tray > .active {
+              background-color: ${dracula_theme.hex.current_line};
+            }
+
+            #tray > .needs-attention {
+              background-color: ${dracula_theme.hex.comment};
+              -gtk-icon-effect: highlight;
+            }
+
+            #tray > widget:hover {
+              background-color: ${dracula_theme.hex.current_line};
+            }
+          '';
         };
 
         kitty = {
