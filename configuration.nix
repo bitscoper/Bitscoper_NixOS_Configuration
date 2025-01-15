@@ -65,12 +65,22 @@ let
     };
   };
 
+  cursor = {
+    theme = {
+      name = "Bibata-Modern-Classic";
+      package = pkgs.bibata-cursors;
+    };
+
+    size = 24;
+  };
+
   secrets = import ./secrets.nix;
 in
 {
   imports = [
-    (import "${home-manager}/nixos")
     ./hardware-configuration.nix
+
+    (import "${home-manager}/nixos")
   ];
 
   boot = {
@@ -169,17 +179,7 @@ in
 
     activationScripts = { };
 
-    userActivationScripts = {
-      stdio = {
-        text = ''
-          rm -rf /home/bitscoper/.android/avd
-          ln -s /home/bitscoper/.config/.android/avd /home/bitscoper/.android/avd
-        '';
-        deps = [
-
-        ];
-      };
-    };
+    userActivationScripts = { };
 
     stateVersion = "24.11";
   };
@@ -958,6 +958,8 @@ in
   };
 
   programs = {
+    command-not-found.enable = true;
+
     nix-ld = {
       enable = true;
       libraries = with pkgs; [
@@ -1186,6 +1188,11 @@ in
       NIXOS_OZONE_WL = "1";
       CHROME_EXECUTABLE = "chromium";
     };
+
+    loginShellInit = ''
+      rm -rf ~/.android/avd
+      ln -sf ~/.config/.android/avd ~/.android/avd
+    '';
 
     systemPackages = with pkgs; [
       acl
@@ -2167,1394 +2174,1402 @@ in
 
     backupFileExtension = "old";
 
-    users.bitscoper = {
-      home = {
-        pointerCursor = {
-          name = "Bibata-Modern-Classic";
-          package = pkgs.bibata-cursors;
-          size = 24;
-
-          hyprcursor = {
-            enable = true;
-            size = config.home-manager.users.bitscoper.home.pointerCursor.size;
-          };
-
-          gtk.enable = true;
-        };
-
-        stateVersion = "24.11";
-      };
-
-      wayland.windowManager.hyprland = {
-        enable = true;
-
-        systemd = {
-          enable = false;
-          enableXdgAutostart = true;
-
-          # extraCommands = [
-
-          # ];
-
-          # variables = [
-
-          # ];
-        };
-
-        plugins = [
-
-        ];
-
-        xwayland.enable = true;
-
-        sourceFirst = true;
-
-        settings = {
-          monitor = [
-            ", highres, auto, 1" # Name, Resolution, Position, Scale
-          ];
-
-          env = [
-            "XCURSOR_SIZE, 24"
-          ];
-
-          exec-once = [
-            "systemctl --user start hyprpolkitagent & setfacl --modify user:jellyfin:--x ~ & adb start-server &"
-            "sleep 2 && uwsm app -- keepassxc"
-            "uwsm app -- wl-paste --type text --watch cliphist store"
-            "uwsm app -- wl-paste --type image --watch cliphist store"
-            # "uwsm app -- nm-applet"
-            "sleep 2 && systemctl --user start warp-taskbar"
-            "uwsm app -- sdkmanager --licenses"
-          ];
-
-          bind = [
-            "SUPER, L, exec, uwsm app -- hyprlock --immediate"
-            "SUPER CTRL, L, exec, uwsm stop"
-            "SUPER CTRL, P, exec, systemctl poweroff"
-            "SUPER CTRL, R, exec, systemctl reboot"
-
-            "SUPER, 1, workspace, 1"
-            "SUPER, 2, workspace, 2"
-            "SUPER, 3, workspace, 3"
-            "SUPER, 4, workspace, 4"
-            "SUPER, 5, workspace, 5"
-            "SUPER, 6, workspace, 6"
-            "SUPER, 7, workspace, 7"
-            "SUPER, 8, workspace, 8"
-            "SUPER, 9, workspace, 9"
-            "SUPER, 0, workspace, 10"
-            "SUPER, mouse_down, workspace, e+1"
-            "SUPER, mouse_up, workspace, e-1"
-            "SUPER, S, togglespecialworkspace, magic"
-
-            "SUPER, left, movefocus, l"
-            "SUPER, right, movefocus, r"
-            "SUPER, up, movefocus, u"
-            "SUPER, down, movefocus, d"
-
-            "SUPER SHIFT, F, togglefloating,"
-            "SUPER SHIFT, T, togglesplit,"
-            "SUPER, Q, killactive,"
-
-            "SUPER SHIFT, 1, movetoworkspace, 1"
-            "SUPER SHIFT, 2, movetoworkspace, 2"
-            "SUPER SHIFT, 3, movetoworkspace, 3"
-            "SUPER SHIFT, 4, movetoworkspace, 4"
-            "SUPER SHIFT, 5, movetoworkspace, 5"
-            "SUPER SHIFT, 6, movetoworkspace, 6"
-            "SUPER SHIFT, 7, movetoworkspace, 7"
-            "SUPER SHIFT, 8, movetoworkspace, 8"
-            "SUPER SHIFT, 9, movetoworkspace, 9"
-            "SUPER SHIFT, 0, movetoworkspace, 10"
-            "SUPER SHIFT, S, movetoworkspace, special:magic"
-
-            "SUPER SHIFT ALT, 1, movetoworkspacesilent, 1"
-            "SUPER SHIFT ALT, 2, movetoworkspacesilent, 2"
-            "SUPER SHIFT ALT, 3, movetoworkspacesilent, 3"
-            "SUPER SHIFT ALT, 4, movetoworkspacesilent, 4"
-            "SUPER SHIFT ALT, 5, movetoworkspacesilent, 5"
-            "SUPER SHIFT ALT, 6, movetoworkspacesilent, 6"
-            "SUPER SHIFT ALT, 7, movetoworkspacesilent, 7"
-            "SUPER SHIFT ALT, 8, movetoworkspacesilent, 8"
-            "SUPER SHIFT ALT, 9, movetoworkspacesilent, 9"
-            "SUPER SHIFT ALT, 0, movetoworkspacesilent, 10"
-            "SUPER SHIFT ALT, S, movetoworkspacesilent, special:magic"
-
-            "SUPER SHIFT, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
-
-            ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/Screenshot_$(date +'%Y-%B-%d_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\""
-
-            "SUPER, R, exec, uwsm app -- kitty"
-            "SUPER, T, exec, uwsm app -- kitty"
-
-            ", XF86Explorer, exec, uwsm app -- kitty sh -c \"superfile\""
-            "SUPER, E, exec, uwsm app -- kitty sh -c \"superfile\""
-
-            "SUPER, F, exec, uwsm app -- kitty --hold sh -c \"fastfetch --thread true --detect-version true --logo-preserve-aspect-ratio true --temp-unit c --title-fqdn true --disk-show-regular true --disk-show-external true --disk-show-hidden true --disk-show-subvolumes true --disk-show-readonly true --disk-show-unknown true --physicaldisk-temp true --bluetooth-show-disconnected true --display-precise-refresh-rate true --cpu-temp true --cpu-show-pe-core-count true --cpuusage-separate true --gpu-temp true --gpu-driver-specific true --battery-temp true --localip-show-ipv4 true --localip-show-ipv6 true --localip-show-mac true --localip-show-loop true --localip-show-mtu true --localip-show-speed true --localip-show-prefix-len true --localip-show-all-ips true --localip-show-flags true --wm-detect-plugin true\""
-            "SUPER, B, exec, uwsm app -- kitty sh -c \"btop\""
-
-            "SUPER, W, exec, uwsm app -- firefox"
-            "SUPER ALT, W, exec, uwsm app -- firefox --private-window"
-
-            ", XF86Mail, exec, uwsm app -- thunderbird"
-            "SUPER, M, exec, uwsm app -- thunderbird"
-
-            "SUPER, C, exec, uwsm app -- code"
-            "SUPER, D, exec, uwsm app -- dbeaver"
-
-            "SUPER, V, exec, uwsm app -- vlc"
-          ];
-
-          bindm = [
-            "SUPER, mouse:272, movewindow"
-            "SUPER, mouse:273, resizewindow"
-          ];
-
-          bindl = [
-            ", XF86AudioPlay, exec, playerctl play-pause"
-            ", XF86AudioPause, exec, playerctl play-pause"
-            ", XF86AudioStop, exec, playerctl stop"
-
-            ", XF86AudioPrev, exec, playerctl previous"
-            ", XF86AudioNext, exec, playerctl next"
-          ];
-
-          bindel = [
-            ", XF86MonBrightnessUp, exec, brightnessctl s 1%+"
-            ", XF86MonBrightnessDown, exec, brightnessctl s 1%-"
-
-            ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+"
-            ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-"
-            ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-            ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-          ];
-
-          general = {
-            allow_tearing = false;
-
-            gaps_workspaces = 0;
-
-            layout = "dwindle";
-
-            gaps_in = 2;
-            gaps_out = 4;
-
-            no_border_on_floating = false;
-
-            border_size = 1;
-            "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-            "col.inactive_border" = "rgba(595959aa)";
-
-            no_focus_fallback = false;
-
-            resize_on_border = true;
-            hover_icon_on_border = true;
-          };
-
-          misc = {
-            disable_autoreload = false;
-
-            key_press_enables_dpms = true;
-            mouse_move_enables_dpms = true;
-
-            vfr = true;
-            vrr = 1;
-
-            render_ahead_of_time = false;
-
-            mouse_move_focuses_monitor = true;
-
-            disable_hyprland_logo = false;
-            force_default_wallpaper = 0;
-            disable_splash_rendering = true;
-
-            font_family = "NotoSans Nerd Font";
-
-            close_special_on_empty = true;
-
-            animate_mouse_windowdragging = false;
-            animate_manual_resizes = false;
-
-            exit_window_retains_fullscreen = false;
-
-            layers_hog_keyboard_focus = true;
-
-            focus_on_activate = false;
-
-            middle_click_paste = true;
-          };
-
-          dwindle = {
-            pseudotile = false;
-
-            use_active_for_splits = true;
-            force_split = 0; # Follows Mouse
-            smart_split = false;
-            preserve_split = true;
-
-            smart_resizing = true;
-          };
-
-          xwayland = {
-            enabled = true;
-            force_zero_scaling = true;
-            use_nearest_neighbor = true;
-          };
-
-          windowrulev2 = [
-            "suppressevent maximize, class:.*"
-            "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
-          ];
-
-          input = {
-            kb_layout = "us";
-
-            numlock_by_default = true;
-
-            follow_mouse = 1;
-            focus_on_close = 1;
-
-            left_handed = false;
-            sensitivity = 1; # Mouse
-            natural_scroll = false;
-
-            touchpad = {
-              natural_scroll = true;
-
-              tap-to-click = true;
-              tap-and-drag = true;
-              drag_lock = true;
-
-              disable_while_typing = true;
+    sharedModules = [
+      {
+        home = {
+          pointerCursor = {
+            name = cursor.theme.name;
+            package = cursor.theme.package;
+            size = cursor.size;
+
+            hyprcursor = {
+              enable = true;
+              size = cursor.size;
             };
 
-            touchdevice =
-              {
-                enabled = true;
-              };
-
-            tablet = {
-              left_handed = false;
-            };
+            gtk.enable = true;
           };
 
-          gestures = {
-            # Touchpad
-            workspace_swipe = true;
-            workspace_swipe_invert = true;
+          stateVersion = "24.11";
+        };
 
-            # Touchscreen
-            workspace_swipe_touch = false;
-            workspace_swipe_touch_invert = false;
+        wayland.windowManager.hyprland = {
+          enable = true;
 
-            workspace_swipe_create_new = true;
-            workspace_swipe_forever = true;
+          systemd = {
+            enable = false;
+            enableXdgAutostart = true;
+
+            # extraCommands = [
+
+            # ];
+
+            # variables = [
+
+            # ];
           };
 
-          decoration = {
-            rounding = 10;
+          plugins = [
 
-            active_opacity = 1.0;
-            inactive_opacity = 1.0;
+          ];
 
-            shadow = {
-              enabled = true;
-              range = 4;
-              render_power = 3;
-              color = "rgba(1a1a1aee)";
-            };
-
-            blur = {
-              enabled = true;
-              size = 3;
-              passes = 1;
-
-              vibrancy = 0.1696;
-            };
-          };
-
-          animations = {
-            enabled = "yes";
-
-            bezier = [
-              "easeOutQuint,0.23,1,0.32,1"
-              "easeInOutCubic,0.65,0.05,0.36,1"
-              "linear,0,0,1,1"
-              "almostLinear,0.5,0.5,0.75,1.0"
-              "quick,0.15,0,0.1,1"
-            ];
-
-            animation = [
-              "global, 1, 10, default"
-              "border, 1, 5.39, easeOutQuint"
-              "windows, 1, 4.79, easeOutQuint"
-              "windowsIn, 1, 4.1, easeOutQuint, popin 87%"
-              "windowsOut, 1, 1.49, linear, popin 87%"
-              "fadeIn, 1, 1.73, almostLinear"
-              "fadeOut, 1, 1.46, almostLinear"
-              "fade, 1, 3.03, quick"
-              "layers, 1, 3.81, easeOutQuint"
-              "layersIn, 1, 4, easeOutQuint, fade"
-              "layersOut, 1, 1.5, linear, fade"
-              "fadeLayersIn, 1, 1.79, almostLinear"
-              "fadeLayersOut, 1, 1.39, almostLinear"
-              "workspaces, 1, 1.94, almostLinear, fade"
-              "workspacesIn, 1, 1.21, almostLinear, fade"
-              "workspacesOut, 1, 1.94, almostLinear, fade"
-            ];
-          };
-        };
-
-        extraConfig = '' '';
-      };
-
-      xdg = {
-        mime.enable = true;
-
-        mimeApps = {
-          enable = true;
-
-          associations = {
-            added = config.xdg.mime.addedAssociations;
-
-            removed = config.xdg.mime.removedAssociations;
-          };
-
-          defaultApplications = config.xdg.mime.defaultApplications;
-        };
-
-        configFile = {
-          "mimeapps.list".force = true;
-        };
-      };
-
-      gtk = {
-        enable = true;
-
-        theme = {
-          name = "Dracula";
-          package = pkgs.dracula-theme;
-        };
-
-        iconTheme = {
-          name = "Dracula";
-          package = pkgs.dracula-icon-theme;
-        };
-
-        cursorTheme = {
-          name = config.home-manager.users.bitscoper.home.pointerCursor.name;
-          package = config.home-manager.users.bitscoper.home.pointerCursor.package;
-          size = config.home-manager.users.bitscoper.home.pointerCursor.size;
-        };
-
-        font = {
-          name = font_name.sans_serif;
-          package = pkgs.nerd-fonts.noto;
-          size = 11;
-        };
-
-        # gtk3.bookmarks = [
-        #
-        # ];
-      };
-
-      qt = {
-        enable = true;
-
-        platformTheme.name = "gtk";
-
-        style = {
-          name = "Dracula";
-          package = pkgs.dracula-qt5-theme;
-        };
-      };
-
-      services = {
-        mako = {
-          enable = true;
-
-          actions = true;
-
-          anchor = "top-right";
-          layer = "top";
-          margin = "10";
-          sort = "-time";
-          maxVisible = 5; # -1 = Disabled
-          ignoreTimeout = false;
-          defaultTimeout = 0; # Disabled
-
-          borderRadius = 8;
-          borderSize = 1;
-          borderColor = dracula_theme.hex.comment;
-          backgroundColor = dracula_theme.hex.background;
-          padding = "4";
-          icons = true;
-          maxIconSize = 16;
-          markup = true;
-          font = "${font_name.sans_serif} 11";
-          textColor = dracula_theme.hex.foreground;
-          format = "<b>%s</b>\\n%b";
-
-          extraConfig = ''
-            history=1
-
-            on-notify=none
-            on-button-left=dismiss
-            on-button-right=exec makoctl menu rofi -dmenu -p 'Choose Action'
-            on-button-middle=none
-            on-touch=exec  makoctl menu rofi -dmenu -p 'Choose Action'
-
-            [urgency=low]
-            border-color=${dracula_theme.hex.current_line}
-
-            [urgency=normal]
-            border-color=${dracula_theme.hex.comment}
-
-            [urgency=high]
-            border-color=${dracula_theme.hex.red}
-          '';
-        };
-
-        udiskie = {
-          enable = true;
-
-          tray = "never";
-          automount = true;
-          notify = true;
-        };
-
-        hyprpaper = {
-          enable = true;
-
-          settings =
-            let
-              wallpaper_1 = builtins.fetchurl {
-                url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
-              };
-            in
-            {
-              ipc = "on";
-
-              splash = false;
-
-              preload =
-                [
-                  wallpaper_1
-                ];
-
-              wallpaper = [
-                ", ${wallpaper_1}"
-              ];
-            };
-        };
-      };
-
-      programs = {
-        hyprlock = {
-          enable = true;
+          xwayland.enable = true;
 
           sourceFirst = true;
 
           settings = {
+            monitor = [
+              ", highres, auto, 1" # Name, Resolution, Position, Scale
+            ];
+
+            env = [
+              "XCURSOR_SIZE, ${toString cursor.size}"
+            ];
+
+            exec-once = [
+              "systemctl --user start hyprpolkitagent & setfacl --modify user:jellyfin:--x ~ & adb start-server &"
+              "sleep 2 && uwsm app -- keepassxc"
+              "uwsm app -- wl-paste --type text --watch cliphist store"
+              "uwsm app -- wl-paste --type image --watch cliphist store"
+              "sleep 2 && systemctl --user start warp-taskbar"
+              "uwsm app -- sdkmanager --licenses"
+            ];
+
+            bind = [
+              "SUPER, L, exec, uwsm app -- hyprlock --immediate"
+              "SUPER CTRL, L, exec, uwsm stop"
+              "SUPER CTRL, P, exec, systemctl poweroff"
+              "SUPER CTRL, R, exec, systemctl reboot"
+
+              "SUPER, 1, workspace, 1"
+              "SUPER, 2, workspace, 2"
+              "SUPER, 3, workspace, 3"
+              "SUPER, 4, workspace, 4"
+              "SUPER, 5, workspace, 5"
+              "SUPER, 6, workspace, 6"
+              "SUPER, 7, workspace, 7"
+              "SUPER, 8, workspace, 8"
+              "SUPER, 9, workspace, 9"
+              "SUPER, 0, workspace, 10"
+              "SUPER, mouse_down, workspace, e+1"
+              "SUPER, mouse_up, workspace, e-1"
+              "SUPER, S, togglespecialworkspace, magic"
+
+              "SUPER, left, movefocus, l"
+              "SUPER, right, movefocus, r"
+              "SUPER, up, movefocus, u"
+              "SUPER, down, movefocus, d"
+
+              "SUPER SHIFT, F, togglefloating,"
+              "SUPER SHIFT, T, togglesplit,"
+              "SUPER, Q, killactive,"
+
+              "SUPER SHIFT, 1, movetoworkspace, 1"
+              "SUPER SHIFT, 2, movetoworkspace, 2"
+              "SUPER SHIFT, 3, movetoworkspace, 3"
+              "SUPER SHIFT, 4, movetoworkspace, 4"
+              "SUPER SHIFT, 5, movetoworkspace, 5"
+              "SUPER SHIFT, 6, movetoworkspace, 6"
+              "SUPER SHIFT, 7, movetoworkspace, 7"
+              "SUPER SHIFT, 8, movetoworkspace, 8"
+              "SUPER SHIFT, 9, movetoworkspace, 9"
+              "SUPER SHIFT, 0, movetoworkspace, 10"
+              "SUPER SHIFT, S, movetoworkspace, special:magic"
+
+              "SUPER SHIFT ALT, 1, movetoworkspacesilent, 1"
+              "SUPER SHIFT ALT, 2, movetoworkspacesilent, 2"
+              "SUPER SHIFT ALT, 3, movetoworkspacesilent, 3"
+              "SUPER SHIFT ALT, 4, movetoworkspacesilent, 4"
+              "SUPER SHIFT ALT, 5, movetoworkspacesilent, 5"
+              "SUPER SHIFT ALT, 6, movetoworkspacesilent, 6"
+              "SUPER SHIFT ALT, 7, movetoworkspacesilent, 7"
+              "SUPER SHIFT ALT, 8, movetoworkspacesilent, 8"
+              "SUPER SHIFT ALT, 9, movetoworkspacesilent, 9"
+              "SUPER SHIFT ALT, 0, movetoworkspacesilent, 10"
+              "SUPER SHIFT ALT, S, movetoworkspacesilent, special:magic"
+
+              "SUPER SHIFT, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+
+              ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/Screenshot_$(date +'%Y-%B-%d_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\""
+
+              "SUPER, R, exec, uwsm app -- rofi -show drun"
+              "SUPER, T, exec, uwsm app -- kitty"
+
+              ", XF86Explorer, exec, uwsm app -- kitty sh -c \"superfile\""
+              "SUPER, E, exec, uwsm app -- kitty sh -c \"superfile\""
+
+              "SUPER, F, exec, uwsm app -- kitty --hold sh -c \"fastfetch --thread true --detect-version true --logo-preserve-aspect-ratio true --temp-unit c --title-fqdn true --disk-show-regular true --disk-show-external true --disk-show-hidden true --disk-show-subvolumes true --disk-show-readonly true --disk-show-unknown true --physicaldisk-temp true --bluetooth-show-disconnected true --display-precise-refresh-rate true --cpu-temp true --cpu-show-pe-core-count true --cpuusage-separate true --gpu-temp true --gpu-driver-specific true --battery-temp true --localip-show-ipv4 true --localip-show-ipv6 true --localip-show-mac true --localip-show-loop true --localip-show-mtu true --localip-show-speed true --localip-show-prefix-len true --localip-show-all-ips true --localip-show-flags true --wm-detect-plugin true\""
+              "SUPER, B, exec, uwsm app -- kitty sh -c \"btop\""
+
+              "SUPER, W, exec, uwsm app -- firefox"
+              "SUPER ALT, W, exec, uwsm app -- firefox --private-window"
+
+              ", XF86Mail, exec, uwsm app -- thunderbird"
+              "SUPER, M, exec, uwsm app -- thunderbird"
+
+              "SUPER, C, exec, uwsm app -- code"
+              "SUPER, D, exec, uwsm app -- dbeaver"
+
+              "SUPER, V, exec, uwsm app -- vlc"
+            ];
+
+            bindm = [
+              "SUPER, mouse:272, movewindow"
+              "SUPER, mouse:273, resizewindow"
+            ];
+
+            bindl = [
+              ", XF86AudioPlay, exec, playerctl play-pause"
+              ", XF86AudioPause, exec, playerctl play-pause"
+              ", XF86AudioStop, exec, playerctl stop"
+
+              ", XF86AudioPrev, exec, playerctl previous"
+              ", XF86AudioNext, exec, playerctl next"
+            ];
+
+            bindel = [
+              ", XF86MonBrightnessUp, exec, brightnessctl s 1%+"
+              ", XF86MonBrightnessDown, exec, brightnessctl s 1%-"
+
+              ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+"
+              ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-"
+              ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+              ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+            ];
+
             general = {
-              disable_loading_bar = true;
-              immediate_render = true;
-              fractional_scaling = 2; # 2 = Auto
+              allow_tearing = false;
 
-              no_fade_in = false;
-              no_fade_out = false;
+              gaps_workspaces = 0;
 
-              hide_cursor = false;
-              text_trim = false;
+              layout = "dwindle";
 
-              grace = 0;
-              ignore_empty_input = true;
+              gaps_in = 2;
+              gaps_out = 4;
+
+              no_border_on_floating = false;
+
+              border_size = 1;
+              "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
+              "col.inactive_border" = "rgba(595959aa)";
+
+              no_focus_fallback = false;
+
+              resize_on_border = true;
+              hover_icon_on_border = true;
             };
 
-            auth = {
-              pam = {
-                enabled = true;
+            misc = {
+              disable_autoreload = false;
+
+              key_press_enables_dpms = true;
+              mouse_move_enables_dpms = true;
+
+              vfr = true;
+              vrr = 1;
+
+              render_ahead_of_time = false;
+
+              mouse_move_focuses_monitor = true;
+
+              disable_hyprland_logo = false;
+              force_default_wallpaper = 0;
+              disable_splash_rendering = true;
+
+              font_family = "NotoSans Nerd Font";
+
+              close_special_on_empty = true;
+
+              animate_mouse_windowdragging = false;
+              animate_manual_resizes = false;
+
+              exit_window_retains_fullscreen = false;
+
+              layers_hog_keyboard_focus = true;
+
+              focus_on_activate = false;
+
+              middle_click_paste = true;
+            };
+
+            dwindle = {
+              pseudotile = false;
+
+              use_active_for_splits = true;
+              force_split = 0; # Follows Mouse
+              smart_split = false;
+              preserve_split = true;
+
+              smart_resizing = true;
+            };
+
+            xwayland = {
+              enabled = true;
+              force_zero_scaling = true;
+              use_nearest_neighbor = true;
+            };
+
+            windowrulev2 = [
+              "suppressevent maximize, class:.*"
+              "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
+            ];
+
+            input = {
+              kb_layout = "us";
+
+              numlock_by_default = true;
+
+              follow_mouse = 1;
+              focus_on_close = 1;
+
+              left_handed = false;
+              sensitivity = 1; # Mouse
+              natural_scroll = false;
+
+              touchpad = {
+                natural_scroll = true;
+
+                tap-to-click = true;
+                tap-and-drag = true;
+                drag_lock = true;
+
+                disable_while_typing = true;
+              };
+
+              touchdevice =
+                {
+                  enabled = true;
+                };
+
+              tablet = {
+                left_handed = false;
               };
             };
 
-            background = [
-              {
-                monitor = "";
-                path = "screenshot";
-                blur_passes = 4;
-                blur_size = 4;
-              }
-            ];
+            gestures = {
+              # Touchpad
+              workspace_swipe = true;
+              workspace_swipe_invert = true;
 
-            label = [
-              {
-                monitor = "";
-                halign = "center";
-                valign = "top";
-                position = "0, -128";
+              # Touchscreen
+              workspace_swipe_touch = false;
+              workspace_swipe_touch_invert = false;
 
-                text_align = "center";
-                font_family = font_name.sans_serif;
-                color = dracula_theme.rgba.foreground;
-                font_size = 64;
-                text = "$TIME12";
-              }
+              workspace_swipe_create_new = true;
+              workspace_swipe_forever = true;
+            };
 
-              {
-                monitor = "";
-                halign = "center";
-                valign = "center";
-                position = "0, 0";
+            decoration = {
+              rounding = 10;
 
-                text_align = "center";
-                font_family = font_name.sans_serif;
-                color = dracula_theme.rgba.foreground;
-                font_size = 16;
-                text = "$DESC"; # Full Name
-              }
-            ];
+              active_opacity = 1.0;
+              inactive_opacity = 1.0;
 
-            input-field = [
-              {
-                monitor = "";
-                halign = "center";
-                valign = "bottom";
-                position = "0, 128";
+              shadow = {
+                enabled = true;
+                range = 4;
+                render_power = 3;
+                color = "rgba(1a1a1aee)";
+              };
 
-                size = "256, 48";
-                rounding = 16;
-                outline_thickness = 1;
-                # outer_color = "";
-                shadow_passes = 0;
-                hide_input = false;
-                inner_color = dracula_theme.rgba.current_line;
-                font_family = font_name.sans_serif;
-                font_color = dracula_theme.rgba.foreground;
-                placeholder_text = "Password";
-                dots_center = true;
-                dots_rounding = -1;
+              blur = {
+                enabled = true;
+                size = 3;
+                passes = 1;
 
-                fade_on_empty = true;
+                vibrancy = 0.1696;
+              };
+            };
 
-                invert_numlock = false;
-                # capslock_color = "";
-                # numlock_color = "";
-                # bothlock_color = "";
+            animations = {
+              enabled = "yes";
 
-                # check_color = "";
-                # fail_color = "";
-                fail_text = "<i>$FAIL <b>($ATTEMPTS)</b></i>";
-                fail_timeout = 2000;
-              }
-            ];
+              bezier = [
+                "easeOutQuint,0.23,1,0.32,1"
+                "easeInOutCubic,0.65,0.05,0.36,1"
+                "linear,0,0,1,1"
+                "almostLinear,0.5,0.5,0.75,1.0"
+                "quick,0.15,0,0.1,1"
+              ];
+
+              animation = [
+                "global, 1, 10, default"
+                "border, 1, 5.39, easeOutQuint"
+                "windows, 1, 4.79, easeOutQuint"
+                "windowsIn, 1, 4.1, easeOutQuint, popin 87%"
+                "windowsOut, 1, 1.49, linear, popin 87%"
+                "fadeIn, 1, 1.73, almostLinear"
+                "fadeOut, 1, 1.46, almostLinear"
+                "fade, 1, 3.03, quick"
+                "layers, 1, 3.81, easeOutQuint"
+                "layersIn, 1, 4, easeOutQuint, fade"
+                "layersOut, 1, 1.5, linear, fade"
+                "fadeLayersIn, 1, 1.79, almostLinear"
+                "fadeLayersOut, 1, 1.39, almostLinear"
+                "workspaces, 1, 1.94, almostLinear, fade"
+                "workspacesIn, 1, 1.21, almostLinear, fade"
+                "workspacesOut, 1, 1.94, almostLinear, fade"
+              ];
+            };
           };
 
           extraConfig = '' '';
         };
 
-        rofi = {
-          enable = true;
-          package = pkgs.rofi-wayland;
-          plugins = with pkgs; [
+        xdg = {
+          mime.enable = true;
 
-          ];
-
-          cycle = false;
-          terminal = "${pkgs.kitty}/bin/kitty";
-
-          location = "center";
-
-          font = "${font_name.sans_serif} 11";
-
-          extraConfig = {
-            show-icons = true;
-            display-drun = "Applications";
-
-            disable-history = false;
-          };
-
-          theme =
-            let
-              inherit (config.home-manager.users.bitscoper.lib.formats.rasi) mkLiteral;
-            in
-            {
-              "*" = {
-                margin = 0;
-                background-color = mkLiteral "transparent";
-                padding = 0;
-                spacing = 0;
-                text-color = mkLiteral dracula_theme.hex.foreground;
-              };
-
-              "window" = {
-                width = mkLiteral "768px";
-                border = mkLiteral "1px";
-                border-radius = mkLiteral "16px";
-                border-color = mkLiteral dracula_theme.hex.purple;
-                background-color = mkLiteral dracula_theme.hex.background;
-              };
-
-              "mainbox" = {
-                padding = mkLiteral "16px";
-              };
-
-              "inputbar" = {
-                border = mkLiteral "1px";
-                border-radius = mkLiteral "8px";
-                border-color = mkLiteral dracula_theme.hex.comment;
-                background-color = mkLiteral dracula_theme.hex.current_line;
-                padding = mkLiteral "8px";
-                spacing = mkLiteral "8px";
-                children = map mkLiteral [
-                  "prompt"
-                  "entry"
-                ];
-              };
-
-              "prompt" = {
-                text-color = mkLiteral dracula_theme.hex.foreground;
-              };
-
-              "entry" = {
-                placeholder-color = mkLiteral dracula_theme.hex.comment;
-                placeholder = "Search";
-              };
-
-              "listview" = {
-                margin = mkLiteral "16px 0px 0px 0px";
-                fixed-height = false;
-                lines = 8;
-                columns = 2;
-              };
-
-              "element" = {
-                border-radius = mkLiteral "8px";
-                padding = mkLiteral "8px";
-                spacing = mkLiteral "8px";
-                children = map mkLiteral [
-                  "element-icon"
-                  "element-text"
-                ];
-              };
-
-              "element-icon" = {
-                vertical-align = mkLiteral "0.5";
-                size = mkLiteral "1em";
-              };
-
-              "element-text" = {
-                text-color = mkLiteral "inherit";
-              };
-
-              "element.selected" = {
-                background-color = mkLiteral dracula_theme.hex.current_line;
-              };
-            };
-        };
-
-        waybar = {
-          enable = true;
-          systemd = {
+          mimeApps = {
             enable = true;
-            # target = ;
-          };
 
-          settings = {
-            top_bar = {
-              start_hidden = false;
-              reload_style_on_change = true;
-              position = "top";
-              exclusive = true;
-              layer = "top";
-              passthrough = false;
-              fixed-center = true;
-              spacing = 4;
+            associations = {
+              added = config.xdg.mime.addedAssociations;
 
-              modules-left = [
-                "power-profiles-daemon"
-                "idle_inhibitor"
-                "backlight"
-                "pulseaudio"
-                "bluetooth"
-                "network"
-              ];
-
-              modules-center = [
-                "clock"
-              ];
-
-              modules-right = [
-                "privacy"
-                "keyboard-state"
-                "systemd-failed-units"
-                "disk"
-                "memory"
-                "cpu"
-                "battery"
-              ];
-
-              power-profiles-daemon = {
-                format = "{icon}";
-                format-icons = {
-                  performance = "";
-                  balanced = "";
-                  power-saver = "";
-                };
-
-                tooltip = true;
-                tooltip-format = "Driver: {driver}\nProfile: {profile}";
-              };
-
-              idle_inhibitor = {
-                start-activated = false;
-
-                format = "{icon}";
-                format-icons = {
-                  activated = "";
-                  deactivated = "";
-                };
-
-                tooltip = true;
-                tooltip-format-activated = "{status}";
-                tooltip-format-deactivated = "{status}";
-              };
-
-              backlight = {
-                device = "intel_backlight";
-                interval = 1;
-
-                format = "{percent}% {icon}";
-                format-icons = [
-                  ""
-                  ""
-                  ""
-                  ""
-                  ""
-                  ""
-                  ""
-                  ""
-                  ""
-                ];
-
-                tooltip = true;
-                tooltip-format = "{percent}% {icon}";
-
-                on-scroll-up = "brightnessctl s +1%";
-                on-scroll-down = "brightnessctl s 1%-";
-                reverse-scrolling = false;
-                reverse-mouse-scrolling = false;
-                scroll-step = 1.0;
-              };
-
-              pulseaudio = {
-                format = "{volume}% {icon} {format_source}";
-                format-muted = "{icon} {format_source}";
-
-                format-bluetooth = "{volume}% {icon} 󰂱 {format_source}";
-                format-bluetooth-muted = "{icon} 󰂱 {format_source}";
-
-                format-source = " {volume}% ";
-                format-source-muted = "";
-
-                format-icons = {
-                  default = [
-                    ""
-                    ""
-                    ""
-                  ];
-                  default-muted = "";
-
-                  speaker = "󰓃";
-                  speaker-muted = "󰓄";
-
-                  headphone = "󰋋";
-                  headphone-muted = "󰟎";
-
-                  headset = "󰋎";
-                  headset-muted = "󰋐";
-
-                  hands-free = "󰏳";
-                  hands-free-muted = "󰗿";
-
-                  phone = "";
-                  phone-muted = "";
-
-                  portable = "";
-                  portable-muted = "";
-
-                  hdmi = "󰽟";
-                  hdmi-muted = "󰽠";
-
-                  hifi = "󰴸";
-                  hifi-muted = "󰓄";
-
-                  car = "󰄋";
-                  car-muted = "󰸜";
-                };
-
-                tooltip = true;
-                tooltip-format = "{desc}";
-
-                scroll-step = 1.0;
-                reverse-scrolling = false;
-                reverse-mouse-scrolling = false;
-                max-volume = 100;
-                on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+";
-                on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-";
-
-                on-click = "uwsm app -- pavucontrol";
-              };
-
-              bluetooth = {
-                format = "{status} {icon}";
-                format-disabled = "Disabled {icon}";
-                format-off = "Off {icon}";
-                format-on = "On {icon}";
-                format-connected = "{device_alias} {icon}";
-                format-connected-battery = "{device_alias} 󰂱 ({device_battery_percentage}%)";
-                format-icons = {
-                  no-controller = "󰂲";
-                  disabled = "󰂲";
-                  off = "󰂲";
-                  on = "󰂯";
-                  connected = "󰂱";
-                };
-
-                tooltip = true;
-                tooltip-format = "Status: {status}\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}";
-                tooltip-format-disabled = "Status: Disabled";
-                tooltip-format-off = "Status: Off";
-                tooltip-format-on = "Status: On\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}";
-                tooltip-format-connected = "Status: Connected\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}\nConnected Devices ({num_connections}): {device_enumerate}";
-                tooltip-format-connected-battery = "Status: Connected\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}\nConnected Devices ({num_connections}): {device_enumerate}";
-                tooltip-format-enumerate-connected = "\n\tAddress: {device_address} ({device_address_type})\n\tAlias: {device_alias}";
-                tooltip-format-enumerate-connected-battery = "\n\tAddress: {device_address} ({device_address_type})\n\tAlias: {device_alias}\n\tBattery: {device_battery_percentage}%";
-
-                on-click = "uwsm app -- blueman-manager";
-              };
-
-              network = {
-                interval = 1;
-
-                format = "{bandwidthUpBytes} {bandwidthDownBytes}";
-                format-disconnected = "Disconnected 󱘖";
-                format-linked = "No IP 󰀦";
-                format-ethernet = "{bandwidthUpBytes}   {bandwidthDownBytes}";
-                format-wifi = "{bandwidthUpBytes}   {bandwidthDownBytes}";
-
-                tooltip = true;
-                tooltip-format = "Interface: {ifname}\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation: {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
-                tooltip-format-disconnected = "Disconnected";
-                tooltip-format-ethernet = "Interface: {ifname}\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation= {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
-                tooltip-format-wifi = "Interface: {ifname}\nESSID: {essid}\nFrequency: {frequency} GHz\nStrength: {signaldBm} dBm ({signalStrength}%)\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation: {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
-
-                on-click = "uwsm app -- nm-connection-editor";
-              };
-
-              clock = {
-                timezone = config.time.timeZone;
-                locale = "en_US";
-                interval = 1;
-
-                format = "{:%I:%M:%S %p}";
-                format-alt = "{:%A, %B %d, %Y}";
-
-                tooltip = true;
-                tooltip-format = "<tt><small>{calendar}</small></tt>";
-
-                calendar = {
-                  mode = "year";
-                  mode-mon-col = 3;
-                  weeks-pos = "right";
-
-                  format = {
-                    months = "<b>{}</b>";
-                    days = "{}";
-                    weekdays = "<b>{}</b>";
-                    weeks = "<i>{:%U}</i>";
-                    today = "<u>{}</u>";
-                  };
-                };
-              };
-
-              privacy = {
-                icon-size = 14;
-                icon-spacing = 8;
-                transition-duration = 200;
-
-                modules = [
-                  {
-                    type = "screenshare";
-                    tooltip = true;
-                    tooltip-icon-size = 16;
-                  }
-                  {
-                    type = "audio-in";
-                    tooltip = true;
-                    tooltip-icon-size = 16;
-                  }
-                  {
-                    type = "audio-out";
-                    tooltip = true;
-                    tooltip-icon-size = 16;
-                  }
-                ];
-              };
-
-              keyboard-state = {
-                capslock = true;
-                numlock = true;
-
-                format = {
-                  capslock = "󰪛";
-                  numlock = "󰎦";
-                };
-              };
-
-              systemd-failed-units = {
-                system = true;
-                user = true;
-
-                hide-on-ok = false;
-
-                format = "{nr_failed_system}, {nr_failed_user} ";
-                format-ok = "";
-              };
-
-              disk = {
-                path = "/";
-                unit = "GB";
-                interval = 1;
-
-                format = "{percentage_used}% 󰋊";
-
-                tooltip = true;
-                tooltip-format = "Total: {specific_total} GB\nUsed: {specific_used} GB ({percentage_used}%)\nFree: {specific_free} GB ({percentage_free}%)";
-
-                on-click = "uwsm app -- kitty sh -c \"btop\"";
-              };
-
-              memory = {
-                interval = 1;
-
-                format = "{percentage}% ";
-
-                tooltip = true;
-                tooltip-format = "Used RAM: {used} GiB ({percentage}%)\nUsed Swap: {swapUsed} GiB ({swapPercentage}%)\nAvailable RAM: {avail} GiB\nAvailable Swap: {swapAvail} GiB";
-
-                on-click = "uwsm app -- kitty sh -c \"btop\"";
-              };
-
-              cpu = {
-                interval = 1;
-
-                format = "{usage}% ";
-
-                tooltip = true;
-
-                on-click = "uwsm app -- kitty sh -c \"btop\"";
-              };
-
-              battery = {
-                bat = "BAT0";
-                adapter = "AC0";
-                design-capacity = false;
-                weighted-average = true;
-                interval = 1;
-
-                full-at = 100;
-                states = {
-                  warning = 25;
-                  critical = 10;
-                };
-
-                format = "{capacity}% {icon}";
-                format-plugged = "{capacity}% ";
-                format-charging = "{capacity}% ";
-                format-full = "{capacity}% {icon}";
-                format-alt = "{time} {icon}";
-                format-time = "{H} h {m} min";
-                format-icons = [
-                  ""
-                  ""
-                  ""
-                  ""
-                  ""
-                ];
-
-                tooltip = true;
-                tooltip-format = "Capacity: {capacity}%\nPower: {power} W\n{timeTo}\nCycles: {cycles}\nHealth: {health}%";
-
-                on-click = "uwsm app -- kitty sh -c \"btop\"";
-              };
+              removed = config.xdg.mime.removedAssociations;
             };
 
-            bottom_bar = {
-              start_hidden = false;
-              reload_style_on_change = true;
-              position = "bottom";
-              exclusive = true;
-              layer = "top";
-              passthrough = false;
-              fixed-center = true;
-              spacing = 0;
-
-              modules-left = [
-                "hyprland/workspaces"
-                "wlr/taskbar"
-              ];
-
-              modules-center = [
-                "hyprland/window"
-              ];
-
-              modules-right = [
-                "tray"
-              ];
-
-              "hyprland/workspaces" = {
-                all-outputs = false;
-                show-special = true;
-                special-visible-only = false;
-                active-only = false;
-                format = "{name}";
-                move-to-monitor = false;
-              };
-
-              "wlr/taskbar" = {
-                all-outputs = false;
-                active-first = false;
-                sort-by-app-id = false;
-                format = "{icon}";
-                icon-theme = "Dracula";
-                icon-size = 14;
-                markup = true;
-
-                tooltip = true;
-                tooltip-format = "Title: {title}\nName: {name}\nID: {app_id}\nState: {state}";
-
-                on-click = "activate";
-              };
-
-              "hyprland/window" = {
-                separate-outputs = true;
-                icon = false;
-
-                format = "{title}";
-              };
-
-              tray = {
-                show-passive-items = true;
-                reverse-direction = false;
-                icon-size = 14;
-                spacing = 4;
-              };
-            };
+            defaultApplications = config.xdg.mime.defaultApplications;
           };
 
-          style = ''
-            * {
-              font-family: ${font_name.sans_serif};
-              font-size: 14px;
-            }
-
-            window#waybar {
-              border: none;
-              background-color: transparent;
-            }
-
-            .modules-right > widget:last-child > #workspaces {
-              margin-right: 0;
-            }
-
-            .modules-left > widget:first-child > #workspaces {
-              margin-left: 0;
-            }
-
-            #power-profiles-daemon,
-            #idle_inhibitor,
-            #backlight,
-            #pulseaudio,
-            #bluetooth,
-            #network,
-            #keyboard-state,
-            #clock,
-            #privacy,
-            #systemd-failed-units,
-            #disk,
-            #memory,
-            #cpu,
-            #battery,
-            #window {
-              border-radius: 16px;
-              background-color: ${dracula_theme.hex.background};
-              padding: 2px 8px;
-              color: ${dracula_theme.hex.foreground};
-            }
-
-            #power-profiles-daemon.power-saver {
-              color: ${dracula_theme.hex.green};
-            }
-
-            #power-profiles-daemon.balanced {
-              color: ${dracula_theme.hex.cyan};
-            }
-
-            #power-profiles-daemon.performance {
-              color: ${dracula_theme.hex.foreground};
-            }
-
-            #idle_inhibitor.deactivated {
-              color: ${dracula_theme.hex.foreground};
-            }
-
-            #idle_inhibitor.activated {
-              color: ${dracula_theme.hex.cyan};
-            }
-
-            #pulseaudio.muted,
-            #pulseaudio.source-muted {
-              color: ${dracula_theme.hex.red};
-            }
-
-            #pulseaudio.bluetooth {
-              color: ${dracula_theme.hex.foreground};
-            }
-
-            #bluetooth.no-controller,
-            #bluetooth.disabled,
-            #bluetooth.off {
-              color: ${dracula_theme.hex.red};
-            }
-
-            #bluetooth.on,
-            #bluetooth.discoverable,
-            #bluetooth.pairable {
-              color: ${dracula_theme.hex.foreground};
-            }
-
-            #bluetooth.discovering,
-            #bluetooth.connected {
-              color: ${dracula_theme.hex.cyan};
-            }
-
-            #network.disabled,
-            #network.disconnected,
-            #network.linked {
-              color: ${dracula_theme.hex.red};
-            }
-
-            #network.etherenet,
-            #network.wifi {
-              color: ${dracula_theme.hex.foreground};
-            }
-
-            #privacy-item.audio-out {
-              color: ${dracula_theme.hex.foreground};
-            }
-
-            #privacy-item.audio-in,
-            #privacy-item.screenshare {
-              color: ${dracula_theme.hex.cyan};
-            }
-
-            #keyboard-state label {
-              margin: 0px 4px;
-            }
-
-            #keyboard-state label.locked {
-              color: ${dracula_theme.hex.cyan};
-            }
-
-            #systemd-failed-units.ok {
-              color: ${dracula_theme.hex.foreground};
-            }
-
-            #systemd-failed-units.degraded {
-              color: ${dracula_theme.hex.red};
-            }
-
-            #battery.plugged,
-            #battery.full {
-              color: ${dracula_theme.hex.foreground};
-            }
-
-            #battery.charging {
-              color: ${dracula_theme.hex.cyan};
-            }
-
-            #battery.warning {
-              color: ${dracula_theme.hex.yellow};
-            }
-
-            #battery.critical {
-              color: ${dracula_theme.hex.red};
-            }
-
-            #workspaces,
-            #taskbar,
-            #tray {
-              background-color: transparent;
-            }
-
-            button {
-              margin: 0px 2px;
-              border-radius: 16px;
-              background-color: ${dracula_theme.hex.background};
-              padding: 0px;
-              color: ${dracula_theme.hex.foreground};
-            }
-
-            button * {
-              padding: 0px 4px;
-            }
-
-            button.active {
-              background-color: ${dracula_theme.hex.current_line};
-            }
-
-            #window label {
-              padding: 0px 4px;
-              font-size: 11px;
-            }
-
-            #tray > widget {
-              border-radius: 16px;
-              background-color: ${dracula_theme.hex.background};
-              color: ${dracula_theme.hex.foreground};
-            }
-
-            #tray image {
-              padding: 0px 8px;
-            }
-
-            #tray > .passive {
-              -gtk-icon-effect: dim;
-            }
-
-            #tray > .active {
-              background-color: ${dracula_theme.hex.current_line};
-            }
-
-            #tray > .needs-attention {
-              background-color: ${dracula_theme.hex.comment};
-              -gtk-icon-effect: highlight;
-            }
-
-            #tray > widget:hover {
-              background-color: ${dracula_theme.hex.current_line};
-            }
-          '';
+          configFile = {
+            "mimeapps.list".force = true;
+          };
         };
 
-        kitty = {
+        gtk = {
           enable = true;
 
-          shellIntegration = {
-            mode = "no-rc";
-            enableBashIntegration = true;
+          theme = {
+            name = "Dracula";
+            package = pkgs.dracula-theme;
+          };
+
+          iconTheme = {
+            name = "Dracula";
+            package = pkgs.dracula-icon-theme;
+          };
+
+          cursorTheme = {
+            name = cursor.theme.name;
+            package = cursor.theme.package;
+            size = cursor.size;
           };
 
           font = {
-            name = font_name.mono;
+            name = font_name.sans_serif;
             package = pkgs.nerd-fonts.noto;
             size = 11;
           };
 
-          keybindings = { };
-
-          settings = {
-            sync_to_monitor = "yes";
-
-            window_padding_width = "0 4 0 4";
-            confirm_os_window_close = 0;
-
-            enable_audio_bell = "yes";
-            detect_urls = "yes";
-            scrollback_lines = -1;
-            click_interval = -1;
-
-            # Colors
-            foreground = dracula_theme.hex.foreground;
-            background = dracula_theme.hex.background;
-            selection_foreground = "#ffffff";
-            selection_background = dracula_theme.hex.current_line;
-            url_color = dracula_theme.hex.cyan;
-            title_fg = dracula_theme.hex.foreground;
-            title_bg = dracula_theme.hex.background;
-            margin_bg = dracula_theme.hex.comment;
-            margin_fg = dracula_theme.hex.current_line;
-            removed_bg = dracula_theme.hex.red;
-            highlight_removed_bg = dracula_theme.hex.red;
-            removed_margin_bg = dracula_theme.hex.red;
-            added_bg = dracula_theme.hex.green;
-            highlight_added_bg = dracula_theme.hex.green;
-            added_margin_bg = dracula_theme.hex.green;
-            filler_bg = dracula_theme.hex.current_line;
-            hunk_margin_bg = dracula_theme.hex.current_line;
-            hunk_bg = dracula_theme.hex.purple;
-            search_bg = dracula_theme.hex.cyan;
-            search_fg = dracula_theme.hex.background;
-            select_bg = dracula_theme.hex.yellow;
-            select_fg = dracula_theme.hex.background;
-
-            # Splits/Windows
-            active_border_color = dracula_theme.hex.foreground;
-            inactive_border_color = dracula_theme.hex.comment;
-
-            # Tab Bar Colors
-            active_tab_foreground = dracula_theme.hex.background;
-            active_tab_background = dracula_theme.hex.foreground;
-            inactive_tab_foreground = dracula_theme.hex.background;
-            inactive_tab_background = dracula_theme.hex.comment;
-
-            # Marks
-            mark1_foreground = dracula_theme.hex.background;
-            mark1_background = dracula_theme.hex.red;
-
-            # Cursor Colors
-            cursor = dracula_theme.hex.foreground;
-            cursor_text_color = dracula_theme.hex.background;
-
-            # Black
-            color0 = "#21222c";
-            color8 = dracula_theme.hex.comment;
-
-            # Red
-            color1 = dracula_theme.hex.red;
-            color9 = "#ff6e6e";
-
-            # Green
-            color2 = dracula_theme.hex.green;
-            color10 = "#69ff94";
-
-            # Yellow
-            color3 = dracula_theme.hex.yellow;
-            color11 = "#ffffa5";
-
-            # Blue
-            color4 = dracula_theme.hex.purple;
-            color12 = "#d6acff";
-
-            # Magenta
-            color5 = dracula_theme.hex.pink;
-            color13 = "#ff92df";
-
-            # Cyan
-            color6 = dracula_theme.hex.cyan;
-            color14 = "#a4ffff";
-
-            # White
-            color7 = dracula_theme.hex.foreground;
-            color15 = "#ffffff";
-          };
-
-          extraConfig = '' '';
+          # gtk3.bookmarks = [
+          #
+          # ];
         };
 
-        git = {
+        qt = {
           enable = true;
+
+          platformTheme.name = "gtk";
+
+          style = {
+            name = "Dracula";
+            package = pkgs.dracula-qt5-theme;
+          };
+        };
+
+        services = {
+          mako = {
+            enable = true;
+
+            actions = true;
+
+            anchor = "top-right";
+            layer = "top";
+            margin = "10";
+            sort = "-time";
+            maxVisible = 5; # -1 = Disabled
+            ignoreTimeout = false;
+            defaultTimeout = 0; # Disabled
+
+            borderRadius = 8;
+            borderSize = 1;
+            borderColor = dracula_theme.hex.comment;
+            backgroundColor = dracula_theme.hex.background;
+            padding = "4";
+            icons = true;
+            maxIconSize = 16;
+            markup = true;
+            font = "${font_name.sans_serif} 11";
+            textColor = dracula_theme.hex.foreground;
+            format = "<b>%s</b>\\n%b";
+
+            extraConfig = ''
+              history=1
+
+              on-notify=none
+              on-button-left=dismiss
+              on-button-right=exec makoctl menu rofi -dmenu -p 'Choose Action'
+              on-button-middle=none
+              on-touch=exec  makoctl menu rofi -dmenu -p 'Choose Action'
+
+              [urgency=low]
+              border-color=${dracula_theme.hex.current_line}
+
+              [urgency=normal]
+              border-color=${dracula_theme.hex.comment}
+
+              [urgency=high]
+              border-color=${dracula_theme.hex.red}
+            '';
+          };
+
+          udiskie = {
+            enable = true;
+
+            tray = "never";
+            automount = true;
+            notify = true;
+          };
+
+          hyprpaper = {
+            enable = true;
+
+            settings =
+              let
+                wallpaper_1 = builtins.fetchurl {
+                  url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
+                };
+              in
+              {
+                ipc = "on";
+
+                splash = false;
+
+                preload =
+                  [
+                    wallpaper_1
+                  ];
+
+                wallpaper = [
+                  ", ${wallpaper_1}"
+                ];
+              };
+          };
+        };
+
+        programs = {
+          hyprlock = {
+            enable = true;
+
+            sourceFirst = true;
+
+            settings = {
+              general = {
+                disable_loading_bar = true;
+                immediate_render = true;
+                fractional_scaling = 2; # 2 = Auto
+
+                no_fade_in = false;
+                no_fade_out = false;
+
+                hide_cursor = false;
+                text_trim = false;
+
+                grace = 0;
+                ignore_empty_input = true;
+              };
+
+              auth = {
+                pam = {
+                  enabled = true;
+                };
+              };
+
+              background = [
+                {
+                  monitor = "";
+                  path = "screenshot";
+                  blur_passes = 4;
+                  blur_size = 4;
+                }
+              ];
+
+              label = [
+                {
+                  monitor = "";
+                  halign = "center";
+                  valign = "top";
+                  position = "0, -128";
+
+                  text_align = "center";
+                  font_family = font_name.sans_serif;
+                  color = dracula_theme.rgba.foreground;
+                  font_size = 64;
+                  text = "$TIME12";
+                }
+
+                {
+                  monitor = "";
+                  halign = "center";
+                  valign = "center";
+                  position = "0, 0";
+
+                  text_align = "center";
+                  font_family = font_name.sans_serif;
+                  color = dracula_theme.rgba.foreground;
+                  font_size = 16;
+                  text = "$DESC"; # Full Name
+                }
+              ];
+
+              input-field = [
+                {
+                  monitor = "";
+                  halign = "center";
+                  valign = "bottom";
+                  position = "0, 128";
+
+                  size = "256, 48";
+                  rounding = 16;
+                  outline_thickness = 1;
+                  # outer_color = "";
+                  shadow_passes = 0;
+                  hide_input = false;
+                  inner_color = dracula_theme.rgba.current_line;
+                  font_family = font_name.sans_serif;
+                  font_color = dracula_theme.rgba.foreground;
+                  placeholder_text = "Password";
+                  dots_center = true;
+                  dots_rounding = -1;
+
+                  fade_on_empty = true;
+
+                  invert_numlock = false;
+                  # capslock_color = "";
+                  # numlock_color = "";
+                  # bothlock_color = "";
+
+                  # check_color = "";
+                  # fail_color = "";
+                  fail_text = "<i>$FAIL <b>($ATTEMPTS)</b></i>";
+                  fail_timeout = 2000;
+                }
+              ];
+            };
+
+            extraConfig = '' '';
+          };
+
+          rofi = {
+            enable = true;
+            package = pkgs.rofi-wayland;
+            plugins = with pkgs; [
+
+            ];
+
+            cycle = false;
+            terminal = "${pkgs.kitty}/bin/kitty";
+
+            location = "center";
+
+            font = "${font_name.sans_serif} 11";
+
+            extraConfig = {
+              show-icons = true;
+              display-drun = "Applications";
+
+              disable-history = false;
+            };
+
+            # theme =
+            #   let
+            #     inherit (config.home-manager.lib.formats.rasi) mkLiteral;
+            #   in
+            #   {
+            #     "*" = {
+            #       margin = 0;
+            #       background-color = mkLiteral "transparent";
+            #       padding = 0;
+            #       spacing = 0;
+            #       text-color = mkLiteral dracula_theme.hex.foreground;
+            #     };
+
+            #     "window" = {
+            #       width = mkLiteral "768px";
+            #       border = mkLiteral "1px";
+            #       border-radius = mkLiteral "16px";
+            #       border-color = mkLiteral dracula_theme.hex.purple;
+            #       background-color = mkLiteral dracula_theme.hex.background;
+            #     };
+
+            #     "mainbox" = {
+            #       padding = mkLiteral "16px";
+            #     };
+
+            #     "inputbar" = {
+            #       border = mkLiteral "1px";
+            #       border-radius = mkLiteral "8px";
+            #       border-color = mkLiteral dracula_theme.hex.comment;
+            #       background-color = mkLiteral dracula_theme.hex.current_line;
+            #       padding = mkLiteral "8px";
+            #       spacing = mkLiteral "8px";
+            #       children = map mkLiteral [
+            #         "prompt"
+            #         "entry"
+            #       ];
+            #     };
+
+            #     "prompt" = {
+            #       text-color = mkLiteral dracula_theme.hex.foreground;
+            #     };
+
+            #     "entry" = {
+            #       placeholder-color = mkLiteral dracula_theme.hex.comment;
+            #       placeholder = "Search";
+            #     };
+
+            #     "listview" = {
+            #       margin = mkLiteral "16px 0px 0px 0px";
+            #       fixed-height = false;
+            #       lines = 8;
+            #       columns = 2;
+            #     };
+
+            #     "element" = {
+            #       border-radius = mkLiteral "8px";
+            #       padding = mkLiteral "8px";
+            #       spacing = mkLiteral "8px";
+            #       children = map mkLiteral [
+            #         "element-icon"
+            #         "element-text"
+            #       ];
+            #     };
+
+            #     "element-icon" = {
+            #       vertical-align = mkLiteral "0.5";
+            #       size = mkLiteral "1em";
+            #     };
+
+            #     "element-text" = {
+            #       text-color = mkLiteral "inherit";
+            #     };
+
+            #     "element.selected" = {
+            #       background-color = mkLiteral dracula_theme.hex.current_line;
+            #     };
+            #   };
+          };
+
+          waybar = {
+            enable = true;
+            systemd = {
+              enable = true;
+              # target = ;
+            };
+
+            settings = {
+              top_bar = {
+                start_hidden = false;
+                reload_style_on_change = true;
+                position = "top";
+                exclusive = true;
+                layer = "top";
+                passthrough = false;
+                fixed-center = true;
+                spacing = 4;
+
+                modules-left = [
+                  "power-profiles-daemon"
+                  "idle_inhibitor"
+                  "backlight"
+                  "pulseaudio"
+                  "bluetooth"
+                  "network"
+                ];
+
+                modules-center = [
+                  "clock"
+                ];
+
+                modules-right = [
+                  "privacy"
+                  "keyboard-state"
+                  "systemd-failed-units"
+                  "disk"
+                  "memory"
+                  "cpu"
+                  "battery"
+                ];
+
+                power-profiles-daemon = {
+                  format = "{icon}";
+                  format-icons = {
+                    performance = "";
+                    balanced = "";
+                    power-saver = "";
+                  };
+
+                  tooltip = true;
+                  tooltip-format = "Driver: {driver}\nProfile: {profile}";
+                };
+
+                idle_inhibitor = {
+                  start-activated = false;
+
+                  format = "{icon}";
+                  format-icons = {
+                    activated = "";
+                    deactivated = "";
+                  };
+
+                  tooltip = true;
+                  tooltip-format-activated = "{status}";
+                  tooltip-format-deactivated = "{status}";
+                };
+
+                backlight = {
+                  device = "intel_backlight";
+                  interval = 1;
+
+                  format = "{percent}% {icon}";
+                  format-icons = [
+                    ""
+                    ""
+                    ""
+                    ""
+                    ""
+                    ""
+                    ""
+                    ""
+                    ""
+                  ];
+
+                  tooltip = true;
+                  tooltip-format = "{percent}% {icon}";
+
+                  on-scroll-up = "brightnessctl s +1%";
+                  on-scroll-down = "brightnessctl s 1%-";
+                  reverse-scrolling = false;
+                  reverse-mouse-scrolling = false;
+                  scroll-step = 1.0;
+                };
+
+                pulseaudio = {
+                  format = "{volume}% {icon} {format_source}";
+                  format-muted = "{icon} {format_source}";
+
+                  format-bluetooth = "{volume}% {icon} 󰂱 {format_source}";
+                  format-bluetooth-muted = "{icon} 󰂱 {format_source}";
+
+                  format-source = " {volume}% ";
+                  format-source-muted = "";
+
+                  format-icons = {
+                    default = [
+                      ""
+                      ""
+                      ""
+                    ];
+                    default-muted = "";
+
+                    speaker = "󰓃";
+                    speaker-muted = "󰓄";
+
+                    headphone = "󰋋";
+                    headphone-muted = "󰟎";
+
+                    headset = "󰋎";
+                    headset-muted = "󰋐";
+
+                    hands-free = "󰏳";
+                    hands-free-muted = "󰗿";
+
+                    phone = "";
+                    phone-muted = "";
+
+                    portable = "";
+                    portable-muted = "";
+
+                    hdmi = "󰽟";
+                    hdmi-muted = "󰽠";
+
+                    hifi = "󰴸";
+                    hifi-muted = "󰓄";
+
+                    car = "󰄋";
+                    car-muted = "󰸜";
+                  };
+
+                  tooltip = true;
+                  tooltip-format = "{desc}";
+
+                  scroll-step = 1.0;
+                  reverse-scrolling = false;
+                  reverse-mouse-scrolling = false;
+                  max-volume = 100;
+                  on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+";
+                  on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-";
+
+                  on-click = "uwsm app -- pavucontrol";
+                };
+
+                bluetooth = {
+                  format = "{status} {icon}";
+                  format-disabled = "Disabled {icon}";
+                  format-off = "Off {icon}";
+                  format-on = "On {icon}";
+                  format-connected = "{device_alias} {icon}";
+                  format-connected-battery = "{device_alias} 󰂱 ({device_battery_percentage}%)";
+                  format-icons = {
+                    no-controller = "󰂲";
+                    disabled = "󰂲";
+                    off = "󰂲";
+                    on = "󰂯";
+                    connected = "󰂱";
+                  };
+
+                  tooltip = true;
+                  tooltip-format = "Status: {status}\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}";
+                  tooltip-format-disabled = "Status: Disabled";
+                  tooltip-format-off = "Status: Off";
+                  tooltip-format-on = "Status: On\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}";
+                  tooltip-format-connected = "Status: Connected\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}\nConnected Devices ({num_connections}): {device_enumerate}";
+                  tooltip-format-connected-battery = "Status: Connected\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}\nConnected Devices ({num_connections}): {device_enumerate}";
+                  tooltip-format-enumerate-connected = "\n\tAddress: {device_address} ({device_address_type})\n\tAlias: {device_alias}";
+                  tooltip-format-enumerate-connected-battery = "\n\tAddress: {device_address} ({device_address_type})\n\tAlias: {device_alias}\n\tBattery: {device_battery_percentage}%";
+
+                  on-click = "uwsm app -- blueman-manager";
+                };
+
+                network = {
+                  interval = 1;
+
+                  format = "{bandwidthUpBytes} {bandwidthDownBytes}";
+                  format-disconnected = "Disconnected 󱘖";
+                  format-linked = "No IP 󰀦";
+                  format-ethernet = "{bandwidthUpBytes}   {bandwidthDownBytes}";
+                  format-wifi = "{bandwidthUpBytes}   {bandwidthDownBytes}";
+
+                  tooltip = true;
+                  tooltip-format = "Interface: {ifname}\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation: {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
+                  tooltip-format-disconnected = "Disconnected";
+                  tooltip-format-ethernet = "Interface: {ifname}\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation= {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
+                  tooltip-format-wifi = "Interface: {ifname}\nESSID: {essid}\nFrequency: {frequency} GHz\nStrength: {signaldBm} dBm ({signalStrength}%)\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation: {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
+
+                  on-click = "uwsm app -- nm-connection-editor";
+                };
+
+                clock = {
+                  timezone = config.time.timeZone;
+                  locale = "en_US";
+                  interval = 1;
+
+                  format = "{:%I:%M:%S %p}";
+                  format-alt = "{:%A, %B %d, %Y}";
+
+                  tooltip = true;
+                  tooltip-format = "<tt><small>{calendar}</small></tt>";
+
+                  calendar = {
+                    mode = "year";
+                    mode-mon-col = 3;
+                    weeks-pos = "right";
+
+                    format = {
+                      months = "<b>{}</b>";
+                      days = "{}";
+                      weekdays = "<b>{}</b>";
+                      weeks = "<i>{:%U}</i>";
+                      today = "<u>{}</u>";
+                    };
+                  };
+                };
+
+                privacy = {
+                  icon-size = 14;
+                  icon-spacing = 8;
+                  transition-duration = 200;
+
+                  modules = [
+                    {
+                      type = "screenshare";
+                      tooltip = true;
+                      tooltip-icon-size = 16;
+                    }
+                    {
+                      type = "audio-in";
+                      tooltip = true;
+                      tooltip-icon-size = 16;
+                    }
+                    {
+                      type = "audio-out";
+                      tooltip = true;
+                      tooltip-icon-size = 16;
+                    }
+                  ];
+                };
+
+                keyboard-state = {
+                  capslock = true;
+                  numlock = true;
+
+                  format = {
+                    capslock = "󰪛";
+                    numlock = "󰎦";
+                  };
+                };
+
+                systemd-failed-units = {
+                  system = true;
+                  user = true;
+
+                  hide-on-ok = false;
+
+                  format = "{nr_failed_system}, {nr_failed_user} ";
+                  format-ok = "";
+                };
+
+                disk = {
+                  path = "/";
+                  unit = "GB";
+                  interval = 1;
+
+                  format = "{percentage_used}% 󰋊";
+
+                  tooltip = true;
+                  tooltip-format = "Total: {specific_total} GB\nUsed: {specific_used} GB ({percentage_used}%)\nFree: {specific_free} GB ({percentage_free}%)";
+
+                  on-click = "uwsm app -- kitty sh -c \"btop\"";
+                };
+
+                memory = {
+                  interval = 1;
+
+                  format = "{percentage}% ";
+
+                  tooltip = true;
+                  tooltip-format = "Used RAM: {used} GiB ({percentage}%)\nUsed Swap: {swapUsed} GiB ({swapPercentage}%)\nAvailable RAM: {avail} GiB\nAvailable Swap: {swapAvail} GiB";
+
+                  on-click = "uwsm app -- kitty sh -c \"btop\"";
+                };
+
+                cpu = {
+                  interval = 1;
+
+                  format = "{usage}% ";
+
+                  tooltip = true;
+
+                  on-click = "uwsm app -- kitty sh -c \"btop\"";
+                };
+
+                battery = {
+                  bat = "BAT0";
+                  adapter = "AC0";
+                  design-capacity = false;
+                  weighted-average = true;
+                  interval = 1;
+
+                  full-at = 100;
+                  states = {
+                    warning = 25;
+                    critical = 10;
+                  };
+
+                  format = "{capacity}% {icon}";
+                  format-plugged = "{capacity}% ";
+                  format-charging = "{capacity}% ";
+                  format-full = "{capacity}% {icon}";
+                  format-alt = "{time} {icon}";
+                  format-time = "{H} h {m} min";
+                  format-icons = [
+                    ""
+                    ""
+                    ""
+                    ""
+                    ""
+                  ];
+
+                  tooltip = true;
+                  tooltip-format = "Capacity: {capacity}%\nPower: {power} W\n{timeTo}\nCycles: {cycles}\nHealth: {health}%";
+
+                  on-click = "uwsm app -- kitty sh -c \"btop\"";
+                };
+              };
+
+              bottom_bar = {
+                start_hidden = false;
+                reload_style_on_change = true;
+                position = "bottom";
+                exclusive = true;
+                layer = "top";
+                passthrough = false;
+                fixed-center = true;
+                spacing = 0;
+
+                modules-left = [
+                  "hyprland/workspaces"
+                  "wlr/taskbar"
+                ];
+
+                modules-center = [
+                  "hyprland/window"
+                ];
+
+                modules-right = [
+                  "tray"
+                ];
+
+                "hyprland/workspaces" = {
+                  all-outputs = false;
+                  show-special = true;
+                  special-visible-only = false;
+                  active-only = false;
+                  format = "{name}";
+                  move-to-monitor = false;
+                };
+
+                "wlr/taskbar" = {
+                  all-outputs = false;
+                  active-first = false;
+                  sort-by-app-id = false;
+                  format = "{icon}";
+                  icon-theme = "Dracula";
+                  icon-size = 14;
+                  markup = true;
+
+                  tooltip = true;
+                  tooltip-format = "Title: {title}\nName: {name}\nID: {app_id}\nState: {state}";
+
+                  on-click = "activate";
+                };
+
+                "hyprland/window" = {
+                  separate-outputs = true;
+                  icon = false;
+
+                  format = "{title}";
+                };
+
+                tray = {
+                  show-passive-items = true;
+                  reverse-direction = false;
+                  icon-size = 14;
+                  spacing = 4;
+                };
+              };
+            };
+
+            style = ''
+              * {
+                font-family: ${font_name.sans_serif};
+                font-size: 14px;
+              }
+
+              window#waybar {
+                border: none;
+                background-color: transparent;
+              }
+
+              .modules-right > widget:last-child > #workspaces {
+                margin-right: 0;
+              }
+
+              .modules-left > widget:first-child > #workspaces {
+                margin-left: 0;
+              }
+
+              #power-profiles-daemon,
+              #idle_inhibitor,
+              #backlight,
+              #pulseaudio,
+              #bluetooth,
+              #network,
+              #keyboard-state,
+              #clock,
+              #privacy,
+              #systemd-failed-units,
+              #disk,
+              #memory,
+              #cpu,
+              #battery,
+              #window {
+                border-radius: 16px;
+                background-color: ${dracula_theme.hex.background};
+                padding: 2px 8px;
+                color: ${dracula_theme.hex.foreground};
+              }
+
+              #power-profiles-daemon.power-saver {
+                color: ${dracula_theme.hex.green};
+              }
+
+              #power-profiles-daemon.balanced {
+                color: ${dracula_theme.hex.cyan};
+              }
+
+              #power-profiles-daemon.performance {
+                color: ${dracula_theme.hex.foreground};
+              }
+
+              #idle_inhibitor.deactivated {
+                color: ${dracula_theme.hex.foreground};
+              }
+
+              #idle_inhibitor.activated {
+                color: ${dracula_theme.hex.cyan};
+              }
+
+              #pulseaudio.muted,
+              #pulseaudio.source-muted {
+                color: ${dracula_theme.hex.red};
+              }
+
+              #pulseaudio.bluetooth {
+                color: ${dracula_theme.hex.foreground};
+              }
+
+              #bluetooth.no-controller,
+              #bluetooth.disabled,
+              #bluetooth.off {
+                color: ${dracula_theme.hex.red};
+              }
+
+              #bluetooth.on,
+              #bluetooth.discoverable,
+              #bluetooth.pairable {
+                color: ${dracula_theme.hex.foreground};
+              }
+
+              #bluetooth.discovering,
+              #bluetooth.connected {
+                color: ${dracula_theme.hex.cyan};
+              }
+
+              #network.disabled,
+              #network.disconnected,
+              #network.linked {
+                color: ${dracula_theme.hex.red};
+              }
+
+              #network.etherenet,
+              #network.wifi {
+                color: ${dracula_theme.hex.foreground};
+              }
+
+              #privacy-item.audio-out {
+                color: ${dracula_theme.hex.foreground};
+              }
+
+              #privacy-item.audio-in,
+              #privacy-item.screenshare {
+                color: ${dracula_theme.hex.cyan};
+              }
+
+              #keyboard-state label {
+                margin: 0px 4px;
+              }
+
+              #keyboard-state label.locked {
+                color: ${dracula_theme.hex.cyan};
+              }
+
+              #systemd-failed-units.ok {
+                color: ${dracula_theme.hex.foreground};
+              }
+
+              #systemd-failed-units.degraded {
+                color: ${dracula_theme.hex.red};
+              }
+
+              #battery.plugged,
+              #battery.full {
+                color: ${dracula_theme.hex.foreground};
+              }
+
+              #battery.charging {
+                color: ${dracula_theme.hex.cyan};
+              }
+
+              #battery.warning {
+                color: ${dracula_theme.hex.yellow};
+              }
+
+              #battery.critical {
+                color: ${dracula_theme.hex.red};
+              }
+
+              #workspaces,
+              #taskbar,
+              #tray {
+                background-color: transparent;
+              }
+
+              button {
+                margin: 0px 2px;
+                border-radius: 16px;
+                background-color: ${dracula_theme.hex.background};
+                padding: 0px;
+                color: ${dracula_theme.hex.foreground};
+              }
+
+              button * {
+                padding: 0px 4px;
+              }
+
+              button.active {
+                background-color: ${dracula_theme.hex.current_line};
+              }
+
+              #window label {
+                padding: 0px 4px;
+                font-size: 11px;
+              }
+
+              #tray > widget {
+                border-radius: 16px;
+                background-color: ${dracula_theme.hex.background};
+                color: ${dracula_theme.hex.foreground};
+              }
+
+              #tray image {
+                padding: 0px 8px;
+              }
+
+              #tray > .passive {
+                -gtk-icon-effect: dim;
+              }
+
+              #tray > .active {
+                background-color: ${dracula_theme.hex.current_line};
+              }
+
+              #tray > .needs-attention {
+                background-color: ${dracula_theme.hex.comment};
+                -gtk-icon-effect: highlight;
+              }
+
+              #tray > widget:hover {
+                background-color: ${dracula_theme.hex.current_line};
+              }
+            '';
+          };
+
+          kitty = {
+            enable = true;
+
+            shellIntegration = {
+              mode = "no-rc";
+              enableBashIntegration = true;
+            };
+
+            font = {
+              name = font_name.mono;
+              package = pkgs.nerd-fonts.noto;
+              size = 11;
+            };
+
+            keybindings = { };
+
+            settings = {
+              sync_to_monitor = "yes";
+
+              window_padding_width = "0 4 0 4";
+              confirm_os_window_close = 0;
+
+              enable_audio_bell = "yes";
+              detect_urls = "yes";
+              scrollback_lines = -1;
+              click_interval = -1;
+
+              # Colors
+              foreground = dracula_theme.hex.foreground;
+              background = dracula_theme.hex.background;
+              selection_foreground = "#ffffff";
+              selection_background = dracula_theme.hex.current_line;
+              url_color = dracula_theme.hex.cyan;
+              title_fg = dracula_theme.hex.foreground;
+              title_bg = dracula_theme.hex.background;
+              margin_bg = dracula_theme.hex.comment;
+              margin_fg = dracula_theme.hex.current_line;
+              removed_bg = dracula_theme.hex.red;
+              highlight_removed_bg = dracula_theme.hex.red;
+              removed_margin_bg = dracula_theme.hex.red;
+              added_bg = dracula_theme.hex.green;
+              highlight_added_bg = dracula_theme.hex.green;
+              added_margin_bg = dracula_theme.hex.green;
+              filler_bg = dracula_theme.hex.current_line;
+              hunk_margin_bg = dracula_theme.hex.current_line;
+              hunk_bg = dracula_theme.hex.purple;
+              search_bg = dracula_theme.hex.cyan;
+              search_fg = dracula_theme.hex.background;
+              select_bg = dracula_theme.hex.yellow;
+              select_fg = dracula_theme.hex.background;
+
+              # Splits/Windows
+              active_border_color = dracula_theme.hex.foreground;
+              inactive_border_color = dracula_theme.hex.comment;
+
+              # Tab Bar Colors
+              active_tab_foreground = dracula_theme.hex.background;
+              active_tab_background = dracula_theme.hex.foreground;
+              inactive_tab_foreground = dracula_theme.hex.background;
+              inactive_tab_background = dracula_theme.hex.comment;
+
+              # Marks
+              mark1_foreground = dracula_theme.hex.background;
+              mark1_background = dracula_theme.hex.red;
+
+              # Cursor Colors
+              cursor = dracula_theme.hex.foreground;
+              cursor_text_color = dracula_theme.hex.background;
+
+              # Black
+              color0 = "#21222c";
+              color8 = dracula_theme.hex.comment;
+
+              # Red
+              color1 = dracula_theme.hex.red;
+              color9 = "#ff6e6e";
+
+              # Green
+              color2 = dracula_theme.hex.green;
+              color10 = "#69ff94";
+
+              # Yellow
+              color3 = dracula_theme.hex.yellow;
+              color11 = "#ffffa5";
+
+              # Blue
+              color4 = dracula_theme.hex.purple;
+              color12 = "#d6acff";
+
+              # Magenta
+              color5 = dracula_theme.hex.pink;
+              color13 = "#ff92df";
+
+              # Cyan
+              color6 = dracula_theme.hex.cyan;
+              color14 = "#a4ffff";
+
+              # White
+              color7 = dracula_theme.hex.foreground;
+              color15 = "#ffffff";
+            };
+
+            extraConfig = '' '';
+          };
+
+          git = {
+            enable = true;
+          };
+        };
+      }
+    ];
+
+    users.bitscoper = {
+      programs = {
+        git = {
           userName = "Abdullah As-Sadeed";
           userEmail = "bitscoper@gmail.com";
         };
