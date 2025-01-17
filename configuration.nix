@@ -74,6 +74,10 @@ let
     size = 24;
   };
 
+  wallpaper = builtins.fetchurl {
+    url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
+  };
+
   secrets = import ./secrets.nix;
 in
 {
@@ -134,7 +138,7 @@ in
       # "udev.log_priority=3"
     ];
 
-    consoleLogLevel = 5; # KERN_NOTICE
+    consoleLogLevel = 5; # 5 = KERN_NOTICE
 
     tmp.cleanOnBoot = true;
 
@@ -197,7 +201,7 @@ in
       sandbox = true;
       auto-optimise-store = true;
 
-      cores = 0; # All
+      cores = 0; # 0 = All
       # max-jobs = 1;
     };
 
@@ -226,15 +230,15 @@ in
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
-      LC_ADDRESS = "en_US.UTF-8";
-      LC_IDENTIFICATION = "en_US.UTF-8";
-      LC_MEASUREMENT = "en_US.UTF-8";
-      LC_MONETARY = "en_US.UTF-8";
-      LC_NAME = "en_US.UTF-8";
-      LC_NUMERIC = "en_US.UTF-8";
-      LC_PAPER = "en_US.UTF-8";
-      LC_TELEPHONE = "en_US.UTF-8";
-      LC_TIME = "en_US.UTF-8";
+      LC_ADDRESS = config.i18n.defaultLocale;
+      LC_IDENTIFICATION = config.i18n.defaultLocale;
+      LC_MEASUREMENT = config.i18n.defaultLocale;
+      LC_MONETARY = config.i18n.defaultLocale;
+      LC_NAME = config.i18n.defaultLocale;
+      LC_NUMERIC = config.i18n.defaultLocale;
+      LC_PAPER = config.i18n.defaultLocale;
+      LC_TELEPHONE = config.i18n.defaultLocale;
+      LC_TIME = config.i18n.defaultLocale;
     };
     supportedLocales = [
       "all"
@@ -295,17 +299,36 @@ in
   };
 
   security = {
-    rtkit.enable = true;
+    allowSimultaneousMultithreading = true;
 
-    polkit = {
-      enable = true;
-    };
+    tpm2.enable = true;
+
+    lockKernelModules = false;
 
     pam.services.hyprlock = {
       fprintAuth = true;
     };
 
-    wrappers.spice-client-glib-usb-acl-helper.source = "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
+    sudo = {
+      enable = true;
+      execWheelOnly = true;
+      wheelNeedsPassword = true;
+    };
+
+    polkit = {
+      enable = true;
+    };
+    soteria.enable = true;
+
+    rtkit.enable = true;
+
+    wrappers = {
+      spice-client-glib-usb-acl-helper.source = "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
+    };
+
+    audit = {
+      enable = true;
+    };
   };
 
   hardware = {
@@ -366,7 +389,7 @@ in
         ovmf = {
           enable = true;
           packages = [
-            (pkgs.OVMF.override {
+            (pkgs.OVMFFull.override {
               secureBoot = true;
               tpmSupport = true;
             }).fd
@@ -392,9 +415,13 @@ in
       cloudflare-warp
     ];
 
-    targets.multi-user.wants = [
-      "warp-svc.service"
-    ];
+    globalEnvironment = { };
+
+    targets = {
+      multi-user.wants = [
+        "warp-svc.service"
+      ];
+    };
   };
 
   services = {
@@ -445,7 +472,7 @@ in
       enable = true;
       # tod = {
       #   enable = true;
-      #   driver = pkgs.libfprint-2-tod1-elan;
+      #   driver = ;
       # };
     };
 
@@ -480,6 +507,7 @@ in
       packages = with pkgs; [
         android-udev-rules
         game-devices-udev-rules
+        libmtp.out
         rtl-sdr
         usb-blaster-udev-rules
       ];
@@ -576,12 +604,6 @@ in
     pulseaudio.enable = false;
 
     blueman.enable = true;
-
-    udisks2 = {
-      enable = true;
-
-      settings = { };
-    };
 
     printing = {
       enable = true;
@@ -973,16 +995,7 @@ in
       binfmt = true;
     };
 
-    uwsm = {
-      enable = true;
-      waylandCompositors = {
-        hyprland = {
-          prettyName = "Hyprland";
-          comment = "Hyprland compositor managed by UWSM";
-          binPath = "/run/current-system/sw/bin/Hyprland";
-        };
-      };
-    };
+    uwsm.enable = true;
 
     hyprland = {
       enable = true;
@@ -1001,9 +1014,7 @@ in
       completion.enable = true;
       enableLsColors = true;
 
-      shellAliases = {
-        clean_build = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --upgrade-all";
-      };
+      shellAliases = { };
 
       loginShellInit = '' '';
 
@@ -1035,12 +1046,32 @@ in
       dirmngr.enable = true;
     };
 
-    adb.enable = true;
-
     nm-applet = {
       enable = true;
       indicator = true;
     };
+
+    git = {
+      enable = true;
+      package = pkgs.gitFull;
+
+      lfs = {
+        enable = true;
+        enablePureSSHTransfer = true;
+      };
+
+      prompt.enable = true;
+
+      config = {
+        init = {
+          defaultBranch = "main";
+        };
+      };
+    };
+
+    adb.enable = true;
+
+    usbtop.enable = true;
 
     virt-manager.enable = true;
 
@@ -1070,6 +1101,11 @@ in
       localNetworkGameTransfers.openFirewall = true;
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
+    };
+
+    localsend = {
+      enable = true;
+      openFirewall = true;
     };
 
     dconf = {
@@ -1177,6 +1213,21 @@ in
   };
 
   environment = {
+
+    enableDebugInfo = false;
+
+    enableAllTerminfo = true;
+
+    wordlist = {
+      enable = true;
+      # lists = ;
+    };
+
+    homeBinInPath = true;
+    localBinInPath = true;
+
+    stub-ld.enable = true;
+
     variables = pkgs.lib.mkForce {
       ANDROID_SDK_ROOT = android_sdk_path;
       ANDROID_HOME = android_sdk_path;
@@ -1189,12 +1240,24 @@ in
       CHROME_EXECUTABLE = "chromium";
     };
 
+    shellAliases = {
+      clean_build = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --install-bootloader --upgrade-all";
+    };
+
+    extraInit = '' '';
+
     loginShellInit = ''
       rm -rf ~/.android/avd
       ln -sf ~/.config/.android/avd ~/.android/avd
     '';
 
+    shellInit = '' '';
+
+    interactiveShellInit = '' '';
+
     systemPackages = with pkgs; [
+      # hyprpolkitagent
+      # reiser4progs
       acl
       agi
       aircrack-ng
@@ -1211,12 +1274,12 @@ in
       blender
       bluez
       bluez-tools
-      bridge-utils
       brightnessctl
       btop
       btrfs-progs
       burpsuite
       butt
+      bzip2
       certbot-full
       clang
       clinfo
@@ -1236,14 +1299,18 @@ in
       dbeaver-bin
       dconf-editor
       dmg2img
+      dosfstools
+      e2fsprogs
       esptool
       exfatprogs
+      f2fs-tools
       faac
       faad2
       fastfetch
       fd
       fdk_aac
       ffmpeg-full
+      ffmpegthumbnailer
       file
       flutter327
       fritzing
@@ -1251,14 +1318,15 @@ in
       gcc
       gdb
       gimp-with-plugins
-      git
       git-doc
       glib
       glibc
       gnome-font-viewer
       gnugrep
       gnumake
+      gnutar
       gource
+      gparted
       gpredict
       gradle
       gradle-completion
@@ -1266,15 +1334,16 @@ in
       grim
       guestfs-tools
       gzip
+      hfsprogs
       hw-probe
       hyprcursor
       hyprls
       hyprpicker
-      hyprpolkitagent
       i2c-tools
       iftop
       inotify-tools
       jellyfin-media-player
+      jfsutils
       john
       johnny
       jq
@@ -1286,6 +1355,7 @@ in
       kubectl-view-allocations
       kubectl-view-secret
       kubernetes
+      lhasa
       libGL
       libaom
       libappimage
@@ -1295,6 +1365,7 @@ in
       libdvdread
       libfprint
       libfprint-tod
+      libftdi1
       libgcc
       libgpg-error
       libguestfs
@@ -1303,7 +1374,6 @@ in
       libopus
       libosinfo
       libreoffice-fresh
-      libtinfo
       libusb1
       libuuid
       libva-utils
@@ -1311,13 +1381,14 @@ in
       libvpx
       libwebp
       lsof
+      lvm2
       lynis
       mattermost-desktop
-      memcached
       metasploit
       mixxx
-      nano
+      mtools
       networkmanagerapplet
+      nilfs-utils
       ninja
       nix-bash-completions
       nix-diff
@@ -1326,35 +1397,39 @@ in
       nixos-icons
       nixpkgs-fmt
       nmap
+      ntfs3g
       obs-studio
       oculante
       onedrive
       onionshare-gui
       openssl
+      p7zip
       patchelf
       pavucontrol
       pciutils
+      pcmanfm
       pcre
       pgadmin4-desktopmode
       php84
-      pipewire
       pkg-config
       platformio
       platformio-core
       playerctl
       podman-compose
       podman-desktop
-      podman-tui
       python313Full
       qbittorrent
+      qemu-utils
       qpwgraph
       rar
       readline
+      reiserfsprogs
       ripgrep
       rpPPPoE
       rtl-sdr-librtlsdr
       sane-backends
       schroedinger
+      scrcpy
       screen
       sdrangel
       sdrpp
@@ -1363,22 +1438,23 @@ in
       social-engineer-toolkit
       spice-gtk
       spice-protocol
-      superfile
-      swtpm
       telegram-desktop
       texliveFull
       thermald
       tor-browser
       tree
       tree-sitter
+      udftools
+      unar
       undollar
       ungoogled-chromium
       unicode-emoji
       universal-android-debloater
       unrar
       unzip
-      usbtop
       usbutils
+      util-linux
+      virt-viewer
       virtio-win
       virtiofsd
       vlc
@@ -1400,8 +1476,10 @@ in
       wpscan
       x264
       x265
+      xarchiver
       xdg-user-dirs
       xdg-utils
+      xfsdump
       xfsprogs
       xorg.xhost
       xoscope
@@ -1501,6 +1579,17 @@ in
         ];
       })
     ] ++
+    (with unixtools; [
+      arp
+      ifconfig
+      netstat
+      nettools
+      ping
+      route
+      util-linux
+      whereis
+    ])
+    ++
     (with gst_all_1; [
       gst-editing-services
       gst-libav
@@ -1608,7 +1697,7 @@ in
       latexpand
     ]) ++
     # (with androidenv.androidPkgs; [
-    #   build-tools
+    #   build-tools # Errors
     #   emulator
     #   platform-tools
     #   tools
@@ -1648,8 +1737,13 @@ in
 
       removedAssociations = { };
 
+      # https://www.iana.org/assignments/media-types/media-types.xhtml # Excluding "application/x-*" and "x-scheme-handler/*"
       defaultApplications = {
+        "inode/directory" = "pcmanfm.desktop";
+
         "text/1d-interleaved-parityfec" = "code.desktop";
+        "text/RED" = "code.desktop";
+        "text/SGML" = "code.desktop";
         "text/cache-manifest" = "code.desktop";
         "text/calendar" = "code.desktop";
         "text/cql" = "code.desktop";
@@ -1663,7 +1757,6 @@ in
         "text/ecmascript" = "code.desktop";
         "text/encaprtp" = "code.desktop";
         "text/enriched" = "code.desktop";
-        "text/example" = "code.desktop";
         "text/fhirpath" = "code.desktop";
         "text/flexfec" = "code.desktop";
         "text/fwdred" = "code.desktop";
@@ -1685,14 +1778,12 @@ in
         "text/prs.prop.logic" = "code.desktop";
         "text/prs.texi" = "code.desktop";
         "text/raptorfec" = "code.desktop";
-        "text/RED" = "code.desktop";
         "text/rfc822-headers" = "code.desktop";
         "text/richtext" = "code.desktop";
         "text/rtf" = "code.desktop";
         "text/rtp-enc-aescm128" = "code.desktop";
         "text/rtploopback" = "code.desktop";
         "text/rtx" = "code.desktop";
-        "text/SGML" = "code.desktop";
         "text/shaclc" = "code.desktop";
         "text/shex" = "code.desktop";
         "text/spdx" = "code.desktop";
@@ -1704,12 +1795,14 @@ in
         "text/ulpfec" = "code.desktop";
         "text/uri-list" = "code.desktop";
         "text/vcard" = "code.desktop";
+        "text/vnd.DMClientScript" = "code.desktop";
+        "text/vnd.IPTC.NITF" = "code.desktop";
+        "text/vnd.IPTC.NewsML" = "code.desktop";
         "text/vnd.a" = "code.desktop";
         "text/vnd.abc" = "code.desktop";
         "text/vnd.ascii-art" = "code.desktop";
         "text/vnd.curl" = "code.desktop";
         "text/vnd.debian.copyright" = "code.desktop";
-        "text/vnd.DMClientScript" = "code.desktop";
         "text/vnd.dvb.subtitle" = "code.desktop";
         "text/vnd.esmertec.theme-descriptor" = "code.desktop";
         "text/vnd.exchangeable" = "code.desktop";
@@ -1723,8 +1816,6 @@ in
         "text/vnd.hgl" = "code.desktop";
         "text/vnd.in3d.3dml" = "code.desktop";
         "text/vnd.in3d.spot" = "code.desktop";
-        "text/vnd.IPTC.NewsML" = "code.desktop";
-        "text/vnd.IPTC.NITF" = "code.desktop";
         "text/vnd.latex-z" = "code.desktop";
         "text/vnd.motorola.reflex" = "code.desktop";
         "text/vnd.ms-mediapackage" = "code.desktop";
@@ -1732,8 +1823,8 @@ in
         "text/vnd.radisys.msml-basic-layout" = "code.desktop";
         "text/vnd.senx.warpscript" = "code.desktop";
         "text/vnd.si.uricatalogue" = "code.desktop";
-        "text/vnd.sun.j2me.app-descriptor" = "code.desktop";
         "text/vnd.sosi" = "code.desktop";
+        "text/vnd.sun.j2me.app-descriptor" = "code.desktop";
         "text/vnd.trolltech.linguist" = "code.desktop";
         "text/vnd.vcf" = "code.desktop";
         "text/vnd.wap.si" = "code.desktop";
@@ -1756,7 +1847,6 @@ in
         "image/dicom-rle" = "oculante.desktop";
         "image/dpx" = "oculante.desktop";
         "image/emf" = "oculante.desktop";
-        "image/example" = "oculante.desktop";
         "image/fits" = "oculante.desktop";
         "image/g3fax" = "oculante.desktop";
         "image/gif" = "oculante.desktop";
@@ -1801,9 +1891,9 @@ in
         "image/vnd.cns.inf2" = "oculante.desktop";
         "image/vnd.dece.graphic" = "oculante.desktop";
         "image/vnd.djvu" = "oculante.desktop";
+        "image/vnd.dvb.subtitle" = "oculante.desktop";
         "image/vnd.dwg" = "oculante.desktop";
         "image/vnd.dxf" = "oculante.desktop";
-        "image/vnd.dvb.subtitle" = "oculante.desktop";
         "image/vnd.fastbidsheet" = "oculante.desktop";
         "image/vnd.fpx" = "oculante.desktop";
         "image/vnd.fst" = "oculante.desktop";
@@ -1812,8 +1902,8 @@ in
         "image/vnd.globalgraphics.pgb" = "oculante.desktop";
         "image/vnd.microsoft.icon" = "oculante.desktop";
         "image/vnd.mix" = "oculante.desktop";
-        "image/vnd.ms-modi" = "oculante.desktop";
         "image/vnd.mozilla.apng" = "oculante.desktop";
+        "image/vnd.ms-modi" = "oculante.desktop";
         "image/vnd.net-fpx" = "oculante.desktop";
         "image/vnd.pco.b16" = "oculante.desktop";
         "image/vnd.radiance" = "oculante.desktop";
@@ -1835,31 +1925,17 @@ in
         "audio/32kadpcm" = "vlc.desktop";
         "audio/3gpp" = "vlc.desktop";
         "audio/3gpp2" = "vlc.desktop";
-        "audio/aac" = "vlc.desktop";
-        "audio/ac3" = "vlc.desktop";
         "audio/AMR" = "vlc.desktop";
         "audio/AMR-WB" = "vlc.desktop";
-        "audio/amr-wb+" = "vlc.desktop";
-        "audio/aptx" = "vlc.desktop";
-        "audio/asc" = "vlc.desktop";
         "audio/ATRAC-ADVANCED-LOSSLESS" = "vlc.desktop";
         "audio/ATRAC-X" = "vlc.desktop";
         "audio/ATRAC3" = "vlc.desktop";
-        "audio/basic" = "vlc.desktop";
         "audio/BV16" = "vlc.desktop";
         "audio/BV32" = "vlc.desktop";
-        "audio/clearmode" = "vlc.desktop";
         "audio/CN" = "vlc.desktop";
         "audio/DAT12" = "vlc.desktop";
-        "audio/dls" = "vlc.desktop";
-        "audio/dsr-es201108" = "vlc.desktop";
-        "audio/dsr-es202050" = "vlc.desktop";
-        "audio/dsr-es202211" = "vlc.desktop";
-        "audio/dsr-es202212" = "vlc.desktop";
         "audio/DV" = "vlc.desktop";
         "audio/DVI4" = "vlc.desktop";
-        "audio/eac3" = "vlc.desktop";
-        "audio/encaprtp" = "vlc.desktop";
         "audio/EVRC" = "vlc.desktop";
         "audio/EVRC-QCP" = "vlc.desktop";
         "audio/EVRC0" = "vlc.desktop";
@@ -1874,14 +1950,10 @@ in
         "audio/EVRCWB0" = "vlc.desktop";
         "audio/EVRCWB1" = "vlc.desktop";
         "audio/EVS" = "vlc.desktop";
-        "audio/example" = "vlc.desktop";
-        "audio/flac" = "vlc.desktop";
-        "audio/flexfec" = "vlc.desktop";
-        "audio/fwdred" = "vlc.desktop";
         "audio/G711-0" = "vlc.desktop";
         "audio/G719" = "vlc.desktop";
-        "audio/G7221" = "vlc.desktop";
         "audio/G722" = "vlc.desktop";
+        "audio/G7221" = "vlc.desktop";
         "audio/G723" = "vlc.desktop";
         "audio/G726-16" = "vlc.desktop";
         "audio/G726-24" = "vlc.desktop";
@@ -1895,65 +1967,82 @@ in
         "audio/GSM" = "vlc.desktop";
         "audio/GSM-EFR" = "vlc.desktop";
         "audio/GSM-HR-08" = "vlc.desktop";
-        "audio/iLBC" = "vlc.desktop";
-        "audio/ip-mr_v2.5" = "vlc.desktop";
-        "audio/L8" = "vlc.desktop";
         "audio/L16" = "vlc.desktop";
         "audio/L20" = "vlc.desktop";
         "audio/L24" = "vlc.desktop";
+        "audio/L8" = "vlc.desktop";
         "audio/LPC" = "vlc.desktop";
-        "audio/matroska" = "vlc.desktop";
         "audio/MELP" = "vlc.desktop";
-        "audio/MELP600" = "vlc.desktop";
         "audio/MELP1200" = "vlc.desktop";
         "audio/MELP2400" = "vlc.desktop";
+        "audio/MELP600" = "vlc.desktop";
+        "audio/MP4A-LATM" = "vlc.desktop";
+        "audio/MPA" = "vlc.desktop";
+        "audio/PCMA" = "vlc.desktop";
+        "audio/PCMA-WB" = "vlc.desktop";
+        "audio/PCMU" = "vlc.desktop";
+        "audio/PCMU-WB" = "vlc.desktop";
+        "audio/QCELP" = "vlc.desktop";
+        "audio/RED" = "vlc.desktop";
+        "audio/SMV" = "vlc.desktop";
+        "audio/SMV-QCP" = "vlc.desktop";
+        "audio/SMV0" = "vlc.desktop";
+        "audio/TETRA_ACELP" = "vlc.desktop";
+        "audio/TETRA_ACELP_BB" = "vlc.desktop";
+        "audio/TSVCIS" = "vlc.desktop";
+        "audio/UEMCLIP" = "vlc.desktop";
+        "audio/VDVI" = "vlc.desktop";
+        "audio/VMR-WB" = "vlc.desktop";
+        "audio/aac" = "vlc.desktop";
+        "audio/ac3" = "vlc.desktop";
+        "audio/amr-wb+" = "vlc.desktop";
+        "audio/aptx" = "vlc.desktop";
+        "audio/asc" = "vlc.desktop";
+        "audio/basic" = "vlc.desktop";
+        "audio/clearmode" = "vlc.desktop";
+        "audio/dls" = "vlc.desktop";
+        "audio/dsr-es201108" = "vlc.desktop";
+        "audio/dsr-es202050" = "vlc.desktop";
+        "audio/dsr-es202211" = "vlc.desktop";
+        "audio/dsr-es202212" = "vlc.desktop";
+        "audio/eac3" = "vlc.desktop";
+        "audio/encaprtp" = "vlc.desktop";
+        "audio/flac" = "vlc.desktop";
+        "audio/flexfec" = "vlc.desktop";
+        "audio/fwdred" = "vlc.desktop";
+        "audio/iLBC" = "vlc.desktop";
+        "audio/ip-mr_v2.5" = "vlc.desktop";
+        "audio/matroska" = "vlc.desktop";
         "audio/mhas" = "vlc.desktop";
         "audio/midi-clip" = "vlc.desktop";
         "audio/mobile-xmf" = "vlc.desktop";
-        "audio/MPA" = "vlc.desktop";
         "audio/mp4" = "vlc.desktop";
-        "audio/MP4A-LATM" = "vlc.desktop";
         "audio/mpa-robust" = "vlc.desktop";
         "audio/mpeg" = "vlc.desktop";
         "audio/mpeg4-generic" = "vlc.desktop";
         "audio/ogg" = "vlc.desktop";
         "audio/opus" = "vlc.desktop";
         "audio/parityfec" = "vlc.desktop";
-        "audio/PCMA" = "vlc.desktop";
-        "audio/PCMA-WB" = "vlc.desktop";
-        "audio/PCMU" = "vlc.desktop";
-        "audio/PCMU-WB" = "vlc.desktop";
         "audio/prs.sid" = "vlc.desktop";
-        "audio/QCELP" = "vlc.desktop";
         "audio/raptorfec" = "vlc.desktop";
-        "audio/RED" = "vlc.desktop";
         "audio/rtp-enc-aescm128" = "vlc.desktop";
-        "audio/rtploopback" = "vlc.desktop";
         "audio/rtp-midi" = "vlc.desktop";
+        "audio/rtploopback" = "vlc.desktop";
         "audio/rtx" = "vlc.desktop";
         "audio/scip" = "vlc.desktop";
-        "audio/SMV" = "vlc.desktop";
-        "audio/SMV0" = "vlc.desktop";
-        "audio/SMV-QCP" = "vlc.desktop";
         "audio/sofa" = "vlc.desktop";
         "audio/sp-midi" = "vlc.desktop";
         "audio/speex" = "vlc.desktop";
         "audio/t140c" = "vlc.desktop";
         "audio/t38" = "vlc.desktop";
         "audio/telephone-event" = "vlc.desktop";
-        "audio/TETRA_ACELP" = "vlc.desktop";
-        "audio/TETRA_ACELP_BB" = "vlc.desktop";
         "audio/tone" = "vlc.desktop";
-        "audio/TSVCIS" = "vlc.desktop";
-        "audio/UEMCLIP" = "vlc.desktop";
         "audio/ulpfec" = "vlc.desktop";
         "audio/usac" = "vlc.desktop";
-        "audio/VDVI" = "vlc.desktop";
-        "audio/VMR-WB" = "vlc.desktop";
         "audio/vnd.3gpp.iufp" = "vlc.desktop";
         "audio/vnd.4SB" = "vlc.desktop";
-        "audio/vnd.audiokoz" = "vlc.desktop";
         "audio/vnd.CELP" = "vlc.desktop";
+        "audio/vnd.audiokoz" = "vlc.desktop";
         "audio/vnd.cisco.nse" = "vlc.desktop";
         "audio/vnd.cmles.radio-events" = "vlc.desktop";
         "audio/vnd.cns.anp1" = "vlc.desktop";
@@ -1995,18 +2084,14 @@ in
 
         "video/1d-interleaved-parityfec" = "vlc.desktop";
         "video/3gpp" = "vlc.desktop";
-        "video/3gpp2" = "vlc.desktop";
         "video/3gpp-tt" = "vlc.desktop";
+        "video/3gpp2" = "vlc.desktop";
         "video/AV1" = "vlc.desktop";
         "video/BMPEG" = "vlc.desktop";
         "video/BT656" = "vlc.desktop";
         "video/CelB" = "vlc.desktop";
         "video/DV" = "vlc.desktop";
-        "video/encaprtp" = "vlc.desktop";
-        "video/evc" = "vlc.desktop";
-        "video/example" = "vlc.desktop";
         "video/FFV1" = "vlc.desktop";
-        "video/flexfec" = "vlc.desktop";
         "video/H261" = "vlc.desktop";
         "video/H263" = "vlc.desktop";
         "video/H263-1998" = "vlc.desktop";
@@ -2016,19 +2101,25 @@ in
         "video/H264-SVC" = "vlc.desktop";
         "video/H265" = "vlc.desktop";
         "video/H266" = "vlc.desktop";
-        "video/iso.segment" = "vlc.desktop";
         "video/JPEG" = "vlc.desktop";
+        "video/MP1S" = "vlc.desktop";
+        "video/MP2P" = "vlc.desktop";
+        "video/MP2T" = "vlc.desktop";
+        "video/MP4V-ES" = "vlc.desktop";
+        "video/MPV" = "vlc.desktop";
+        "video/SMPTE292M" = "vlc.desktop";
+        "video/VP8" = "vlc.desktop";
+        "video/VP9" = "vlc.desktop";
+        "video/encaprtp" = "vlc.desktop";
+        "video/evc" = "vlc.desktop";
+        "video/flexfec" = "vlc.desktop";
+        "video/iso.segment" = "vlc.desktop";
         "video/jpeg2000" = "vlc.desktop";
         "video/jxsv" = "vlc.desktop";
         "video/matroska" = "vlc.desktop";
         "video/matroska-3d" = "vlc.desktop";
         "video/mj2" = "vlc.desktop";
-        "video/MP1S" = "vlc.desktop";
-        "video/MP2P" = "vlc.desktop";
-        "video/MP2T" = "vlc.desktop";
         "video/mp4" = "vlc.desktop";
-        "video/MP4V-ES" = "vlc.desktop";
-        "video/MPV" = "vlc.desktop";
         "video/mpeg" = "vlc.desktop";
         "video/mpeg4-generic" = "vlc.desktop";
         "video/nv" = "vlc.desktop";
@@ -2043,7 +2134,6 @@ in
         "video/rtx" = "vlc.desktop";
         "video/scip" = "vlc.desktop";
         "video/smpte291" = "vlc.desktop";
-        "video/SMPTE292M" = "vlc.desktop";
         "video/ulpfec" = "vlc.desktop";
         "video/vc1" = "vlc.desktop";
         "video/vc2" = "vlc.desktop";
@@ -2081,10 +2171,23 @@ in
         "video/vnd.sealed.swf" = "vlc.desktop";
         "video/vnd.sealedmedia.softseal.mov" = "vlc.desktop";
         "video/vnd.uvvu.mp4" = "vlc.desktop";
-        "video/vnd.youtube.yt" = "vlc.desktop";
         "video/vnd.vivo" = "vlc.desktop";
-        "video/VP8" = "vlc.desktop";
-        "video/VP9" = "vlc.desktop";
+        "video/vnd.youtube.yt" = "vlc.desktop";
+
+        "application/vnd.oasis.opendocument.text" = "writer.desktop"; # .odt
+        "application/msword" = "writer.desktop"; # .doc
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = "writer.desktop"; # .docx
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.template" = "writer.desktop"; # .dotx
+
+        "application/vnd.oasis.opendocument.spreadsheet" = "calc.desktop"; # .ods
+        "application/vnd.ms-excel" = "calc.desktop"; # .xls
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "calc.desktop"; # .xlsx
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.template" = "calc.desktop"; # .xltx
+
+        "application/vnd.oasis.opendocument.presentation" = "impress.desktop"; # .odp
+        "application/vnd.ms-powerpoint" = "impress.desktop"; # .ppt
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop"; # .pptx
+        "application/vnd.openxmlformats-officedocument.presentationml.template" = "impress.desktop"; # .potx
 
         "application/pdf" = "firefox.desktop";
 
@@ -2094,6 +2197,21 @@ in
         "font/ttf" = "org.gnome.font-viewer.desktop";
         "font/woff" = "org.gnome.font-viewer.desktop";
         "font/woff2" = "org.gnome.font-viewer.desktop";
+
+        "application/gzip" = "xarchiver.desktop";
+        "application/vnd.rar" = "xarchiver.desktop";
+        "application/x-7z-compressed" = "xarchiver.desktop";
+        "application/x-arj" = "xarchiver.desktop";
+        "application/x-bzip2" = "xarchiver.desktop";
+        "application/x-gtar" = "xarchiver.desktop";
+        "application/x-rar-compressed " = "xarchiver.desktop"; # More common than "application/vnd.rar"
+        "application/x-tar" = "xarchiver.desktop";
+        "application/zip" = "xarchiver.desktop";
+
+        "x-scheme-handler/http" = "firefox.desktop";
+        "x-scheme-handler/https" = "firefox.desktop";
+
+        "x-scheme-handler/mailto" = "thunderbird.desktop";
       };
     };
 
@@ -2204,9 +2322,9 @@ in
 
             # ];
 
-            # variables = [
-
-            # ];
+            variables = [
+              "--all"
+            ];
           };
 
           plugins = [
@@ -2227,7 +2345,7 @@ in
             ];
 
             exec-once = [
-              "systemctl --user start hyprpolkitagent & setfacl --modify user:jellyfin:--x ~ & adb start-server &"
+              "setfacl --modify user:jellyfin:--x ~ & adb start-server &"
               "sleep 2 && uwsm app -- keepassxc"
               "uwsm app -- wl-paste --type text --watch cliphist store"
               "uwsm app -- wl-paste --type image --watch cliphist store"
@@ -2293,10 +2411,12 @@ in
               ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/Screenshot_$(date +'%Y-%B-%d_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\""
 
               "SUPER, R, exec, uwsm app -- rofi -show drun"
+              "SUPER SHIFT, R, exec, uwsm app -- rofi -show run"
+
               "SUPER, T, exec, uwsm app -- kitty"
 
-              ", XF86Explorer, exec, uwsm app -- kitty sh -c \"superfile\""
-              "SUPER, E, exec, uwsm app -- kitty sh -c \"superfile\""
+              ", XF86Explorer, exec, uwsm app -- pcmanfm"
+              "SUPER, E, exec, uwsm app -- pcmanfm"
 
               "SUPER, F, exec, uwsm app -- kitty --hold sh -c \"fastfetch --thread true --detect-version true --logo-preserve-aspect-ratio true --temp-unit c --title-fqdn true --disk-show-regular true --disk-show-external true --disk-show-hidden true --disk-show-subvolumes true --disk-show-readonly true --disk-show-unknown true --physicaldisk-temp true --bluetooth-show-disconnected true --display-precise-refresh-rate true --cpu-temp true --cpu-show-pe-core-count true --cpuusage-separate true --gpu-temp true --gpu-driver-specific true --battery-temp true --localip-show-ipv4 true --localip-show-ipv6 true --localip-show-mac true --localip-show-loop true --localip-show-mtu true --localip-show-speed true --localip-show-prefix-len true --localip-show-all-ips true --localip-show-flags true --wm-detect-plugin true\""
               "SUPER, B, exec, uwsm app -- kitty sh -c \"btop\""
@@ -2361,6 +2481,8 @@ in
 
             misc = {
               disable_autoreload = false;
+
+              allow_session_lock_restore = true;
 
               key_press_enables_dpms = true;
               mouse_move_enables_dpms = true;
@@ -2560,10 +2682,6 @@ in
             package = pkgs.nerd-fonts.noto;
             size = 11;
           };
-
-          # gtk3.bookmarks = [
-          #
-          # ];
         };
 
         qt = {
@@ -2589,7 +2707,7 @@ in
             sort = "-time";
             maxVisible = 5; # -1 = Disabled
             ignoreTimeout = false;
-            defaultTimeout = 0; # Disabled
+            defaultTimeout = 0; # 0 = Disabled
 
             borderRadius = 8;
             borderSize = 1;
@@ -2623,37 +2741,23 @@ in
             '';
           };
 
-          udiskie = {
-            enable = true;
-
-            tray = "never";
-            automount = true;
-            notify = true;
-          };
-
           hyprpaper = {
             enable = true;
 
-            settings =
-              let
-                wallpaper_1 = builtins.fetchurl {
-                  url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
-                };
-              in
-              {
-                ipc = "on";
+            settings = {
+              ipc = "on";
 
-                splash = false;
+              splash = false;
 
-                preload =
-                  [
-                    wallpaper_1
-                  ];
-
-                wallpaper = [
-                  ", ${wallpaper_1}"
+              preload =
+                [
+                  wallpaper
                 ];
-              };
+
+              wallpaper = [
+                ", ${wallpaper}"
+              ];
+            };
           };
         };
 
@@ -2667,7 +2771,7 @@ in
               general = {
                 disable_loading_bar = true;
                 immediate_render = true;
-                fractional_scaling = 2; # 2 = Auto
+                fractional_scaling = 2; # 2 = Automatic
 
                 no_fade_in = false;
                 no_fade_out = false;
@@ -2688,9 +2792,7 @@ in
               background = [
                 {
                   monitor = "";
-                  path = "screenshot";
-                  blur_passes = 4;
-                  blur_size = 4;
+                  path = wallpaper;
                 }
               ];
 
@@ -2760,105 +2862,102 @@ in
             extraConfig = '' '';
           };
 
-          rofi = {
-            enable = true;
-            package = pkgs.rofi-wayland;
-            plugins = with pkgs; [
+          rofi =
+            let
+              rofi_theme = pkgs.writeTextFile {
+                name = "Rofi_Theme.rasi";
+                text = ''
+                  * {
+                    margin: 0;
+                    background-color: transparent;
+                    padding: 0;
+                    spacing: 0;
+                    text-color: ${dracula_theme.hex.foreground};
+                  }
 
-            ];
+                  window {
+                    width: 768px;
+                    border: 1px;
+                    border-radius: 16px;
+                    border-color: ${dracula_theme.hex.purple};
+                    background-color: ${dracula_theme.hex.background};
+                  }
 
-            cycle = false;
-            terminal = "${pkgs.kitty}/bin/kitty";
+                  mainbox {
+                    padding: 16px;
+                  }
 
-            location = "center";
+                  inputbar {
+                    border: 1px;
+                    border-radius: 8px;
+                    border-color: ${dracula_theme.hex.comment};
+                    background-color: ${dracula_theme.hex.current_line};
+                    padding: 8px;
+                    spacing: 8px;
+                    children: [ "prompt", "entry" ];
+                  }
 
-            font = "${font_name.sans_serif} 11";
+                  prompt {
+                    text-color: ${dracula_theme.hex.foreground};
+                  }
 
-            extraConfig = {
-              show-icons = true;
-              display-drun = "Applications";
+                  entry {
+                    placeholder-color: ${dracula_theme.hex.comment};
+                    placeholder: "Search";
+                  }
 
-              disable-history = false;
+                  listview {
+                    margin: 16px 0px 0px 0px;
+                    fixed-height: false;
+                    lines: 8;
+                    columns: 2;
+                  }
+
+                  element {
+                    border-radius: 8px;
+                    padding: 8px;
+                    spacing: 8px;
+                    children: [ "element-icon", "element-text" ];
+                  }
+
+                  element-icon {
+                    vertical-align: 0.5;
+                    size: 1em;
+                  }
+
+                  element-text {
+                    text-color: inherit;
+                  }
+
+                  element.selected {
+                    background-color: ${dracula_theme.hex.current_line};
+                  }
+                '';
+              };
+            in
+            {
+              enable = true;
+              package = pkgs.rofi-wayland;
+              plugins = with pkgs; [
+
+              ];
+
+              cycle = false;
+              terminal = "${pkgs.kitty}/bin/kitty";
+
+              location = "center";
+
+              font = "${font_name.sans_serif} 11";
+
+              extraConfig = {
+                show-icons = true;
+                display-drun = "Applications";
+
+                disable-history = false;
+              };
+
+              theme = "${rofi_theme}";
             };
-
-            # theme =
-            #   let
-            #     inherit (config.home-manager.lib.formats.rasi) mkLiteral;
-            #   in
-            #   {
-            #     "*" = {
-            #       margin = 0;
-            #       background-color = mkLiteral "transparent";
-            #       padding = 0;
-            #       spacing = 0;
-            #       text-color = mkLiteral dracula_theme.hex.foreground;
-            #     };
-
-            #     "window" = {
-            #       width = mkLiteral "768px";
-            #       border = mkLiteral "1px";
-            #       border-radius = mkLiteral "16px";
-            #       border-color = mkLiteral dracula_theme.hex.purple;
-            #       background-color = mkLiteral dracula_theme.hex.background;
-            #     };
-
-            #     "mainbox" = {
-            #       padding = mkLiteral "16px";
-            #     };
-
-            #     "inputbar" = {
-            #       border = mkLiteral "1px";
-            #       border-radius = mkLiteral "8px";
-            #       border-color = mkLiteral dracula_theme.hex.comment;
-            #       background-color = mkLiteral dracula_theme.hex.current_line;
-            #       padding = mkLiteral "8px";
-            #       spacing = mkLiteral "8px";
-            #       children = map mkLiteral [
-            #         "prompt"
-            #         "entry"
-            #       ];
-            #     };
-
-            #     "prompt" = {
-            #       text-color = mkLiteral dracula_theme.hex.foreground;
-            #     };
-
-            #     "entry" = {
-            #       placeholder-color = mkLiteral dracula_theme.hex.comment;
-            #       placeholder = "Search";
-            #     };
-
-            #     "listview" = {
-            #       margin = mkLiteral "16px 0px 0px 0px";
-            #       fixed-height = false;
-            #       lines = 8;
-            #       columns = 2;
-            #     };
-
-            #     "element" = {
-            #       border-radius = mkLiteral "8px";
-            #       padding = mkLiteral "8px";
-            #       spacing = mkLiteral "8px";
-            #       children = map mkLiteral [
-            #         "element-icon"
-            #         "element-text"
-            #       ];
-            #     };
-
-            #     "element-icon" = {
-            #       vertical-align = mkLiteral "0.5";
-            #       size = mkLiteral "1em";
-            #     };
-
-            #     "element-text" = {
-            #       text-color = mkLiteral "inherit";
-            #     };
-
-            #     "element.selected" = {
-            #       background-color = mkLiteral dracula_theme.hex.current_line;
-            #     };
-            #   };
-          };
 
           waybar = {
             enable = true;
@@ -3482,7 +3581,6 @@ in
               scrollback_lines = -1;
               click_interval = -1;
 
-              # Colors
               foreground = dracula_theme.hex.foreground;
               background = dracula_theme.hex.background;
               selection_foreground = "#ffffff";
@@ -3506,11 +3604,11 @@ in
               select_bg = dracula_theme.hex.yellow;
               select_fg = dracula_theme.hex.background;
 
-              # Splits/Windows
+              # Splits / Windows
               active_border_color = dracula_theme.hex.foreground;
               inactive_border_color = dracula_theme.hex.comment;
 
-              # Tab Bar Colors
+              # Tab Bar
               active_tab_foreground = dracula_theme.hex.background;
               active_tab_background = dracula_theme.hex.foreground;
               inactive_tab_foreground = dracula_theme.hex.background;
@@ -3520,7 +3618,7 @@ in
               mark1_foreground = dracula_theme.hex.background;
               mark1_background = dracula_theme.hex.red;
 
-              # Cursor Colors
+              # Cursor
               cursor = dracula_theme.hex.foreground;
               cursor_text_color = dracula_theme.hex.background;
 
@@ -3560,9 +3658,7 @@ in
             extraConfig = '' '';
           };
 
-          git = {
-            enable = true;
-          };
+          git.enable = true; # Needed for config.home-manager.users.bitscoper.programs.git.*
         };
       }
     ];
@@ -3579,3 +3675,8 @@ in
     verbose = true;
   };
 }
+
+# FIXME: PCManFM > Oculante
+# TODO: Hyprland Configurations
+# TODO: PCManFM > Thumbnailers
+# TODO: greetd > GUI
