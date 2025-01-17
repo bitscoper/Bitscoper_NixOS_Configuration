@@ -5,18 +5,17 @@
 , ...
 }:
 let
-  android_nixpkgs = pkgs.callPackage
+  android-nixpkgs = pkgs.callPackage
     (import (builtins.fetchGit {
       url = "https://github.com/tadfisher/android-nixpkgs.git";
     }))
     {
       channel = "stable";
     };
-  android_sdk = android_nixpkgs.sdk (sdkPkgs: with sdkPkgs; [
+  android_sdk = android-nixpkgs.sdk (sdkPkgs: with sdkPkgs; [
     build-tools-35-0-0
     cmdline-tools-latest
     emulator
-    extras-google-auto
     extras-google-google-play-services
     platform-tools
     platforms-android-35
@@ -82,9 +81,9 @@ let
 in
 {
   imports = [
-    ./hardware-configuration.nix
-
     (import "${home-manager}/nixos")
+
+    ./hardware-configuration.nix
   ];
 
   boot = {
@@ -162,8 +161,9 @@ in
   };
 
   system = {
-    switch.enable = true;
+    copySystemConfiguration = true;
 
+    switch.enable = true;
     tools = {
       nixos-build-vms.enable = true;
       nixos-enter.enable = true;
@@ -194,6 +194,7 @@ in
 
     settings = {
       experimental-features = [
+        "flakes"
         "nix-command"
       ];
 
@@ -381,7 +382,7 @@ in
       enable = true;
 
       qemu = {
-        package = pkgs.qemu_kvm;
+        package = pkgs.qemu_full;
         runAsRoot = true;
 
         swtpm.enable = true;
@@ -425,7 +426,7 @@ in
   };
 
   services = {
-    flatpak.enable = false;
+    flatpak.enable = true;
 
     fwupd.enable = true;
 
@@ -989,9 +990,8 @@ in
       ];
     };
 
-    java = {
+    appimage = {
       enable = true;
-      package = pkgs.jdk23;
       binfmt = true;
     };
 
@@ -1006,10 +1006,6 @@ in
 
     xwayland.enable = true;
 
-    appimage.enable = true;
-
-    nix-index.enableBashIntegration = true;
-
     bash = {
       completion.enable = true;
       enableLsColors = true;
@@ -1023,6 +1019,14 @@ in
       interactiveShellInit = ''
         PROMPT_COMMAND="history -a"
       '';
+    };
+
+    nix-index.enableBashIntegration = true;
+
+    java = {
+      enable = true;
+      package = pkgs.jdk23;
+      binfmt = true;
     };
 
     ssh = {
@@ -1085,11 +1089,19 @@ in
     firefox = {
       enable = true;
       languagePacks = [
+        "bn"
         "en-US"
       ];
+
+      preferences = { };
     };
 
-    thunderbird.enable = true;
+    thunderbird = {
+      enable = true;
+      package = pkgs.thunderbird-latest;
+
+      preferences = { };
+    };
 
     steam = {
       enable = true;
@@ -1213,7 +1225,6 @@ in
   };
 
   environment = {
-
     enableDebugInfo = false;
 
     enableAllTerminfo = true;
@@ -1256,6 +1267,7 @@ in
     interactiveShellInit = '' '';
 
     systemPackages = with pkgs; [
+      # appimagekit
       # hyprpolkitagent
       # reiser4progs
       acl
@@ -1265,6 +1277,7 @@ in
       android-tools
       android_sdk # Custom
       anydesk
+      appimage-run
       aribb24
       aribb25
       audacity
@@ -1292,7 +1305,7 @@ in
       cups-filters
       cups-pdf-to-pdf
       cups-printers
-      curl
+      curlFull
       curtail
       d-spy
       dart
@@ -1311,20 +1324,25 @@ in
       fdk_aac
       ffmpeg-full
       ffmpegthumbnailer
+      fh
       file
       flutter327
       fritzing
       fwupd-efi
       gcc
       gdb
+      gh
       gimp-with-plugins
       git-doc
       glib
       glibc
       gnome-font-viewer
       gnugrep
+      gnulib
       gnumake
+      gnused
       gnutar
+      gnutls
       gource
       gparted
       gpredict
@@ -1340,6 +1358,8 @@ in
       hyprls
       hyprpicker
       i2c-tools
+      ideviceinstaller
+      idevicerestore
       iftop
       inotify-tools
       jellyfin-media-player
@@ -1370,9 +1390,12 @@ in
       libgpg-error
       libguestfs
       libheif
+      libideviceactivation
+      libimobiledevice
       libnotify
       libopus
       libosinfo
+      libportal
       libreoffice-fresh
       libusb1
       libuuid
@@ -1396,6 +1419,8 @@ in
       nix-info
       nixos-icons
       nixpkgs-fmt
+      nixpkgs-lint
+      nixpkgs-review
       nmap
       ntfs3g
       obs-studio
@@ -1443,7 +1468,6 @@ in
       thermald
       tor-browser
       tree
-      tree-sitter
       udftools
       unar
       undollar
@@ -1462,13 +1486,13 @@ in
       vscode-js-debug
       waybar-mpris
       waycheck
-      waydroid
       wayland
       wayland-protocols
       wayland-utils
       waylevel
       wev
       wget
+      which
       wireplumber
       wireshark
       wl-clipboard
@@ -1591,48 +1615,33 @@ in
     ])
     ++
     (with gst_all_1; [
-      gst-editing-services
       gst-libav
       gst-plugins-bad
       gst-plugins-base
       gst-plugins-good
       gst-plugins-ugly
-      gst-rtsp-server
       gst-vaapi
       gstreamer
     ])
     ++
     (with php84Extensions; [
-      ast
       bz2
       calendar
       ctype
       curl
       dba
       dom
-      ds
-      enchant
-      event
       exif
       ffi
       fileinfo
       filter
       ftp
       gd
-      gettext
-      gnupg
-      grpc
       iconv
       imagick
       imap
-      inotify
-      intl
-      ldap
       # mailparse
-      mbstring
       memcached
-      meminfo
-      memprof
       mysqli
       mysqlnd
       opcache
@@ -1643,22 +1652,15 @@ in
       pdo_pgsql
       pgsql
       posix
-      pspell
       readline
       session
-      simplexml
-      smbclient
       sockets
       sodium
-      tokenizer
-      uuid
-      vld
       xdebug
       xml
       xmlreader
       xmlwriter
       xsl
-      yaml
       zip
       zlib
     ]) ++
@@ -1666,6 +1668,7 @@ in
 
     ]) ++
     (with python313Packages; [
+      bangla
       black
       datetime
       matplotlib
@@ -1679,53 +1682,11 @@ in
       tkinter
     ]) ++
     (with texlivePackages; [
-      latex
-      latex-fonts
-      latex-git-log
-      latex-papersize
-      latexbangla
-      latexbug
-      latexcheat
-      latexcolors
-      latexconfig
-      latexdemo
-      latexdiff
-      latexfileversion
-      latexgit
-      latexindent
+      bangla
       latexmk
-      latexpand
-    ]) ++
-    # (with androidenv.androidPkgs; [
-    #   build-tools # Errors
-    #   emulator
-    #   platform-tools
-    #   tools
-    # ]) ++
-    (with tree-sitter-grammars; [
-      tree-sitter-bash
-      tree-sitter-c
-      tree-sitter-cmake
-      tree-sitter-comment
-      tree-sitter-cpp
-      tree-sitter-css
-      tree-sitter-dart
-      tree-sitter-dockerfile
-      tree-sitter-html
-      tree-sitter-http
-      tree-sitter-javascript
-      tree-sitter-json
-      tree-sitter-latex
-      tree-sitter-make
-      tree-sitter-markdown
-      tree-sitter-markdown-inline
-      tree-sitter-nix
-      tree-sitter-php
-      tree-sitter-python
-      tree-sitter-regex
-      tree-sitter-sql
-      tree-sitter-toml
-      tree-sitter-yaml
+      quran
+      quran-bn
+      quran-en
     ]);
   };
 
@@ -2378,8 +2339,9 @@ in
               "SUPER, up, movefocus, u"
               "SUPER, down, movefocus, d"
 
-              "SUPER SHIFT, F, togglefloating,"
               "SUPER SHIFT, T, togglesplit,"
+              "SUPER SHIFT, F, togglefloating,"
+              ", F11, fullscreen, 0"
               "SUPER, Q, killactive,"
 
               "SUPER SHIFT, 1, movetoworkspace, 1"
