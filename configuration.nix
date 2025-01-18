@@ -2,6 +2,7 @@
 
 { config
 , pkgs
+, lib
 , ...
 }:
 let
@@ -218,7 +219,6 @@ in
 
     config = {
       allowUnfree = true;
-      android_sdk.accept_license = true;
     };
 
     # overlays = [
@@ -438,9 +438,9 @@ in
     acpid = {
       enable = true;
 
-      powerEventCommands = '' '';
-      acEventCommands = '' '';
-      lidEventCommands = '' '';
+      powerEventCommands = '''';
+      acEventCommands = '''';
+      lidEventCommands = '''';
 
       logEvents = false;
     };
@@ -479,8 +479,41 @@ in
 
     displayManager = {
       enable = true;
+      preStart = '''';
+
+      sddm = {
+        enable = true;
+        package = pkgs.kdePackages.sddm; # Qt 6
+
+        extraPackages = with pkgs; [
+          kdePackages.qtmultimedia
+        ];
+
+        wayland = {
+          enable = true;
+          compositor = "weston";
+        };
+
+        enableHidpi = true;
+        theme = "sddm-astronaut-theme";
+
+        autoNumlock = true;
+
+        autoLogin.relogin = false;
+
+        settings = {
+          Theme = {
+            CursorTheme = cursor.theme.name;
+            CursorSize = cursor.size;
+
+            Font = font_name.sans_serif;
+          };
+        };
+
+        stopScript = '''';
+      };
+
       defaultSession = "hyprland-uwsm";
-      preStart = '' '';
 
       autoLogin = {
         enable = false;
@@ -489,18 +522,6 @@ in
 
       logToJournal = true;
       logToFile = true;
-    };
-
-    greetd = {
-      enable = true;
-      restart = true;
-
-      settings = {
-        default_session = {
-          command = "tuigreet --time --user-menu --greet-align center --asterisks --asterisks-char \"*\" --cmd \"uwsm start -S -F /run/current-system/sw/bin/Hyprland\"";
-          user = "greeter";
-        };
-      };
     };
 
     udev = {
@@ -867,7 +888,7 @@ in
 
       pluginSettings = { };
 
-      extraConfig = '' '';
+      extraConfig = '''';
     };
 
     icecast = {
@@ -1012,16 +1033,54 @@ in
 
       shellAliases = { };
 
-      loginShellInit = '' '';
+      loginShellInit = '''';
 
-      shellInit = '' '';
+      shellInit = '''';
 
       interactiveShellInit = ''
         PROMPT_COMMAND="history -a"
       '';
     };
 
-    nix-index.enableBashIntegration = true;
+    fish = {
+      enable = true;
+
+      vendor = {
+        config.enable = true;
+        functions.enable = true;
+        completions.enable = true;
+      };
+
+      shellAbbrs = { };
+      shellAliases = { };
+
+      promptInit = '''';
+
+      loginShellInit = '''';
+
+      shellInit = '''';
+
+      interactiveShellInit = '''';
+    };
+
+    direnv = {
+      enable = true;
+
+      nix-direnv.enable = true;
+      loadInNixShell = true;
+
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+
+      direnvrcExtra = '''';
+
+      silent = false;
+    };
+
+    nix-index = {
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+    };
 
     java = {
       enable = true;
@@ -1083,7 +1142,7 @@ in
 
     nano = {
       enable = true;
-      nanorc = '' '';
+      nanorc = '''';
     };
 
     firefox = {
@@ -1128,7 +1187,7 @@ in
 
           settings = {
             "system/locale" = {
-              region = "en_US.UTF-8";
+              region = config.i18n.defaultLocale;
             };
 
             "org/virt-manager/virt-manager/connections" = {
@@ -1255,16 +1314,16 @@ in
       clean_build = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --install-bootloader --upgrade-all";
     };
 
-    extraInit = '' '';
+    extraInit = '''';
 
     loginShellInit = ''
-      rm -rf ~/.android/avd
-      ln -sf ~/.config/.android/avd ~/.android/avd
+      # rm -rf ~/.android/avd
+      # ln -sf ~/.config/.android/avd ~/.android/avd
     '';
 
-    shellInit = '' '';
+    shellInit = '''';
 
-    interactiveShellInit = '' '';
+    interactiveShellInit = '''';
 
     systemPackages = with pkgs; [
       # appimagekit
@@ -1281,6 +1340,7 @@ in
       aribb24
       aribb25
       audacity
+      audit
       avrdude
       bat
       bleachbit
@@ -1348,7 +1408,6 @@ in
       gpredict
       gradle
       gradle-completion
-      greetd.tuigreet
       grim
       guestfs-tools
       gzip
@@ -1361,6 +1420,7 @@ in
       ideviceinstaller
       idevicerestore
       iftop
+      image-roll
       inotify-tools
       jellyfin-media-player
       jfsutils
@@ -1393,6 +1453,7 @@ in
       libideviceactivation
       libimobiledevice
       libnotify
+      libopenraw
       libopus
       libosinfo
       libportal
@@ -1403,6 +1464,7 @@ in
       libvirt
       libvpx
       libwebp
+      libxfs
       lsof
       lvm2
       lynis
@@ -1424,7 +1486,6 @@ in
       nmap
       ntfs3g
       obs-studio
-      oculante
       onedrive
       onionshare-gui
       openssl
@@ -1505,12 +1566,89 @@ in
       xdg-utils
       xfsdump
       xfsprogs
+      xfstests
       xorg.xhost
       xoscope
       xvidcore
       yaml-language-server
       yt-dlp
       zip
+      (sddm-astronaut.override {
+        embeddedTheme = "astronaut";
+
+        themeConfig = {
+          # ScreenWidth = 1920;
+          # ScreenHeight = 1080;
+          ScreenPadding = 0;
+
+          BackgroundColor = dracula_theme.hex.background;
+          BackgroundHorizontalAlignment = "center";
+          BackgroundVerticalAlignment = "center";
+          Background = wallpaper;
+          CropBackground = false;
+          DimBackgroundImage = "0.0";
+
+          FullBlur = false;
+          PartialBlur = false;
+
+          HaveFormBackground = false;
+          FormPosition = "center";
+
+          HideLoginButton = false;
+          HideSystemButtons = false;
+          HideVirtualKeyboard = false;
+          VirtualKeyboardPosition = "center";
+
+          # MainColor = ;
+          # AccentColor = ;
+
+          # HighlightBorderColor= ;
+          # HighlightBackgroundColor= ;
+          # HighlightTextColor= ;
+
+          HeaderTextColor = dracula_theme.hex.foreground;
+          TimeTextColor = dracula_theme.hex.foreground;
+          DateTextColor = dracula_theme.hex.foreground;
+
+          IconColor = dracula_theme.hex.foreground;
+          PlaceholderTextColor = dracula_theme.hex.foreground;
+          WarningColor = dracula_theme.hex.red;
+
+          # LoginFieldBackgroundColor = ;
+          # LoginFieldTextColor = ;
+          # UserIconColor = ;
+          # HoverUserIconColor = ;
+
+          # PasswordFieldBackgroundColor = ;
+          # PasswordFieldTextColor = ;
+          # PasswordIconColor = ;
+          # HoverPasswordIconColor = ;
+
+          # LoginButtonBackgroundColor = ;
+          LoginButtonTextColor = dracula_theme.hex.foreground;
+
+          SystemButtonsIconsColor = dracula_theme.hex.foreground;
+          # HoverSystemButtonsIconsColor = ;
+
+          SessionButtonTextColor = dracula_theme.hex.foreground;
+          # HoverSessionButtonTextColor = ;
+
+          VirtualKeyboardButtonTextColor = dracula_theme.hex.foreground;
+          # HoverVirtualKeyboardButtonTextColor = ;
+
+          DropdownBackgroundColor = dracula_theme.hex.background;
+          DropdownSelectedBackgroundColor = dracula_theme.hex.current_line;
+          DropdownTextColor = dracula_theme.hex.foreground;
+
+          HeaderText = "Welcome";
+
+          HourFormat = "\"hh:mm A\"";
+          DateFormat = "\"MMMM dd, yyyy\"";
+
+          PasswordFocus = true;
+          AllowEmptyPassword = false;
+        };
+      })
       (vscode-with-extensions.override {
         # vscode = vscodium;
         vscodeExtensions = with vscode-extensions; [
@@ -1798,89 +1936,89 @@ in
         "text/xml" = "code.desktop";
         "text/xml-external-parsed-entity" = "code.desktop";
 
-        "image/aces" = "oculante.desktop";
-        "image/apng" = "oculante.desktop";
-        "image/avci" = "oculante.desktop";
-        "image/avcs" = "oculante.desktop";
-        "image/avif" = "oculante.desktop";
-        "image/bmp" = "oculante.desktop";
-        "image/cgm" = "oculante.desktop";
-        "image/dicom-rle" = "oculante.desktop";
-        "image/dpx" = "oculante.desktop";
-        "image/emf" = "oculante.desktop";
-        "image/fits" = "oculante.desktop";
-        "image/g3fax" = "oculante.desktop";
-        "image/gif" = "oculante.desktop";
-        "image/heic" = "oculante.desktop";
-        "image/heic-sequence" = "oculante.desktop";
-        "image/heif" = "oculante.desktop";
-        "image/heif-sequence" = "oculante.desktop";
-        "image/hej2k" = "oculante.desktop";
-        "image/hsj2" = "oculante.desktop";
-        "image/ief" = "oculante.desktop";
-        "image/j2c" = "oculante.desktop";
-        "image/jaii" = "oculante.desktop";
-        "image/jais" = "oculante.desktop";
-        "image/jls" = "oculante.desktop";
-        "image/jp2" = "oculante.desktop";
-        "image/jpeg" = "oculante.desktop";
-        "image/jph" = "oculante.desktop";
-        "image/jphc" = "oculante.desktop";
-        "image/jpm" = "oculante.desktop";
-        "image/jpx" = "oculante.desktop";
-        "image/jxl" = "oculante.desktop";
-        "image/jxr" = "oculante.desktop";
-        "image/jxrA" = "oculante.desktop";
-        "image/jxrS" = "oculante.desktop";
-        "image/jxs" = "oculante.desktop";
-        "image/jxsc" = "oculante.desktop";
-        "image/jxsi" = "oculante.desktop";
-        "image/jxss" = "oculante.desktop";
-        "image/ktx" = "oculante.desktop";
-        "image/ktx2" = "oculante.desktop";
-        "image/naplps" = "oculante.desktop";
-        "image/png" = "oculante.desktop";
-        "image/prs.btif" = "oculante.desktop";
-        "image/prs.pti" = "oculante.desktop";
-        "image/pwg-raster" = "oculante.desktop";
-        "image/svg+xml" = "oculante.desktop";
-        "image/t38" = "oculante.desktop";
-        "image/tiff" = "oculante.desktop";
-        "image/tiff-fx" = "oculante.desktop";
-        "image/vnd.adobe.photoshop" = "oculante.desktop";
-        "image/vnd.airzip.accelerator.azv" = "oculante.desktop";
-        "image/vnd.cns.inf2" = "oculante.desktop";
-        "image/vnd.dece.graphic" = "oculante.desktop";
-        "image/vnd.djvu" = "oculante.desktop";
-        "image/vnd.dvb.subtitle" = "oculante.desktop";
-        "image/vnd.dwg" = "oculante.desktop";
-        "image/vnd.dxf" = "oculante.desktop";
-        "image/vnd.fastbidsheet" = "oculante.desktop";
-        "image/vnd.fpx" = "oculante.desktop";
-        "image/vnd.fst" = "oculante.desktop";
-        "image/vnd.fujixerox.edmics-mmr" = "oculante.desktop";
-        "image/vnd.fujixerox.edmics-rlc" = "oculante.desktop";
-        "image/vnd.globalgraphics.pgb" = "oculante.desktop";
-        "image/vnd.microsoft.icon" = "oculante.desktop";
-        "image/vnd.mix" = "oculante.desktop";
-        "image/vnd.mozilla.apng" = "oculante.desktop";
-        "image/vnd.ms-modi" = "oculante.desktop";
-        "image/vnd.net-fpx" = "oculante.desktop";
-        "image/vnd.pco.b16" = "oculante.desktop";
-        "image/vnd.radiance" = "oculante.desktop";
-        "image/vnd.sealed.png" = "oculante.desktop";
-        "image/vnd.sealedmedia.softseal.gif" = "oculante.desktop";
-        "image/vnd.sealedmedia.softseal.jpg" = "oculante.desktop";
-        "image/vnd.svf" = "oculante.desktop";
-        "image/vnd.tencent.tap" = "oculante.desktop";
-        "image/vnd.valve.source.texture" = "oculante.desktop";
-        "image/vnd.wap.wbmp" = "oculante.desktop";
-        "image/vnd.xiff" = "oculante.desktop";
-        "image/vnd.zbrush.pcx" = "oculante.desktop";
-        "image/webp" = "oculante.desktop";
-        "image/wmf" = "oculante.desktop";
-        "image/x-emf" = "oculante.desktop";
-        "image/x-wmf" = "oculante.desktop";
+        "image/aces" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/apng" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/avci" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/avcs" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/avif" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/bmp" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/cgm" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/dicom-rle" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/dpx" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/emf" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/fits" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/g3fax" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/gif" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/heic" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/heic-sequence" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/heif" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/heif-sequence" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/hej2k" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/hsj2" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/ief" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/j2c" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jaii" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jais" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jls" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jp2" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jpeg" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jph" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jphc" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jpm" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jpx" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jxl" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jxr" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jxrA" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jxrS" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jxs" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jxsc" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jxsi" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/jxss" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/ktx" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/ktx2" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/naplps" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/png" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/prs.btif" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/prs.pti" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/pwg-raster" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/svg+xml" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/t38" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/tiff" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/tiff-fx" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.adobe.photoshop" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.airzip.accelerator.azv" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.cns.inf2" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.dece.graphic" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.djvu" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.dvb.subtitle" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.dwg" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.dxf" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.fastbidsheet" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.fpx" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.fst" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.fujixerox.edmics-mmr" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.fujixerox.edmics-rlc" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.globalgraphics.pgb" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.microsoft.icon" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.mix" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.mozilla.apng" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.ms-modi" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.net-fpx" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.pco.b16" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.radiance" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.sealed.png" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.sealedmedia.softseal.gif" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.sealedmedia.softseal.jpg" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.svf" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.tencent.tap" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.valve.source.texture" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.wap.wbmp" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.xiff" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/vnd.zbrush.pcx" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/webp" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/wmf" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/x-emf" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/x-wmf" = "com.github.weclaw1.ImageRoll.desktop";
 
         "audio/1d-interleaved-parityfec" = "vlc.desktop";
         "audio/32kadpcm" = "vlc.desktop";
@@ -2186,10 +2324,11 @@ in
 
     portal = {
       enable = true;
-      xdgOpenUsePortal = false; # Opening Programs
       extraPortals = with pkgs; [
         xdg-desktop-portal-hyprland
       ];
+
+      xdgOpenUsePortal = false; # Opening Programs
     };
   };
 
@@ -2306,16 +2445,18 @@ in
             ];
 
             exec-once = [
-              "setfacl --modify user:jellyfin:--x ~ & adb start-server &"
               "sleep 2 && uwsm app -- keepassxc"
-              "uwsm app -- wl-paste --type text --watch cliphist store"
-              "uwsm app -- wl-paste --type image --watch cliphist store"
-              "sleep 2 && systemctl --user start warp-taskbar"
-              "uwsm app -- sdkmanager --licenses"
+
+              "wl-paste --type text --watch cliphist store"
+              "wl-paste --type image --watch cliphist store"
+
+              "setfacl --modify user:jellyfin:--x ~ & adb start-server &"
+
+              "systemctl --user start warp-taskbar"
             ];
 
             bind = [
-              "SUPER, L, exec, uwsm app -- hyprlock --immediate"
+              "SUPER, L, exec, hyprlock --immediate"
               "SUPER CTRL, L, exec, uwsm stop"
               "SUPER CTRL, P, exec, systemctl poweroff"
               "SUPER CTRL, R, exec, systemctl reboot"
@@ -2372,27 +2513,29 @@ in
 
               ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/Screenshot_$(date +'%Y-%B-%d_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\""
 
-              "SUPER, R, exec, uwsm app -- rofi -show drun"
-              "SUPER SHIFT, R, exec, uwsm app -- rofi -show run"
+              "SUPER, R, exec, rofi -show drun"
+              "SUPER SHIFT, R, exec, rofi -show run"
 
-              "SUPER, T, exec, uwsm app -- kitty"
+              "SUPER, T, exec, kitty"
+              "SUPER ALT, T, exec, kitty sh -c \"fish\""
 
-              ", XF86Explorer, exec, uwsm app -- pcmanfm"
-              "SUPER, E, exec, uwsm app -- pcmanfm"
+              ", XF86Explorer, exec, pcmanfm"
+              "SUPER, E, exec, pcmanfm"
 
-              "SUPER, F, exec, uwsm app -- kitty --hold sh -c \"fastfetch --thread true --detect-version true --logo-preserve-aspect-ratio true --temp-unit c --title-fqdn true --disk-show-regular true --disk-show-external true --disk-show-hidden true --disk-show-subvolumes true --disk-show-readonly true --disk-show-unknown true --physicaldisk-temp true --bluetooth-show-disconnected true --display-precise-refresh-rate true --cpu-temp true --cpu-show-pe-core-count true --cpuusage-separate true --gpu-temp true --gpu-driver-specific true --battery-temp true --localip-show-ipv4 true --localip-show-ipv6 true --localip-show-mac true --localip-show-loop true --localip-show-mtu true --localip-show-speed true --localip-show-prefix-len true --localip-show-all-ips true --localip-show-flags true --wm-detect-plugin true\""
-              "SUPER, B, exec, uwsm app -- kitty sh -c \"btop\""
+              "SUPER, F, exec, kitty --hold sh -c \"fastfetch --thread true --detect-version true --logo-preserve-aspect-ratio true --temp-unit c --title-fqdn true --disk-show-regular true --disk-show-external true --disk-show-hidden true --disk-show-subvolumes true --disk-show-readonly true --disk-show-unknown true --physicaldisk-temp true --bluetooth-show-disconnected true --display-precise-refresh-rate true --cpu-temp true --cpu-show-pe-core-count true --cpuusage-separate true --gpu-temp true --gpu-driver-specific true --battery-temp true --localip-show-ipv4 true --localip-show-ipv6 true --localip-show-mac true --localip-show-loop true --localip-show-mtu true --localip-show-speed true --localip-show-prefix-len true --localip-show-all-ips true --localip-show-flags true --wm-detect-plugin true\""
 
-              "SUPER, W, exec, uwsm app -- firefox"
-              "SUPER ALT, W, exec, uwsm app -- firefox --private-window"
+              "SUPER, B, exec, kitty sh -c \"btop\""
 
-              ", XF86Mail, exec, uwsm app -- thunderbird"
-              "SUPER, M, exec, uwsm app -- thunderbird"
+              "SUPER, W, exec, firefox"
+              "SUPER ALT, W, exec, firefox --private-window"
 
-              "SUPER, C, exec, uwsm app -- code"
-              "SUPER, D, exec, uwsm app -- dbeaver"
+              ", XF86Mail, exec, thunderbird"
+              "SUPER, M, exec, thunderbird"
 
-              "SUPER, V, exec, uwsm app -- vlc"
+              "SUPER, C, exec, code"
+              "SUPER, D, exec, dbeaver"
+
+              "SUPER, V, exec, vlc"
             ];
 
             bindm = [
@@ -2457,10 +2600,10 @@ in
               mouse_move_focuses_monitor = true;
 
               disable_hyprland_logo = false;
-              force_default_wallpaper = 0;
+              force_default_wallpaper = 1;
               disable_splash_rendering = true;
 
-              font_family = "NotoSans Nerd Font";
+              font_family = font_name.sans_serif;
 
               close_special_on_empty = true;
 
@@ -2597,7 +2740,7 @@ in
             };
           };
 
-          extraConfig = '' '';
+          extraConfig = '''';
         };
 
         xdg = {
@@ -2821,7 +2964,7 @@ in
               ];
             };
 
-            extraConfig = '' '';
+            extraConfig = '''';
           };
 
           rofi =
@@ -3071,7 +3214,7 @@ in
                   on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+";
                   on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-";
 
-                  on-click = "uwsm app -- pavucontrol";
+                  on-click = "pavucontrol";
                 };
 
                 bluetooth = {
@@ -3099,7 +3242,7 @@ in
                   tooltip-format-enumerate-connected = "\n\tAddress: {device_address} ({device_address_type})\n\tAlias: {device_alias}";
                   tooltip-format-enumerate-connected-battery = "\n\tAddress: {device_address} ({device_address_type})\n\tAlias: {device_alias}\n\tBattery: {device_battery_percentage}%";
 
-                  on-click = "uwsm app -- blueman-manager";
+                  on-click = "blueman-manager";
                 };
 
                 network = {
@@ -3117,7 +3260,7 @@ in
                   tooltip-format-ethernet = "Interface: {ifname}\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation= {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
                   tooltip-format-wifi = "Interface: {ifname}\nESSID: {essid}\nFrequency: {frequency} GHz\nStrength: {signaldBm} dBm ({signalStrength}%)\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation: {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
 
-                  on-click = "uwsm app -- nm-connection-editor";
+                  on-click = "nm-connection-editor";
                 };
 
                 clock = {
@@ -3200,7 +3343,7 @@ in
                   tooltip = true;
                   tooltip-format = "Total: {specific_total} GB\nUsed: {specific_used} GB ({percentage_used}%)\nFree: {specific_free} GB ({percentage_free}%)";
 
-                  on-click = "uwsm app -- kitty sh -c \"btop\"";
+                  on-click = "kitty sh -c \"btop\"";
                 };
 
                 memory = {
@@ -3211,7 +3354,7 @@ in
                   tooltip = true;
                   tooltip-format = "Used RAM: {used} GiB ({percentage}%)\nUsed Swap: {swapUsed} GiB ({swapPercentage}%)\nAvailable RAM: {avail} GiB\nAvailable Swap: {swapAvail} GiB";
 
-                  on-click = "uwsm app -- kitty sh -c \"btop\"";
+                  on-click = "kitty sh -c \"btop\"";
                 };
 
                 cpu = {
@@ -3221,7 +3364,7 @@ in
 
                   tooltip = true;
 
-                  on-click = "uwsm app -- kitty sh -c \"btop\"";
+                  on-click = "kitty sh -c \"btop\"";
                 };
 
                 battery = {
@@ -3254,7 +3397,7 @@ in
                   tooltip = true;
                   tooltip-format = "Capacity: {capacity}%\nPower: {power} W\n{timeTo}\nCycles: {cycles}\nHealth: {health}%";
 
-                  on-click = "uwsm app -- kitty sh -c \"btop\"";
+                  on-click = "kitty sh -c \"btop\"";
                 };
               };
 
@@ -3617,7 +3760,7 @@ in
               color15 = "#ffffff";
             };
 
-            extraConfig = '' '';
+            extraConfig = '''';
           };
 
           git.enable = true; # Needed for config.home-manager.users.bitscoper.programs.git.*
@@ -3638,7 +3781,16 @@ in
   };
 }
 
-# FIXME: PCManFM > Oculante
+# sdkmanager --licenses
+# flutter doctor -v
+
+# sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+# sudo flatpak update
+# sudo flatpak install flathub com.github.tchx84.Flatseal io.github.flattool.Warehouse io.github.giantpinkrobots.flatsweep
+# sudo flatpak repair
+
+# FIXME: Hyprpaper Delay
+# FIXME: libsecret
 # TODO: Hyprland Configurations
 # TODO: PCManFM > Thumbnailers
-# TODO: greetd > GUI
+# TODO: Xarchiver > Backends
