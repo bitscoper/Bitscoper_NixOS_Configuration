@@ -306,12 +306,95 @@ in
 
     lockKernelModules = false;
 
-    pam.services.hyprlock = {
-      fprintAuth = true;
+    pam = {
+      mount = {
+        enable = true;
+
+        createMountPoints = true;
+        removeCreatedMountPoints = true;
+
+        logoutHup = true;
+        logoutTerm = false;
+        logoutKill = false;
+
+        logoutWait = 0;
+      };
+
+      services = {
+        login = {
+          unixAuth = true;
+          nodelay = false;
+
+          fprintAuth = true;
+
+          logFailures = true;
+
+          enableGnomeKeyring = true;
+
+          gnupg = {
+            enable = true;
+            storeOnly = false;
+            noAutostart = false;
+          };
+        };
+
+        sddm = {
+          unixAuth = true;
+          nodelay = false;
+
+          fprintAuth = true;
+
+          logFailures = true;
+
+          enableGnomeKeyring = true;
+
+          gnupg = {
+            enable = true;
+            storeOnly = false;
+            noAutostart = false;
+          };
+        };
+
+        hyprlock = {
+          unixAuth = true;
+          nodelay = false;
+
+          fprintAuth = true;
+
+          logFailures = true;
+
+          enableGnomeKeyring = true;
+
+          gnupg = {
+            enable = true;
+            storeOnly = false;
+            noAutostart = false;
+          };
+        };
+
+        sudo = {
+          unixAuth = true;
+          nodelay = false;
+
+          fprintAuth = true;
+
+          logFailures = true;
+        };
+
+        polkit-1 = {
+          unixAuth = true;
+          nodelay = false;
+
+          fprintAuth = true;
+
+          logFailures = true;
+        };
+      };
     };
 
     sudo = {
       enable = true;
+
       execWheelOnly = true;
       wheelNeedsPassword = true;
     };
@@ -426,6 +509,20 @@ in
   };
 
   services = {
+    dbus = {
+      enable = true;
+      implementation = "broker";
+    };
+
+    btrfs.autoScrub = {
+      enable = true;
+
+      interval = "weekly";
+      fileSystems = [
+        "/"
+      ];
+    };
+
     flatpak.enable = true;
 
     fwupd.enable = true;
@@ -466,8 +563,6 @@ in
       hibernateKey = "ignore";
       hibernateKeyLongPress = "ignore";
     };
-
-    dbus.enable = true;
 
     fprintd = {
       enable = true;
@@ -523,6 +618,8 @@ in
       logToJournal = true;
       logToFile = true;
     };
+
+    gnome.gnome-keyring.enable = true;
 
     udev = {
       enable = true;
@@ -1114,6 +1211,8 @@ in
       indicator = true;
     };
 
+    seahorse.enable = true;
+
     git = {
       enable = true;
       package = pkgs.gitFull;
@@ -1343,6 +1442,7 @@ in
       audit
       avrdude
       bat
+      bfcal
       bleachbit
       blender
       bluez
@@ -1389,6 +1489,7 @@ in
       flutter327
       fritzing
       fwupd-efi
+      gcal
       gcc
       gdb
       gh
@@ -1413,6 +1514,7 @@ in
       gzip
       hfsprogs
       hw-probe
+      hwloc
       hyprcursor
       hyprls
       hyprpicker
@@ -1421,6 +1523,7 @@ in
       idevicerestore
       iftop
       image-roll
+      inkscape
       inotify-tools
       jellyfin-media-player
       jfsutils
@@ -1729,14 +1832,14 @@ in
           {
             name = "platformio-ide";
             publisher = "platformio";
-            version = "3.3.3";
-            sha256 = "pcWKBqtpU7DVpiT7UF6Zi+YUKknyjtXFEf5nL9+xuSo=";
+            version = "3.3.4";
+            sha256 = "qfNz4IYjCmCMFLtAkbGTW5xnsVT8iDnFWjrgkmr2Slk=";
           }
           {
             name = "vscode-serial-monitor";
             publisher = "ms-vscode";
-            version = "0.13.1";
-            sha256 = "qZKCNG5EdMwzE9y3WVxaPMdTP9Y0xbe8kozjU7v44OI=";
+            version = "0.13.250120001";
+            sha256 = "sZ5ybbl1gxt41Eirp88JmS30WNHeM4SslhzBlLXyRsM=";
           }
         ];
       })
@@ -1750,6 +1853,13 @@ in
       route
       util-linux
       whereis
+    ]) ++
+    (with fishPlugins; [
+      async-prompt
+      autopair
+      colored-man-pages
+      done
+      fish-you-should-use
     ])
     ++
     (with gst_all_1; [
@@ -1825,6 +1935,41 @@ in
       quran
       quran-bn
       quran-en
+    ]) ++
+    (with inkscape-extensions; [
+      applytransforms
+      textext
+    ])
+    ++
+    (with obs-studio-plugins; [
+      droidcam-obs
+      input-overlay
+      obs-3d-effect
+      obs-backgroundremoval
+      obs-color-monitor
+      obs-composite-blur
+      obs-freeze-filter
+      obs-gradient-source
+      obs-gstreamer
+      obs-move-transition
+      obs-multi-rtmp
+      obs-mute-filter
+      obs-pipewire-audio-capture
+      obs-replay-source
+      obs-rgb-levels-filter
+      obs-scale-to-sound
+      obs-shaderfilter
+      obs-source-clone
+      obs-source-record
+      obs-source-switcher
+      obs-text-pthread
+      obs-transition-table
+      obs-tuna
+      obs-vaapi
+      obs-vertical-canvas
+      obs-vintage-filter
+      obs-vkcapture
+      waveform
     ]);
   };
 
@@ -2355,6 +2500,8 @@ in
     enforceIdUniqueness = true;
     mutableUsers = true;
 
+    defaultUserShell = pkgs.fish;
+
     motd = "Welcome";
 
     users.bitscoper = {
@@ -2383,6 +2530,8 @@ in
         "wheel"
         "wireshark"
       ];
+
+      useDefaultShell = true;
     };
   };
 
