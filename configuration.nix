@@ -251,7 +251,6 @@ in
 
       fcitx5 = {
         waylandFrontend = true;
-        plasma6Support = true;
 
         addons = with pkgs; [
           fcitx5-openbangla-keyboard
@@ -850,6 +849,8 @@ in
     };
 
     phpfpm = {
+      settings = { };
+
       phpOptions = ''
         default_charset = "UTF-8"
         error_reporting = E_ALL
@@ -1453,6 +1454,7 @@ in
       burpsuite
       butt
       bzip2
+      caprine
       certbot-full
       clang
       clinfo
@@ -1656,6 +1658,7 @@ in
       waylevel
       wev
       wget
+      whatsie
       which
       wireplumber
       wireshark
@@ -2477,6 +2480,13 @@ in
     };
   };
 
+  qt = {
+    enable = true;
+
+    platformTheme = "gtk2";
+    style = "gtk2";
+  };
+
   documentation = {
     enable = true;
     dev.enable = true;
@@ -2666,7 +2676,7 @@ in
               "SUPER SHIFT, R, exec, rofi -show run"
 
               "SUPER, T, exec, kitty"
-              "SUPER ALT, T, exec, kitty sh -c \"fish\""
+              "SUPER ALT, T, exec, kitty sh -c \"bash\""
 
               ", XF86Explorer, exec, pcmanfm"
               "SUPER, E, exec, pcmanfm"
@@ -2941,10 +2951,10 @@ in
         qt = {
           enable = true;
 
-          platformTheme.name = "gtk";
+          platformTheme.name = "gtk2";
 
           style = {
-            name = "Dracula";
+            name = "gtk2";
             package = pkgs.dracula-qt5-theme;
           };
         };
@@ -3939,7 +3949,7 @@ in
 # sudo flatpak repair
 
 # FIXME: Hyprpaper Delay
-# FIXME: libsecret
+# FIXME: Qt Styling
 # TODO: Hyprland Configurations
 # TODO: PCManFM > Thumbnailers
 # TODO: Xarchiver > Backends
