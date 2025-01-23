@@ -464,7 +464,7 @@ in
       enable = true;
 
       qemu = {
-        package = pkgs.qemu_full;
+        package = pkgs.qemu_kvm;
 
         swtpm.enable = true;
 
@@ -1227,8 +1227,13 @@ in
       prompt.enable = true;
 
       config = {
-        init = {
-          defaultBranch = "main";
+        init.defaultBranch = "main";
+
+        credential.helper = "${pkgs.gitFull}/bin/git-credential-libsecret";
+
+        user = {
+          name = "Abdullah As-Sadeed";
+          email = "bitscoper@gmail.com";
         };
       };
     };
@@ -3257,6 +3262,7 @@ in
 
                 modules-right = [
                   "privacy"
+                  "mpris"
                   "keyboard-state"
                   "systemd-failed-units"
                   "disk"
@@ -3449,6 +3455,22 @@ in
                   };
                 };
 
+                mpris = {
+                  interval = 1;
+
+                  format = "{player_icon}";
+
+                  tooltip-format = "Title: {title}\nArtist: {artist}\nAlbum: {album}\n{status}: {position}/{length}\nPlayer: {player}";
+
+                  player-icons = {
+                    default = "";
+
+                    vlc = "󰕼";
+                    firefox = "";
+                    chromium = "";
+                  };
+                };
+
                 privacy = {
                   icon-size = 14;
                   icon-spacing = 8;
@@ -3462,11 +3484,6 @@ in
                     }
                     {
                       type = "audio-in";
-                      tooltip = true;
-                      tooltip-icon-size = 16;
-                    }
-                    {
-                      type = "audio-out";
                       tooltip = true;
                       tooltip-icon-size = 16;
                     }
@@ -3651,6 +3668,7 @@ in
               #network,
               #keyboard-state,
               #clock,
+              #mpris,
               #privacy,
               #systemd-failed-units,
               #disk,
@@ -3721,8 +3739,8 @@ in
                 color: ${dracula_theme.hex.foreground};
               }
 
-              #privacy-item.audio-out {
-                color: ${dracula_theme.hex.foreground};
+              #mpris.playing {
+                color: ${dracula_theme.hex.cyan};
               }
 
               #privacy-item.audio-in,
@@ -3922,20 +3940,11 @@ in
 
             extraConfig = '''';
           };
-
-          git.enable = true; # Needed for config.home-manager.users.bitscoper.programs.git.*
         };
       }
     ];
 
-    users.bitscoper = {
-      programs = {
-        git = {
-          userName = "Abdullah As-Sadeed";
-          userEmail = "bitscoper@gmail.com";
-        };
-      };
-    };
+    users.bitscoper = { };
 
     verbose = true;
   };
@@ -3952,5 +3961,4 @@ in
 # FIXME: Hyprpaper Delay
 # TODO: Hyprland Configurations
 # TODO: PCManFM > Thumbnailers
-# TODO: Waybar > MPRIS
 # TODO: Xarchiver > Backends
