@@ -465,7 +465,6 @@ in
 
       qemu = {
         package = pkgs.qemu_full;
-        runAsRoot = true;
 
         swtpm.enable = true;
 
@@ -478,6 +477,8 @@ in
             }).fd
           ];
         };
+
+        runAsRoot = true;
       };
     };
     spiceUSBRedirection.enable = true;
@@ -1574,6 +1575,7 @@ in
       lvm2
       lynis
       mattermost-desktop
+      meld
       metasploit
       mixxx
       mtools
@@ -1860,7 +1862,6 @@ in
     (with fishPlugins; [
       async-prompt
       autopair
-      colored-man-pages
       done
       fish-you-should-use
     ])
@@ -2672,8 +2673,8 @@ in
 
               ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/Screenshot_$(date +'%Y-%B-%d_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\""
 
-              "SUPER, R, exec, rofi -show drun"
-              "SUPER SHIFT, R, exec, rofi -show run"
+              "SUPER, A, exec, rofi -show drun"
+              "SUPER, R, exec, rofi -show run"
 
               "SUPER, T, exec, kitty"
               "SUPER ALT, T, exec, kitty sh -c \"bash\""
@@ -2955,7 +2956,7 @@ in
 
           style = {
             name = "gtk2";
-            package = pkgs.dracula-qt5-theme;
+            # package = pkgs. ;
           };
         };
 
@@ -3949,7 +3950,7 @@ in
 # sudo flatpak repair
 
 # FIXME: Hyprpaper Delay
-# FIXME: Qt Styling
 # TODO: Hyprland Configurations
 # TODO: PCManFM > Thumbnailers
+# TODO: Waybar > MPRIS
 # TODO: Xarchiver > Backends
