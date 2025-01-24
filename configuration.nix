@@ -134,8 +134,8 @@ in
       "iommu=pt"
       "boot.shell_on_fail"
       "rd.systemd.show_status=true"
-      # "rd.udev.log_level=3"
-      # "udev.log_priority=3"
+      # "rd.udev.log_level=3" # TODO
+      # "udev.log_priority=3" # TODO
     ];
 
     consoleLogLevel = 5; # 5 = KERN_NOTICE
@@ -1712,12 +1712,12 @@ in
           HideVirtualKeyboard = false;
           VirtualKeyboardPosition = "center";
 
-          # MainColor = ;
-          # AccentColor = ;
+          # MainColor = ; # TODO
+          # AccentColor = ; # TODO
 
-          # HighlightBorderColor= ;
-          # HighlightBackgroundColor= ;
-          # HighlightTextColor= ;
+          # HighlightBorderColor= ; # TODO
+          # HighlightBackgroundColor= ; # TODO
+          # HighlightTextColor= ; # TODO
 
           HeaderTextColor = dracula_theme.hex.foreground;
           TimeTextColor = dracula_theme.hex.foreground;
@@ -1727,27 +1727,27 @@ in
           PlaceholderTextColor = dracula_theme.hex.foreground;
           WarningColor = dracula_theme.hex.red;
 
-          # LoginFieldBackgroundColor = ;
-          # LoginFieldTextColor = ;
-          # UserIconColor = ;
-          # HoverUserIconColor = ;
+          # LoginFieldBackgroundColor = ; # TODO
+          # LoginFieldTextColor = ; # TODO
+          # UserIconColor = ; # TODO
+          # HoverUserIconColor = ; # TODO
 
-          # PasswordFieldBackgroundColor = ;
-          # PasswordFieldTextColor = ;
-          # PasswordIconColor = ;
-          # HoverPasswordIconColor = ;
+          # PasswordFieldBackgroundColor = ; # TODO
+          # PasswordFieldTextColor = ; # TODO
+          # PasswordIconColor = ; # TODO
+          # HoverPasswordIconColor = ; # TODO
 
-          # LoginButtonBackgroundColor = ;
+          # LoginButtonBackgroundColor = ; # TODO
           LoginButtonTextColor = dracula_theme.hex.foreground;
 
           SystemButtonsIconsColor = dracula_theme.hex.foreground;
-          # HoverSystemButtonsIconsColor = ;
+          # HoverSystemButtonsIconsColor = ; # TODO
 
           SessionButtonTextColor = dracula_theme.hex.foreground;
-          # HoverSessionButtonTextColor = ;
+          # HoverSessionButtonTextColor = ; # TODO
 
           VirtualKeyboardButtonTextColor = dracula_theme.hex.foreground;
-          # HoverVirtualKeyboardButtonTextColor = ;
+          # HoverVirtualKeyboardButtonTextColor = ; # TODO
 
           DropdownBackgroundColor = dracula_theme.hex.background;
           DropdownSelectedBackgroundColor = dracula_theme.hex.current_line;
@@ -2740,13 +2740,22 @@ in
               no_border_on_floating = false;
 
               border_size = 1;
-              "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-              "col.inactive_border" = "rgba(595959aa)";
+              "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg"; # TODO
+              "col.inactive_border" = "rgba(595959aa)"; # TODO
 
               no_focus_fallback = false;
 
               resize_on_border = true;
               hover_icon_on_border = true;
+
+              snap = {
+                enabled = true;
+                border_overlap = false;
+              };
+            };
+
+            ecosystem = {
+              no_update_news = false;
             };
 
             misc = {
@@ -2803,7 +2812,7 @@ in
 
             windowrulev2 = [
               "suppressevent maximize, class:.*"
-              "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
+              "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
             ];
 
             input = {
@@ -2828,14 +2837,34 @@ in
                 disable_while_typing = true;
               };
 
-              touchdevice =
-                {
-                  enabled = true;
-                };
+              touchdevice = {
+                enabled = true;
+              };
 
               tablet = {
                 left_handed = false;
               };
+            };
+
+            cursor = {
+              no_hardware_cursors = false;
+
+              enable_hyprcursor = true;
+              sync_gsettings_theme = true;
+
+              persistent_warps = true;
+
+              no_warps = false;
+
+              hide_on_key_press = false;
+              hide_on_touch = true;
+            };
+
+            binds = {
+              disable_keybind_grabbing = true;
+              pass_mouse_when_bound = false;
+
+              window_direction_monitor_fallback = true;
             };
 
             gestures = {
@@ -2852,36 +2881,31 @@ in
             };
 
             decoration = {
-              rounding = 10;
+              dim_special = 0.25;
+
+              rounding = 8;
 
               active_opacity = 1.0;
+              fullscreen_opacity = 1.0;
               inactive_opacity = 1.0;
 
-              shadow = {
-                enabled = true;
-                range = 4;
-                render_power = 3;
-                color = "rgba(1a1a1aee)";
-              };
+              dim_inactive = false;
+              dim_strength = 0.0;
 
-              blur = {
-                enabled = true;
-                size = 3;
-                passes = 1;
-
-                vibrancy = 0.1696;
-              };
+              blur.enabled = false;
+              shadow .enabled = false;
             };
 
             animations = {
-              enabled = "yes";
+              enabled = true;
+              first_launch_animation = true;
 
               bezier = [
-                "easeOutQuint,0.23,1,0.32,1"
-                "easeInOutCubic,0.65,0.05,0.36,1"
-                "linear,0,0,1,1"
-                "almostLinear,0.5,0.5,0.75,1.0"
-                "quick,0.15,0,0.1,1"
+                "easeOutQuint, 0.23, 1, 0.32, 1"
+                "easeInOutCubic, 0.65, 0.05, 0.36, 1"
+                "linear, 0, 0, 1, 1"
+                "almostLinear, 0.5, 0.5, 0.75, 1.0"
+                "quick, 0.15, 0, 0.1, 1"
               ];
 
               animation = [
@@ -2902,6 +2926,7 @@ in
                 "workspacesIn, 1, 1.21, almostLinear, fade"
                 "workspacesOut, 1, 1.94, almostLinear, fade"
               ];
+              # Name, On/Off, Speed, Curve [, Style]
             };
           };
 
@@ -3104,7 +3129,7 @@ in
                   size = "256, 48";
                   rounding = 16;
                   outline_thickness = 1;
-                  # outer_color = "";
+                  # outer_color = ""; # TODO
                   shadow_passes = 0;
                   hide_input = false;
                   inner_color = dracula_theme.rgba.current_line;
@@ -3117,12 +3142,12 @@ in
                   fade_on_empty = true;
 
                   invert_numlock = false;
-                  # capslock_color = "";
-                  # numlock_color = "";
-                  # bothlock_color = "";
+                  # capslock_color = ""; # TODO
+                  # numlock_color = ""; # TODO
+                  # bothlock_color = ""; # TODO
 
-                  # check_color = "";
-                  # fail_color = "";
+                  # check_color = ""; # TODO
+                  # fail_color = ""; # TODO
                   fail_text = "<i>$FAIL <b>($ATTEMPTS)</b></i>";
                   fail_timeout = 2000;
                 }
@@ -3891,17 +3916,14 @@ in
               active_border_color = dracula_theme.hex.foreground;
               inactive_border_color = dracula_theme.hex.comment;
 
-              # Tab Bar
               active_tab_foreground = dracula_theme.hex.background;
               active_tab_background = dracula_theme.hex.foreground;
               inactive_tab_foreground = dracula_theme.hex.background;
               inactive_tab_background = dracula_theme.hex.comment;
 
-              # Marks
               mark1_foreground = dracula_theme.hex.background;
               mark1_background = dracula_theme.hex.red;
 
-              # Cursor
               cursor = dracula_theme.hex.foreground;
               cursor_text_color = dracula_theme.hex.background;
 
@@ -3959,6 +3981,5 @@ in
 # sudo flatpak repair
 
 # FIXME: Hyprpaper Delay
-# TODO: Hyprland Configurations
 # TODO: PCManFM > Thumbnailers
 # TODO: Xarchiver > Backends
