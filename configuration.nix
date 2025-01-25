@@ -527,11 +527,6 @@ in
 
     fwupd.enable = true;
 
-    asusd = {
-      enable = true;
-      enableUserService = true;
-    };
-
     acpid = {
       enable = true;
 
@@ -1242,9 +1237,9 @@ in
 
     usbtop.enable = true;
 
-    virt-manager.enable = true;
-
     system-config-printer.enable = true;
+
+    virt-manager.enable = true;
 
     nano = {
       enable = true;
@@ -1253,6 +1248,7 @@ in
 
     firefox = {
       enable = true;
+      package = pkgs.firefox-devedition;
       languagePacks = [
         "bn"
         "en-US"
@@ -1267,6 +1263,8 @@ in
 
       preferences = { };
     };
+
+    wireshark.enable = true;
 
     steam = {
       enable = true;
@@ -1341,6 +1339,16 @@ in
               metadata = false;
               new-file = true;
               recursive = true;
+            };
+
+            "org/gnome/meld" = {
+              enable-space-drawer = true;
+              highlight-current-line = true;
+              highlight-syntax = true;
+              prefer-dark-theme = true;
+              show-line-numbers = true;
+              show-overview-map = true;
+              wrap-mode = "word";
             };
           };
         }
@@ -1539,6 +1547,7 @@ in
       johnny
       jq
       keepassxc
+      kernelshark
       kind
       kubectl
       kubectl-graph
@@ -1667,7 +1676,6 @@ in
       wget
       whatsie
       which
-      wireplumber
       wireshark
       wl-clipboard
       wordpress
@@ -2442,7 +2450,7 @@ in
         "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop"; # .pptx
         "application/vnd.openxmlformats-officedocument.presentationml.template" = "impress.desktop"; # .potx
 
-        "application/pdf" = "firefox.desktop";
+        "application/pdf" = "firefox-devedition.desktop";
 
         "font/collection" = "org.gnome.font-viewer.desktop";
         "font/otf" = "org.gnome.font-viewer.desktop";
@@ -2461,8 +2469,8 @@ in
         "application/x-tar" = "xarchiver.desktop";
         "application/zip" = "xarchiver.desktop";
 
-        "x-scheme-handler/http" = "firefox.desktop";
-        "x-scheme-handler/https" = "firefox.desktop";
+        "x-scheme-handler/http" = "firefox-devedition.desktop";
+        "x-scheme-handler/https" = "firefox-devedition.desktop";
 
         "x-scheme-handler/mailto" = "thunderbird.desktop";
       };
@@ -2678,8 +2686,8 @@ in
 
               ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/Screenshot_$(date +'%Y-%B-%d_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\""
 
-              "SUPER, A, exec, rofi -show drun"
-              "SUPER, R, exec, rofi -show run"
+              "SUPER, A, exec, rofi -show drun -disable-history"
+              "SUPER, R, exec, rofi -show run -disable-history"
 
               "SUPER, T, exec, kitty"
               "SUPER ALT, T, exec, kitty sh -c \"bash\""
@@ -2691,8 +2699,8 @@ in
 
               "SUPER, B, exec, kitty sh -c \"btop\""
 
-              "SUPER, W, exec, firefox"
-              "SUPER ALT, W, exec, firefox --private-window"
+              "SUPER, W, exec, firefox-devedition"
+              "SUPER ALT, W, exec, firefox-devedition --private-window"
 
               ", XF86Mail, exec, thunderbird"
               "SUPER, M, exec, thunderbird"
@@ -3981,5 +3989,6 @@ in
 # sudo flatpak repair
 
 # FIXME: Hyprpaper Delay
+# FIXME: MariaDB > Login
 # TODO: PCManFM > Thumbnailers
 # TODO: Xarchiver > Backends
