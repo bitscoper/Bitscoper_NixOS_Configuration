@@ -491,6 +491,8 @@ in
       defaultNetwork.settings.dns_enabled = true;
     };
 
+    oci-containers.backend = "podman";
+
     waydroid.enable = true;
   };
 
@@ -1243,7 +1245,12 @@ in
 
     nano = {
       enable = true;
-      nanorc = '''';
+      nanorc = ''
+        set linenumbers
+        set softwrap
+        set indicator
+        set autoindent
+      '';
     };
 
     firefox = {
@@ -1294,6 +1301,9 @@ in
               region = config.i18n.defaultLocale;
             };
 
+            "org/virt-manager/virt-manager" = {
+              xmleditor-enabled = true;
+            };
             "org/virt-manager/virt-manager/connections" = {
               autoconnect = [
                 "qemu:///system"
@@ -1302,26 +1312,18 @@ in
                 "qemu:///system"
               ];
             };
-            "org/virt-manager/virt-manager" = {
-              xmleditor-enabled = true;
+            "org/virt-manager/virt-manager/new-vm" = {
+              cpu-default = "host-passthrough";
+            };
+            "org/virt-manager/virt-manager/console" = {
+              auto-redirect = false;
+              autoconnect = true;
             };
             "org/virt-manager/virt-manager/stats" = {
               enable-cpu-poll = true;
               enable-disk-poll = true;
               enable-memory-poll = true;
               enable-net-poll = true;
-            };
-            "org/virt-manager/virt-manager/confirm" = {
-              delete-storage = true;
-              forcepoweroff = true;
-              pause = true;
-              poweroff = true;
-              removedev = true;
-              unapplied-dev = true;
-            };
-            "org/virt-manager/virt-manager/console" = {
-              auto-redirect = false;
-              autoconnect = true;
             };
             "org/virt-manager/virt-manager/vmlist-fields" = {
               cpu-usage = true;
@@ -1330,8 +1332,13 @@ in
               memory-usage = true;
               network-traffic = true;
             };
-            "org/virt-manager/virt-manager/new-vm" = {
-              cpu-default = "host-passthrough";
+            "org/virt-manager/virt-manager/confirm" = {
+              delete-storage = true;
+              forcepoweroff = true;
+              pause = true;
+              poweroff = true;
+              removedev = true;
+              unapplied-dev = true;
             };
 
             "com/github/huluti/Curtail" = {
