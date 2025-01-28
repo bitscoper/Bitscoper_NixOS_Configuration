@@ -1849,12 +1849,6 @@ in
           zainchen.json
         ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
-            name = "vscode-sort-json";
-            publisher = "richie5um2";
-            version = "1.20.0";
-            sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
-          }
-          {
             name = "platformio-ide";
             publisher = "platformio";
             version = "3.3.4";
@@ -1865,6 +1859,18 @@ in
             publisher = "ms-vscode";
             version = "0.13.250120001";
             sha256 = "sZ5ybbl1gxt41Eirp88JmS30WNHeM4SslhzBlLXyRsM=";
+          }
+          {
+            name = "pubspec-assist";
+            publisher = "jeroen-meijer";
+            version = "2.3.2";
+            sha256 = "+Mkcbeq7b+vkuf2/LYT10mj46sULixLNKGpCEk1Eu/0=";
+          }
+          {
+            name = "vscode-sort-json";
+            publisher = "richie5um2";
+            version = "1.20.0";
+            sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
           }
         ];
       })
