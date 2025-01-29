@@ -1090,6 +1090,26 @@ in
       openFirewall = true;
     };
 
+    wordpress = { };
+
+    asterisk = {
+      enable = true;
+
+      extraConfig = '''';
+
+      extraArguments = [
+
+      ];
+    };
+
+    tailscale = {
+      enable = true;
+      disableTaildrop = false;
+
+      port = 0; # Automatic Selection
+      openFirewall = true;
+    };
+
     logrotate = {
       enable = true;
       checkConfig = true;
@@ -1448,11 +1468,21 @@ in
 
     systemPackages = with pkgs; [
       # appimagekit
-      # hyprpolkitagent
+      # cewl
+      # dmitry
+      # medusa
+      # ncrack
       # reiser4progs
+      # scrounge-ntfs
+      # snort
+      ## dart
+      ## gradle
+      ## gradle-completion
+      ## hyprpolkitagent
       acl
       agi
       aircrack-ng
+      amass
       android-backup-extractor
       android-tools
       android_sdk # Custom
@@ -1460,11 +1490,15 @@ in
       appimage-run
       aribb24
       aribb25
+      armitage
+      arping
       audacity
       audit
+      autopsy
       avrdude
       bat
       bfcal
+      binwalk
       bleachbit
       blender
       bluez
@@ -1472,17 +1506,25 @@ in
       brightnessctl
       btop
       btrfs-progs
+      bulk_extractor
+      bully
       burpsuite
       butt
       bzip2
       caprine
       certbot-full
+      chntpw
       clang
+      clang-analyzer
+      clang-manpages
+      clang-tools
       clinfo
       cliphist
       cloudflare-warp
       cmake
+      commix
       coreutils-full
+      crunch
       cryptsetup
       cups
       cups-filters
@@ -1491,13 +1533,26 @@ in
       curlFull
       curtail
       d-spy
-      dart
+      davtest
+      dbd
       dbeaver-bin
       dconf-editor
       dmg2img
+      dmidecode
+      dns2tcp
+      dnschef
+      dnsenum
+      dnsmap
+      dnsrecon
       dosfstools
+      dsniff
       e2fsprogs
+      efibootmgr
+      enum4linux
       esptool
+      ettercap
+      evil-winrm
+      exe2hex
       exfatprogs
       f2fs-tools
       faac
@@ -1508,8 +1563,10 @@ in
       ffmpeg-full
       ffmpegthumbnailer
       fh
+      fierce
       file
       flutter327
+      fping
       fritzing
       fwupd-efi
       gcal
@@ -1530,18 +1587,26 @@ in
       gource
       gparted
       gpredict
-      gradle
-      gradle-completion
       grim
+      gtk-vnc
       guestfs-tools
+      guymager
       gzip
+      hardinfo2
+      hash-identifier
+      hashcat
+      hashdeep
+      hashid
+      hdparm
       hfsprogs
       hw-probe
       hwloc
+      hydra-check
       hyprcursor
       hyprls
       hyprpicker
       i2c-tools
+      iaito
       ideviceinstaller
       idevicerestore
       iftop
@@ -1556,16 +1621,20 @@ in
       keepassxc
       kernelshark
       kind
+      kismet
       kubectl
       kubectl-graph
       kubectl-tree
       kubectl-view-allocations
       kubectl-view-secret
       kubernetes
+      laudanum
+      lbd
       lhasa
       libGL
       libaom
       libappimage
+      libclang
       libde265
       libdvdcss
       libdvdnav
@@ -1589,18 +1658,38 @@ in
       libuuid
       libva-utils
       libvirt
+      libvncserver
       libvpx
       libwebp
       libxfs
+      lshw
       lsof
+      lsscsi
       lvm2
       lynis
+      macchanger
+      magicrescue
+      maltego
+      masscan
       mattermost-desktop
       meld
+      mesa-demos
       metasploit
+      mimikatz
+      minicom
+      miredo
+      mitmproxy
       mixxx
+      msfpc
       mtools
+      nbtscan
+      netcat-gnu
+      netdiscover
+      netexec
+      netmask
+      netsniff-ng
       networkmanagerapplet
+      nikto
       nilfs-utils
       ninja
       nix-bash-completions
@@ -1615,54 +1704,89 @@ in
       ntfs3g
       obs-studio
       onedrive
+      onesixtyone
       onionshare-gui
       openssl
+      ophcrack
+      ophcrack-cli
       p7zip
       patchelf
       pavucontrol
       pciutils
       pcmanfm
       pcre
+      pdf-parser
+      pdfid
       pgadmin4-desktopmode
       php84
+      pixiewps
       pkg-config
       platformio
       platformio-core
       playerctl
       podman-compose
       podman-desktop
+      powersploit
+      proxychains
+      ptunnel
+      pwnat
       python313Full
       qbittorrent
       qemu-utils
       qpwgraph
+      radare2
       rar
       readline
+      reaverwps-t6x
       reiserfsprogs
+      remmina
+      responder
       ripgrep
       rpPPPoE
+      rsmangler
       rtl-sdr-librtlsdr
+      samdump2
       sane-backends
+      scalpel
       schroedinger
       scrcpy
       screen
       sdrangel
       sdrpp
+      sipvicious
+      sleuthkit
       slurp
       smartmontools
+      smbmap
+      snmpcheck
       social-engineer-toolkit
+      spice
       spice-gtk
       spice-protocol
+      spooftooph
+      sqlmap
+      ssldump
+      sslh
+      sslscan
+      sslsplit
+      swaks
+      tcpdump
+      tcpreplay
       telegram-desktop
       texliveFull
+      thc-hydra
+      theharvester
       thermald
       tor-browser
       tree
       udftools
+      udptunnel
       unar
       undollar
       ungoogled-chromium
       unicode-emoji
       universal-android-debloater
+      unix-privesc-check
       unrar
       unzip
       usbutils
@@ -1673,18 +1797,27 @@ in
       vlc
       vlc-bittorrent
       vscode-js-debug
+      vulkan-tools
+      wafw00f
+      wapiti
       waybar-mpris
       waycheck
       wayland
       wayland-protocols
       wayland-utils
       waylevel
+      weevely
       wev
       wget
       whatsie
+      whatweb
       which
+      whois
+      wifite2
+      win-spice
       wireshark
       wl-clipboard
+      wordlists
       wordpress
       wpscan
       x264
@@ -1877,6 +2010,7 @@ in
     ] ++
     (with unixtools; [
       arp
+      fdisk
       ifconfig
       netstat
       nettools
@@ -2551,6 +2685,7 @@ in
         "adbusers"
         "audio"
         "dialout"
+        "hardinfo2"
         "input"
         "jellyfin"
         "kvm"
