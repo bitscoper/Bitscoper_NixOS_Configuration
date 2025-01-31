@@ -1273,6 +1273,21 @@ in
       '';
     };
 
+    neovim = {
+      enable = true;
+
+      viAlias = true;
+      vimAlias = true;
+
+      withPython3 = true;
+
+      configure = {
+        # customRC = '''';
+      };
+
+      defaultEditor = false;
+    };
+
     firefox = {
       enable = true;
       package = pkgs.firefox-devedition;
@@ -1665,6 +1680,7 @@ in
       lshw
       lsof
       lsscsi
+      lua-language-server
       lvm2
       lynis
       macchanger
@@ -1683,6 +1699,7 @@ in
       msfpc
       mtools
       nbtscan
+      neovim-remote
       netcat-gnu
       netdiscover
       netexec
@@ -1779,6 +1796,7 @@ in
       thermald
       tor-browser
       tree
+      tree-sitter
       udftools
       udptunnel
       unar
@@ -1980,7 +1998,9 @@ in
           wmaurer.change-case
           xdebug.php-debug
           zainchen.json
-        ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+        ]
+        ++
+        pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
             name = "platformio-ide";
             publisher = "platformio";
@@ -2007,7 +2027,8 @@ in
           }
         ];
       })
-    ] ++
+    ]
+    ++
     (with unixtools; [
       arp
       fdisk
@@ -2018,7 +2039,8 @@ in
       route
       util-linux
       whereis
-    ]) ++
+    ])
+    ++
     (with fishPlugins; [
       async-prompt
       autopair
@@ -2075,10 +2097,12 @@ in
       xsl
       zip
       zlib
-    ]) ++
+    ])
+    ++
     (with php84Packages; [
 
-    ]) ++
+    ])
+    ++
     (with python313Packages; [
       bangla
       black
@@ -2092,14 +2116,58 @@ in
       requests
       seaborn
       tkinter
-    ]) ++
+    ])
+    ++
     (with texlivePackages; [
       bangla
       latexmk
       quran
       quran-bn
       quran-en
-    ]) ++
+    ])
+    ++
+    (with lua51Packages; [
+      # Old Version Pinned for Neovim
+      lua
+      luarocks
+    ])
+    ++
+    (with tree-sitter-grammars; [
+      tree-sitter-bash
+      tree-sitter-c
+      tree-sitter-cmake
+      tree-sitter-comment
+      tree-sitter-cpp
+      tree-sitter-css
+      tree-sitter-dart
+      tree-sitter-devicetree
+      tree-sitter-dockerfile
+      tree-sitter-fish
+      tree-sitter-html
+      tree-sitter-http
+      tree-sitter-hyprlang
+      tree-sitter-javascript
+      tree-sitter-jsdoc
+      tree-sitter-json
+      tree-sitter-json5
+      tree-sitter-latex
+      tree-sitter-lua
+      tree-sitter-make
+      tree-sitter-markdown
+      tree-sitter-markdown-inline
+      tree-sitter-nix
+      tree-sitter-org-nvim
+      tree-sitter-php
+      tree-sitter-python
+      tree-sitter-query
+      tree-sitter-regex
+      tree-sitter-scheme
+      tree-sitter-sql
+      tree-sitter-toml
+      tree-sitter-vim
+      tree-sitter-yaml
+    ])
+    ++
     (with inkscape-extensions; [
       applytransforms
       textext
@@ -4138,5 +4206,8 @@ in
 
 # FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
+# TODO: Asterisk
+# TODO: Neovim
 # TODO: PCManFM > Thumbnailers
+# TODO: Tailscale
 # TODO: Xarchiver > Backends
