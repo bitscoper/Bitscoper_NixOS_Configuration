@@ -1110,6 +1110,66 @@ in
       openFirewall = true;
     };
 
+    tor = {
+      enable = false;
+
+      relay = {
+        enable = false;
+
+        # role = ;
+      };
+
+      client = {
+        enable = false;
+
+        dns.enable = true;
+
+        onionServices = { };
+      };
+
+      torsocks = {
+        enable = config.services.tor.client.enable;
+        allowInbound = true;
+      };
+
+      controlSocket.enable = false;
+
+      enableGeoIP = true;
+
+      settings = {
+        Nickname = config.networking.hostName;
+        ContactInfo = "bitscoper@${config.networking.hostName}";
+
+        IPv6Exit = true;
+        ClientUseIPv4 = true;
+        ClientUseIPv6 = true;
+
+        ExtendAllowPrivateAddresses = false;
+        RefuseUnknownExits = true;
+        ServerDNSDetectHijacking = true;
+        ServerDNSRandomizeCase = true;
+
+        FetchServerDescriptors = true;
+        FetchHidServDescriptors = true;
+        FetchUselessDescriptors = false;
+        DownloadExtraInfo = false;
+
+        CellStatistics = false;
+        ConnDirectionStatistics = false;
+        DirReqStatistics = false;
+        EntryStatistics = false;
+        ExitPortStatistics = false;
+        ExtraInfoStatistics = false;
+        HiddenServiceStatistics = false;
+        MainloopStats = false;
+        PaddingStatistics = false;
+
+        LogMessageDomains = false;
+      };
+
+      openFirewall = true;
+    };
+
     logrotate = {
       enable = true;
       checkConfig = true;
@@ -1511,6 +1571,7 @@ in
       audit
       autopsy
       avrdude
+      awscli2
       bat
       bfcal
       binwalk
