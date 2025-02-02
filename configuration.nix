@@ -123,8 +123,8 @@ in
       "kvm-intel"
     ];
 
-    extraModulePackages = [
-
+    extraModulePackages = with config.boot.kernelPackages; [
+      xpadneo
     ];
 
     extraModprobeConfig = "options kvm_intel nested=1";
@@ -446,7 +446,77 @@ in
 
     bluetooth = {
       enable = true;
+      package = pkgs.bluez;
+
+      hsphfpd.enable = false; # Conflicts wwth WirePlumber
+
       powerOnBoot = true;
+
+      input.General = {
+        IdleTimeout = 0; # 0 = Disabled
+        LEAutoSecurity = true;
+        ClassicBondedOnly = true;
+        UserspaceHID = true;
+      };
+
+      network.General = {
+        DisableSecurity = false;
+      };
+
+      settings = {
+        General = {
+          MaxControllers = 0; # 0 = Unlimited
+          ControllerMode = "dual";
+
+          Name = config.networking.hostName;
+
+          DiscoverableTimeout = 0; # 0 = Disabled
+          PairableTimeout = 0; # 0 = Disabled
+          AlwaysPairable = true;
+          FastConnectable = true;
+
+          ReverseServiceDiscovery = true;
+          NameResolving = true;
+          RemoteNameRequestRetryDelay = 60; # Seconds
+          RefreshDiscovery = true;
+          TemporaryTimeout = 0; # 0 = Disabled
+
+          SecureConnections = "on";
+          Privacy = "off";
+
+          Experimental = true;
+          KernelExperimental = true;
+        };
+
+        Policy = {
+          AutoEnable = true;
+
+          ResumeDelay = 2; # Seconds
+          ReconnectAttempts = 7;
+          ReconnectIntervals = "1, 2, 4, 8, 16, 32, 64";
+        };
+
+        GATT = {
+          Cache = "always";
+        };
+
+        CSIS = {
+          Encryption = true;
+        };
+
+        AVRCP = {
+          VolumeCategory = true;
+          VolumeWithoutTarget = false;
+        };
+
+        AVDTP = {
+          SessionMode = "ertm";
+        };
+
+        AdvMon = {
+          RSSISamplingPeriod = "0x00";
+        };
+      };
     };
 
     rtl-sdr.enable = true;
@@ -457,6 +527,8 @@ in
     };
 
     steam-hardware.enable = true;
+    xone.enable = true;
+    xpadneo.enable = true;
   };
 
   virtualisation = {
@@ -1577,8 +1649,8 @@ in
       binwalk
       bleachbit
       blender
-      bluez
       bluez-tools
+      bottles
       brightnessctl
       btop
       btrfs-progs
