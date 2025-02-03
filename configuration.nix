@@ -290,10 +290,10 @@ in
       allowPing = true;
 
       allowedTCPPorts = [
-
+        5060
       ];
       allowedUDPPorts = [
-
+        5060
       ];
     };
   };
@@ -697,6 +697,7 @@ in
         game-devices-udev-rules
         libmtp.out
         rtl-sdr
+        steam-devices-udev-rules
         usb-blaster-udev-rules
       ];
     };
@@ -1166,6 +1167,78 @@ in
 
     asterisk = {
       enable = true;
+
+      confFiles = {
+        "pjsip.conf" = ''
+          [transport-udp]
+          type=transport
+          protocol=udp
+          bind=0.0.0.0
+
+          [endpoint_internal](!)
+          type=endpoint
+          context=from-internal
+          disallow=all
+          allow=ulaw
+
+          [auth_userpass](!)
+          type=auth
+          auth_type=userpass
+
+          [aor_dynamic](!)
+          type=aor
+          max_contacts=1
+
+          ; Account 1
+          [bitscoper_1](endpoint_internal)
+          auth=bitscoper_1
+          aors=bitscoper_1
+          [bitscoper_1](auth_userpass)
+          password=${secrets.password_2_of_bitscoper}
+          username=bitscoper_1
+          [bitscoper_1](aor_dynamic)
+
+          ; Account 2
+          [bitscoper_2](endpoint_internal)
+          auth=bitscoper_2
+          aors=bitscoper_2
+          [bitscoper_2](auth_userpass)
+          password=${secrets.password_2_of_bitscoper}
+          username=bitscoper_2
+          [bitscoper_2](aor_dynamic)
+
+          ; Account 3
+          [bitscoper_3](endpoint_internal)
+          auth=bitscoper_3
+          aors=bitscoper_3
+          [bitscoper_3](auth_userpass)
+          password=${secrets.password_2_of_bitscoper}
+          username=bitscoper_3
+          [bitscoper_3](aor_dynamic)
+
+          ; Account 4
+          [bitscoper_4](endpoint_internal)
+          auth=bitscoper_4
+          aors=bitscoper_4
+          [bitscoper_4](auth_userpass)
+          password=${secrets.password_2_of_bitscoper}
+          username=bitscoper_4
+          [bitscoper_4](aor_dynamic)
+        '';
+
+        "extensions.conf" = ''
+          [from-internal]
+            exten => 1, 1, Dial(PJSIP/bitscoper_1, 60)
+            exten => 2, 1, Dial(PJSIP/bitscoper_2, 60)
+            exten => 3, 1, Dial(PJSIP/bitscoper_3, 60)
+            exten => 4, 1, Dial(PJSIP/bitscoper_4, 60)
+
+            exten => 17, 1, Answer()
+            same  =>     n, Wait(1)
+            same  =>     n, Playback(hello-world)
+            same  =>     n, Hangup()
+        '';
+      };
 
       extraConfig = '''';
 
@@ -1700,6 +1773,7 @@ in
       esptool
       ettercap
       evil-winrm
+      evtest
       exe2hex
       exfatprogs
       f2fs-tools
@@ -1810,6 +1884,7 @@ in
       libvpx
       libwebp
       libxfs
+      linuxConsoleTools
       lshw
       lsof
       lsscsi
@@ -1870,6 +1945,7 @@ in
       pgadmin4-desktopmode
       php84
       pixiewps
+      pjsip
       pkg-config
       platformio
       platformio-core
@@ -4334,7 +4410,7 @@ in
 
 # sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 # sudo flatpak update
-# sudo flatpak install flathub com.github.tchx84.Flatseal io.github.flattool.Warehouse io.github.giantpinkrobots.flatsweep
+# sudo flatpak install flathub com.github.tchx84.Flatseal io.github.flattool.Warehouse io.github.giantpinkrobots.flatsweep com.icanblink.blink
 # sudo flatpak repair
 
 # FIXME: Hyprpaper Delay
