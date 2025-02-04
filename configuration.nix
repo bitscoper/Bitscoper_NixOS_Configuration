@@ -296,6 +296,11 @@ in
         5060
       ];
     };
+
+    nameservers = [
+      "1.1.1.3#one.one.one.one"
+      "1.0.0.3#one.one.one.one"
+    ];
   };
 
   security = {
@@ -1170,59 +1175,74 @@ in
 
       confFiles = {
         "pjsip.conf" = ''
+          [transport-tcp]
+          type = transport
+          protocol = tcp
+          bind = 0.0.0.0
+
           [transport-udp]
-          type=transport
-          protocol=udp
-          bind=0.0.0.0
+          type = transport
+          protocol = udp
+          bind = 0.0.0.0
+
+          [transport-tcp6]
+          type = transport
+          protocol = tcp
+          bind = ::
+
+          [transport-udp6]
+          type = transport
+          protocol = udp
+          bind = ::
 
           [endpoint_internal](!)
-          type=endpoint
-          context=from-internal
-          disallow=all
-          allow=ulaw
+          type = endpoint
+          context = from-internal
+          disallow = all
+          allow = ulaw
 
           [auth_userpass](!)
-          type=auth
-          auth_type=userpass
+          type = auth
+          auth_type = userpass
 
           [aor_dynamic](!)
-          type=aor
-          max_contacts=1
+          type = aor
+          max_contacts = 1
 
           ; Account 1
           [bitscoper_1](endpoint_internal)
-          auth=bitscoper_1
-          aors=bitscoper_1
+          auth = bitscoper_1
+          aors = bitscoper_1
           [bitscoper_1](auth_userpass)
-          password=${secrets.password_2_of_bitscoper}
-          username=bitscoper_1
+          password = ${secrets.password_2_of_bitscoper}
+          username = bitscoper_1
           [bitscoper_1](aor_dynamic)
 
           ; Account 2
           [bitscoper_2](endpoint_internal)
-          auth=bitscoper_2
-          aors=bitscoper_2
+          auth = bitscoper_2
+          aors = bitscoper_2
           [bitscoper_2](auth_userpass)
-          password=${secrets.password_2_of_bitscoper}
-          username=bitscoper_2
+          password = ${secrets.password_2_of_bitscoper}
+          username = bitscoper_2
           [bitscoper_2](aor_dynamic)
 
           ; Account 3
           [bitscoper_3](endpoint_internal)
-          auth=bitscoper_3
-          aors=bitscoper_3
+          auth = bitscoper_3
+          aors = bitscoper_3
           [bitscoper_3](auth_userpass)
-          password=${secrets.password_2_of_bitscoper}
-          username=bitscoper_3
+          password = ${secrets.password_2_of_bitscoper}
+          username = bitscoper_3
           [bitscoper_3](aor_dynamic)
 
           ; Account 4
           [bitscoper_4](endpoint_internal)
-          auth=bitscoper_4
-          aors=bitscoper_4
+          auth = bitscoper_4
+          aors = bitscoper_4
           [bitscoper_4](auth_userpass)
-          password=${secrets.password_2_of_bitscoper}
-          username=bitscoper_4
+          password = ${secrets.password_2_of_bitscoper}
+          username = bitscoper_4
           [bitscoper_4](aor_dynamic)
         '';
 
@@ -1251,7 +1271,7 @@ in
       enable = true;
       disableTaildrop = false;
 
-      port = 0; # Automatic Selection
+      port = 0; # 0 = Automatic
       openFirewall = true;
     };
 
@@ -1517,6 +1537,7 @@ in
       enable = true;
       extraCompatPackages = with pkgs; [
         proton-ge-bin
+        steam-play-none
       ];
       protontricks.enable = true;
 
@@ -1689,7 +1710,10 @@ in
     systemPackages = with pkgs; [
       # appimagekit
       # cewl
+      # clang-analyzer
+      # clang-tools
       # dmitry
+      # libclang
       # medusa
       # ncrack
       # reiser4progs
@@ -1736,9 +1760,7 @@ in
       certbot-full
       chntpw
       clang
-      clang-analyzer
       clang-manpages
-      clang-tools
       clinfo
       cliphist
       cloudflare-warp
@@ -1856,7 +1878,6 @@ in
       libGL
       libaom
       libappimage
-      libclang
       libde265
       libdvdcss
       libdvdnav
@@ -4413,10 +4434,9 @@ in
 # sudo flatpak install flathub com.github.tchx84.Flatseal io.github.flattool.Warehouse io.github.giantpinkrobots.flatsweep com.icanblink.blink
 # sudo flatpak repair
 
+# FIXME: 05ac-033e-Gamepad > Rumble
 # FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
-# TODO: Asterisk
 # TODO: Neovim
 # TODO: PCManFM > Thumbnailers
-# TODO: Tailscale
 # TODO: Xarchiver > Backends
