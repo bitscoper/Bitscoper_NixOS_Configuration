@@ -1698,22 +1698,19 @@ in
 
     extraInit = '''';
 
-    loginShellInit = ''
-      # rm -rf ~/.android/avd
-      # ln -sf ~/.config/.android/avd ~/.android/avd
-    '';
+    loginShellInit = '''';
 
     shellInit = '''';
 
-    interactiveShellInit = '''';
+    interactiveShellInit = ''
+      rm -rf ~/.android/avd
+      ln -sf ~/.config/.android/avd ~/.android/avd
+      '';
 
     systemPackages = with pkgs; [
       # appimagekit
       # cewl
-      # clang-analyzer
-      # clang-tools
       # dmitry
-      # libclang
       # medusa
       # ncrack
       # reiser4progs
@@ -1756,11 +1753,12 @@ in
       burpsuite
       butt
       bzip2
-      caprine
       certbot-full
       chntpw
       clang
+      clang-analyzer
       clang-manpages
+      clang-tools
       clinfo
       cliphist
       cloudflare-warp
@@ -1796,6 +1794,7 @@ in
       ettercap
       evil-winrm
       evtest
+      evtest-qt
       exe2hex
       exfatprogs
       f2fs-tools
@@ -1878,6 +1877,7 @@ in
       libGL
       libaom
       libappimage
+      libclang
       libde265
       libdvdcss
       libdvdnav
@@ -2000,6 +2000,7 @@ in
       screen
       sdrangel
       sdrpp
+      serial-studio
       sipvicious
       sleuthkit
       slurp
@@ -2254,6 +2255,12 @@ in
             publisher = "richie5um2";
             version = "1.20.0";
             sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
+          }
+          {
+            name = "remote-repositories";
+            publisher = "ms-vscode";
+            version = "0.42.0";
+            sha256 = "cYbkCcNsoTO6E5befw/ZN3yTW262APTCxyCJ/3z84dc=";
           }
         ];
       })
@@ -4427,6 +4434,7 @@ in
 }
 
 # sdkmanager --licenses
+# flutter doctor --android-licenses
 # flutter doctor -v
 
 # sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
