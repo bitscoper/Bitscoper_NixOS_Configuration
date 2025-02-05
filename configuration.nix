@@ -6,27 +6,7 @@
 , ...
 }:
 let
-  android-nixpkgs = pkgs.callPackage
-    (import (builtins.fetchGit {
-      url = "https://github.com/tadfisher/android-nixpkgs.git";
-    }))
-    {
-      channel = "stable";
-    };
-  android_sdk = android-nixpkgs.sdk (sdkPkgs: with sdkPkgs; [
-    build-tools-35-0-0
-    cmdline-tools-latest
-    emulator
-    extras-google-google-play-services
-    platform-tools
-    platforms-android-35
-    system-images-android-35-google-apis-playstore-x86-64
-  ]);
-  android_sdk_path = "${android_sdk}/share/android-sdk";
-
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
-
-  existing_library_paths = builtins.getEnv "LD_LIBRARY_PATH";
 
   font_name = {
     mono = "NotoMono Nerd Font";
@@ -602,9 +582,9 @@ in
       ];
     };
 
-    flatpak.enable = true;
-
     fwupd.enable = true;
+
+    flatpak.enable = true;
 
     acpid = {
       enable = true;
@@ -705,6 +685,11 @@ in
         steam-devices-udev-rules
         usb-blaster-udev-rules
       ];
+    };
+
+    gvfs = {
+      enable = true;
+      package = pkgs.gvfs;
     };
 
     libinput = {
@@ -1680,12 +1665,7 @@ in
 
     stub-ld.enable = true;
 
-    variables = pkgs.lib.mkForce {
-      ANDROID_SDK_ROOT = android_sdk_path;
-      ANDROID_HOME = android_sdk_path;
-
-      # LD_LIBRARY_PATH = "${pkgs.glib.out}/lib/:${pkgs.libGL}/lib/:${pkgs.stdenv.cc.cc.lib}/lib:${existing_library_paths}";
-    };
+    variables = { };
 
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
@@ -1702,10 +1682,7 @@ in
 
     shellInit = '''';
 
-    interactiveShellInit = ''
-      rm -rf ~/.android/avd
-      ln -sf ~/.config/.android/avd ~/.android/avd
-      '';
+    interactiveShellInit = '''';
 
     systemPackages = with pkgs; [
       # appimagekit
@@ -1725,8 +1702,9 @@ in
       aircrack-ng
       amass
       android-backup-extractor
+      android-studio
+      android-studio-tools
       android-tools
-      android_sdk # Custom
       anydesk
       appimage-run
       aribb24
