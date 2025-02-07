@@ -1813,9 +1813,9 @@ in
       fping
       fritzing
       fwupd-efi
-      gcal
       gcc
       gdb
+      gdk-pixbuf
       gh
       gimp-with-plugins
       git-doc
@@ -1898,6 +1898,7 @@ in
       libopus
       libosinfo
       libportal
+      libqalculate
       libreoffice-fresh
       libusb1
       libuuid
@@ -2006,6 +2007,7 @@ in
       sdrangel
       sdrpp
       serial-studio
+      shared-mime-info
       sipvicious
       sleuthkit
       slurp
@@ -4452,11 +4454,11 @@ in
 # sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 # sudo flatpak update
 # sudo flatpak install flathub com.github.tchx84.Flatseal io.github.flattool.Warehouse io.github.giantpinkrobots.flatsweep com.icanblink.blink
+# sudo flatpak uninstall --unused
 # sudo flatpak repair
 
 # FIXME: 05ac-033e-Gamepad > Rumble
 # FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
-# TODO: Nautilus > Thumbnailers
 # TODO: Neovim
 # TODO: Xarchiver > Backends
