@@ -386,7 +386,6 @@ in
     polkit = {
       enable = true;
     };
-    soteria.enable = true;
 
     rtkit.enable = true;
 
@@ -690,6 +689,11 @@ in
     gvfs = {
       enable = true;
       package = pkgs.gvfs;
+    };
+
+    udisks2 = {
+      enable = true;
+      mountOnMedia = false;
     };
 
     libinput = {
@@ -1696,7 +1700,6 @@ in
       ## dart
       ## gradle
       ## gradle-completion
-      ## hyprpolkitagent
       acl
       agi
       aircrack-ng
@@ -1826,6 +1829,7 @@ in
       hyprcursor
       hyprls
       hyprpicker
+      hyprpolkitagent
       i2c-tools
       iaito
       ideviceinstaller
@@ -1903,6 +1907,7 @@ in
       miredo
       mitmproxy
       mixxx
+      motrix
       msfpc
       mtools
       nbtscan
@@ -2007,6 +2012,7 @@ in
       tree
       tree-sitter
       udftools
+      udiskie
       udptunnel
       unar
       undollar
@@ -2060,6 +2066,7 @@ in
       xvidcore
       yaml-language-server
       yt-dlp
+      ytdownloader
       zip
       (sddm-astronaut.override {
         embeddedTheme = "astronaut";
@@ -3049,10 +3056,14 @@ in
             ];
 
             exec-once = [
+              "uwsm app -- ${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
+
+              "uwsm app -- udiskie --tray --automount --notify --file-manager pcmanfm"
+
               "sleep 2 && uwsm app -- keepassxc"
 
-              "wl-paste --type text --watch cliphist store"
-              "wl-paste --type image --watch cliphist store"
+              "uwsm app -- wl-paste --type text --watch cliphist store"
+              "uwsm app -- wl-paste --type image --watch cliphist store"
 
               "setfacl --modify user:jellyfin:--x ~ & adb start-server &"
 
