@@ -1551,6 +1551,26 @@ in
               region = config.i18n.defaultLocale;
             };
 
+            "org/gtk/gtk4/settings/file-chooser" = {
+              sort-directories-first = true;
+            };
+            "org/gnome/nautilus/preferences" = {
+              click-policy = "double";
+              recursive-search = "always";
+              show-create-link = true;
+              show-delete-permanently = true;
+              show-directory-item-counts = "always";
+              show-image-thumbnails = "always";
+              date-time-format = "simple";
+            };
+            "org/gnome/nautilus/icon-view" = {
+              captions = [
+                "size"
+                "date_modified"
+                "none"
+              ];
+            };
+
             "org/virt-manager/virt-manager" = {
               xmleditor-enabled = true;
             };
@@ -1910,6 +1930,8 @@ in
       motrix
       msfpc
       mtools
+      nautilus
+      nautilus-open-any-terminal
       nbtscan
       neovim-remote
       netcat-gnu
@@ -1942,7 +1964,6 @@ in
       patchelf
       pavucontrol
       pciutils
-      pcmanfm
       pcre
       pdf-parser
       pdfid
@@ -1961,6 +1982,7 @@ in
       ptunnel
       pwnat
       python313Full
+      qalculate-gtk
       qbittorrent
       qemu-utils
       qpwgraph
@@ -2000,6 +2022,7 @@ in
       sslh
       sslscan
       sslsplit
+      sushi
       swaks
       tcpdump
       tcpreplay
@@ -2437,7 +2460,7 @@ in
 
       # https://www.iana.org/assignments/media-types/media-types.xhtml # Excluding "application/x-*" and "x-scheme-handler/*"
       defaultApplications = {
-        "inode/directory" = "pcmanfm.desktop";
+        "inode/directory" = "nautilus.desktop";
 
         "text/1d-interleaved-parityfec" = "code.desktop";
         "text/RED" = "code.desktop";
@@ -3058,7 +3081,7 @@ in
             exec-once = [
               "uwsm app -- ${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
 
-              "uwsm app -- udiskie --tray --automount --notify --file-manager pcmanfm"
+              "uwsm app -- udiskie --tray --appindicator --automount --notify --file-manager nautilus"
 
               "sleep 2 && uwsm app -- keepassxc"
 
@@ -3134,8 +3157,8 @@ in
               "SUPER, T, exec, kitty"
               "SUPER ALT, T, exec, kitty sh -c \"bash\""
 
-              ", XF86Explorer, exec, pcmanfm"
-              "SUPER, E, exec, pcmanfm"
+              ", XF86Explorer, exec, nautilus"
+              "SUPER, E, exec, nautilus"
 
               "SUPER, F, exec, kitty --hold sh -c \"fastfetch --thread true --detect-version true --logo-preserve-aspect-ratio true --temp-unit c --title-fqdn true --disk-show-regular true --disk-show-external true --disk-show-hidden true --disk-show-subvolumes true --disk-show-readonly true --disk-show-unknown true --physicaldisk-temp true --bluetooth-show-disconnected true --display-precise-refresh-rate true --cpu-temp true --cpu-show-pe-core-count true --cpuusage-separate true --gpu-temp true --gpu-driver-specific true --battery-temp true --localip-show-ipv4 true --localip-show-ipv6 true --localip-show-mac true --localip-show-loop true --localip-show-mtu true --localip-show-speed true --localip-show-prefix-len true --localip-show-all-ips true --localip-show-flags true --wm-detect-plugin true\""
 
@@ -3412,8 +3435,8 @@ in
           };
 
           iconTheme = {
-            name = "Dracula";
-            package = pkgs.dracula-icon-theme;
+            name = "Vimix-Black";
+            package = pkgs.vimix-icon-theme;
           };
 
           cursorTheme = {
@@ -4434,6 +4457,6 @@ in
 # FIXME: 05ac-033e-Gamepad > Rumble
 # FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
+# TODO: Nautilus > Thumbnailers
 # TODO: Neovim
-# TODO: PCManFM > Thumbnailers
 # TODO: Xarchiver > Backends
