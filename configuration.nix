@@ -8,6 +8,8 @@
 let
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
 
+  existing_LD_LIBRARY_PATH = builtins.getEnv "LD_LIBRARY_PATH";
+
   font_name = {
     mono = "NotoMono Nerd Font";
     sans_serif = "NotoSans Nerd Font";
@@ -1689,7 +1691,9 @@ in
 
     stub-ld.enable = true;
 
-    variables = { };
+    variables = pkgs.lib.mkForce {
+      # LD_LIBRARY_PATH = "${pkgs.glib.out}/lib/:${pkgs.libGL}/lib/:${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.llvmPackages.stdenv.cc.cc.lib}:${existing_LD_LIBRARY_PATH}";
+    };
 
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
@@ -1877,9 +1881,9 @@ in
       lbd
       lhasa
       libGL
+      libGLU
       libaom
       libappimage
-      libclang
       libde265
       libdvdcss
       libdvdnav
