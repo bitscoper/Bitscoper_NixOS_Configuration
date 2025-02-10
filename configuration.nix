@@ -1714,6 +1714,8 @@ in
 
     systemPackages = with pkgs; [
       # appimagekit
+      # binwalk
+      # certbot-full
       # cewl
       # dmitry
       # medusa
@@ -1727,15 +1729,20 @@ in
       acl
       agi
       aircrack-ng
+      alac
       amass
+      amrnb
+      amrwb
       android-backup-extractor
       android-studio
       android-studio-tools
       android-tools
       anydesk
+      apktool
       appimage-run
       aribb24
       aribb25
+      arj
       armitage
       arping
       audacity
@@ -1745,7 +1752,6 @@ in
       awscli2
       bat
       bfcal
-      binwalk
       bleachbit
       blender
       bluez-tools
@@ -1758,7 +1764,10 @@ in
       burpsuite
       butt
       bzip2
-      certbot-full
+      bzip3
+      cabextract
+      celt
+      chmlib
       chntpw
       clang
       clang-analyzer
@@ -1768,8 +1777,10 @@ in
       cliphist
       cloudflare-warp
       cmake
+      codec2
       commix
       coreutils-full
+      cpio
       crunch
       cryptsetup
       cups
@@ -1783,6 +1794,8 @@ in
       dbd
       dbeaver-bin
       dconf-editor
+      debase
+      dejsonlz4
       dmg2img
       dmidecode
       dns2tcp
@@ -1836,6 +1849,7 @@ in
       gparted
       gpredict
       grim
+      gsm
       gtk-vnc
       guestfs-tools
       guymager
@@ -1867,6 +1881,7 @@ in
       john
       johnny
       jq
+      jxrlib
       keepassxc
       kernelshark
       kind
@@ -1879,6 +1894,7 @@ in
       kubernetes
       laudanum
       lbd
+      lha
       lhasa
       libGL
       libGLU
@@ -1890,14 +1906,18 @@ in
       libdvdread
       libfprint
       libfprint-tod
+      libfreeaptx
       libftdi1
       libgcc
       libgpg-error
       libguestfs
       libheif
       libideviceactivation
+      libilbc
       libimobiledevice
+      liblc3
       libnotify
+      libogg
       libopenraw
       libopus
       libosinfo
@@ -1912,13 +1932,20 @@ in
       libvpx
       libwebp
       libxfs
+      libzip
       linuxConsoleTools
+      lrzip
       lshw
       lsof
       lsscsi
       lua-language-server
       lvm2
       lynis
+      lz4
+      lzham
+      lzip
+      lzlib
+      lzop
       macchanger
       magicrescue
       maltego
@@ -1932,7 +1959,9 @@ in
       miredo
       mitmproxy
       mixxx
+      monkeysAudio
       motrix
+      mozlz4a
       msfpc
       mtools
       nautilus
@@ -1962,6 +1991,9 @@ in
       onedrive
       onesixtyone
       onionshare-gui
+      opencore-amr
+      openh264
+      openjpeg
       openssl
       ophcrack
       ophcrack-cli
@@ -2000,10 +2032,13 @@ in
       responder
       ripgrep
       rpPPPoE
+      rpmextract
       rsmangler
       rtl-sdr-librtlsdr
+      rzip
       samdump2
       sane-backends
+      sbc
       scalpel
       schroedinger
       scrcpy
@@ -2062,6 +2097,7 @@ in
       vulkan-tools
       wafw00f
       wapiti
+      wavpack
       waybar-mpris
       waycheck
       wayland
@@ -2079,6 +2115,7 @@ in
       win-spice
       wireshark
       wl-clipboard
+      woff2
       wordlists
       wordpress
       wpscan
@@ -2093,10 +2130,14 @@ in
       xorg.xhost
       xoscope
       xvidcore
+      xz
       yaml-language-server
       yt-dlp
       ytdownloader
       zip
+      zlib
+      zpaq
+      zstd
       (sddm-astronaut.override {
         embeddedTheme = "astronaut";
 
@@ -4465,4 +4506,3 @@ in
 # FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
 # TODO: Neovim
-# TODO: Xarchiver > Backends
