@@ -1713,16 +1713,26 @@ in
     interactiveShellInit = '''';
 
     systemPackages = with pkgs; [
+      # amrnb
+      # amrwb
       # appimagekit
       # binwalk
+      # blender
       # certbot-full
       # cewl
       # dmitry
+      # john
+      # johnny
       # medusa
+      # mitmproxy
       # ncrack
+      # netexec
       # reiser4progs
       # scrounge-ntfs
       # snort
+      # theharvester
+      # wapiti
+      # wifite2
       ## dart
       ## gradle
       ## gradle-completion
@@ -1731,8 +1741,6 @@ in
       aircrack-ng
       alac
       amass
-      amrnb
-      amrwb
       android-backup-extractor
       android-studio
       android-studio-tools
@@ -1753,7 +1761,6 @@ in
       bat
       bfcal
       bleachbit
-      blender
       bluez-tools
       bottles
       brightnessctl
@@ -1878,8 +1885,6 @@ in
       inotify-tools
       jellyfin-media-player
       jfsutils
-      john
-      johnny
       jq
       jxrlib
       keepassxc
@@ -1957,7 +1962,6 @@ in
       mimikatz
       minicom
       miredo
-      mitmproxy
       mixxx
       monkeysAudio
       motrix
@@ -1970,7 +1974,6 @@ in
       neovim-remote
       netcat-gnu
       netdiscover
-      netexec
       netmask
       netsniff-ng
       networkmanagerapplet
@@ -1998,6 +2001,7 @@ in
       ophcrack
       ophcrack-cli
       p7zip
+      papirus-folders
       patchelf
       pavucontrol
       pciutils
@@ -2070,7 +2074,6 @@ in
       telegram-desktop
       texliveFull
       thc-hydra
-      theharvester
       thermald
       tor-browser
       tree
@@ -2096,7 +2099,6 @@ in
       vscode-js-debug
       vulkan-tools
       wafw00f
-      wapiti
       wavpack
       waybar-mpris
       waycheck
@@ -2111,7 +2113,6 @@ in
       whatweb
       which
       whois
-      wifite2
       win-spice
       wireshark
       wl-clipboard
@@ -3482,8 +3483,10 @@ in
           };
 
           iconTheme = {
-            name = "Vimix-Black";
-            package = pkgs.vimix-icon-theme;
+            name = "Papirus-Dark";
+            package = (pkgs.papirus-icon-theme.override {
+              color = "black";
+            });
           };
 
           cursorTheme = {
