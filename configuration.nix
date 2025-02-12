@@ -1720,22 +1720,22 @@ in
       # blender
       # certbot-full
       # cewl
+      # ciscoPacketTracer8
       # dmitry
       # john
       # johnny
+      # mdk3-master
       # medusa
       # mitmproxy
       # ncrack
       # netexec
+      # p0f
       # reiser4progs
       # scrounge-ntfs
-      # snort
       # theharvester
       # wapiti
       # wifite2
-      ## dart
-      ## gradle
-      ## gradle-completion
+      above
       acl
       agi
       aircrack-ng
@@ -1759,8 +1759,10 @@ in
       avrdude
       awscli2
       bat
+      bettercap
       bfcal
       bleachbit
+      bloodhound
       bluez-tools
       bottles
       brightnessctl
@@ -1788,6 +1790,7 @@ in
       commix
       coreutils-full
       cpio
+      crowbar
       crunch
       cryptsetup
       cups
@@ -1797,12 +1800,15 @@ in
       curlFull
       curtail
       d-spy
+      dart
       davtest
       dbd
       dbeaver-bin
       dconf-editor
       debase
       dejsonlz4
+      dirb
+      dirbuster
       dmg2img
       dmidecode
       dns2tcp
@@ -1811,6 +1817,7 @@ in
       dnsmap
       dnsrecon
       dosfstools
+      driftnet
       dsniff
       e2fsprogs
       efibootmgr
@@ -1826,14 +1833,17 @@ in
       faac
       faad2
       fastfetch
+      fcrackzip
       fd
       fdk_aac
       ffmpeg-full
       ffmpegthumbnailer
+      ffuf
       fh
       fierce
       file
-      flutter327
+      flutter
+      foremost
       fping
       fritzing
       fwupd-efi
@@ -1841,6 +1851,7 @@ in
       gdb
       gdk-pixbuf
       gh
+      ghidra
       gimp-with-plugins
       git-doc
       glib
@@ -1852,6 +1863,8 @@ in
       gnused
       gnutar
       gnutls
+      gobuster
+      gophish
       gource
       gparted
       gpredict
@@ -1938,6 +1951,7 @@ in
       libwebp
       libxfs
       libzip
+      ligolo-ng
       linuxConsoleTools
       lrzip
       lshw
@@ -1955,6 +1969,7 @@ in
       magicrescue
       maltego
       masscan
+      massdns
       mattermost-desktop
       meld
       mesa-demos
@@ -1990,6 +2005,7 @@ in
       nixpkgs-review
       nmap
       ntfs3g
+      nuclei
       obs-studio
       onedrive
       onesixtyone
@@ -2002,6 +2018,7 @@ in
       ophcrack-cli
       p7zip
       papirus-folders
+      parsero
       patchelf
       pavucontrol
       pciutils
@@ -2051,12 +2068,14 @@ in
       sdrpp
       serial-studio
       shared-mime-info
+      sherlock
       sipvicious
       sleuthkit
       slurp
       smartmontools
       smbmap
       snmpcheck
+      snort
       social-engineer-toolkit
       spice
       spice-gtk
@@ -2067,6 +2086,8 @@ in
       sslh
       sslscan
       sslsplit
+      steghide
+      subfinder
       sushi
       swaks
       tcpdump
@@ -2078,6 +2099,7 @@ in
       tor-browser
       tree
       tree-sitter
+      trufflehog
       udftools
       udiskie
       udptunnel
@@ -2108,6 +2130,7 @@ in
       waylevel
       weevely
       wev
+      wfuzz
       wget
       whatsie
       whatweb
@@ -2133,6 +2156,8 @@ in
       xvidcore
       xz
       yaml-language-server
+      yara
+      yersinia
       yt-dlp
       ytdownloader
       zip
@@ -2318,6 +2343,12 @@ in
             version = "0.42.0";
             sha256 = "cYbkCcNsoTO6E5befw/ZN3yTW262APTCxyCJ/3z84dc=";
           }
+          {
+            name = "remotehub";
+            publisher = "github";
+            version = "0.64.0";
+            sha256 = "Nh4PxYVdgdDb8iwHHUbXwJ5ZbMruFB6juL4Yg/wdKMY=";
+          }
         ];
       })
     ]
@@ -2459,6 +2490,19 @@ in
       tree-sitter-toml
       tree-sitter-vim
       tree-sitter-yaml
+    ])
+    ++
+    (with ghidra-extensions; [
+      findcrypt
+      ghidra-delinker-extension
+      ghidra-golanganalyzerextension
+      ghidraninja-ghidra-scripts
+      gnudisassembler
+      lightkeeper
+      machinelearning
+      ret-sync
+      sleighdevtools
+      wasm
     ])
     ++
     (with inkscape-extensions; [
