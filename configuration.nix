@@ -116,11 +116,12 @@ in
       "iommu=pt"
       "boot.shell_on_fail"
       "rd.systemd.show_status=true"
-      # "rd.udev.log_level=3" # TODO
-      # "udev.log_priority=3" # TODO
+      "rd.udev.log_level=err"
+      "udev.log_level=err"
+      "udev.log_priority=err"
     ];
 
-    consoleLogLevel = 5; # 5 = KERN_NOTICE
+    consoleLogLevel = 4; # 4 = KERN_WARNING
 
     tmp.cleanOnBoot = true;
 
@@ -1085,7 +1086,7 @@ in
           <loglevel>2</loglevel>
         </logging>
         <server-id>${config.networking.hostName}</server-id>
-      '';
+      ''; # <loglevel>2</loglevel> = Warn
     };
 
     jellyfin = {
