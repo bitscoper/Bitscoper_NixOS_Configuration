@@ -2036,6 +2036,7 @@ in
       playerctl
       podman-compose
       podman-desktop
+      postman
       powersploit
       proxychains
       ptunnel
@@ -2248,7 +2249,6 @@ in
           adpyke.codesnap
           albymor.increment-selection
           alefragnani.bookmarks
-          alexisvt.flutter-snippets
           bierner.github-markdown-preview
           bierner.markdown-mermaid
           christian-kohler.path-intellisense
@@ -2327,6 +2327,12 @@ in
             sha256 = "sZ5ybbl1gxt41Eirp88JmS30WNHeM4SslhzBlLXyRsM=";
           }
           {
+            name = "unique-lines";
+            publisher = "bibhasdn";
+            version = "1.0.0";
+            sha256 = "W0ZpZ6+vjkfNfOtekx5NWOFTyxfWAiB0XYcIwHabFPQ=";
+          }
+          {
             name = "pubspec-assist";
             publisher = "jeroen-meijer";
             version = "2.3.2";
@@ -2339,6 +2345,12 @@ in
             sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
           }
           {
+            name = "postman-for-vscode";
+            publisher = "postman";
+            version = "1.7.0";
+            sha256 = "JZ5zaA2r7kc3KJg+dbimA/2mVaOILiEIwD/6w/36ebU=";
+          }
+          {
             name = "remote-repositories";
             publisher = "ms-vscode";
             version = "0.42.0";
@@ -2349,6 +2361,12 @@ in
             publisher = "github";
             version = "0.64.0";
             sha256 = "Nh4PxYVdgdDb8iwHHUbXwJ5ZbMruFB6juL4Yg/wdKMY=";
+          }
+          {
+            name = "errorlens";
+            publisher = "usernamehw";
+            version = "3.23.0";
+            sha256 = "mz3JU4+/P6nM/SEJcVG5gq5K1Ym9L8N2pXbfw8a5DoA=";
           }
         ];
       })
