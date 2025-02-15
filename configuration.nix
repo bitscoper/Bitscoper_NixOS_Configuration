@@ -86,9 +86,7 @@ in
     initrd = {
       enable = true;
 
-      kernelModules = [
-
-      ];
+      kernelModules = config.boot.kernelModules;
 
       systemd = {
         enable = true;
@@ -101,12 +99,15 @@ in
 
     kernelPackages = pkgs.linuxPackages_zen;
 
-    kernelModules = [
-      "kvm-intel"
-    ];
-
     extraModulePackages = with config.boot.kernelPackages; [
       xpadneo
+    ];
+
+    kernelModules = [
+      "at24"
+      "ee1004"
+      "kvm-intel"
+      "spd5118"
     ];
 
     extraModprobeConfig = "options kvm_intel nested=1";
@@ -2417,7 +2418,7 @@ in
       iconv
       imagick
       imap
-      # mailparse
+      mailparse
       memcached
       mysqli
       mysqlnd
@@ -3109,7 +3110,6 @@ in
         "adbusers"
         "audio"
         "dialout"
-        "hardinfo2"
         "input"
         "jellyfin"
         "kvm"
