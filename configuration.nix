@@ -8,8 +8,6 @@
 let
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
 
-  existing_LD_LIBRARY_PATH = builtins.getEnv "LD_LIBRARY_PATH";
-
   font_name = {
     mono = "NotoMono Nerd Font";
     sans_serif = "NotoSans Nerd Font";
@@ -559,6 +557,7 @@ in
   systemd = {
     packages = with pkgs; [
       cloudflare-warp
+      hardinfo2
     ];
 
     globalEnvironment = { };
@@ -1341,7 +1340,11 @@ in
     nix-ld = {
       enable = true;
       libraries = with pkgs; [
-
+        # libepoxy
+        glib.out
+        libGL
+        llvmPackages.stdenv.cc.cc.lib
+        stdenv.cc.cc.lib
       ];
     };
 
@@ -1693,9 +1696,7 @@ in
 
     stub-ld.enable = true;
 
-    variables = pkgs.lib.mkForce {
-      # LD_LIBRARY_PATH = "${pkgs.glib.out}/lib/:${pkgs.libGL}/lib/:${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.llvmPackages.stdenv.cc.cc.lib}:${existing_LD_LIBRARY_PATH}";
-    };
+    variables = { };
 
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
@@ -1924,6 +1925,7 @@ in
       libdvdcss
       libdvdnav
       libdvdread
+      libepoxy
       libfprint
       libfprint-tod
       libfreeaptx
@@ -2531,11 +2533,12 @@ in
     ])
     ++
     (with obs-studio-plugins; [
-      droidcam-obs
+      # droidcam-obs
+      # obs-color-monitor
+      # obs-replay-source
       input-overlay
       obs-3d-effect
       obs-backgroundremoval
-      obs-color-monitor
       obs-composite-blur
       obs-freeze-filter
       obs-gradient-source
@@ -2544,7 +2547,6 @@ in
       obs-multi-rtmp
       obs-mute-filter
       obs-pipewire-audio-capture
-      obs-replay-source
       obs-rgb-levels-filter
       obs-scale-to-sound
       obs-shaderfilter
@@ -3093,6 +3095,10 @@ in
   };
 
   users = {
+    groups = {
+      hardinfo2 = { }; # Creation
+    };
+
     enforceIdUniqueness = true;
     mutableUsers = true;
 
