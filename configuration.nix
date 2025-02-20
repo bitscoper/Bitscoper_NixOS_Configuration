@@ -113,6 +113,7 @@ in
     kernelParams = [
       "intel_iommu=on"
       "iommu=pt"
+      "kvm.ignore_msrs=1"
       "boot.shell_on_fail"
       "rd.systemd.show_status=true"
       "rd.udev.log_level=err"
