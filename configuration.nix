@@ -2040,6 +2040,7 @@ in
       playerctl
       podman-compose
       podman-desktop
+      podman-tui
       postman
       powersploit
       proxychains
