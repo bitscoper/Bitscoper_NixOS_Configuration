@@ -1720,7 +1720,6 @@ in
       # amrnb
       # amrwb
       # appimagekit
-      # binwalk
       # certbot-full
       # cewl
       # ciscoPacketTracer8
@@ -1763,6 +1762,7 @@ in
       bat
       bettercap
       bfcal
+      binwalk
       bleachbit
       blender
       bloodhound
