@@ -1731,7 +1731,6 @@ in
       # medusa
       # mitmproxy
       # ncrack
-      # netexec
       # p0f
       # reiser4progs
       # scrounge-ntfs
@@ -1994,6 +1993,7 @@ in
       neovim-remote
       netcat-gnu
       netdiscover
+      netexec
       netmask
       netsniff-ng
       networkmanagerapplet
