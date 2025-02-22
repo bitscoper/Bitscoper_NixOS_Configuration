@@ -1728,7 +1728,6 @@ in
       # johnny
       # mdk3-master
       # medusa
-      # mitmproxy
       # ncrack
       # p0f
       # reiser4progs
@@ -1981,6 +1980,7 @@ in
       mimikatz
       minicom
       miredo
+      mitmproxy
       mixxx
       monkeysAudio
       motrix
