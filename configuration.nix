@@ -1721,7 +1721,6 @@ in
       # amrwb
       # appimagekit
       # binwalk
-      # blender
       # certbot-full
       # cewl
       # ciscoPacketTracer8
@@ -1766,6 +1765,7 @@ in
       bettercap
       bfcal
       bleachbit
+      blender
       bloodhound
       bluez-tools
       bottles
