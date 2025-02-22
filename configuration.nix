@@ -2119,6 +2119,7 @@ in
       unzip
       usbutils
       util-linux
+      video-trimmer
       virt-viewer
       virtio-win
       virtiofsd
