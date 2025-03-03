@@ -1847,6 +1847,7 @@ in
       flutter
       foremost
       fping
+      freetube
       fritzing
       fwupd-efi
       gcc
@@ -2012,7 +2013,6 @@ in
       ntfs3g
       nuclei
       obs-studio
-      onedrive
       onesixtyone
       onionshare-gui
       opencore-amr
@@ -2168,6 +2168,7 @@ in
       yersinia
       yt-dlp
       ytdownloader
+      zenity
       zip
       zlib
       zpaq
@@ -4580,4 +4581,5 @@ in
 # FIXME: 05ac-033e-Gamepad > Rumble
 # FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
+# FIXME: hardinfo2
 # TODO: Neovim
