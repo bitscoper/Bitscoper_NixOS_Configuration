@@ -1510,17 +1510,6 @@ in
       defaultEditor = false;
     };
 
-    firefox = {
-      enable = true;
-      package = pkgs.firefox-devedition;
-      languagePacks = [
-        "bn"
-        "en-US"
-      ];
-
-      preferences = { };
-    };
-
     thunderbird = {
       enable = true;
       package = pkgs.thunderbird-latest;
@@ -2140,7 +2129,6 @@ in
       wev
       wfuzz
       wget
-      whatsie
       whatweb
       which
       whois
@@ -2270,7 +2258,6 @@ in
           dracula-theme.theme-dracula
           ecmel.vscode-html-css
           esbenp.prettier-vscode
-          firefox-devtools.vscode-firefox-debug
           formulahendry.auto-close-tag
           formulahendry.auto-rename-tag
           foxundermoon.shell-format
@@ -2291,9 +2278,9 @@ in
           mishkinf.goto-next-previous-member
           moshfeu.compare-folders
           ms-azuretools.vscode-docker
-          ms-python.black-formatter
-          ms-python.debugpy
-          ms-python.python
+          # ms-python.black-formatter
+          # ms-python.debugpy
+          # ms-python.python
           ms-toolsai.datawrangler
           ms-vscode-remote.remote-containers
           ms-vscode-remote.remote-ssh
@@ -3028,7 +3015,7 @@ in
         "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop"; # .pptx
         "application/vnd.openxmlformats-officedocument.presentationml.template" = "impress.desktop"; # .potx
 
-        "application/pdf" = "firefox-devedition.desktop";
+        "application/pdf" = "chromium-browser.desktop";
 
         "font/collection" = "org.gnome.font-viewer.desktop";
         "font/otf" = "org.gnome.font-viewer.desktop";
@@ -3047,8 +3034,8 @@ in
         "application/x-tar" = "xarchiver.desktop";
         "application/zip" = "xarchiver.desktop";
 
-        "x-scheme-handler/http" = "firefox-devedition.desktop";
-        "x-scheme-handler/https" = "firefox-devedition.desktop";
+        "x-scheme-handler/http" = "chromium-browser.desktop";
+        "x-scheme-handler/https" = "chromium-browser.desktop";
 
         "x-scheme-handler/mailto" = "thunderbird.desktop";
       };
@@ -3285,8 +3272,8 @@ in
 
               "SUPER, B, exec, kitty sh -c \"btop\""
 
-              "SUPER, W, exec, firefox-devedition"
-              "SUPER ALT, W, exec, firefox-devedition --private-window"
+              "SUPER, W, exec, chromium"
+              "SUPER ALT, W, exec, chromium --incognito"
 
               ", XF86Mail, exec, thunderbird"
               "SUPER, M, exec, thunderbird"
@@ -4087,7 +4074,6 @@ in
                     default = "";
 
                     vlc = "󰕼";
-                    firefox = "";
                     chromium = "";
                   };
                 };
