@@ -2240,6 +2240,9 @@ in
       (vscode-with-extensions.override {
         # vscode = vscodium;
         vscodeExtensions = with vscode-extensions; [
+          # ms-python.black-formatter
+          # ms-python.debugpy
+          # ms-python.python
           aaron-bond.better-comments
           adpyke.codesnap
           albymor.increment-selection
@@ -2278,9 +2281,6 @@ in
           mishkinf.goto-next-previous-member
           moshfeu.compare-folders
           ms-azuretools.vscode-docker
-          # ms-python.black-formatter
-          # ms-python.debugpy
-          # ms-python.python
           ms-toolsai.datawrangler
           ms-vscode-remote.remote-containers
           ms-vscode-remote.remote-ssh
@@ -2361,6 +2361,12 @@ in
             publisher = "usernamehw";
             version = "3.23.0";
             sha256 = "mz3JU4+/P6nM/SEJcVG5gq5K1Ym9L8N2pXbfw8a5DoA=";
+          }
+          {
+            name = "vscode-print";
+            publisher = "pdconsec";
+            version = "1.3.0";
+            sha256 = "JBSqNLSHr25nlbuIr7K0o+oBCD9LfAp/wW/bmeUBfao=";
           }
         ];
       })
