@@ -1030,9 +1030,6 @@ in
 
     dovecot2 = {
       enable = true;
-      modules = with pkgs; [
-
-      ];
 
       enableImap = true;
       enablePop3 = true;
@@ -1510,6 +1507,17 @@ in
       defaultEditor = false;
     };
 
+    firefox = {
+      enable = true;
+      package = pkgs.librewolf;
+      languagePacks = [
+        "bn"
+        "en-US"
+      ];
+
+      preferences = { };
+    };
+
     thunderbird = {
       enable = true;
       package = pkgs.thunderbird-latest;
@@ -1916,7 +1924,6 @@ in
       libdvdread
       libepoxy
       libfprint
-      libfprint-tod
       libfreeaptx
       libftdi1
       libgcc
@@ -2109,7 +2116,6 @@ in
       unzip
       usbutils
       util-linux
-      video-trimmer
       virt-viewer
       virtio-win
       virtiofsd
@@ -3021,7 +3027,7 @@ in
         "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop"; # .pptx
         "application/vnd.openxmlformats-officedocument.presentationml.template" = "impress.desktop"; # .potx
 
-        "application/pdf" = "chromium-browser.desktop";
+        "application/pdf" = "librewolf.desktop";
 
         "font/collection" = "org.gnome.font-viewer.desktop";
         "font/otf" = "org.gnome.font-viewer.desktop";
@@ -3040,8 +3046,8 @@ in
         "application/x-tar" = "xarchiver.desktop";
         "application/zip" = "xarchiver.desktop";
 
-        "x-scheme-handler/http" = "chromium-browser.desktop";
-        "x-scheme-handler/https" = "chromium-browser.desktop";
+        "x-scheme-handler/http" = "librewolf.desktop";
+        "x-scheme-handler/https" = "librewolf.desktop";
 
         "x-scheme-handler/mailto" = "thunderbird.desktop";
       };
@@ -3278,8 +3284,8 @@ in
 
               "SUPER, B, exec, kitty sh -c \"btop\""
 
-              "SUPER, W, exec, chromium"
-              "SUPER ALT, W, exec, chromium --incognito"
+              "SUPER, W, exec, librewolf"
+              "SUPER ALT, W, exec, librewolf --private-window"
 
               ", XF86Mail, exec, thunderbird"
               "SUPER, M, exec, thunderbird"
