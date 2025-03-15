@@ -2161,7 +2161,6 @@ in
       yara
       yersinia
       yt-dlp
-      ytdownloader
       zenity
       zip
       zlib
