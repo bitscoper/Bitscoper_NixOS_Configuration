@@ -2247,140 +2247,6 @@ in
             AllowEmptyPassword = false;
           };
         })
-        (vscode-with-extensions.override {
-          vscode = vscodium;
-          vscodeExtensions =
-            with vscode-extensions;
-            [
-              aaron-bond.better-comments
-              adpyke.codesnap
-              albymor.increment-selection
-              alefragnani.bookmarks
-              bierner.github-markdown-preview
-              bierner.markdown-mermaid
-              christian-kohler.path-intellisense
-              codezombiech.gitignore
-              coolbear.systemd-unit-file
-              dart-code.dart-code
-              dart-code.flutter
-              davidanson.vscode-markdownlint
-              davidlday.languagetool-linter
-              devsense.phptools-vscode
-              devsense.profiler-php-vscode
-              dracula-theme.theme-dracula
-              ecmel.vscode-html-css
-              esbenp.prettier-vscode
-              formulahendry.auto-close-tag
-              formulahendry.auto-rename-tag
-              foxundermoon.shell-format
-              github.copilot
-              github.copilot-chat
-              github.vscode-github-actions
-              github.vscode-pull-request-github
-              grapecity.gc-excelviewer
-              gruntfuggly.todo-tree
-              ibm.output-colorizer
-              irongeek.vscode-env
-              james-yu.latex-workshop
-              jnoortheen.nix-ide
-              jock.svg
-              kamikillerto.vscode-colorize
-              mads-hartmann.bash-ide-vscode
-              mechatroner.rainbow-csv
-              mishkinf.goto-next-previous-member
-              moshfeu.compare-folders
-              ms-azuretools.vscode-docker
-              ms-python.black-formatter
-              ms-python.debugpy
-              ms-python.python
-              ms-toolsai.datawrangler
-              ms-vscode-remote.remote-containers
-              ms-vscode-remote.remote-ssh
-              ms-vscode-remote.remote-ssh-edit
-              ms-vscode.cpptools
-              ms-vscode.hexeditor
-              ms-vscode.live-server
-              ms-vscode.makefile-tools
-              oderwat.indent-rainbow
-              redhat.vscode-xml
-              redhat.vscode-yaml
-              ryu1kn.partial-diff
-              shardulm94.trailing-spaces
-              spywhere.guides
-              tamasfe.even-better-toml
-              timonwong.shellcheck
-              tyriar.sort-lines
-              vincaslt.highlight-matching-tag
-              visualstudioexptteam.intellicode-api-usage-examples
-              visualstudioexptteam.vscodeintellicode
-              vscjava.vscode-gradle
-              wmaurer.change-case
-              xdebug.php-debug
-              zainchen.json
-            ]
-            ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-              {
-                name = "platformio-ide";
-                publisher = "platformio";
-                version = "3.3.4";
-                sha256 = "qfNz4IYjCmCMFLtAkbGTW5xnsVT8iDnFWjrgkmr2Slk=";
-              }
-              {
-                name = "vscode-serial-monitor";
-                publisher = "ms-vscode";
-                version = "0.13.250320001";
-                sha256 = "Uy/b8Rb1jT+hqHHL06mK8NWKno1AMVfKV/s06uwPMAU=";
-              }
-              {
-                name = "unique-lines";
-                publisher = "bibhasdn";
-                version = "1.0.0";
-                sha256 = "W0ZpZ6+vjkfNfOtekx5NWOFTyxfWAiB0XYcIwHabFPQ=";
-              }
-              {
-                name = "pubspec-assist";
-                publisher = "jeroen-meijer";
-                version = "2.3.2";
-                sha256 = "+Mkcbeq7b+vkuf2/LYT10mj46sULixLNKGpCEk1Eu/0=";
-              }
-              {
-                name = "vscode-sort-json";
-                publisher = "richie5um2";
-                version = "1.20.0";
-                sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
-              }
-              {
-                name = "postman-for-vscode";
-                publisher = "postman";
-                version = "1.9.0";
-                sha256 = "ijW75IujPomtIef4JKDqgKTTbbGStmPiTwmEIKc/dbo=";
-              }
-              {
-                name = "remote-repositories";
-                publisher = "ms-vscode";
-                version = "0.43.2024112101";
-                sha256 = "/KdI8XKJOjKUNGbn/ISY5Per5OEYLktzqS2IfqcTWtc=";
-              }
-              {
-                name = "remotehub";
-                publisher = "github";
-                version = "0.65.2024112101";
-                sha256 = "Xb28yff0tiQDUuwC5Mv0rwXqLgZOU4B3KZAht78NfFU=";
-              }
-              {
-                name = "errorlens";
-                publisher = "usernamehw";
-                version = "3.24.0";
-                sha256 = "r5xXR4rDbP+2bk66yqPoLod8IZXFrntcKHuWbAiFWwE=";
-              }
-              {
-                name = "vscode-print";
-                publisher = "pdconsec";
-                version = "1.3.0";
-                sha256 = "JBSqNLSHr25nlbuIr7K0o+oBCD9LfAp/wW/bmeUBfao=";
-              }
-            ];
-        })
       ]
       ++ (with unixtools; [
         arp
@@ -4549,6 +4415,162 @@ in
             };
 
             extraConfig = '''';
+          };
+
+          vscode = {
+            enable = true;
+            package = pkgs.vscodium;
+            mutableExtensionsDir = false;
+
+            profiles = {
+              default = {
+                extensions =
+                  with pkgs.vscode-extensions;
+                  [
+                    aaron-bond.better-comments
+                    adpyke.codesnap
+                    albymor.increment-selection
+                    alefragnani.bookmarks
+                    bierner.github-markdown-preview
+                    bierner.markdown-mermaid
+                    christian-kohler.path-intellisense
+                    codezombiech.gitignore
+                    coolbear.systemd-unit-file
+                    dart-code.dart-code
+                    dart-code.flutter
+                    davidanson.vscode-markdownlint
+                    davidlday.languagetool-linter
+                    devsense.phptools-vscode
+                    devsense.profiler-php-vscode
+                    dracula-theme.theme-dracula
+                    ecmel.vscode-html-css
+                    esbenp.prettier-vscode
+                    formulahendry.auto-close-tag
+                    formulahendry.auto-rename-tag
+                    foxundermoon.shell-format
+                    github.copilot
+                    github.copilot-chat
+                    github.vscode-github-actions
+                    github.vscode-pull-request-github
+                    grapecity.gc-excelviewer
+                    gruntfuggly.todo-tree
+                    ibm.output-colorizer
+                    irongeek.vscode-env
+                    james-yu.latex-workshop
+                    jnoortheen.nix-ide
+                    jock.svg
+                    kamikillerto.vscode-colorize
+                    mads-hartmann.bash-ide-vscode
+                    mechatroner.rainbow-csv
+                    mishkinf.goto-next-previous-member
+                    moshfeu.compare-folders
+                    ms-azuretools.vscode-docker
+                    ms-python.black-formatter
+                    ms-python.debugpy
+                    ms-python.python
+                    ms-toolsai.datawrangler
+                    ms-vscode-remote.remote-containers
+                    ms-vscode-remote.remote-ssh
+                    ms-vscode-remote.remote-ssh-edit
+                    ms-vscode.cpptools
+                    ms-vscode.hexeditor
+                    ms-vscode.live-server
+                    ms-vscode.makefile-tools
+                    oderwat.indent-rainbow
+                    redhat.vscode-xml
+                    redhat.vscode-yaml
+                    ryu1kn.partial-diff
+                    shardulm94.trailing-spaces
+                    spywhere.guides
+                    tamasfe.even-better-toml
+                    timonwong.shellcheck
+                    tyriar.sort-lines
+                    vincaslt.highlight-matching-tag
+                    visualstudioexptteam.intellicode-api-usage-examples
+                    visualstudioexptteam.vscodeintellicode
+                    vscjava.vscode-gradle
+                    wmaurer.change-case
+                    xdebug.php-debug
+                    zainchen.json
+                  ]
+                  ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+                    {
+                      name = "platformio-ide";
+                      publisher = "platformio";
+                      version = "3.3.4";
+                      sha256 = "qfNz4IYjCmCMFLtAkbGTW5xnsVT8iDnFWjrgkmr2Slk=";
+                    }
+                    {
+                      name = "vscode-serial-monitor";
+                      publisher = "ms-vscode";
+                      version = "0.13.250320001";
+                      sha256 = "Uy/b8Rb1jT+hqHHL06mK8NWKno1AMVfKV/s06uwPMAU=";
+                    }
+                    {
+                      name = "unique-lines";
+                      publisher = "bibhasdn";
+                      version = "1.0.0";
+                      sha256 = "W0ZpZ6+vjkfNfOtekx5NWOFTyxfWAiB0XYcIwHabFPQ=";
+                    }
+                    {
+                      name = "pubspec-assist";
+                      publisher = "jeroen-meijer";
+                      version = "2.3.2";
+                      sha256 = "+Mkcbeq7b+vkuf2/LYT10mj46sULixLNKGpCEk1Eu/0=";
+                    }
+                    {
+                      name = "vscode-sort-json";
+                      publisher = "richie5um2";
+                      version = "1.20.0";
+                      sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
+                    }
+                    {
+                      name = "postman-for-vscode";
+                      publisher = "postman";
+                      version = "1.9.0";
+                      sha256 = "ijW75IujPomtIef4JKDqgKTTbbGStmPiTwmEIKc/dbo=";
+                    }
+                    {
+                      name = "remote-repositories";
+                      publisher = "ms-vscode";
+                      version = "0.43.2024112101";
+                      sha256 = "/KdI8XKJOjKUNGbn/ISY5Per5OEYLktzqS2IfqcTWtc=";
+                    }
+                    {
+                      name = "remotehub";
+                      publisher = "github";
+                      version = "0.65.2024112101";
+                      sha256 = "Xb28yff0tiQDUuwC5Mv0rwXqLgZOU4B3KZAht78NfFU=";
+                    }
+                    {
+                      name = "errorlens";
+                      publisher = "usernamehw";
+                      version = "3.24.0";
+                      sha256 = "r5xXR4rDbP+2bk66yqPoLod8IZXFrntcKHuWbAiFWwE=";
+                    }
+                    {
+                      name = "vscode-print";
+                      publisher = "pdconsec";
+                      version = "1.3.0";
+                      sha256 = "JBSqNLSHr25nlbuIr7K0o+oBCD9LfAp/wW/bmeUBfao=";
+                    }
+                  ];
+
+                enableUpdateCheck = true;
+                enableExtensionUpdateCheck = true;
+
+                userSettings = {
+                  "editor.cursorBlinking" = "phase";
+                  "editor.wordWrap" = "on";
+                  "explorer.confirmDelete" = true;
+                  "git.autofetch" = true;
+                  "git.confirmSync" = false;
+                  "git.enableSmartCommit" = true;
+                  "telemetry.telemetryLevel" = "off";
+                  "workbench.startupEditor" = "none";
+                };
+              };
+            };
           };
         };
       }
