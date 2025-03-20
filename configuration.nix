@@ -1485,6 +1485,21 @@ in
 
     virt-manager.enable = true;
 
+    bat = {
+      enable = true;
+      package = pkgs.bat;
+      extraPackages = with pkgs.bat-extras; [
+        batdiff
+        batgrep
+        batman
+        batpipe
+        batwatch
+        prettybat
+      ];
+
+      settings = { };
+    };
+
     nano = {
       enable = true;
       nanorc = ''
@@ -1508,17 +1523,6 @@ in
       };
 
       defaultEditor = false;
-    };
-
-    firefox = {
-      enable = true;
-      package = pkgs.librewolf;
-      languagePacks = [
-        "bn"
-        "en-US"
-      ];
-
-      preferences = { };
     };
 
     thunderbird = {
@@ -1759,8 +1763,6 @@ in
         audit
         autopsy
         avrdude
-        awscli2
-        bat
         bettercap
         bfcal
         binwalk
@@ -1770,7 +1772,6 @@ in
         bluez-tools
         bottles
         brightnessctl
-        btop
         btrfs-progs
         bulk_extractor
         bully
@@ -1836,7 +1837,6 @@ in
         f2fs-tools
         faac
         faad2
-        fastfetch
         fcrackzip
         fd
         fdk_aac
@@ -1849,13 +1849,11 @@ in
         flutter
         foremost
         fping
-        freetube
         fritzing
         fwupd-efi
         gcc
         gdb
         gdk-pixbuf
-        gh
         ghidra
         gimp-with-plugins
         git-doc
@@ -2013,7 +2011,6 @@ in
         nmap
         ntfs3g
         nuclei
-        obs-studio
         onesixtyone
         onionshare-gui
         opencore-amr
@@ -2113,7 +2110,6 @@ in
         udptunnel
         unar
         undollar
-        ungoogled-chromium
         unicode-emoji
         universal-android-debloater
         unix-privesc-check
@@ -2165,7 +2161,6 @@ in
         yaml-language-server
         yara
         yersinia
-        yt-dlp
         zenity
         zip
         zlib
@@ -2393,36 +2388,6 @@ in
       ++ (with inkscape-extensions; [
         applytransforms
         textext
-      ])
-      ++ (with obs-studio-plugins; [
-        # obs-color-monitor
-        droidcam-obs
-        input-overlay
-        obs-3d-effect
-        obs-backgroundremoval
-        obs-composite-blur
-        obs-freeze-filter
-        obs-gradient-source
-        obs-gstreamer
-        obs-move-transition
-        obs-multi-rtmp
-        obs-mute-filter
-        obs-pipewire-audio-capture
-        obs-replay-source
-        obs-rgb-levels-filter
-        obs-scale-to-sound
-        obs-shaderfilter
-        obs-source-clone
-        obs-source-record
-        obs-source-switcher
-        obs-text-pthread
-        obs-transition-table
-        obs-tuna
-        obs-vaapi
-        obs-vertical-canvas
-        obs-vintage-filter
-        obs-vkcapture
-        waveform
       ]);
   };
 
@@ -3008,6 +2973,18 @@ in
     sharedModules = [
       {
         home = {
+          enableNixpkgsReleaseCheck = true;
+
+          shell = {
+            enableShellIntegration = true;
+            enableBashIntegration = true;
+            enableFishIntegration = true;
+          };
+
+          language = { };
+
+          keyboard = { };
+
           pointerCursor = {
             name = cursor.theme.name;
             package = cursor.theme.package;
@@ -3020,6 +2997,20 @@ in
 
             gtk.enable = true;
           };
+
+          preferXdgDirectories = true;
+
+          packages = with pkgs; [
+
+          ];
+
+          sessionVariables = { };
+
+          sessionSearchVariables = { };
+
+          shellAliases = { };
+
+          enableDebugInfo = false;
 
           stateVersion = "24.11";
         };
@@ -4417,6 +4408,69 @@ in
             extraConfig = '''';
           };
 
+          dircolors = {
+            enable = true;
+
+            enableBashIntegration = true;
+            enableFishIntegration = true;
+
+            settings = { };
+
+            extraConfig = '''';
+          };
+
+          nix-your-shell = {
+            enable = true;
+            package = pkgs.nix-your-shell;
+
+            enableFishIntegration = true;
+          };
+
+          thefuck = {
+            enable = true;
+            package = pkgs.thefuck;
+
+            enableBashIntegration = true;
+            enableFishIntegration = true;
+
+            enableInstantMode = true;
+          };
+
+          fastfetch = {
+            enable = true;
+            package = pkgs.fastfetch;
+
+            settings = { };
+          };
+
+          btop = {
+            enable = true;
+            package = pkgs.btop;
+
+            settings = { };
+
+            extraConfig = '''';
+          };
+
+          librewolf = {
+            enable = true;
+            languagePacks = [
+
+            ];
+
+            settings = {
+              "privacy.resistFingerprinting" = false;
+            };
+          };
+
+          matplotlib = {
+            enable = true;
+
+            config = { };
+
+            extraConfig = '''';
+          };
+
           vscode = {
             enable = true;
             package = pkgs.vscodium;
@@ -4571,6 +4625,111 @@ in
                 };
               };
             };
+          };
+
+          gh = {
+            enable = true;
+            package = pkgs.gh;
+            extensions = with pkgs; [
+
+            ];
+
+            gitCredentialHelper = {
+              enable = true;
+
+              hosts = [
+                "https://github.com"
+                "https://gist.github.com"
+              ];
+            };
+
+            settings = {
+              git_protocol = "https";
+
+              editor = "nvim";
+
+              aliases = { };
+            };
+          };
+
+          awscli = {
+            enable = true;
+            package = pkgs.awscli2;
+
+            settings = {
+              "default" = {
+                output = "json";
+              };
+            };
+
+            credentials = { };
+          };
+
+          chromium = {
+            enable = true;
+            package = pkgs.ungoogled-chromium;
+            dictionaries = with pkgs.hunspellDictsChromium; [
+              en_US
+              en-us
+            ];
+            nativeMessagingHosts = with pkgs; [
+
+            ];
+
+            commandLineArgs = [
+
+            ];
+          };
+
+          obs-studio = {
+            enable = true;
+            package = pkgs.obs-studio;
+            plugins = with pkgs.obs-studio-plugins; [
+              # obs-color-monitor
+              droidcam-obs
+              input-overlay
+              obs-3d-effect
+              obs-backgroundremoval
+              obs-composite-blur
+              obs-freeze-filter
+              obs-gradient-source
+              obs-gstreamer
+              obs-move-transition
+              obs-multi-rtmp
+              obs-mute-filter
+              obs-pipewire-audio-capture
+              obs-replay-source
+              obs-rgb-levels-filter
+              obs-scale-to-sound
+              obs-shaderfilter
+              obs-source-clone
+              obs-source-record
+              obs-source-switcher
+              obs-text-pthread
+              obs-transition-table
+              obs-tuna
+              obs-vaapi
+              obs-vertical-canvas
+              obs-vintage-filter
+              obs-vkcapture
+              waveform
+            ];
+          };
+
+          yt-dlp = {
+            enable = true;
+            package = pkgs.yt-dlp;
+
+            settings = { };
+
+            extraConfig = '''';
+          };
+
+          freetube = {
+            enable = true;
+            package = pkgs.freetube;
+
+            settings = { };
           };
         };
       }
