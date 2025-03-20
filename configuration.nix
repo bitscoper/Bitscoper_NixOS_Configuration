@@ -1,9 +1,10 @@
 # By Abdullah As-Sadeed
 
-{ config
-, pkgs
-, lib
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  ...
 }:
 let
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
@@ -1436,9 +1437,11 @@ in
         enableExtraSocket = true;
         enableSSHSupport = false;
 
-        pinentryPackage = (pkgs.pinentry-rofi.override {
-          rofi = pkgs.rofi-wayland;
-        });
+        pinentryPackage = (
+          pkgs.pinentry-rofi.override {
+            rofi = pkgs.rofi-wayland;
+          }
+        );
       };
 
       dirmngr.enable = true;
@@ -1713,857 +1716,848 @@ in
 
     interactiveShellInit = '''';
 
-    systemPackages = with pkgs; [
-      # amrnb
-      # amrwb
-      # appimagekit
-      # certbot-full
-      # cewl
-      # ciscoPacketTracer8
-      # dmitry
-      # john
-      # johnny
-      # mdk3-master
-      # medusa
-      # ncrack
-      # p0f
-      # reiser4progs
-      # scrounge-ntfs
-      # theharvester
-      # wapiti
-      # wifite2
-      above
-      acl
-      agi
-      aircrack-ng
-      alac
-      amass
-      android-backup-extractor
-      android-studio
-      android-studio-tools
-      android-tools
-      anydesk
-      apktool
-      appimage-run
-      aribb24
-      aribb25
-      arj
-      armitage
-      arping
-      audacity
-      audit
-      autopsy
-      avrdude
-      awscli2
-      bat
-      bettercap
-      bfcal
-      binwalk
-      bleachbit
-      blender
-      bloodhound
-      bluez-tools
-      bottles
-      brightnessctl
-      btop
-      btrfs-progs
-      bulk_extractor
-      bully
-      burpsuite
-      butt
-      bzip2
-      bzip3
-      cabextract
-      celt
-      chmlib
-      chntpw
-      clang
-      clang-analyzer
-      clang-manpages
-      clang-tools
-      clinfo
-      cliphist
-      cloudflare-warp
-      cmake
-      codec2
-      commix
-      coreutils-full
-      cpio
-      crowbar
-      crunch
-      cryptsetup
-      cups
-      cups-filters
-      cups-pdf-to-pdf
-      cups-printers
-      curlFull
-      curtail
-      d-spy
-      dart
-      davtest
-      dbd
-      dbeaver-bin
-      dconf-editor
-      debase
-      dejsonlz4
-      dirb
-      dirbuster
-      dmg2img
-      dmidecode
-      dns2tcp
-      dnschef
-      dnsenum
-      dnsmap
-      dnsrecon
-      dosfstools
-      driftnet
-      dsniff
-      e2fsprogs
-      efibootmgr
-      enum4linux
-      esptool
-      ettercap
-      evil-winrm
-      evtest
-      evtest-qt
-      exe2hex
-      exfatprogs
-      f2fs-tools
-      faac
-      faad2
-      fastfetch
-      fcrackzip
-      fd
-      fdk_aac
-      ffmpeg-full
-      ffmpegthumbnailer
-      ffuf
-      fh
-      fierce
-      file
-      flutter
-      foremost
-      fping
-      freetube
-      fritzing
-      fwupd-efi
-      gcc
-      gdb
-      gdk-pixbuf
-      gh
-      ghidra
-      gimp-with-plugins
-      git-doc
-      glib
-      glibc
-      gnome-font-viewer
-      gnugrep
-      gnulib
-      gnumake
-      gnused
-      gnutar
-      gnutls
-      gobuster
-      gophish
-      gource
-      gparted
-      gpredict
-      grim
-      gsm
-      gtk-vnc
-      guestfs-tools
-      guymager
-      gzip
-      hardinfo2
-      hash-identifier
-      hashcat
-      hashdeep
-      hashid
-      hdparm
-      hfsprogs
-      hw-probe
-      hwloc
-      hydra-check
-      hyprcursor
-      hyprls
-      hyprpicker
-      hyprpolkitagent
-      i2c-tools
-      iaito
-      ideviceinstaller
-      idevicerestore
-      iftop
-      image-roll
-      inkscape
-      inotify-tools
-      jellyfin-media-player
-      jfsutils
-      jq
-      jxrlib
-      keepassxc
-      kernelshark
-      kind
-      kismet
-      kubectl
-      kubectl-graph
-      kubectl-tree
-      kubectl-view-allocations
-      kubectl-view-secret
-      kubernetes
-      laudanum
-      lbd
-      lha
-      lhasa
-      libGL
-      libGLU
-      libaom
-      libappimage
-      libde265
-      libdvdcss
-      libdvdnav
-      libdvdread
-      libepoxy
-      libfprint
-      libfreeaptx
-      libftdi1
-      libgcc
-      libgpg-error
-      libguestfs
-      libheif
-      libideviceactivation
-      libilbc
-      libimobiledevice
-      liblc3
-      libnotify
-      libogg
-      libopenraw
-      libopus
-      libosinfo
-      libportal
-      libqalculate
-      libreoffice-fresh
-      libusb1
-      libuuid
-      libva-utils
-      libvirt
-      libvncserver
-      libvpx
-      libwebp
-      libxfs
-      libzip
-      ligolo-ng
-      linuxConsoleTools
-      lrzip
-      lshw
-      lsof
-      lsscsi
-      lua-language-server
-      lvm2
-      lynis
-      lz4
-      lzham
-      lzip
-      lzlib
-      lzop
-      macchanger
-      magicrescue
-      maltego
-      masscan
-      massdns
-      mattermost-desktop
-      meld
-      mesa-demos
-      metasploit
-      mimikatz
-      minicom
-      miredo
-      mitmproxy
-      mixxx
-      monkeysAudio
-      motrix
-      mozlz4a
-      msfpc
-      mtools
-      nautilus
-      nautilus-open-any-terminal
-      nbtscan
-      neovim-remote
-      netcat-gnu
-      netdiscover
-      netexec
-      netmask
-      netsniff-ng
-      networkmanagerapplet
-      nikto
-      nilfs-utils
-      ninja
-      nix-bash-completions
-      nix-diff
-      nix-index
-      nix-info
-      nixos-icons
-      nixpkgs-fmt
-      nixpkgs-lint
-      nixpkgs-review
-      nmap
-      ntfs3g
-      nuclei
-      obs-studio
-      onesixtyone
-      onionshare-gui
-      opencore-amr
-      openh264
-      openjpeg
-      openssl
-      ophcrack
-      ophcrack-cli
-      p7zip
-      papirus-folders
-      parsero
-      patchelf
-      pavucontrol
-      pciutils
-      pcre
-      pdf-parser
-      pdfid
-      pgadmin4-desktopmode
-      php84
-      pixiewps
-      pjsip
-      pkg-config
-      platformio
-      platformio-core
-      playerctl
-      podman-compose
-      podman-desktop
-      podman-tui
-      postman
-      powersploit
-      proxychains
-      ptunnel
-      pwnat
-      python313Full
-      qalculate-gtk
-      qbittorrent
-      qemu-utils
-      qpwgraph
-      radare2
-      rar
-      readline
-      reaverwps-t6x
-      reiserfsprogs
-      remmina
-      responder
-      ripgrep
-      rpPPPoE
-      rpmextract
-      rsmangler
-      rtl-sdr-librtlsdr
-      rzip
-      samdump2
-      sane-backends
-      sbc
-      scalpel
-      schroedinger
-      scrcpy
-      screen
-      sdrangel
-      sdrpp
-      serial-studio
-      shared-mime-info
-      sherlock
-      sipvicious
-      sleuthkit
-      slurp
-      smartmontools
-      smbmap
-      snmpcheck
-      snort
-      social-engineer-toolkit
-      spice
-      spice-gtk
-      spice-protocol
-      spooftooph
-      sqlmap
-      ssldump
-      sslh
-      sslscan
-      sslsplit
-      steghide
-      subfinder
-      sushi
-      swaks
-      tcpdump
-      tcpreplay
-      telegram-desktop
-      texliveFull
-      thc-hydra
-      thermald
-      tor-browser
-      tree
-      tree-sitter
-      trufflehog
-      udftools
-      udiskie
-      udptunnel
-      unar
-      undollar
-      ungoogled-chromium
-      unicode-emoji
-      universal-android-debloater
-      unix-privesc-check
-      unrar
-      unzip
-      usbutils
-      util-linux
-      virt-viewer
-      virtio-win
-      virtiofsd
-      vlc
-      vlc-bittorrent
-      vscode-js-debug
-      vulkan-tools
-      wafw00f
-      wavpack
-      waybar-mpris
-      waycheck
-      wayland
-      wayland-protocols
-      wayland-utils
-      waylevel
-      weevely
-      wev
-      wfuzz
-      wget
-      whatweb
-      which
-      whois
-      win-spice
-      wireshark
-      wl-clipboard
-      woff2
-      wordlists
-      wordpress
-      wpscan
-      x264
-      x265
-      xarchiver
-      xdg-user-dirs
-      xdg-utils
-      xfsdump
-      xfsprogs
-      xfstests
-      xorg.xhost
-      xoscope
-      xvidcore
-      xz
-      yaml-language-server
-      yara
-      yersinia
-      yt-dlp
-      zenity
-      zip
-      zlib
-      zpaq
-      zstd
-      (sddm-astronaut.override {
-        embeddedTheme = "astronaut";
+    systemPackages =
+      with pkgs;
+      [
+        # amrnb
+        # amrwb
+        # appimagekit
+        # certbot-full
+        # cewl
+        # ciscoPacketTracer8
+        # dmitry
+        # john
+        # johnny
+        # mdk3-master
+        # medusa
+        # ncrack
+        # p0f
+        # reiser4progs
+        # scrounge-ntfs
+        # theharvester
+        # wapiti
+        # wifite2
+        above
+        acl
+        agi
+        aircrack-ng
+        alac
+        amass
+        android-backup-extractor
+        android-studio
+        android-studio-tools
+        android-tools
+        anydesk
+        apktool
+        appimage-run
+        aribb24
+        aribb25
+        arj
+        armitage
+        arping
+        audacity
+        audit
+        autopsy
+        avrdude
+        awscli2
+        bat
+        bettercap
+        bfcal
+        binwalk
+        bleachbit
+        blender
+        bloodhound
+        bluez-tools
+        bottles
+        brightnessctl
+        btop
+        btrfs-progs
+        bulk_extractor
+        bully
+        burpsuite
+        butt
+        bzip2
+        bzip3
+        cabextract
+        celt
+        chmlib
+        chntpw
+        clang
+        clang-analyzer
+        clang-manpages
+        clang-tools
+        clinfo
+        cliphist
+        cloudflare-warp
+        cmake
+        codec2
+        commix
+        coreutils-full
+        cpio
+        crowbar
+        crunch
+        cryptsetup
+        cups
+        cups-filters
+        cups-pdf-to-pdf
+        cups-printers
+        curlFull
+        curtail
+        d-spy
+        dart
+        davtest
+        dbd
+        dbeaver-bin
+        dconf-editor
+        debase
+        dejsonlz4
+        dirb
+        dirbuster
+        dmg2img
+        dmidecode
+        dns2tcp
+        dnschef
+        dnsenum
+        dnsmap
+        dnsrecon
+        dosfstools
+        driftnet
+        dsniff
+        e2fsprogs
+        efibootmgr
+        enum4linux
+        esptool
+        ettercap
+        evil-winrm
+        evtest
+        evtest-qt
+        exe2hex
+        exfatprogs
+        f2fs-tools
+        faac
+        faad2
+        fastfetch
+        fcrackzip
+        fd
+        fdk_aac
+        ffmpeg-full
+        ffmpegthumbnailer
+        ffuf
+        fh
+        fierce
+        file
+        flutter
+        foremost
+        fping
+        freetube
+        fritzing
+        fwupd-efi
+        gcc
+        gdb
+        gdk-pixbuf
+        gh
+        ghidra
+        gimp-with-plugins
+        git-doc
+        glib
+        glibc
+        gnome-font-viewer
+        gnugrep
+        gnulib
+        gnumake
+        gnused
+        gnutar
+        gnutls
+        gobuster
+        gophish
+        gource
+        gparted
+        gpredict
+        grim
+        gsm
+        gtk-vnc
+        guestfs-tools
+        guymager
+        gzip
+        hardinfo2
+        hash-identifier
+        hashcat
+        hashdeep
+        hashid
+        hdparm
+        hfsprogs
+        hw-probe
+        hwloc
+        hydra-check
+        hyprcursor
+        hyprls
+        hyprpicker
+        hyprpolkitagent
+        i2c-tools
+        iaito
+        ideviceinstaller
+        idevicerestore
+        iftop
+        image-roll
+        inkscape
+        inotify-tools
+        jellyfin-media-player
+        jfsutils
+        jq
+        jxrlib
+        keepassxc
+        kernelshark
+        kind
+        kismet
+        kubectl
+        kubectl-graph
+        kubectl-tree
+        kubectl-view-allocations
+        kubectl-view-secret
+        kubernetes
+        laudanum
+        lbd
+        lha
+        lhasa
+        libGL
+        libGLU
+        libaom
+        libappimage
+        libde265
+        libdvdcss
+        libdvdnav
+        libdvdread
+        libepoxy
+        libfprint
+        libfreeaptx
+        libftdi1
+        libgcc
+        libgpg-error
+        libguestfs
+        libheif
+        libideviceactivation
+        libilbc
+        libimobiledevice
+        liblc3
+        libnotify
+        libogg
+        libopenraw
+        libopus
+        libosinfo
+        libportal
+        libqalculate
+        libreoffice-fresh
+        libusb1
+        libuuid
+        libva-utils
+        libvirt
+        libvncserver
+        libvpx
+        libwebp
+        libxfs
+        libzip
+        ligolo-ng
+        linuxConsoleTools
+        lrzip
+        lshw
+        lsof
+        lsscsi
+        lua-language-server
+        lvm2
+        lynis
+        lz4
+        lzham
+        lzip
+        lzlib
+        lzop
+        macchanger
+        magicrescue
+        maltego
+        masscan
+        massdns
+        mattermost-desktop
+        meld
+        mesa-demos
+        metasploit
+        mimikatz
+        minicom
+        miredo
+        mitmproxy
+        mixxx
+        monkeysAudio
+        motrix
+        mozlz4a
+        msfpc
+        mtools
+        nautilus
+        nautilus-open-any-terminal
+        nbtscan
+        neovim-remote
+        netcat-gnu
+        netdiscover
+        netexec
+        netmask
+        netsniff-ng
+        networkmanagerapplet
+        nikto
+        nilfs-utils
+        ninja
+        nix-bash-completions
+        nix-diff
+        nix-index
+        nix-info
+        nixfmt-rfc-style
+        nixos-icons
+        nixpkgs-lint
+        nixpkgs-review
+        nmap
+        ntfs3g
+        nuclei
+        obs-studio
+        onesixtyone
+        onionshare-gui
+        opencore-amr
+        openh264
+        openjpeg
+        openssl
+        ophcrack
+        ophcrack-cli
+        p7zip
+        papirus-folders
+        parsero
+        patchelf
+        pavucontrol
+        pciutils
+        pcre
+        pdf-parser
+        pdfid
+        pgadmin4-desktopmode
+        php84
+        pixiewps
+        pjsip
+        pkg-config
+        platformio
+        platformio-core
+        playerctl
+        podman-compose
+        podman-desktop
+        podman-tui
+        postman
+        powersploit
+        proxychains
+        ptunnel
+        pwnat
+        python313Full
+        qalculate-gtk
+        qbittorrent
+        qemu-utils
+        qpwgraph
+        radare2
+        rar
+        readline
+        reaverwps-t6x
+        reiserfsprogs
+        remmina
+        responder
+        ripgrep
+        rpPPPoE
+        rpmextract
+        rsmangler
+        rtl-sdr-librtlsdr
+        rzip
+        samdump2
+        sane-backends
+        sbc
+        scalpel
+        schroedinger
+        scrcpy
+        screen
+        sdrangel
+        sdrpp
+        serial-studio
+        shared-mime-info
+        sherlock
+        sipvicious
+        sleuthkit
+        slurp
+        smartmontools
+        smbmap
+        snmpcheck
+        snort
+        social-engineer-toolkit
+        spice
+        spice-gtk
+        spice-protocol
+        spooftooph
+        sqlmap
+        ssldump
+        sslh
+        sslscan
+        sslsplit
+        steghide
+        subfinder
+        sushi
+        swaks
+        tcpdump
+        tcpreplay
+        telegram-desktop
+        texliveFull
+        thc-hydra
+        thermald
+        tor-browser
+        tree
+        tree-sitter
+        trufflehog
+        udftools
+        udiskie
+        udptunnel
+        unar
+        undollar
+        ungoogled-chromium
+        unicode-emoji
+        universal-android-debloater
+        unix-privesc-check
+        unrar
+        unzip
+        usbutils
+        util-linux
+        virt-viewer
+        virtio-win
+        virtiofsd
+        vlc
+        vlc-bittorrent
+        vscode-js-debug
+        vulkan-tools
+        wafw00f
+        wavpack
+        waybar-mpris
+        waycheck
+        wayland
+        wayland-protocols
+        wayland-utils
+        waylevel
+        weevely
+        wev
+        wfuzz
+        wget
+        whatweb
+        which
+        whois
+        win-spice
+        wireshark
+        wl-clipboard
+        woff2
+        wordlists
+        wordpress
+        wpscan
+        x264
+        x265
+        xarchiver
+        xdg-user-dirs
+        xdg-utils
+        xfsdump
+        xfsprogs
+        xfstests
+        xorg.xhost
+        xoscope
+        xvidcore
+        xz
+        yaml-language-server
+        yara
+        yersinia
+        yt-dlp
+        zenity
+        zip
+        zlib
+        zpaq
+        zstd
+        (sddm-astronaut.override {
+          embeddedTheme = "astronaut";
 
-        themeConfig = {
-          # ScreenWidth = 1920;
-          # ScreenHeight = 1080;
-          ScreenPadding = 0;
+          themeConfig = {
+            # ScreenWidth = 1920;
+            # ScreenHeight = 1080;
+            ScreenPadding = 0;
 
-          BackgroundColor = dracula_theme.hex.background;
-          BackgroundHorizontalAlignment = "center";
-          BackgroundVerticalAlignment = "center";
-          Background = wallpaper;
-          CropBackground = false;
-          DimBackgroundImage = "0.0";
+            BackgroundColor = dracula_theme.hex.background;
+            BackgroundHorizontalAlignment = "center";
+            BackgroundVerticalAlignment = "center";
+            Background = wallpaper;
+            CropBackground = false;
+            DimBackgroundImage = "0.0";
 
-          FullBlur = false;
-          PartialBlur = false;
+            FullBlur = false;
+            PartialBlur = false;
 
-          HaveFormBackground = false;
-          FormPosition = "center";
+            HaveFormBackground = false;
+            FormPosition = "center";
 
-          HideLoginButton = false;
-          HideSystemButtons = false;
-          HideVirtualKeyboard = false;
-          VirtualKeyboardPosition = "center";
+            HideLoginButton = false;
+            HideSystemButtons = false;
+            HideVirtualKeyboard = false;
+            VirtualKeyboardPosition = "center";
 
-          # MainColor = ; # TODO
-          # AccentColor = ; # TODO
+            # MainColor = ; # TODO
+            # AccentColor = ; # TODO
 
-          # HighlightBorderColor= ; # TODO
-          # HighlightBackgroundColor= ; # TODO
-          # HighlightTextColor= ; # TODO
+            # HighlightBorderColor= ; # TODO
+            # HighlightBackgroundColor= ; # TODO
+            # HighlightTextColor= ; # TODO
 
-          HeaderTextColor = dracula_theme.hex.foreground;
-          TimeTextColor = dracula_theme.hex.foreground;
-          DateTextColor = dracula_theme.hex.foreground;
+            HeaderTextColor = dracula_theme.hex.foreground;
+            TimeTextColor = dracula_theme.hex.foreground;
+            DateTextColor = dracula_theme.hex.foreground;
 
-          IconColor = dracula_theme.hex.foreground;
-          PlaceholderTextColor = dracula_theme.hex.foreground;
-          WarningColor = dracula_theme.hex.red;
+            IconColor = dracula_theme.hex.foreground;
+            PlaceholderTextColor = dracula_theme.hex.foreground;
+            WarningColor = dracula_theme.hex.red;
 
-          # LoginFieldBackgroundColor = ; # TODO
-          # LoginFieldTextColor = ; # TODO
-          # UserIconColor = ; # TODO
-          # HoverUserIconColor = ; # TODO
+            # LoginFieldBackgroundColor = ; # TODO
+            # LoginFieldTextColor = ; # TODO
+            # UserIconColor = ; # TODO
+            # HoverUserIconColor = ; # TODO
 
-          # PasswordFieldBackgroundColor = ; # TODO
-          # PasswordFieldTextColor = ; # TODO
-          # PasswordIconColor = ; # TODO
-          # HoverPasswordIconColor = ; # TODO
+            # PasswordFieldBackgroundColor = ; # TODO
+            # PasswordFieldTextColor = ; # TODO
+            # PasswordIconColor = ; # TODO
+            # HoverPasswordIconColor = ; # TODO
 
-          # LoginButtonBackgroundColor = ; # TODO
-          LoginButtonTextColor = dracula_theme.hex.foreground;
+            # LoginButtonBackgroundColor = ; # TODO
+            LoginButtonTextColor = dracula_theme.hex.foreground;
 
-          SystemButtonsIconsColor = dracula_theme.hex.foreground;
-          # HoverSystemButtonsIconsColor = ; # TODO
+            SystemButtonsIconsColor = dracula_theme.hex.foreground;
+            # HoverSystemButtonsIconsColor = ; # TODO
 
-          SessionButtonTextColor = dracula_theme.hex.foreground;
-          # HoverSessionButtonTextColor = ; # TODO
+            SessionButtonTextColor = dracula_theme.hex.foreground;
+            # HoverSessionButtonTextColor = ; # TODO
 
-          VirtualKeyboardButtonTextColor = dracula_theme.hex.foreground;
-          # HoverVirtualKeyboardButtonTextColor = ; # TODO
+            VirtualKeyboardButtonTextColor = dracula_theme.hex.foreground;
+            # HoverVirtualKeyboardButtonTextColor = ; # TODO
 
-          DropdownBackgroundColor = dracula_theme.hex.background;
-          DropdownSelectedBackgroundColor = dracula_theme.hex.current_line;
-          DropdownTextColor = dracula_theme.hex.foreground;
+            DropdownBackgroundColor = dracula_theme.hex.background;
+            DropdownSelectedBackgroundColor = dracula_theme.hex.current_line;
+            DropdownTextColor = dracula_theme.hex.foreground;
 
-          HeaderText = "Welcome";
+            HeaderText = "Welcome";
 
-          HourFormat = "\"hh:mm A\"";
-          DateFormat = "\"MMMM dd, yyyy\"";
+            HourFormat = "\"hh:mm A\"";
+            DateFormat = "\"MMMM dd, yyyy\"";
 
-          PasswordFocus = true;
-          AllowEmptyPassword = false;
-        };
-      })
-      (vscode-with-extensions.override {
-        # vscode = vscodium;
-        vscodeExtensions = with vscode-extensions; [
-          # ms-python.black-formatter
-          # ms-python.debugpy
-          # ms-python.python
-          aaron-bond.better-comments
-          adpyke.codesnap
-          albymor.increment-selection
-          alefragnani.bookmarks
-          bierner.github-markdown-preview
-          bierner.markdown-mermaid
-          christian-kohler.path-intellisense
-          codezombiech.gitignore
-          coolbear.systemd-unit-file
-          dart-code.dart-code
-          dart-code.flutter
-          davidanson.vscode-markdownlint
-          davidlday.languagetool-linter
-          devsense.phptools-vscode
-          devsense.profiler-php-vscode
-          dracula-theme.theme-dracula
-          ecmel.vscode-html-css
-          esbenp.prettier-vscode
-          formulahendry.auto-close-tag
-          formulahendry.auto-rename-tag
-          foxundermoon.shell-format
-          github.copilot
-          github.copilot-chat
-          github.vscode-github-actions
-          github.vscode-pull-request-github
-          grapecity.gc-excelviewer
-          gruntfuggly.todo-tree
-          ibm.output-colorizer
-          irongeek.vscode-env
-          james-yu.latex-workshop
-          jnoortheen.nix-ide
-          jock.svg
-          kamikillerto.vscode-colorize
-          mads-hartmann.bash-ide-vscode
-          mechatroner.rainbow-csv
-          mishkinf.goto-next-previous-member
-          moshfeu.compare-folders
-          ms-azuretools.vscode-docker
-          ms-toolsai.datawrangler
-          ms-vscode-remote.remote-containers
-          ms-vscode-remote.remote-ssh
-          ms-vscode-remote.remote-ssh-edit
-          ms-vscode.cpptools
-          ms-vscode.hexeditor
-          ms-vscode.live-server
-          ms-vscode.makefile-tools
-          oderwat.indent-rainbow
-          redhat.vscode-xml
-          redhat.vscode-yaml
-          ryu1kn.partial-diff
-          shardulm94.trailing-spaces
-          spywhere.guides
-          tamasfe.even-better-toml
-          timonwong.shellcheck
-          tyriar.sort-lines
-          vincaslt.highlight-matching-tag
-          visualstudioexptteam.intellicode-api-usage-examples
-          visualstudioexptteam.vscodeintellicode
-          vscjava.vscode-gradle
-          wmaurer.change-case
-          xdebug.php-debug
-          zainchen.json
-        ]
-        ++
-        pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-          {
-            name = "platformio-ide";
-            publisher = "platformio";
-            version = "3.3.4";
-            sha256 = "qfNz4IYjCmCMFLtAkbGTW5xnsVT8iDnFWjrgkmr2Slk=";
-          }
-          {
-            name = "vscode-serial-monitor";
-            publisher = "ms-vscode";
-            version = "0.13.250120001";
-            sha256 = "sZ5ybbl1gxt41Eirp88JmS30WNHeM4SslhzBlLXyRsM=";
-          }
-          {
-            name = "unique-lines";
-            publisher = "bibhasdn";
-            version = "1.0.0";
-            sha256 = "W0ZpZ6+vjkfNfOtekx5NWOFTyxfWAiB0XYcIwHabFPQ=";
-          }
-          {
-            name = "pubspec-assist";
-            publisher = "jeroen-meijer";
-            version = "2.3.2";
-            sha256 = "+Mkcbeq7b+vkuf2/LYT10mj46sULixLNKGpCEk1Eu/0=";
-          }
-          {
-            name = "vscode-sort-json";
-            publisher = "richie5um2";
-            version = "1.20.0";
-            sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
-          }
-          {
-            name = "postman-for-vscode";
-            publisher = "postman";
-            version = "1.7.0";
-            sha256 = "JZ5zaA2r7kc3KJg+dbimA/2mVaOILiEIwD/6w/36ebU=";
-          }
-          {
-            name = "remote-repositories";
-            publisher = "ms-vscode";
-            version = "0.42.0";
-            sha256 = "cYbkCcNsoTO6E5befw/ZN3yTW262APTCxyCJ/3z84dc=";
-          }
-          {
-            name = "remotehub";
-            publisher = "github";
-            version = "0.64.0";
-            sha256 = "Nh4PxYVdgdDb8iwHHUbXwJ5ZbMruFB6juL4Yg/wdKMY=";
-          }
-          {
-            name = "errorlens";
-            publisher = "usernamehw";
-            version = "3.23.0";
-            sha256 = "mz3JU4+/P6nM/SEJcVG5gq5K1Ym9L8N2pXbfw8a5DoA=";
-          }
-          {
-            name = "vscode-print";
-            publisher = "pdconsec";
-            version = "1.3.0";
-            sha256 = "JBSqNLSHr25nlbuIr7K0o+oBCD9LfAp/wW/bmeUBfao=";
-          }
-        ];
-      })
-    ]
-    ++
-    (with unixtools; [
-      arp
-      fdisk
-      ifconfig
-      netstat
-      nettools
-      ping
-      route
-      util-linux
-      whereis
-    ])
-    ++
-    (with fishPlugins; [
-      async-prompt
-      autopair
-      done
-      fish-you-should-use
-    ])
-    ++
-    (with gst_all_1; [
-      gst-libav
-      gst-plugins-bad
-      gst-plugins-base
-      gst-plugins-good
-      gst-plugins-ugly
-      gst-vaapi
-      gstreamer
-    ])
-    ++
-    (with php84Extensions; [
-      bz2
-      calendar
-      ctype
-      curl
-      dba
-      dom
-      exif
-      ffi
-      fileinfo
-      filter
-      ftp
-      gd
-      iconv
-      imagick
-      imap
-      mailparse
-      memcached
-      mysqli
-      mysqlnd
-      opcache
-      openssl
-      pcntl
-      pdo
-      pdo_mysql
-      pdo_pgsql
-      pgsql
-      posix
-      readline
-      session
-      sockets
-      sodium
-      xdebug
-      xml
-      xmlreader
-      xmlwriter
-      xsl
-      zip
-      zlib
-    ])
-    ++
-    (with php84Packages; [
+            PasswordFocus = true;
+            AllowEmptyPassword = false;
+          };
+        })
+        (vscode-with-extensions.override {
+          vscode = vscodium;
+          vscodeExtensions =
+            with vscode-extensions;
+            [
+              aaron-bond.better-comments
+              adpyke.codesnap
+              albymor.increment-selection
+              alefragnani.bookmarks
+              bierner.github-markdown-preview
+              bierner.markdown-mermaid
+              christian-kohler.path-intellisense
+              codezombiech.gitignore
+              coolbear.systemd-unit-file
+              dart-code.dart-code
+              dart-code.flutter
+              davidanson.vscode-markdownlint
+              davidlday.languagetool-linter
+              devsense.phptools-vscode
+              devsense.profiler-php-vscode
+              dracula-theme.theme-dracula
+              ecmel.vscode-html-css
+              esbenp.prettier-vscode
+              formulahendry.auto-close-tag
+              formulahendry.auto-rename-tag
+              foxundermoon.shell-format
+              github.copilot
+              github.copilot-chat
+              github.vscode-github-actions
+              github.vscode-pull-request-github
+              grapecity.gc-excelviewer
+              gruntfuggly.todo-tree
+              ibm.output-colorizer
+              irongeek.vscode-env
+              james-yu.latex-workshop
+              jnoortheen.nix-ide
+              jock.svg
+              kamikillerto.vscode-colorize
+              mads-hartmann.bash-ide-vscode
+              mechatroner.rainbow-csv
+              mishkinf.goto-next-previous-member
+              moshfeu.compare-folders
+              ms-azuretools.vscode-docker
+              ms-python.black-formatter
+              ms-python.debugpy
+              ms-python.python
+              ms-toolsai.datawrangler
+              ms-vscode-remote.remote-containers
+              ms-vscode-remote.remote-ssh
+              ms-vscode-remote.remote-ssh-edit
+              ms-vscode.cpptools
+              ms-vscode.hexeditor
+              ms-vscode.live-server
+              ms-vscode.makefile-tools
+              oderwat.indent-rainbow
+              redhat.vscode-xml
+              redhat.vscode-yaml
+              ryu1kn.partial-diff
+              shardulm94.trailing-spaces
+              spywhere.guides
+              tamasfe.even-better-toml
+              timonwong.shellcheck
+              tyriar.sort-lines
+              vincaslt.highlight-matching-tag
+              visualstudioexptteam.intellicode-api-usage-examples
+              visualstudioexptteam.vscodeintellicode
+              vscjava.vscode-gradle
+              wmaurer.change-case
+              xdebug.php-debug
+              zainchen.json
+            ]
+            ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+              {
+                name = "platformio-ide";
+                publisher = "platformio";
+                version = "3.3.4";
+                sha256 = "qfNz4IYjCmCMFLtAkbGTW5xnsVT8iDnFWjrgkmr2Slk=";
+              }
+              {
+                name = "vscode-serial-monitor";
+                publisher = "ms-vscode";
+                version = "0.13.250320001";
+                sha256 = "Uy/b8Rb1jT+hqHHL06mK8NWKno1AMVfKV/s06uwPMAU=";
+              }
+              {
+                name = "unique-lines";
+                publisher = "bibhasdn";
+                version = "1.0.0";
+                sha256 = "W0ZpZ6+vjkfNfOtekx5NWOFTyxfWAiB0XYcIwHabFPQ=";
+              }
+              {
+                name = "pubspec-assist";
+                publisher = "jeroen-meijer";
+                version = "2.3.2";
+                sha256 = "+Mkcbeq7b+vkuf2/LYT10mj46sULixLNKGpCEk1Eu/0=";
+              }
+              {
+                name = "vscode-sort-json";
+                publisher = "richie5um2";
+                version = "1.20.0";
+                sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
+              }
+              {
+                name = "postman-for-vscode";
+                publisher = "postman";
+                version = "1.9.0";
+                sha256 = "ijW75IujPomtIef4JKDqgKTTbbGStmPiTwmEIKc/dbo=";
+              }
+              {
+                name = "remote-repositories";
+                publisher = "ms-vscode";
+                version = "0.43.2024112101";
+                sha256 = "/KdI8XKJOjKUNGbn/ISY5Per5OEYLktzqS2IfqcTWtc=";
+              }
+              {
+                name = "remotehub";
+                publisher = "github";
+                version = "0.65.2024112101";
+                sha256 = "Xb28yff0tiQDUuwC5Mv0rwXqLgZOU4B3KZAht78NfFU=";
+              }
+              {
+                name = "errorlens";
+                publisher = "usernamehw";
+                version = "3.24.0";
+                sha256 = "r5xXR4rDbP+2bk66yqPoLod8IZXFrntcKHuWbAiFWwE=";
+              }
+              {
+                name = "vscode-print";
+                publisher = "pdconsec";
+                version = "1.3.0";
+                sha256 = "JBSqNLSHr25nlbuIr7K0o+oBCD9LfAp/wW/bmeUBfao=";
+              }
+            ];
+        })
+      ]
+      ++ (with unixtools; [
+        arp
+        fdisk
+        ifconfig
+        netstat
+        nettools
+        ping
+        route
+        util-linux
+        whereis
+      ])
+      ++ (with fishPlugins; [
+        async-prompt
+        autopair
+        done
+        fish-you-should-use
+      ])
+      ++ (with gst_all_1; [
+        gst-libav
+        gst-plugins-bad
+        gst-plugins-base
+        gst-plugins-good
+        gst-plugins-ugly
+        gst-vaapi
+        gstreamer
+      ])
+      ++ (with php84Extensions; [
+        bz2
+        calendar
+        ctype
+        curl
+        dba
+        dom
+        exif
+        ffi
+        fileinfo
+        filter
+        ftp
+        gd
+        iconv
+        imagick
+        imap
+        mailparse
+        memcached
+        mysqli
+        mysqlnd
+        opcache
+        openssl
+        pcntl
+        pdo
+        pdo_mysql
+        pdo_pgsql
+        pgsql
+        posix
+        readline
+        session
+        sockets
+        sodium
+        xdebug
+        xml
+        xmlreader
+        xmlwriter
+        xsl
+        zip
+        zlib
+      ])
+      ++ (with php84Packages; [
 
-    ])
-    ++
-    (with python313Packages; [
-      bangla
-      black
-      datetime
-      matplotlib
-      numpy
-      pandas
-      pillow
-      pip
-      pyserial
-      requests
-      seaborn
-      tkinter
-    ])
-    ++
-    (with texlivePackages; [
-      bangla
-      latexmk
-      quran
-      quran-bn
-      quran-en
-    ])
-    ++
-    (with lua51Packages; [
-      # Old Version Pinned for Neovim
-      lua
-      luarocks
-    ])
-    ++
-    (with tree-sitter-grammars; [
-      tree-sitter-bash
-      tree-sitter-c
-      tree-sitter-cmake
-      tree-sitter-comment
-      tree-sitter-cpp
-      tree-sitter-css
-      tree-sitter-dart
-      tree-sitter-devicetree
-      tree-sitter-dockerfile
-      tree-sitter-fish
-      tree-sitter-html
-      tree-sitter-http
-      tree-sitter-hyprlang
-      tree-sitter-javascript
-      tree-sitter-jsdoc
-      tree-sitter-json
-      tree-sitter-json5
-      tree-sitter-latex
-      tree-sitter-lua
-      tree-sitter-make
-      tree-sitter-markdown
-      tree-sitter-markdown-inline
-      tree-sitter-nix
-      tree-sitter-org-nvim
-      tree-sitter-php
-      tree-sitter-python
-      tree-sitter-query
-      tree-sitter-regex
-      tree-sitter-scheme
-      tree-sitter-sql
-      tree-sitter-toml
-      tree-sitter-vim
-      tree-sitter-yaml
-    ])
-    ++
-    (with ghidra-extensions; [
-      findcrypt
-      ghidra-delinker-extension
-      ghidra-golanganalyzerextension
-      ghidraninja-ghidra-scripts
-      gnudisassembler
-      lightkeeper
-      machinelearning
-      ret-sync
-      sleighdevtools
-      wasm
-    ])
-    ++
-    (with inkscape-extensions; [
-      applytransforms
-      textext
-    ])
-    ++
-    (with obs-studio-plugins; [
-      # droidcam-obs
-      # obs-color-monitor
-      # obs-replay-source
-      input-overlay
-      obs-3d-effect
-      obs-backgroundremoval
-      obs-composite-blur
-      obs-freeze-filter
-      obs-gradient-source
-      obs-gstreamer
-      obs-move-transition
-      obs-multi-rtmp
-      obs-mute-filter
-      obs-pipewire-audio-capture
-      obs-rgb-levels-filter
-      obs-scale-to-sound
-      obs-shaderfilter
-      obs-source-clone
-      obs-source-record
-      obs-source-switcher
-      obs-text-pthread
-      obs-transition-table
-      obs-tuna
-      obs-vaapi
-      obs-vertical-canvas
-      obs-vintage-filter
-      obs-vkcapture
-      waveform
-    ]);
+      ])
+      ++ (with python313Packages; [
+        bangla
+        black
+        datetime
+        matplotlib
+        numpy
+        pandas
+        pillow
+        pip
+        pyserial
+        requests
+        seaborn
+        tkinter
+      ])
+      ++ (with texlivePackages; [
+        bangla
+        latexmk
+        quran
+        quran-bn
+        quran-en
+      ])
+      ++ (with lua51Packages; [
+        # Old Version Pinned for Neovim
+        lua
+        luarocks
+      ])
+      ++ (with tree-sitter-grammars; [
+        tree-sitter-bash
+        tree-sitter-c
+        tree-sitter-cmake
+        tree-sitter-comment
+        tree-sitter-cpp
+        tree-sitter-css
+        tree-sitter-dart
+        tree-sitter-devicetree
+        tree-sitter-dockerfile
+        tree-sitter-fish
+        tree-sitter-html
+        tree-sitter-http
+        tree-sitter-hyprlang
+        tree-sitter-javascript
+        tree-sitter-jsdoc
+        tree-sitter-json
+        tree-sitter-json5
+        tree-sitter-latex
+        tree-sitter-lua
+        tree-sitter-make
+        tree-sitter-markdown
+        tree-sitter-markdown-inline
+        tree-sitter-nix
+        tree-sitter-org-nvim
+        tree-sitter-php
+        tree-sitter-python
+        tree-sitter-query
+        tree-sitter-regex
+        tree-sitter-scheme
+        tree-sitter-sql
+        tree-sitter-toml
+        tree-sitter-vim
+        tree-sitter-yaml
+      ])
+      ++ (with ghidra-extensions; [
+        findcrypt
+        ghidra-delinker-extension
+        ghidra-golanganalyzerextension
+        ghidraninja-ghidra-scripts
+        gnudisassembler
+        lightkeeper
+        machinelearning
+        ret-sync
+        sleighdevtools
+        wasm
+      ])
+      ++ (with inkscape-extensions; [
+        applytransforms
+        textext
+      ])
+      ++ (with obs-studio-plugins; [
+        # obs-color-monitor
+        droidcam-obs
+        input-overlay
+        obs-3d-effect
+        obs-backgroundremoval
+        obs-composite-blur
+        obs-freeze-filter
+        obs-gradient-source
+        obs-gstreamer
+        obs-move-transition
+        obs-multi-rtmp
+        obs-mute-filter
+        obs-pipewire-audio-capture
+        obs-replay-source
+        obs-rgb-levels-filter
+        obs-scale-to-sound
+        obs-shaderfilter
+        obs-source-clone
+        obs-source-record
+        obs-source-switcher
+        obs-text-pthread
+        obs-transition-table
+        obs-tuna
+        obs-vaapi
+        obs-vertical-canvas
+        obs-vintage-filter
+        obs-vkcapture
+        waveform
+      ]);
   };
 
   xdg = {
@@ -2578,101 +2572,101 @@ in
       defaultApplications = {
         "inode/directory" = "nautilus.desktop";
 
-        "text/1d-interleaved-parityfec" = "code.desktop";
-        "text/RED" = "code.desktop";
-        "text/SGML" = "code.desktop";
-        "text/cache-manifest" = "code.desktop";
-        "text/calendar" = "code.desktop";
-        "text/cql" = "code.desktop";
-        "text/cql-expression" = "code.desktop";
-        "text/cql-identifier" = "code.desktop";
-        "text/css" = "code.desktop";
-        "text/csv" = "code.desktop";
-        "text/csv-schema" = "code.desktop";
-        "text/directory" = "code.desktop";
-        "text/dns" = "code.desktop";
-        "text/ecmascript" = "code.desktop";
-        "text/encaprtp" = "code.desktop";
-        "text/enriched" = "code.desktop";
-        "text/fhirpath" = "code.desktop";
-        "text/flexfec" = "code.desktop";
-        "text/fwdred" = "code.desktop";
-        "text/gff3" = "code.desktop";
-        "text/grammar-ref-list" = "code.desktop";
-        "text/hl7v2" = "code.desktop";
-        "text/html" = "code.desktop";
-        "text/javascript" = "code.desktop";
-        "text/jcr-cnd" = "code.desktop";
-        "text/markdown" = "code.desktop";
-        "text/mizar" = "code.desktop";
-        "text/n3" = "code.desktop";
-        "text/parameters" = "code.desktop";
-        "text/parityfec" = "code.desktop";
-        "text/plain" = "code.desktop";
-        "text/provenance-notation" = "code.desktop";
-        "text/prs.fallenstein.rst" = "code.desktop";
-        "text/prs.lines.tag" = "code.desktop";
-        "text/prs.prop.logic" = "code.desktop";
-        "text/prs.texi" = "code.desktop";
-        "text/raptorfec" = "code.desktop";
-        "text/rfc822-headers" = "code.desktop";
-        "text/richtext" = "code.desktop";
-        "text/rtf" = "code.desktop";
-        "text/rtp-enc-aescm128" = "code.desktop";
-        "text/rtploopback" = "code.desktop";
-        "text/rtx" = "code.desktop";
-        "text/shaclc" = "code.desktop";
-        "text/shex" = "code.desktop";
-        "text/spdx" = "code.desktop";
-        "text/strings" = "code.desktop";
-        "text/t140" = "code.desktop";
-        "text/tab-separated-values" = "code.desktop";
-        "text/troff" = "code.desktop";
-        "text/turtle" = "code.desktop";
-        "text/ulpfec" = "code.desktop";
-        "text/uri-list" = "code.desktop";
-        "text/vcard" = "code.desktop";
-        "text/vnd.DMClientScript" = "code.desktop";
-        "text/vnd.IPTC.NITF" = "code.desktop";
-        "text/vnd.IPTC.NewsML" = "code.desktop";
-        "text/vnd.a" = "code.desktop";
-        "text/vnd.abc" = "code.desktop";
-        "text/vnd.ascii-art" = "code.desktop";
-        "text/vnd.curl" = "code.desktop";
-        "text/vnd.debian.copyright" = "code.desktop";
-        "text/vnd.dvb.subtitle" = "code.desktop";
-        "text/vnd.esmertec.theme-descriptor" = "code.desktop";
-        "text/vnd.exchangeable" = "code.desktop";
-        "text/vnd.familysearch.gedcom" = "code.desktop";
-        "text/vnd.ficlab.flt" = "code.desktop";
-        "text/vnd.fly" = "code.desktop";
-        "text/vnd.fmi.flexstor" = "code.desktop";
-        "text/vnd.gml" = "code.desktop";
-        "text/vnd.graphviz" = "code.desktop";
-        "text/vnd.hans" = "code.desktop";
-        "text/vnd.hgl" = "code.desktop";
-        "text/vnd.in3d.3dml" = "code.desktop";
-        "text/vnd.in3d.spot" = "code.desktop";
-        "text/vnd.latex-z" = "code.desktop";
-        "text/vnd.motorola.reflex" = "code.desktop";
-        "text/vnd.ms-mediapackage" = "code.desktop";
-        "text/vnd.net2phone.commcenter.command" = "code.desktop";
-        "text/vnd.radisys.msml-basic-layout" = "code.desktop";
-        "text/vnd.senx.warpscript" = "code.desktop";
-        "text/vnd.si.uricatalogue" = "code.desktop";
-        "text/vnd.sosi" = "code.desktop";
-        "text/vnd.sun.j2me.app-descriptor" = "code.desktop";
-        "text/vnd.trolltech.linguist" = "code.desktop";
-        "text/vnd.vcf" = "code.desktop";
-        "text/vnd.wap.si" = "code.desktop";
-        "text/vnd.wap.sl" = "code.desktop";
-        "text/vnd.wap.wml" = "code.desktop";
-        "text/vnd.wap.wmlscript" = "code.desktop";
-        "text/vnd.zoo.kcl" = "code.desktop";
-        "text/vtt" = "code.desktop";
-        "text/wgsl" = "code.desktop";
-        "text/xml" = "code.desktop";
-        "text/xml-external-parsed-entity" = "code.desktop";
+        "text/1d-interleaved-parityfec" = "codium.desktop";
+        "text/RED" = "codium.desktop";
+        "text/SGML" = "codium.desktop";
+        "text/cache-manifest" = "codium.desktop";
+        "text/calendar" = "codium.desktop";
+        "text/cql" = "codium.desktop";
+        "text/cql-expression" = "codium.desktop";
+        "text/cql-identifier" = "codium.desktop";
+        "text/css" = "codium.desktop";
+        "text/csv" = "codium.desktop";
+        "text/csv-schema" = "codium.desktop";
+        "text/directory" = "codium.desktop";
+        "text/dns" = "codium.desktop";
+        "text/ecmascript" = "codium.desktop";
+        "text/encaprtp" = "codium.desktop";
+        "text/enriched" = "codium.desktop";
+        "text/fhirpath" = "codium.desktop";
+        "text/flexfec" = "codium.desktop";
+        "text/fwdred" = "codium.desktop";
+        "text/gff3" = "codium.desktop";
+        "text/grammar-ref-list" = "codium.desktop";
+        "text/hl7v2" = "codium.desktop";
+        "text/html" = "codium.desktop";
+        "text/javascript" = "codium.desktop";
+        "text/jcr-cnd" = "codium.desktop";
+        "text/markdown" = "codium.desktop";
+        "text/mizar" = "codium.desktop";
+        "text/n3" = "codium.desktop";
+        "text/parameters" = "codium.desktop";
+        "text/parityfec" = "codium.desktop";
+        "text/plain" = "codium.desktop";
+        "text/provenance-notation" = "codium.desktop";
+        "text/prs.fallenstein.rst" = "codium.desktop";
+        "text/prs.lines.tag" = "codium.desktop";
+        "text/prs.prop.logic" = "codium.desktop";
+        "text/prs.texi" = "codium.desktop";
+        "text/raptorfec" = "codium.desktop";
+        "text/rfc822-headers" = "codium.desktop";
+        "text/richtext" = "codium.desktop";
+        "text/rtf" = "codium.desktop";
+        "text/rtp-enc-aescm128" = "codium.desktop";
+        "text/rtploopback" = "codium.desktop";
+        "text/rtx" = "codium.desktop";
+        "text/shaclc" = "codium.desktop";
+        "text/shex" = "codium.desktop";
+        "text/spdx" = "codium.desktop";
+        "text/strings" = "codium.desktop";
+        "text/t140" = "codium.desktop";
+        "text/tab-separated-values" = "codium.desktop";
+        "text/troff" = "codium.desktop";
+        "text/turtle" = "codium.desktop";
+        "text/ulpfec" = "codium.desktop";
+        "text/uri-list" = "codium.desktop";
+        "text/vcard" = "codium.desktop";
+        "text/vnd.DMClientScript" = "codium.desktop";
+        "text/vnd.IPTC.NITF" = "codium.desktop";
+        "text/vnd.IPTC.NewsML" = "codium.desktop";
+        "text/vnd.a" = "codium.desktop";
+        "text/vnd.abc" = "codium.desktop";
+        "text/vnd.ascii-art" = "codium.desktop";
+        "text/vnd.curl" = "codium.desktop";
+        "text/vnd.debian.copyright" = "codium.desktop";
+        "text/vnd.dvb.subtitle" = "codium.desktop";
+        "text/vnd.esmertec.theme-descriptor" = "codium.desktop";
+        "text/vnd.exchangeable" = "codium.desktop";
+        "text/vnd.familysearch.gedcom" = "codium.desktop";
+        "text/vnd.ficlab.flt" = "codium.desktop";
+        "text/vnd.fly" = "codium.desktop";
+        "text/vnd.fmi.flexstor" = "codium.desktop";
+        "text/vnd.gml" = "codium.desktop";
+        "text/vnd.graphviz" = "codium.desktop";
+        "text/vnd.hans" = "codium.desktop";
+        "text/vnd.hgl" = "codium.desktop";
+        "text/vnd.in3d.3dml" = "codium.desktop";
+        "text/vnd.in3d.spot" = "codium.desktop";
+        "text/vnd.latex-z" = "codium.desktop";
+        "text/vnd.motorola.reflex" = "codium.desktop";
+        "text/vnd.ms-mediapackage" = "codium.desktop";
+        "text/vnd.net2phone.commcenter.command" = "codium.desktop";
+        "text/vnd.radisys.msml-basic-layout" = "codium.desktop";
+        "text/vnd.senx.warpscript" = "codium.desktop";
+        "text/vnd.si.uricatalogue" = "codium.desktop";
+        "text/vnd.sosi" = "codium.desktop";
+        "text/vnd.sun.j2me.app-descriptor" = "codium.desktop";
+        "text/vnd.trolltech.linguist" = "codium.desktop";
+        "text/vnd.vcf" = "codium.desktop";
+        "text/vnd.wap.si" = "codium.desktop";
+        "text/vnd.wap.sl" = "codium.desktop";
+        "text/vnd.wap.wml" = "codium.desktop";
+        "text/vnd.wap.wmlscript" = "codium.desktop";
+        "text/vnd.zoo.kcl" = "codium.desktop";
+        "text/vtt" = "codium.desktop";
+        "text/wgsl" = "codium.desktop";
+        "text/xml" = "codium.desktop";
+        "text/xml-external-parsed-entity" = "codium.desktop";
 
         "image/aces" = "com.github.weclaw1.ImageRoll.desktop";
         "image/apng" = "com.github.weclaw1.ImageRoll.desktop";
@@ -3289,7 +3283,7 @@ in
               ", XF86Mail, exec, thunderbird"
               "SUPER, M, exec, thunderbird"
 
-              "SUPER, C, exec, code"
+              "SUPER, C, exec, codium"
               "SUPER, D, exec, dbeaver"
 
               "SUPER, V, exec, vlc"
@@ -3485,7 +3479,7 @@ in
               dim_strength = 0.0;
 
               blur.enabled = false;
-              shadow .enabled = false;
+              shadow.enabled = false;
             };
 
             animations = {
@@ -3555,9 +3549,11 @@ in
 
           iconTheme = {
             name = "Papirus-Dark";
-            package = (pkgs.papirus-icon-theme.override {
-              color = "black";
-            });
+            package = (
+              pkgs.papirus-icon-theme.override {
+                color = "black";
+              }
+            );
           };
 
           cursorTheme = {
@@ -3638,10 +3634,9 @@ in
 
               splash = false;
 
-              preload =
-                [
-                  wallpaper
-                ];
+              preload = [
+                wallpaper
+              ];
 
               wallpaper = [
                 ", ${wallpaper}"
