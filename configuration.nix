@@ -2023,7 +2023,7 @@ in
         papirus-folders
         parsero
         patchelf
-        pavucontrol
+        pwvucontrol
         pciutils
         pcre
         pdf-parser
@@ -3851,7 +3851,7 @@ in
                   on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+";
                   on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-";
 
-                  on-click = "pavucontrol";
+                  on-click = "pwvucontrol";
                 };
 
                 bluetooth = {
@@ -4481,12 +4481,18 @@ in
                 extensions =
                   with pkgs.vscode-extensions;
                   [
+                    RoweWilsonFrederiskHolme.wikitext
                     aaron-bond.better-comments
                     adpyke.codesnap
+                    adzero.vscode-sievehighlight
                     albymor.increment-selection
                     alefragnani.bookmarks
+                    alexisvt.flutter-snippets
+                    anweber.vscode-httpyac
+                    bierner.docs-view
                     bierner.github-markdown-preview
                     bierner.markdown-mermaid
+                    bradgashler.htmltagwrap
                     christian-kohler.path-intellisense
                     codezombiech.gitignore
                     coolbear.systemd-unit-file
@@ -4494,11 +4500,16 @@ in
                     dart-code.flutter
                     davidanson.vscode-markdownlint
                     davidlday.languagetool-linter
+                    dendron.adjust-heading-level
                     devsense.phptools-vscode
                     devsense.profiler-php-vscode
                     dracula-theme.theme-dracula
                     ecmel.vscode-html-css
+                    editorconfig.editorconfig
+                    edonet.vscode-command-runner
                     esbenp.prettier-vscode
+                    fabiospampinato.vscode-open-in-github
+                    firefox-devtools.vscode-firefox-debug
                     formulahendry.auto-close-tag
                     formulahendry.auto-rename-tag
                     foxundermoon.shell-format
@@ -4507,38 +4518,63 @@ in
                     github.vscode-github-actions
                     github.vscode-pull-request-github
                     grapecity.gc-excelviewer
+                    graphql.vscode-graphql
+                    graphql.vscode-graphql-syntax
                     gruntfuggly.todo-tree
+                    hars.cppsnippets
+                    hbenl.vscode-test-explorer
+                    hediet.vscode-drawio
                     ibm.output-colorizer
                     irongeek.vscode-env
                     james-yu.latex-workshop
+                    jbockle.jbockle-format-files
                     jnoortheen.nix-ide
                     jock.svg
                     kamikillerto.vscode-colorize
+                    llvm-vs-code-extensions.vscode-clangd
                     mads-hartmann.bash-ide-vscode
                     mechatroner.rainbow-csv
                     mishkinf.goto-next-previous-member
                     moshfeu.compare-folders
                     ms-azuretools.vscode-docker
+                    ms-kubernetes-tools.vscode-kubernetes-tools
                     ms-python.black-formatter
                     ms-python.debugpy
+                    ms-python.isort
                     ms-python.python
                     ms-toolsai.datawrangler
+                    ms-toolsai.jupyter
+                    ms-toolsai.jupyter-keymap
+                    ms-toolsai.jupyter-renderers
+                    ms-toolsai.vscode-jupyter-cell-tags
+                    ms-toolsai.vscode-jupyter-slideshow
                     ms-vscode-remote.remote-containers
                     ms-vscode-remote.remote-ssh
                     ms-vscode-remote.remote-ssh-edit
+                    ms-vscode-remote.vscode-remote-extensionpack
+                    ms-vscode.cmake-tools
                     ms-vscode.cpptools
                     ms-vscode.hexeditor
                     ms-vscode.live-server
                     ms-vscode.makefile-tools
+                    ms-vscode.test-adapter-converter
+                    ms-vsliveshare.vsliveshare
+                    ms-windows-ai-studio.windows-ai-studio
                     oderwat.indent-rainbow
+                    platformio.platformio-vscode-ide
+                    quicktype.quicktype
                     redhat.vscode-xml
                     redhat.vscode-yaml
+                    rubymaniac.vscode-paste-and-indent
                     ryu1kn.partial-diff
                     shardulm94.trailing-spaces
+                    skyapps.fish-vscode
                     spywhere.guides
+                    tailscale.vscode-tailscale
                     tamasfe.even-better-toml
                     timonwong.shellcheck
                     tyriar.sort-lines
+                    usernamehw.errorlens
                     vincaslt.highlight-matching-tag
                     visualstudioexptteam.intellicode-api-usage-examples
                     visualstudioexptteam.vscodeintellicode
@@ -4548,12 +4584,6 @@ in
                     zainchen.json
                   ]
                   ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-                    {
-                      name = "platformio-ide";
-                      publisher = "platformio";
-                      version = "3.3.4";
-                      sha256 = "qfNz4IYjCmCMFLtAkbGTW5xnsVT8iDnFWjrgkmr2Slk=";
-                    }
                     {
                       name = "vscode-serial-monitor";
                       publisher = "ms-vscode";
@@ -4579,30 +4609,6 @@ in
                       sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
                     }
                     {
-                      name = "postman-for-vscode";
-                      publisher = "postman";
-                      version = "1.9.0";
-                      sha256 = "ijW75IujPomtIef4JKDqgKTTbbGStmPiTwmEIKc/dbo=";
-                    }
-                    {
-                      name = "remote-repositories";
-                      publisher = "ms-vscode";
-                      version = "0.43.2024112101";
-                      sha256 = "/KdI8XKJOjKUNGbn/ISY5Per5OEYLktzqS2IfqcTWtc=";
-                    }
-                    {
-                      name = "remotehub";
-                      publisher = "github";
-                      version = "0.65.2024112101";
-                      sha256 = "Xb28yff0tiQDUuwC5Mv0rwXqLgZOU4B3KZAht78NfFU=";
-                    }
-                    {
-                      name = "errorlens";
-                      publisher = "usernamehw";
-                      version = "3.24.0";
-                      sha256 = "r5xXR4rDbP+2bk66yqPoLod8IZXFrntcKHuWbAiFWwE=";
-                    }
-                    {
                       name = "vscode-print";
                       publisher = "pdconsec";
                       version = "1.3.0";
@@ -4615,12 +4621,18 @@ in
 
                 userSettings = {
                   "editor.cursorBlinking" = "phase";
+                  "editor.formatOnPaste" = true;
+                  "editor.formatOnSave" = true;
                   "editor.wordWrap" = "on";
+
                   "explorer.confirmDelete" = true;
+
                   "git.autofetch" = true;
                   "git.confirmSync" = false;
                   "git.enableSmartCommit" = true;
+
                   "telemetry.telemetryLevel" = "off";
+
                   "workbench.startupEditor" = "none";
                 };
               };
@@ -4729,7 +4741,44 @@ in
             enable = true;
             package = pkgs.freetube;
 
-            settings = { };
+            settings = {
+              currentLocale = "en-US";
+              baseTheme = "dracula";
+              landingPage = "subscriptions";
+              region = "BD";
+              enableSearchSuggestions = true;
+              displayVideoPlayButton = true;
+
+              checkForUpdates = true;
+              checkForBlogPosts = false;
+              fetchSubscriptionsAutomatically = true;
+
+              rememberHistory = false;
+              rememberSearchHistory = false;
+              saveVideoHistoryWithLastViewedPlaylist = false;
+              saveWatchedProgress = false;
+
+              defaultVideoFormat = "dash";
+              defaultQuality = "1080";
+
+              downloadBehavior = "open";
+              externalPlayer = "vlc";
+
+              enableScreenshot = true;
+              screenshotFormat = "webp";
+              screenshotQuality = 100;
+
+              useSponsorBlock = true;
+              sponsorBlockShowSkippedToast = true;
+              sponsorBlockFiller.skip = "showInSeekBar";
+              sponsorBlockInteraction.skip = "showInSeekBar";
+              sponsorBlockIntro.skip = "showInSeekBar";
+              sponsorBlockMusicOffTopic.skip = "showInSeekBar";
+              sponsorBlockOutro.skip = "showInSeekBar";
+              sponsorBlockRecap.skip = "showInSeekBar";
+              sponsorBlockSelfPromo.skip = "showInSeekBar";
+              sponsorBlockSponsor.skip = "showInSeekBar";
+            };
           };
         };
       }
