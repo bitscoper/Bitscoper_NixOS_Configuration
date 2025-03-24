@@ -1726,21 +1726,13 @@ in
         # amrnb
         # amrwb
         # appimagekit
-        # certbot-full
-        # cewl
         # ciscoPacketTracer8
         # dmitry
-        # john
-        # johnny
-        # mdk3-master
-        # medusa
         # ncrack
         # p0f
         # reiser4progs
         # scrounge-ntfs
-        # theharvester
         # wapiti
-        # wifite2
         above
         acl
         agi
@@ -1776,11 +1768,14 @@ in
         bulk_extractor
         bully
         burpsuite
+        bustle
         butt
         bzip2
         bzip3
         cabextract
         celt
+        certbot-full
+        cewl
         chmlib
         chntpw
         clang
@@ -1901,6 +1896,8 @@ in
         inotify-tools
         jellyfin-media-player
         jfsutils
+        john
+        johnny
         jq
         jxrlib
         keepassxc
@@ -1974,6 +1971,8 @@ in
         masscan
         massdns
         mattermost-desktop
+        mdk3-master
+        medusa
         meld
         mesa-demos
         metasploit
@@ -2023,7 +2022,6 @@ in
         papirus-folders
         parsero
         patchelf
-        pwvucontrol
         pciutils
         pcre
         pdf-parser
@@ -2044,6 +2042,7 @@ in
         proxychains
         ptunnel
         pwnat
+        pwvucontrol
         python313Full
         qalculate-gtk
         qbittorrent
@@ -2100,6 +2099,7 @@ in
         telegram-desktop
         texliveFull
         thc-hydra
+        theharvester
         thermald
         tor-browser
         tree
@@ -2139,6 +2139,7 @@ in
         whatweb
         which
         whois
+        wifite2
         win-spice
         wireshark
         wl-clipboard
@@ -4481,7 +4482,6 @@ in
                 extensions =
                   with pkgs.vscode-extensions;
                   [
-                    RoweWilsonFrederiskHolme.wikitext
                     aaron-bond.better-comments
                     adpyke.codesnap
                     adzero.vscode-sievehighlight
