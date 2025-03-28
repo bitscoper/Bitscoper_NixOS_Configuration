@@ -1800,6 +1800,7 @@ in
         curlFull
         curtail
         d-spy
+        darktable
         dart
         davtest
         dbd
@@ -3254,7 +3255,7 @@ in
               use_nearest_neighbor = true;
             };
 
-            windowrulev2 = [
+            windowrule = [
               "suppressevent maximize, class:.*"
               "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
             ];
@@ -4622,6 +4623,7 @@ in
                 userSettings = {
                   "editor.cursorBlinking" = "phase";
                   "editor.formatOnPaste" = true;
+                  "editor.selectionHighlight" = true;
                   "editor.formatOnSave" = true;
                   "editor.wordWrap" = "on";
 
@@ -4630,6 +4632,7 @@ in
                   "git.autofetch" = true;
                   "git.confirmSync" = false;
                   "git.enableSmartCommit" = true;
+                  "git.openRepositoryInParentFolders" = "always";
 
                   "telemetry.telemetryLevel" = "off";
 
