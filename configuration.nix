@@ -1968,7 +1968,6 @@ in
         lzop
         macchanger
         magicrescue
-        maltego
         masscan
         massdns
         mattermost-desktop
@@ -4738,50 +4737,6 @@ in
             settings = { };
 
             extraConfig = '''';
-          };
-
-          freetube = {
-            enable = true;
-            package = pkgs.freetube;
-
-            settings = {
-              currentLocale = "en-US";
-              baseTheme = "dracula";
-              landingPage = "subscriptions";
-              region = "BD";
-              enableSearchSuggestions = true;
-              displayVideoPlayButton = true;
-
-              checkForUpdates = true;
-              checkForBlogPosts = false;
-              fetchSubscriptionsAutomatically = true;
-
-              rememberHistory = false;
-              rememberSearchHistory = false;
-              saveVideoHistoryWithLastViewedPlaylist = false;
-              saveWatchedProgress = false;
-
-              defaultVideoFormat = "dash";
-              defaultQuality = "1080";
-
-              downloadBehavior = "open";
-              externalPlayer = "vlc";
-
-              enableScreenshot = true;
-              screenshotFormat = "webp";
-              screenshotQuality = 100;
-
-              useSponsorBlock = true;
-              sponsorBlockShowSkippedToast = true;
-              sponsorBlockFiller.skip = "showInSeekBar";
-              sponsorBlockInteraction.skip = "showInSeekBar";
-              sponsorBlockIntro.skip = "showInSeekBar";
-              sponsorBlockMusicOffTopic.skip = "showInSeekBar";
-              sponsorBlockOutro.skip = "showInSeekBar";
-              sponsorBlockRecap.skip = "showInSeekBar";
-              sponsorBlockSelfPromo.skip = "showInSeekBar";
-              sponsorBlockSponsor.skip = "showInSeekBar";
-            };
           };
         };
       }
