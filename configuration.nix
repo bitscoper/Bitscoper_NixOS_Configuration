@@ -1729,7 +1729,10 @@ in
         # ciscoPacketTracer8
         # dmitry
         # ncrack
+        # netexec
         # p0f
+        # platformio
+        # platformio-core
         # reiser4progs
         # scrounge-ntfs
         # wapiti
@@ -1992,7 +1995,6 @@ in
         neovim-remote
         netcat-gnu
         netdiscover
-        netexec
         netmask
         netsniff-ng
         networkmanagerapplet
@@ -2031,8 +2033,6 @@ in
         pixiewps
         pjsip
         pkg-config
-        platformio
-        platformio-core
         playerctl
         podman-compose
         podman-desktop
@@ -4620,22 +4620,24 @@ in
                 enableExtensionUpdateCheck = true;
 
                 userSettings = {
+                  "telemetry.telemetryLevel" = "off";
+
+                  "workbench.startupEditor" = "none";
+
+                  "explorer.confirmDelete" = true;
+
                   "editor.cursorBlinking" = "phase";
                   "editor.formatOnPaste" = true;
                   "editor.selectionHighlight" = true;
                   "editor.formatOnSave" = true;
                   "editor.wordWrap" = "on";
 
-                  "explorer.confirmDelete" = true;
-
                   "git.autofetch" = true;
                   "git.confirmSync" = false;
                   "git.enableSmartCommit" = true;
                   "git.openRepositoryInParentFolders" = "always";
 
-                  "telemetry.telemetryLevel" = "off";
-
-                  "workbench.startupEditor" = "none";
+                  "cmake.ignoreCMakeListsMissing" = true;
                 };
               };
             };
