@@ -588,8 +588,6 @@ in
 
     fwupd.enable = true;
 
-    flatpak.enable = true;
-
     acpid = {
       enable = true;
 
@@ -1736,7 +1734,6 @@ in
         # wapiti
         above
         acl
-        agi
         aircrack-ng
         alac
         amass
@@ -1750,7 +1747,6 @@ in
         aribb24
         aribb25
         arj
-        armitage
         arping
         audacity
         audit
@@ -1763,7 +1759,6 @@ in
         blender
         bloodhound
         bluez-tools
-        bottles
         brightnessctl
         btrfs-progs
         bulk_extractor
@@ -4461,12 +4456,6 @@ in
 # sdkmanager --licenses
 # flutter doctor --android-licenses
 # flutter doctor -v
-
-# sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-# sudo flatpak update
-# sudo flatpak install flathub com.github.tchx84.Flatseal io.github.flattool.Warehouse io.github.giantpinkrobots.flatsweep com.icanblink.blink
-# sudo flatpak uninstall --unused
-# sudo flatpak repair
 
 # FIXME: 05ac-033e-Gamepad > Rumble
 # FIXME: Hyprpaper Delay
