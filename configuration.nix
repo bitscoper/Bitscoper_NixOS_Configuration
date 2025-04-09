@@ -1522,7 +1522,7 @@ in
         # customRC = '''';
       };
 
-      defaultEditor = false;
+      defaultEditor = true;
     };
 
     thunderbird = {
@@ -1731,8 +1731,6 @@ in
         # ncrack
         # netexec
         # p0f
-        # platformio
-        # platformio-core
         # reiser4progs
         # scrounge-ntfs
         # wapiti
@@ -1898,7 +1896,6 @@ in
         image-roll
         inkscape
         inotify-tools
-        jellyfin-media-player
         jfsutils
         john
         johnny
@@ -1973,7 +1970,6 @@ in
         magicrescue
         masscan
         massdns
-        mattermost-desktop
         mdk3-master
         medusa
         meld
@@ -2033,11 +2029,12 @@ in
         pixiewps
         pjsip
         pkg-config
+        platformio
+        platformio-core
         playerctl
         podman-compose
         podman-desktop
         podman-tui
-        postman
         powersploit
         proxychains
         ptunnel
@@ -2109,7 +2106,6 @@ in
         udiskie
         udptunnel
         unar
-        undollar
         unicode-emoji
         universal-android-debloater
         unix-privesc-check
@@ -2122,7 +2118,6 @@ in
         virtiofsd
         vlc
         vlc-bittorrent
-        vscode-js-debug
         vulkan-tools
         wafw00f
         wavpack
@@ -2403,102 +2398,6 @@ in
       # https://www.iana.org/assignments/media-types/media-types.xhtml # Excluding "application/x-*" and "x-scheme-handler/*"
       defaultApplications = {
         "inode/directory" = "nautilus.desktop";
-
-        "text/1d-interleaved-parityfec" = "codium.desktop";
-        "text/RED" = "codium.desktop";
-        "text/SGML" = "codium.desktop";
-        "text/cache-manifest" = "codium.desktop";
-        "text/calendar" = "codium.desktop";
-        "text/cql" = "codium.desktop";
-        "text/cql-expression" = "codium.desktop";
-        "text/cql-identifier" = "codium.desktop";
-        "text/css" = "codium.desktop";
-        "text/csv" = "codium.desktop";
-        "text/csv-schema" = "codium.desktop";
-        "text/directory" = "codium.desktop";
-        "text/dns" = "codium.desktop";
-        "text/ecmascript" = "codium.desktop";
-        "text/encaprtp" = "codium.desktop";
-        "text/enriched" = "codium.desktop";
-        "text/fhirpath" = "codium.desktop";
-        "text/flexfec" = "codium.desktop";
-        "text/fwdred" = "codium.desktop";
-        "text/gff3" = "codium.desktop";
-        "text/grammar-ref-list" = "codium.desktop";
-        "text/hl7v2" = "codium.desktop";
-        "text/html" = "codium.desktop";
-        "text/javascript" = "codium.desktop";
-        "text/jcr-cnd" = "codium.desktop";
-        "text/markdown" = "codium.desktop";
-        "text/mizar" = "codium.desktop";
-        "text/n3" = "codium.desktop";
-        "text/parameters" = "codium.desktop";
-        "text/parityfec" = "codium.desktop";
-        "text/plain" = "codium.desktop";
-        "text/provenance-notation" = "codium.desktop";
-        "text/prs.fallenstein.rst" = "codium.desktop";
-        "text/prs.lines.tag" = "codium.desktop";
-        "text/prs.prop.logic" = "codium.desktop";
-        "text/prs.texi" = "codium.desktop";
-        "text/raptorfec" = "codium.desktop";
-        "text/rfc822-headers" = "codium.desktop";
-        "text/richtext" = "codium.desktop";
-        "text/rtf" = "codium.desktop";
-        "text/rtp-enc-aescm128" = "codium.desktop";
-        "text/rtploopback" = "codium.desktop";
-        "text/rtx" = "codium.desktop";
-        "text/shaclc" = "codium.desktop";
-        "text/shex" = "codium.desktop";
-        "text/spdx" = "codium.desktop";
-        "text/strings" = "codium.desktop";
-        "text/t140" = "codium.desktop";
-        "text/tab-separated-values" = "codium.desktop";
-        "text/troff" = "codium.desktop";
-        "text/turtle" = "codium.desktop";
-        "text/ulpfec" = "codium.desktop";
-        "text/uri-list" = "codium.desktop";
-        "text/vcard" = "codium.desktop";
-        "text/vnd.DMClientScript" = "codium.desktop";
-        "text/vnd.IPTC.NITF" = "codium.desktop";
-        "text/vnd.IPTC.NewsML" = "codium.desktop";
-        "text/vnd.a" = "codium.desktop";
-        "text/vnd.abc" = "codium.desktop";
-        "text/vnd.ascii-art" = "codium.desktop";
-        "text/vnd.curl" = "codium.desktop";
-        "text/vnd.debian.copyright" = "codium.desktop";
-        "text/vnd.dvb.subtitle" = "codium.desktop";
-        "text/vnd.esmertec.theme-descriptor" = "codium.desktop";
-        "text/vnd.exchangeable" = "codium.desktop";
-        "text/vnd.familysearch.gedcom" = "codium.desktop";
-        "text/vnd.ficlab.flt" = "codium.desktop";
-        "text/vnd.fly" = "codium.desktop";
-        "text/vnd.fmi.flexstor" = "codium.desktop";
-        "text/vnd.gml" = "codium.desktop";
-        "text/vnd.graphviz" = "codium.desktop";
-        "text/vnd.hans" = "codium.desktop";
-        "text/vnd.hgl" = "codium.desktop";
-        "text/vnd.in3d.3dml" = "codium.desktop";
-        "text/vnd.in3d.spot" = "codium.desktop";
-        "text/vnd.latex-z" = "codium.desktop";
-        "text/vnd.motorola.reflex" = "codium.desktop";
-        "text/vnd.ms-mediapackage" = "codium.desktop";
-        "text/vnd.net2phone.commcenter.command" = "codium.desktop";
-        "text/vnd.radisys.msml-basic-layout" = "codium.desktop";
-        "text/vnd.senx.warpscript" = "codium.desktop";
-        "text/vnd.si.uricatalogue" = "codium.desktop";
-        "text/vnd.sosi" = "codium.desktop";
-        "text/vnd.sun.j2me.app-descriptor" = "codium.desktop";
-        "text/vnd.trolltech.linguist" = "codium.desktop";
-        "text/vnd.vcf" = "codium.desktop";
-        "text/vnd.wap.si" = "codium.desktop";
-        "text/vnd.wap.sl" = "codium.desktop";
-        "text/vnd.wap.wml" = "codium.desktop";
-        "text/vnd.wap.wmlscript" = "codium.desktop";
-        "text/vnd.zoo.kcl" = "codium.desktop";
-        "text/vtt" = "codium.desktop";
-        "text/wgsl" = "codium.desktop";
-        "text/xml" = "codium.desktop";
-        "text/xml-external-parsed-entity" = "codium.desktop";
 
         "image/aces" = "com.github.weclaw1.ImageRoll.desktop";
         "image/apng" = "com.github.weclaw1.ImageRoll.desktop";
@@ -3118,7 +3017,7 @@ in
               "SUPER SHIFT ALT, 0, movetoworkspacesilent, 10"
               "SUPER SHIFT ALT, S, movetoworkspacesilent, special:magic"
 
-              "SUPER SHIFT, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+              "SUPER, C, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
 
               ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/Screenshot_$(date +'%Y-%B-%d_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\""
 
@@ -3131,8 +3030,6 @@ in
               ", XF86Explorer, exec, nautilus"
               "SUPER, E, exec, nautilus"
 
-              "SUPER, F, exec, kitty --hold sh -c \"fastfetch --thread true --detect-version true --logo-preserve-aspect-ratio true --temp-unit c --title-fqdn true --disk-show-regular true --disk-show-external true --disk-show-hidden true --disk-show-subvolumes true --disk-show-readonly true --disk-show-unknown true --physicaldisk-temp true --bluetooth-show-disconnected true --display-precise-refresh-rate true --cpu-temp true --cpu-show-pe-core-count true --cpuusage-separate true --gpu-temp true --gpu-driver-specific true --battery-temp true --localip-show-ipv4 true --localip-show-ipv6 true --localip-show-mac true --localip-show-loop true --localip-show-mtu true --localip-show-speed true --localip-show-prefix-len true --localip-show-all-ips true --localip-show-flags true --wm-detect-plugin true\""
-
               "SUPER, B, exec, kitty sh -c \"btop\""
 
               "SUPER, W, exec, librewolf"
@@ -3141,7 +3038,6 @@ in
               ", XF86Mail, exec, thunderbird"
               "SUPER, M, exec, thunderbird"
 
-              "SUPER, C, exec, codium"
               "SUPER, D, exec, dbeaver"
 
               "SUPER, V, exec, vlc"
@@ -4427,23 +4323,6 @@ in
             enableFishIntegration = true;
           };
 
-          thefuck = {
-            enable = true;
-            package = pkgs.thefuck;
-
-            enableBashIntegration = true;
-            enableFishIntegration = true;
-
-            enableInstantMode = true;
-          };
-
-          fastfetch = {
-            enable = true;
-            package = pkgs.fastfetch;
-
-            settings = { };
-          };
-
           btop = {
             enable = true;
             package = pkgs.btop;
@@ -4470,177 +4349,6 @@ in
             config = { };
 
             extraConfig = '''';
-          };
-
-          vscode = {
-            enable = true;
-            package = pkgs.vscodium;
-            mutableExtensionsDir = false;
-
-            profiles = {
-              default = {
-                extensions =
-                  with pkgs.vscode-extensions;
-                  [
-                    aaron-bond.better-comments
-                    adpyke.codesnap
-                    adzero.vscode-sievehighlight
-                    albymor.increment-selection
-                    alefragnani.bookmarks
-                    alexisvt.flutter-snippets
-                    anweber.vscode-httpyac
-                    bierner.docs-view
-                    bierner.github-markdown-preview
-                    bierner.markdown-mermaid
-                    bradgashler.htmltagwrap
-                    christian-kohler.path-intellisense
-                    codezombiech.gitignore
-                    coolbear.systemd-unit-file
-                    dart-code.dart-code
-                    dart-code.flutter
-                    davidanson.vscode-markdownlint
-                    davidlday.languagetool-linter
-                    dendron.adjust-heading-level
-                    devsense.phptools-vscode
-                    devsense.profiler-php-vscode
-                    dracula-theme.theme-dracula
-                    ecmel.vscode-html-css
-                    editorconfig.editorconfig
-                    edonet.vscode-command-runner
-                    esbenp.prettier-vscode
-                    fabiospampinato.vscode-open-in-github
-                    firefox-devtools.vscode-firefox-debug
-                    formulahendry.auto-close-tag
-                    formulahendry.auto-rename-tag
-                    foxundermoon.shell-format
-                    github.copilot
-                    github.copilot-chat
-                    github.vscode-github-actions
-                    github.vscode-pull-request-github
-                    grapecity.gc-excelviewer
-                    graphql.vscode-graphql
-                    graphql.vscode-graphql-syntax
-                    gruntfuggly.todo-tree
-                    hars.cppsnippets
-                    hbenl.vscode-test-explorer
-                    hediet.vscode-drawio
-                    ibm.output-colorizer
-                    irongeek.vscode-env
-                    james-yu.latex-workshop
-                    jbockle.jbockle-format-files
-                    jnoortheen.nix-ide
-                    jock.svg
-                    kamikillerto.vscode-colorize
-                    llvm-vs-code-extensions.vscode-clangd
-                    mads-hartmann.bash-ide-vscode
-                    mechatroner.rainbow-csv
-                    mishkinf.goto-next-previous-member
-                    moshfeu.compare-folders
-                    ms-azuretools.vscode-docker
-                    ms-kubernetes-tools.vscode-kubernetes-tools
-                    ms-python.black-formatter
-                    ms-python.debugpy
-                    ms-python.isort
-                    ms-python.python
-                    ms-toolsai.datawrangler
-                    ms-toolsai.jupyter
-                    ms-toolsai.jupyter-keymap
-                    ms-toolsai.jupyter-renderers
-                    ms-toolsai.vscode-jupyter-cell-tags
-                    ms-toolsai.vscode-jupyter-slideshow
-                    ms-vscode-remote.remote-containers
-                    ms-vscode-remote.remote-ssh
-                    ms-vscode-remote.remote-ssh-edit
-                    ms-vscode-remote.vscode-remote-extensionpack
-                    ms-vscode.cmake-tools
-                    ms-vscode.cpptools
-                    ms-vscode.hexeditor
-                    ms-vscode.live-server
-                    ms-vscode.makefile-tools
-                    ms-vscode.test-adapter-converter
-                    ms-vsliveshare.vsliveshare
-                    ms-windows-ai-studio.windows-ai-studio
-                    oderwat.indent-rainbow
-                    platformio.platformio-vscode-ide
-                    quicktype.quicktype
-                    redhat.vscode-xml
-                    redhat.vscode-yaml
-                    rubymaniac.vscode-paste-and-indent
-                    ryu1kn.partial-diff
-                    shardulm94.trailing-spaces
-                    skyapps.fish-vscode
-                    spywhere.guides
-                    tailscale.vscode-tailscale
-                    tamasfe.even-better-toml
-                    timonwong.shellcheck
-                    tyriar.sort-lines
-                    usernamehw.errorlens
-                    vincaslt.highlight-matching-tag
-                    visualstudioexptteam.intellicode-api-usage-examples
-                    visualstudioexptteam.vscodeintellicode
-                    vscjava.vscode-gradle
-                    wmaurer.change-case
-                    xdebug.php-debug
-                    zainchen.json
-                  ]
-                  ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-                    {
-                      name = "vscode-serial-monitor";
-                      publisher = "ms-vscode";
-                      version = "0.13.250320001";
-                      sha256 = "Uy/b8Rb1jT+hqHHL06mK8NWKno1AMVfKV/s06uwPMAU=";
-                    }
-                    {
-                      name = "unique-lines";
-                      publisher = "bibhasdn";
-                      version = "1.0.0";
-                      sha256 = "W0ZpZ6+vjkfNfOtekx5NWOFTyxfWAiB0XYcIwHabFPQ=";
-                    }
-                    {
-                      name = "pubspec-assist";
-                      publisher = "jeroen-meijer";
-                      version = "2.3.2";
-                      sha256 = "+Mkcbeq7b+vkuf2/LYT10mj46sULixLNKGpCEk1Eu/0=";
-                    }
-                    {
-                      name = "vscode-sort-json";
-                      publisher = "richie5um2";
-                      version = "1.20.0";
-                      sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
-                    }
-                    {
-                      name = "vscode-print";
-                      publisher = "pdconsec";
-                      version = "1.3.0";
-                      sha256 = "JBSqNLSHr25nlbuIr7K0o+oBCD9LfAp/wW/bmeUBfao=";
-                    }
-                  ];
-
-                enableUpdateCheck = true;
-                enableExtensionUpdateCheck = true;
-
-                userSettings = {
-                  "telemetry.telemetryLevel" = "off";
-
-                  "workbench.startupEditor" = "none";
-
-                  "explorer.confirmDelete" = true;
-
-                  "editor.cursorBlinking" = "phase";
-                  "editor.formatOnPaste" = true;
-                  "editor.selectionHighlight" = true;
-                  "editor.formatOnSave" = true;
-                  "editor.wordWrap" = "on";
-
-                  "git.autofetch" = true;
-                  "git.confirmSync" = false;
-                  "git.enableSmartCommit" = true;
-                  "git.openRepositoryInParentFolders" = "always";
-
-                  "cmake.ignoreCMakeListsMissing" = true;
-                };
-              };
-            };
           };
 
           gh = {
