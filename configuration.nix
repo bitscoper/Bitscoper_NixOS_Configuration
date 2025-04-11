@@ -954,10 +954,10 @@ in
       };
 
       authentication = pkgs.lib.mkOverride 10 ''
-        local all all trust
+        local all all md5
         host all all 0.0.0.0/0 md5
         host all all ::/0 md5
-        local replication all trust
+        local replication all md5
         host replication all 0.0.0.0/0 md5
         host replication all ::/0 md5
       '';
@@ -1394,7 +1394,11 @@ in
 
       shellInit = '''';
 
-      interactiveShellInit = '''';
+      interactiveShellInit = ''
+        if command -q nix-your-shell
+         nix-your-shell fish | source
+        end
+      '';
     };
 
     direnv = {
@@ -1535,10 +1539,8 @@ in
     steam = {
       enable = true;
       extraCompatPackages = with pkgs; [
-        proton-ge-bin
-        steam-play-none
+
       ];
-      protontricks.enable = true;
 
       localNetworkGameTransfers.openFirewall = true;
       remotePlay.openFirewall = true;
@@ -1942,7 +1944,6 @@ in
         libuuid
         libva-utils
         libvirt
-        libvncserver
         libvpx
         libwebp
         libxfs
@@ -1976,26 +1977,26 @@ in
         mitmproxy
         mixxx
         monkeysAudio
-        motrix
         mozlz4a
         msfpc
         mtools
         nautilus
         nautilus-open-any-terminal
         nbtscan
-        neovim-remote
         netcat-gnu
         netdiscover
         netmask
         netsniff-ng
         networkmanagerapplet
         nikto
+        nil
         nilfs-utils
         ninja
         nix-bash-completions
         nix-diff
         nix-index
         nix-info
+        nixd
         nixfmt-rfc-style
         nixos-icons
         nixpkgs-lint
@@ -2019,7 +2020,6 @@ in
         pcre
         pdf-parser
         pdfid
-        pgadmin4-desktopmode
         php84
         pixiewps
         pjsip
@@ -2135,7 +2135,6 @@ in
         wl-clipboard
         woff2
         wordlists
-        wordpress
         wpscan
         x264
         x265
