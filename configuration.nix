@@ -179,7 +179,6 @@ in
 
     settings = {
       experimental-features = [
-        "flakes"
         "nix-command"
       ];
 
@@ -204,10 +203,6 @@ in
     config = {
       allowUnfree = true;
     };
-
-    # overlays = [
-    #
-    # ];
   };
 
   appstream.enable = true;
@@ -389,6 +384,7 @@ in
 
     polkit = {
       enable = true;
+      package = pkgs.polkit;
     };
 
     rtkit.enable = true;
@@ -507,7 +503,10 @@ in
       };
     };
 
-    rtl-sdr.enable = true;
+    rtl-sdr = {
+      enable = true;
+      package = pkgs.rtl-sdr;
+    };
 
     sane = {
       enable = true;
@@ -526,7 +525,10 @@ in
       qemu = {
         package = pkgs.qemu_kvm;
 
-        swtpm.enable = true;
+        swtpm = {
+          enable = true;
+          package = pkgs.swtpm;
+        };
 
         ovmf = {
           enable = true;
@@ -547,7 +549,9 @@ in
 
     podman = {
       enable = true;
+      package = pkgs.podman;
       dockerCompat = true;
+
       defaultNetwork.settings.dns_enabled = true;
     };
 
@@ -586,7 +590,10 @@ in
       ];
     };
 
-    fwupd.enable = true;
+    fwupd = {
+      enable = true;
+      package = pkgs.fwupd;
+    };
 
     acpid = {
       enable = true;
@@ -598,7 +605,10 @@ in
       logEvents = false;
     };
 
-    power-profiles-daemon.enable = true;
+    power-profiles-daemon = {
+      enable = true;
+      package = pkgs.power-profiles-daemon;
+    };
 
     logind = {
       killUserProcesses = true;
@@ -696,6 +706,8 @@ in
 
     udisks2 = {
       enable = true;
+      package = pkgs.udisks2;
+
       mountOnMedia = false;
     };
 
@@ -731,7 +743,9 @@ in
 
     pipewire = {
       enable = true;
+      package = pkgs.pipewire;
       systemWide = false;
+
       socketActivation = true;
       audio.enable = true;
 
@@ -838,6 +852,7 @@ in
 
     avahi = {
       enable = true;
+      package = pkgs.avahi;
 
       ipv4 = true;
       ipv6 = true;
@@ -864,6 +879,8 @@ in
 
     bind = {
       enable = false;
+      package = pkgs.bind;
+
       listenOn = [
         "any"
       ];
@@ -871,10 +888,12 @@ in
       listenOnIpv6 = [
         "any"
       ];
+
       cacheNetworks = [
         "127.0.0.0/24"
         "::1/128"
       ];
+
       extraOptions = ''
         recursion no;
       '';
@@ -882,6 +901,7 @@ in
 
     openssh = {
       enable = true;
+      package = pkgs.openssh;
 
       listenAddresses = [
         {
@@ -912,6 +932,8 @@ in
 
     cockpit = {
       enable = true;
+      package = pkgs.cockpit;
+
       port = 9090;
       openFirewall = true;
     };
@@ -1088,11 +1110,15 @@ in
 
     jellyfin = {
       enable = true;
+      package = pkgs.jellyfin;
+
       openFirewall = true;
     };
 
     ollama = {
       enable = true;
+      package = pkgs.ollama;
+
       host = "0.0.0.0";
       port = 11434;
       openFirewall = true;
@@ -1100,6 +1126,7 @@ in
 
     open-webui = {
       enable = true;
+      package = pkgs.open-webui;
 
       host = "0.0.0.0";
       port = 11111;
@@ -1157,10 +1184,13 @@ in
       openFirewall = true;
     };
 
-    wordpress = { };
+    wordpress = {
+      sites = { };
+    };
 
     asterisk = {
       enable = true;
+      package = pkgs.asterisk;
 
       confFiles = {
         "pjsip.conf" = ''
@@ -1258,6 +1288,8 @@ in
 
     tailscale = {
       enable = true;
+      package = pkgs.tailscale;
+
       disableTaildrop = false;
 
       port = 0; # 0 = Automatic
@@ -1326,6 +1358,7 @@ in
 
     logrotate = {
       enable = true;
+
       checkConfig = true;
       allowNetworking = true;
     };
@@ -1336,6 +1369,8 @@ in
 
     nix-ld = {
       enable = true;
+      package = pkgs.nix-ld;
+
       libraries = with pkgs; [
         # libepoxy
         glib.out
@@ -1347,22 +1382,33 @@ in
 
     appimage = {
       enable = true;
+      package = pkgs.appimage-run;
+
       binfmt = true;
     };
 
-    uwsm.enable = true;
+    uwsm = {
+      enable = true;
+      package = pkgs.uwsm;
+    };
 
     hyprland = {
       enable = true;
-      withUWSM = true;
+      package = pkgs.hyprland;
       portalPackage = pkgs.xdg-desktop-portal-hyprland;
+
+      withUWSM = true;
       xwayland.enable = true;
     };
 
     xwayland.enable = true;
 
     bash = {
-      completion.enable = true;
+      completion = {
+        enable = true;
+        package = pkgs.bash-completion;
+      };
+
       enableLsColors = true;
 
       shellAliases = { };
@@ -1378,6 +1424,7 @@ in
 
     fish = {
       enable = true;
+      package = pkgs.fish;
 
       vendor = {
         config.enable = true;
@@ -1403,6 +1450,7 @@ in
 
     direnv = {
       enable = true;
+      package = pkgs.direnv;
 
       nix-direnv.enable = true;
       loadInNixShell = true;
@@ -1416,6 +1464,8 @@ in
     };
 
     nix-index = {
+      package = pkgs.nix-index;
+
       enableBashIntegration = true;
       enableFishIntegration = true;
     };
@@ -1423,15 +1473,20 @@ in
     java = {
       enable = true;
       package = pkgs.jdk23;
+
       binfmt = true;
     };
 
     ssh = {
+      package = pkgs.openssh;
+
       startAgent = true;
       agentTimeout = null;
     };
 
     gnupg = {
+      package = pkgs.gnupg;
+
       agent = {
         enable = true;
 
@@ -1462,6 +1517,8 @@ in
 
       lfs = {
         enable = true;
+        package = pkgs.git-lfs;
+
         enablePureSSHTransfer = true;
       };
 
@@ -1502,18 +1559,11 @@ in
       settings = { };
     };
 
-    nano = {
-      enable = true;
-      nanorc = ''
-        set linenumbers
-        set softwrap
-        set indicator
-        set autoindent
-      '';
-    };
+    nano.enable = false;
 
     neovim = {
       enable = true;
+      # package = pkgs.neovim-unwrapped;
 
       viAlias = true;
       vimAlias = true;
@@ -1534,10 +1584,18 @@ in
       preferences = { };
     };
 
-    wireshark.enable = true;
+    wireshark = {
+      enable = true;
+      package = pkgs.wireshark;
+
+      dumpcap.enable = true;
+      usbmon.enable = true;
+    };
 
     steam = {
       enable = true;
+      package = pkgs.steam;
+
       extraCompatPackages = with pkgs; [
 
       ];
@@ -1549,6 +1607,8 @@ in
 
     localsend = {
       enable = true;
+      package = pkgs.localsend;
+
       openFirewall = true;
     };
 
@@ -1745,7 +1805,6 @@ in
         android-tools
         anydesk
         apktool
-        appimage-run
         aribb24
         aribb25
         arj
@@ -2131,10 +2190,8 @@ in
         whois
         wifite2
         win-spice
-        wireshark
         wl-clipboard
         woff2
-        wordlists
         wpscan
         x264
         x265
