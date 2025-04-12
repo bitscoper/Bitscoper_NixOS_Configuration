@@ -3,7 +3,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }:
 let
@@ -89,6 +88,7 @@ in
 
       systemd = {
         enable = true;
+        package = config.systemd.package;
       };
 
       network.ssh.enable = true;
@@ -98,9 +98,9 @@ in
 
     kernelPackages = pkgs.linuxPackages_zen;
 
-    extraModulePackages = with config.boot.kernelPackages; [
-      xpadneo
-    ];
+    # extraModulePackages = with config.boot.kernelPackages; [
+
+    # ];
 
     kernelModules = [
       "at24"
@@ -208,6 +208,10 @@ in
   appstream.enable = true;
 
   i18n = {
+    supportedLocales = [
+      "all"
+    ];
+
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
       LC_ADDRESS = config.i18n.defaultLocale;
@@ -220,9 +224,6 @@ in
       LC_TELEPHONE = config.i18n.defaultLocale;
       LC_TIME = config.i18n.defaultLocale;
     };
-    supportedLocales = [
-      "all"
-    ];
 
     inputMethod = {
       enable = true;
@@ -248,6 +249,7 @@ in
 
     networkmanager = {
       enable = true;
+      package = pkgs.networkmanager;
 
       ethernet.macAddress = "permanent";
 
@@ -377,6 +379,7 @@ in
 
     sudo = {
       enable = true;
+      package = pkgs.sudo;
 
       execWheelOnly = true;
       wheelNeedsPassword = true;
@@ -394,7 +397,7 @@ in
     };
 
     audit = {
-      enable = true;
+      enable = false;
     };
   };
 
@@ -514,13 +517,12 @@ in
     };
 
     steam-hardware.enable = true;
-    xone.enable = true;
-    xpadneo.enable = true;
   };
 
   virtualisation = {
     libvirtd = {
       enable = true;
+      package = pkgs.libvirt;
 
       qemu = {
         package = pkgs.qemu_kvm;
@@ -561,6 +563,8 @@ in
   };
 
   systemd = {
+    package = pkgs.systemd;
+
     packages = with pkgs; [
       cloudflare-warp
       hardinfo2
@@ -578,6 +582,8 @@ in
   services = {
     dbus = {
       enable = true;
+      dbusPackage = pkgs.dbus;
+
       implementation = "broker";
     };
 
@@ -632,6 +638,7 @@ in
 
     fprintd = {
       enable = true;
+      package = if config.services.fprintd.tod.enable then pkgs.fprintd-tod else pkgs.fprintd;
       # tod = {
       #   enable = true;
       #   driver = ;
@@ -746,7 +753,6 @@ in
       package = pkgs.pipewire;
       systemWide = false;
 
-      socketActivation = true;
       audio.enable = true;
 
       alsa.enable = true;
@@ -754,8 +760,11 @@ in
       pulse.enable = true;
       jack.enable = true;
 
+      socketActivation = true;
+
       wireplumber = {
         enable = true;
+        package = pkgs.wireplumber;
 
         extraConfig.bluetoothEnhancements = {
           "monitor.bluez.properties" = {
@@ -807,22 +816,27 @@ in
 
     printing = {
       enable = true;
+      package = pkgs.cups;
+
+      drivers = with pkgs; [
+        gutenprint
+        gutenprintBin
+      ];
+
+      cups-pdf.enable = true;
 
       listenAddresses = [
         "*:631"
       ];
-      browsing = true;
-      webInterface = true;
+
       allowFrom = [
         "all"
       ];
+
+      browsing = true;
+      webInterface = true;
+
       defaultShared = true;
-
-      cups-pdf.enable = true;
-      drivers = with pkgs; [
-        gutenprint
-      ];
-
       startWhenNeeded = true;
 
       extraConf = ''
@@ -1298,6 +1312,7 @@ in
 
     tor = {
       enable = false;
+      package = pkgs.tor;
 
       relay = {
         enable = false;
@@ -1542,7 +1557,10 @@ in
 
     system-config-printer.enable = true;
 
-    virt-manager.enable = true;
+    virt-manager = {
+      enable = true;
+      package = pkgs.virt-manager;
+    };
 
     bat = {
       enable = true;
@@ -1596,9 +1614,9 @@ in
       enable = true;
       package = pkgs.steam;
 
-      extraCompatPackages = with pkgs; [
+      # extraCompatPackages = with pkgs; [
 
-      ];
+      # ];
 
       localNetworkGameTransfers.openFirewall = true;
       remotePlay.openFirewall = true;
@@ -1787,9 +1805,8 @@ in
         # amrwb
         # appimagekit
         # ciscoPacketTracer8
-        # dmitry
         # ncrack
-        # netexec
+        # oterm
         # p0f
         # reiser4progs
         # scrounge-ntfs
@@ -1810,7 +1827,6 @@ in
         arj
         arping
         audacity
-        audit
         autopsy
         avrdude
         bettercap
@@ -1850,7 +1866,6 @@ in
         crowbar
         crunch
         cryptsetup
-        cups
         cups-filters
         cups-pdf-to-pdf
         cups-printers
@@ -1869,6 +1884,7 @@ in
         dirbuster
         dmg2img
         dmidecode
+        dmitry
         dns2tcp
         dnschef
         dnsenum
@@ -1980,7 +1996,6 @@ in
         libdvdnav
         libdvdread
         libepoxy
-        libfprint
         libfreeaptx
         libftdi1
         libgcc
@@ -2044,6 +2059,7 @@ in
         nbtscan
         netcat-gnu
         netdiscover
+        netexec
         netmask
         netsniff-ng
         networkmanagerapplet
@@ -2280,7 +2296,7 @@ in
             DropdownSelectedBackgroundColor = dracula_theme.hex.current_line;
             DropdownTextColor = dracula_theme.hex.foreground;
 
-            HeaderText = "Welcome";
+            HeaderText = "";
 
             HourFormat = "\"hh:mm A\"";
             DateFormat = "\"MMMM dd, yyyy\"";
@@ -2356,9 +2372,9 @@ in
         zip
         zlib
       ])
-      ++ (with php84Packages; [
+      # ++ (with php84Packages; [
 
-      ])
+      # ])
       ++ (with python313Packages; [
         bangla
         black
@@ -2371,7 +2387,6 @@ in
         pyserial
         requests
         seaborn
-        tkinter
       ])
       ++ (with texlivePackages; [
         bangla
@@ -2861,8 +2876,13 @@ in
 
     man = {
       enable = true;
+
+      man-db = {
+        enable = true;
+        package = pkgs.man-db;
+      };
+
       generateCaches = true;
-      man-db.enable = true;
     };
 
     nixos = {
@@ -2894,6 +2914,7 @@ in
         "adbusers"
         "audio"
         "dialout"
+        "hardinfo2"
         "input"
         "jellyfin"
         "kvm"
@@ -2951,9 +2972,9 @@ in
 
           preferXdgDirectories = true;
 
-          packages = with pkgs; [
+          # packages = with pkgs; [
 
-          ];
+          # ];
 
           sessionVariables = { };
 
@@ -2968,6 +2989,7 @@ in
 
         wayland.windowManager.hyprland = {
           enable = true;
+          package = pkgs.hyprland;
 
           systemd = {
             enable = false;
@@ -3388,6 +3410,7 @@ in
         services = {
           mako = {
             enable = true;
+            package = pkgs.mako;
 
             actions = true;
 
@@ -3433,6 +3456,7 @@ in
 
           hyprpaper = {
             enable = true;
+            package = pkgs.hyprpaper;
 
             settings = {
               ipc = "on";
@@ -3453,6 +3477,7 @@ in
         programs = {
           hyprlock = {
             enable = true;
+            package = pkgs.hyprlock;
 
             sourceFirst = true;
 
@@ -3627,9 +3652,9 @@ in
             {
               enable = true;
               package = pkgs.rofi-wayland;
-              plugins = with pkgs; [
+              # plugins = with pkgs; [
 
-              ];
+              # ];
 
               cycle = false;
               terminal = "${pkgs.kitty}/bin/kitty";
@@ -3650,6 +3675,8 @@ in
 
           waybar = {
             enable = true;
+            package = pkgs.waybar;
+
             systemd = {
               enable = true;
               # target = ;
@@ -4257,6 +4284,7 @@ in
 
           kitty = {
             enable = true;
+            package = pkgs.kitty;
 
             shellIntegration = {
               mode = "no-rc";
@@ -4358,6 +4386,7 @@ in
 
           dircolors = {
             enable = true;
+            package = pkgs.coreutils;
 
             enableBashIntegration = true;
             enableFishIntegration = true;
@@ -4405,9 +4434,9 @@ in
           gh = {
             enable = true;
             package = pkgs.gh;
-            extensions = with pkgs; [
+            # extensions = with pkgs; [
 
-            ];
+            # ];
 
             gitCredentialHelper = {
               enable = true;
@@ -4447,9 +4476,9 @@ in
               en_US
               en-us
             ];
-            nativeMessagingHosts = with pkgs; [
+            # nativeMessagingHosts = with pkgs; [
 
-            ];
+            # ];
 
             commandLineArgs = [
 
@@ -4460,11 +4489,11 @@ in
             enable = true;
             package = pkgs.obs-studio;
             plugins = with pkgs.obs-studio-plugins; [
-              # obs-color-monitor
               droidcam-obs
               input-overlay
               obs-3d-effect
               obs-backgroundremoval
+              obs-color-monitor
               obs-composite-blur
               obs-freeze-filter
               obs-gradient-source
@@ -4514,6 +4543,7 @@ in
 # flutter doctor -v
 
 # FIXME: 05ac-033e-Gamepad > Rumble
+# FIXME: ELAN7001 SPI Fingerprint Sensor
 # FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
 # FIXME: hardinfo2
