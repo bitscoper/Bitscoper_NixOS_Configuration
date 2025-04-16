@@ -1641,6 +1641,15 @@ in
               region = config.i18n.defaultLocale;
             };
 
+            "org/gnome/desktop/privacy" = {
+              remember-app-usage = false;
+              remember-recent-files = false;
+              remove-old-temp-files = true;
+              remove-old-trash-files = true;
+              report-technical-problems = false;
+              send-software-usage-stats = false;
+              usb-protection = true;
+            };
             "org/gtk/gtk4/settings/file-chooser" = {
               sort-directories-first = true;
             };
@@ -1857,6 +1866,7 @@ in
         clang-tools
         clinfo
         cliphist
+        cloc
         cloudflare-warp
         cmake
         codec2
@@ -2013,7 +2023,6 @@ in
         libosinfo
         libportal
         libqalculate
-        libreoffice-fresh
         libusb1
         libuuid
         libva-utils
@@ -2049,7 +2058,6 @@ in
         minicom
         miredo
         mitmproxy
-        mixxx
         monkeysAudio
         mozlz4a
         msfpc
@@ -2081,6 +2089,7 @@ in
         nuclei
         onesixtyone
         onionshare-gui
+        onlyoffice-desktopeditors
         opencore-amr
         openh264
         openjpeg
@@ -2802,20 +2811,26 @@ in
         "video/vnd.vivo" = "vlc.desktop";
         "video/vnd.youtube.yt" = "vlc.desktop";
 
-        "application/vnd.oasis.opendocument.text" = "writer.desktop"; # .odt
-        "application/msword" = "writer.desktop"; # .doc
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = "writer.desktop"; # .docx
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.template" = "writer.desktop"; # .dotx
+        "application/vnd.oasis.opendocument.text" = "onlyoffice-desktopeditors.desktop"; # .odt
+        "application/msword" = "onlyoffice-desktopeditors.desktop"; # .doc
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" =
+          "onlyoffice-desktopeditors.desktop"; # .docx
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.template" =
+          "onlyoffice-desktopeditors.desktop"; # .dotx
 
-        "application/vnd.oasis.opendocument.spreadsheet" = "calc.desktop"; # .ods
-        "application/vnd.ms-excel" = "calc.desktop"; # .xls
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "calc.desktop"; # .xlsx
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.template" = "calc.desktop"; # .xltx
+        "application/vnd.oasis.opendocument.spreadsheet" = "onlyoffice-desktopeditors.desktop"; # .ods
+        "application/vnd.ms-excel" = "onlyoffice-desktopeditors.desktop"; # .xls
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" =
+          "onlyoffice-desktopeditors.desktop"; # .xlsx
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.template" =
+          "onlyoffice-desktopeditors.desktop"; # .xltx
 
-        "application/vnd.oasis.opendocument.presentation" = "impress.desktop"; # .odp
-        "application/vnd.ms-powerpoint" = "impress.desktop"; # .ppt
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop"; # .pptx
-        "application/vnd.openxmlformats-officedocument.presentationml.template" = "impress.desktop"; # .potx
+        "application/vnd.oasis.opendocument.presentation" = "onlyoffice-desktopeditors.desktop"; # .odp
+        "application/vnd.ms-powerpoint" = "onlyoffice-desktopeditors.desktop"; # .ppt
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation" =
+          "onlyoffice-desktopeditors.desktop"; # .pptx
+        "application/vnd.openxmlformats-officedocument.presentationml.template" =
+          "onlyoffice-desktopeditors.desktop"; # .potx
 
         "application/pdf" = "librewolf.desktop";
 
@@ -3034,6 +3049,8 @@ in
               "setfacl --modify user:jellyfin:--x ~ & adb start-server &"
 
               "systemctl --user start warp-taskbar"
+
+              "rm -rf ~/.local/share/applications/waydroid.*"
             ];
 
             bind = [
