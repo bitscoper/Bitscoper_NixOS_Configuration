@@ -1577,22 +1577,14 @@ in
       settings = { };
     };
 
-    nano.enable = false;
-
-    neovim = {
+    nano = {
       enable = true;
-      # package = pkgs.neovim-unwrapped;
-
-      viAlias = true;
-      vimAlias = true;
-
-      withPython3 = true;
-
-      configure = {
-        # customRC = '''';
-      };
-
-      defaultEditor = true;
+      nanorc = ''
+        set linenumbers
+        set softwrap
+        set indicator
+        set autoindent
+      '';
     };
 
     thunderbird = {
@@ -1668,6 +1660,15 @@ in
                 "date_modified"
                 "none"
               ];
+            };
+
+            "io/missioncenter/MissionCenter" = {
+              apps-page-core-count-affects-percentages = true;
+              apps-page-merged-process-stats = false;
+              apps-page-remember-sorting = false;
+              performance-page-network-dynamic-scaling = true;
+              performance-smooth-graphs = false;
+              window-interface-style = "dark";
             };
 
             "org/virt-manager/virt-manager" = {
@@ -2037,7 +2038,6 @@ in
         lshw
         lsof
         lsscsi
-        lua-language-server
         lvm2
         lynis
         lz4
@@ -2057,6 +2057,7 @@ in
         mimikatz
         minicom
         miredo
+        mission-center
         mitmproxy
         monkeysAudio
         mozlz4a
@@ -2072,14 +2073,12 @@ in
         netsniff-ng
         networkmanagerapplet
         nikto
-        nil
         nilfs-utils
         ninja
         nix-bash-completions
         nix-diff
         nix-index
         nix-info
-        nixd
         nixfmt-rfc-style
         nixos-icons
         nixpkgs-lint
@@ -2113,7 +2112,6 @@ in
         playerctl
         podman-compose
         podman-desktop
-        podman-tui
         powersploit
         proxychains
         ptunnel
@@ -2404,11 +2402,6 @@ in
         quran-bn
         quran-en
       ])
-      ++ (with lua51Packages; [
-        # Old Version Pinned for Neovim
-        lua
-        luarocks
-      ])
       ++ (with tree-sitter-grammars; [
         tree-sitter-bash
         tree-sitter-c
@@ -2428,12 +2421,10 @@ in
         tree-sitter-json
         tree-sitter-json5
         tree-sitter-latex
-        tree-sitter-lua
         tree-sitter-make
         tree-sitter-markdown
         tree-sitter-markdown-inline
         tree-sitter-nix
-        tree-sitter-org-nvim
         tree-sitter-php
         tree-sitter-python
         tree-sitter-query
@@ -2441,7 +2432,6 @@ in
         tree-sitter-scheme
         tree-sitter-sql
         tree-sitter-toml
-        tree-sitter-vim
         tree-sitter-yaml
       ])
       ++ (with ghidra-extensions; [
@@ -3118,9 +3108,9 @@ in
               "SUPER ALT, T, exec, kitty sh -c \"bash\""
 
               ", XF86Explorer, exec, nautilus"
-              "SUPER, E, exec, nautilus"
+              "SUPER, F, exec, nautilus"
 
-              "SUPER, B, exec, kitty sh -c \"btop\""
+              "SUPER, U, exec, missioncenter"
 
               "SUPER, W, exec, librewolf"
               "SUPER ALT, W, exec, librewolf --private-window"
@@ -3128,6 +3118,7 @@ in
               ", XF86Mail, exec, thunderbird"
               "SUPER, M, exec, thunderbird"
 
+              "SUPER, E, exec, zeditor"
               "SUPER, D, exec, dbeaver"
 
               "SUPER, V, exec, vlc"
@@ -3982,7 +3973,7 @@ in
                   tooltip = true;
                   tooltip-format = "Total: {specific_total} GB\nUsed: {specific_used} GB ({percentage_used}%)\nFree: {specific_free} GB ({percentage_free}%)";
 
-                  on-click = "kitty sh -c \"btop\"";
+                  on-click = "missioncenter";
                 };
 
                 memory = {
@@ -3993,7 +3984,7 @@ in
                   tooltip = true;
                   tooltip-format = "Used RAM: {used} GiB ({percentage}%)\nUsed Swap: {swapUsed} GiB ({swapPercentage}%)\nAvailable RAM: {avail} GiB\nAvailable Swap: {swapAvail} GiB";
 
-                  on-click = "kitty sh -c \"btop\"";
+                  on-click = "missioncenter";
                 };
 
                 cpu = {
@@ -4003,7 +3994,7 @@ in
 
                   tooltip = true;
 
-                  on-click = "kitty sh -c \"btop\"";
+                  on-click = "missioncenter";
                 };
 
                 battery = {
@@ -4035,8 +4026,6 @@ in
 
                   tooltip = true;
                   tooltip-format = "Capacity: {capacity}%\nPower: {power} W\n{timeTo}\nCycles: {cycles}\nHealth: {health}%";
-
-                  on-click = "kitty sh -c \"btop\"";
                 };
               };
 
@@ -4420,15 +4409,6 @@ in
             enableFishIntegration = true;
           };
 
-          btop = {
-            enable = true;
-            package = pkgs.btop;
-
-            settings = { };
-
-            extraConfig = '''';
-          };
-
           librewolf = {
             enable = true;
             languagePacks = [
@@ -4438,6 +4418,272 @@ in
             settings = {
               "privacy.resistFingerprinting" = false;
             };
+          };
+
+          zed-editor = {
+            enable = true;
+            package = pkgs.zed-editor;
+
+            extraPackages = with pkgs; [
+              nixd
+              nil
+            ];
+
+            extensions = [
+              "basher"
+              "csv"
+              "dart"
+              "docker-compose"
+              "dockerfile"
+              "dracula"
+              "env"
+              "fish"
+              "flutter-snippets"
+              "graphql"
+              "http"
+              "hyprlang"
+              "ini"
+              "latex"
+              "live-server"
+              "log"
+              "make"
+              "mermaid"
+              "nix"
+              "php"
+              "rainbow-csv"
+              "rpmspec"
+              "scheme"
+              "sql"
+              "ssh-config"
+              "ultralytics-snippets"
+              "unicode"
+              "xml"
+            ];
+
+            userSettings = {
+              features = {
+                copilot = true;
+              };
+
+              load_direnv = "shell_hook";
+
+              enable_language_server = true;
+
+              languages = {
+                Nix = {
+                  language_servers = [
+                    "nil"
+                    "!nixd"
+                  ];
+
+                  formatter = {
+                    external = {
+                      command = "nixfmt";
+                    };
+                  };
+                };
+              };
+
+              lsp = {
+                nil = {
+                  initialization_options = {
+                    formatting = {
+                      command = [
+                        "nixfmt"
+                      ];
+                    };
+                  };
+                };
+              };
+
+              diagnostics = {
+                include_warnings = true;
+
+                inline = {
+                  enabled = true;
+                };
+              };
+
+              git = { };
+
+              telemetry = {
+                diagnostics = false;
+                metrics = false;
+              };
+
+              theme = {
+                mode = "dark";
+                dark = "One Dark";
+                light = "One Light";
+              };
+
+              icon_theme = {
+                mode = "dark";
+                dark = "Zed (Default)";
+                light = "Zed (Default)";
+              };
+
+              ui_font_family = font_name.sans_serif;
+
+              project_panel = {
+                auto_fold_dirs = false;
+                auto_reveal_entries = true;
+                button = true;
+                dock = "left";
+                file_icons = true;
+                folder_icons = true;
+                git_status = true;
+                show_diagnostics = "all";
+
+                indent_guides = {
+                  show = "always";
+                };
+
+                scrollbar = {
+                  show = "always";
+                };
+              };
+
+              outline_panel = {
+                auto_fold_dirs = false;
+                auto_reveal_entries = true;
+                button = true;
+                dock = "left";
+                file_icons = true;
+                folder_icons = true;
+                git_status = true;
+
+                indent_guides = {
+                  show = "always";
+                };
+
+                scrollbar = {
+                  show = "always";
+                };
+              };
+
+              tab_bar = {
+                show = true;
+                show_nav_history_buttons = true;
+                show_tab_bar_buttons = true;
+              };
+
+              preview_tabs = {
+                enabled = true;
+                enable_preview_from_code_navigation = true;
+                enable_preview_from_file_finder = true;
+              };
+
+              tabs = {
+                activate_on_close = "history";
+                close_position = "right";
+                file_icons = true;
+                git_status = true;
+                show_close_button = "hover";
+                show_diagnostic = "all";
+              };
+
+              toolbar = {
+                breadcrumbs = true;
+                quick_actions = true;
+                selections_menu = true;
+              };
+
+              scrollbar = {
+                cursors = true;
+                diagnostics = "all";
+                git_diff = true;
+                search_results = true;
+                selected_symbol = true;
+                selected_text = true;
+                show = "always";
+
+                axes = {
+                  horizontal = true;
+                  vertical = true;
+                };
+              };
+
+              indent_guides = {
+                enabled = true;
+                coloring = "indent_aware";
+                # background_coloring = "indent_aware";
+              };
+
+              assistant = {
+                button = true;
+                dock = "right";
+                enabled = true;
+              };
+
+              terminal = {
+                blinking = "terminal_controlled";
+                button = true;
+                copy_on_select = false;
+                dock = "bottom";
+                font_family = font_name.mono;
+                line_height = "standard";
+                shell = "system";
+                working_directory = "current_project_directory";
+
+                toolbar = {
+                  breadcrumbs = true;
+                };
+
+                scrollbar = {
+                  show = "always";
+                };
+
+                detect_venv = {
+                  on = {
+                    directories = [
+                      ".env"
+                      ".venv"
+                      "env"
+                      "venv"
+                    ];
+                    activate_script = "default";
+                  };
+                };
+              };
+
+              show_call_status_icon = true;
+
+              buffer_font_family = font_name.mono;
+              soft_wrap = "editor_width";
+              show_whitespaces = "all";
+              cursor_blink = true;
+              cursor_shape = "bar";
+
+              hover_popover_enabled = true;
+              current_line_highlight = "all";
+              selection_highlight = true;
+
+              seed_search_query_from_cursor = "selection";
+              use_smartcase_search = false;
+
+              show_completions_on_input = true;
+              show_completion_documentation = true;
+              show_edit_predictions = true;
+
+              hard_tabs = false;
+
+              use_autoclose = true;
+              always_treat_brackets_as_autoclosed = false;
+
+              format_on_save = "on";
+              remove_trailing_whitespace_on_save = false;
+              ensure_final_newline_on_save = true;
+
+              calls = {
+                mute_on_join = true;
+                share_on_join = false;
+              };
+
+              confirm_quit = false;
+            };
+
+            userKeymaps = { };
           };
 
           matplotlib = {
@@ -4467,7 +4713,7 @@ in
             settings = {
               git_protocol = "https";
 
-              editor = "nvim";
+              editor = "nano";
 
               aliases = { };
             };
@@ -4564,4 +4810,3 @@ in
 # FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
 # FIXME: hardinfo2
-# TODO: Neovim
