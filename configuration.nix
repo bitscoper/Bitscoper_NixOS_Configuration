@@ -1633,6 +1633,25 @@ in
               region = config.i18n.defaultLocale;
             };
 
+            "com/raggesilver/BlackBox" = {
+              context-aware-header-bar = true;
+              easy-copy-paste = false;
+              fill-tabs = true;
+              font = "${font_name.mono} 12";
+              headerbar-drag-area = true;
+              notify-process-completion = true;
+              pretty = true;
+              remember-window-size = false;
+              show-headerbar = true;
+              show-menu-button = true;
+              show-scrollbars = true;
+              terminal-bell = true;
+              theme-bold-is-bright = false;
+              theme-dark = "Dracula";
+              theme-light = "Dracula Light";
+              use-overlay-scrolling = true;
+            };
+
             "org/gnome/desktop/privacy" = {
               remember-app-usage = false;
               remember-recent-files = false;
@@ -1839,9 +1858,11 @@ in
         audacity
         autopsy
         avrdude
+        baobab
         bettercap
         bfcal
         binwalk
+        blackbox-terminal
         bleachbit
         blender
         bloodhound
@@ -1871,6 +1892,7 @@ in
         cloudflare-warp
         cmake
         codec2
+        collision
         commix
         coreutils-full
         cpio
@@ -1964,6 +1986,7 @@ in
         hashid
         hdparm
         hfsprogs
+        hieroglyphic
         hw-probe
         hwloc
         hydra-check
@@ -2155,6 +2178,7 @@ in
         snmpcheck
         snort
         social-engineer-toolkit
+        songrec
         spice
         spice-gtk
         spice-protocol
@@ -3104,8 +3128,8 @@ in
               "SUPER, A, exec, rofi -show drun -disable-history"
               "SUPER, R, exec, rofi -show run -disable-history"
 
-              "SUPER, T, exec, kitty"
-              "SUPER ALT, T, exec, kitty sh -c \"bash\""
+              "SUPER, T, exec, blackbox"
+              "SUPER ALT, T, exec, blackbox sh -c \"bash\""
 
               ", XF86Explorer, exec, nautilus"
               "SUPER, F, exec, nautilus"
@@ -3665,7 +3689,7 @@ in
               # ];
 
               cycle = false;
-              terminal = "${pkgs.kitty}/bin/kitty";
+              terminal = "${pkgs.blackbox-terminal}/bin/blackbox";
 
               location = "center";
 
@@ -4288,108 +4312,6 @@ in
             '';
           };
 
-          kitty = {
-            enable = true;
-            package = pkgs.kitty;
-
-            shellIntegration = {
-              mode = "no-rc";
-              enableBashIntegration = true;
-            };
-
-            font = {
-              name = font_name.mono;
-              package = pkgs.nerd-fonts.noto;
-              size = 11;
-            };
-
-            keybindings = { };
-
-            settings = {
-              sync_to_monitor = "yes";
-
-              window_padding_width = "0 4 0 4";
-              confirm_os_window_close = 0;
-
-              enable_audio_bell = "yes";
-              detect_urls = "yes";
-              scrollback_lines = -1;
-              click_interval = -1;
-
-              foreground = dracula_theme.hex.foreground;
-              background = dracula_theme.hex.background;
-              selection_foreground = "#ffffff";
-              selection_background = dracula_theme.hex.current_line;
-              url_color = dracula_theme.hex.cyan;
-              title_fg = dracula_theme.hex.foreground;
-              title_bg = dracula_theme.hex.background;
-              margin_bg = dracula_theme.hex.comment;
-              margin_fg = dracula_theme.hex.current_line;
-              removed_bg = dracula_theme.hex.red;
-              highlight_removed_bg = dracula_theme.hex.red;
-              removed_margin_bg = dracula_theme.hex.red;
-              added_bg = dracula_theme.hex.green;
-              highlight_added_bg = dracula_theme.hex.green;
-              added_margin_bg = dracula_theme.hex.green;
-              filler_bg = dracula_theme.hex.current_line;
-              hunk_margin_bg = dracula_theme.hex.current_line;
-              hunk_bg = dracula_theme.hex.purple;
-              search_bg = dracula_theme.hex.cyan;
-              search_fg = dracula_theme.hex.background;
-              select_bg = dracula_theme.hex.yellow;
-              select_fg = dracula_theme.hex.background;
-
-              # Splits / Windows
-              active_border_color = dracula_theme.hex.foreground;
-              inactive_border_color = dracula_theme.hex.comment;
-
-              active_tab_foreground = dracula_theme.hex.background;
-              active_tab_background = dracula_theme.hex.foreground;
-              inactive_tab_foreground = dracula_theme.hex.background;
-              inactive_tab_background = dracula_theme.hex.comment;
-
-              mark1_foreground = dracula_theme.hex.background;
-              mark1_background = dracula_theme.hex.red;
-
-              cursor = dracula_theme.hex.foreground;
-              cursor_text_color = dracula_theme.hex.background;
-
-              # Black
-              color0 = "#21222c";
-              color8 = dracula_theme.hex.comment;
-
-              # Red
-              color1 = dracula_theme.hex.red;
-              color9 = "#ff6e6e";
-
-              # Green
-              color2 = dracula_theme.hex.green;
-              color10 = "#69ff94";
-
-              # Yellow
-              color3 = dracula_theme.hex.yellow;
-              color11 = "#ffffa5";
-
-              # Blue
-              color4 = dracula_theme.hex.purple;
-              color12 = "#d6acff";
-
-              # Magenta
-              color5 = dracula_theme.hex.pink;
-              color13 = "#ff92df";
-
-              # Cyan
-              color6 = dracula_theme.hex.cyan;
-              color14 = "#a4ffff";
-
-              # White
-              color7 = dracula_theme.hex.foreground;
-              color15 = "#ffffff";
-            };
-
-            extraConfig = '''';
-          };
-
           dircolors = {
             enable = true;
             package = pkgs.coreutils;
@@ -4423,6 +4345,7 @@ in
           zed-editor = {
             enable = true;
             package = pkgs.zed-editor;
+            installRemoteServer = false;
 
             extraPackages = with pkgs; [
               nixd
