@@ -1895,7 +1895,6 @@ in
         avrdude
         baobab
         bash-language-server
-        bettercap
         bfcal
         binwalk
         blackbox-terminal
@@ -1926,11 +1925,9 @@ in
         cmake-language-server
         codec2
         collision
-        commix
         copilot-language-server
         coreutils-full
         cpio
-        crowbar
         cryptsetup
         cups-filters
         cups-pdf-to-pdf
@@ -1949,13 +1946,10 @@ in
         dnsrecon
         dockerfile-language-server-nodejs
         dosfstools
-        dsniff
         e2fsprogs
         efibootmgr
-        enum4linux
         eog
         esptool
-        ettercap
         evtest
         evtest-qt
         exfatprogs
@@ -1986,7 +1980,6 @@ in
         gnused
         gnutar
         gnutls
-        gophish
         gource
         gparted
         gpredict
@@ -2009,8 +2002,6 @@ in
         hyprpolkitagent
         i2c-tools
         iaito
-        ideviceinstaller
-        idevicerestore
         iftop
         inkscape
         inotify-tools
@@ -2020,8 +2011,6 @@ in
         jxrlib
         keepassxc
         kernelshark
-        laudanum
-        lbd
         lha
         lhasa
         libGL
@@ -2040,9 +2029,7 @@ in
         libgpg-error
         libguestfs
         libheif
-        libideviceactivation
         libilbc
-        libimobiledevice
         liblc3
         libnotify
         libogg
@@ -2075,12 +2062,8 @@ in
         media-player-info
         meld
         mesa-demos
-        metasploit
-        mimikatz
         mission-center
-        mitmproxy
         monkeysAudio
-        msfpc
         mtools
         nautilus
         netdiscover
@@ -2110,7 +2093,6 @@ in
         openssl
         p7zip
         papirus-folders
-        parsero
         patchelf
         pciutils
         pcre
@@ -2133,7 +2115,6 @@ in
         readline
         reiserfsprogs
         remmina
-        responder
         rpPPPoE
         rpmextract
         rtl-sdr-librtlsdr
@@ -2154,21 +2135,17 @@ in
         slurp
         smartmontools
         smbmap
-        social-engineer-toolkit
         songrec
         spice
         spice-gtk
         spice-protocol
         spooftooph
-        sqlmap
         sslscan
-        sslsplit
         subfinder
         swaks
         systemd-language-server
         telegram-desktop
         texliveFull
-        thc-hydra
         theharvester
         thermald
         tor-browser
@@ -2199,7 +2176,6 @@ in
         wayland-protocols
         wayland-utils
         waylevel
-        weevely
         wev
         wget
         which
