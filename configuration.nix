@@ -98,9 +98,9 @@ in
 
     kernelPackages = pkgs.linuxPackages_zen;
 
-    # extraModulePackages = with config.boot.kernelPackages; [
-
-    # ];
+    extraModulePackages = with config.boot.kernelPackages; [
+      akvcam
+    ];
 
     kernelModules = [
       "at24"
@@ -203,6 +203,25 @@ in
     config = {
       allowUnfree = true;
     };
+
+    overlays = [
+      (final: prev: {
+        qt6Packages = prev.qt6Packages.overrideScope (
+          _: kprev: {
+            qt6gtk2 = kprev.qt6gtk2.overrideAttrs (_: {
+              version = "0.5-unstable-2025-03-04";
+              src = final.fetchFromGitLab {
+                domain = "opencode.net";
+                owner = "trialuser";
+                repo = "qt6gtk2";
+                rev = "d7c14bec2c7a3d2a37cde60ec059fc0ed4efee67";
+                hash = "sha256-6xD0lBiGWC3PXFyM2JW16/sDwicw4kWSCnjnNwUT4PI=";
+              };
+            });
+          }
+        );
+      })
+    ];
   };
 
   appstream.enable = true;
@@ -1869,8 +1888,10 @@ in
         # amrnb
         # amrwb
         # appimagekitk
+        # fritzing
         # reiser4progs
         # scrounge-ntfs
+        # sdrangel
         above
         acl
         aircrack-ng
@@ -1962,7 +1983,6 @@ in
         file
         file-roller
         flutter
-        fritzing
         fwupd-efi
         gcc
         gdb
@@ -2018,6 +2038,7 @@ in
         libaom
         libappimage
         libass
+        libcamera
         libde265
         libdvdcss
         libdvdnav
@@ -2041,6 +2062,7 @@ in
         libuuid
         libva-utils
         libvpx
+        libwebcam
         libwebp
         libxfs
         libzip
@@ -2093,6 +2115,7 @@ in
         openssl
         p7zip
         papirus-folders
+        parabolic
         patchelf
         pciutils
         pcre
@@ -2125,7 +2148,6 @@ in
         schroedinger
         scrcpy
         screen
-        sdrangel
         sdrpp
         serial-studio
         shared-mime-info
@@ -2142,6 +2164,7 @@ in
         spooftooph
         sslscan
         subfinder
+        subtitleedit
         swaks
         systemd-language-server
         telegram-desktop
@@ -2176,6 +2199,7 @@ in
         wayland-protocols
         wayland-utils
         waylevel
+        webcamoid
         wev
         wget
         which
