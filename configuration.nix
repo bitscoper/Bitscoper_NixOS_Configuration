@@ -1478,6 +1478,11 @@ in
       silent = false;
     };
 
+    nautilus-open-any-terminal = {
+      enable = true;
+      terminal = "blackbox";
+    };
+
     nix-index = {
       package = pkgs.nix-index;
 
@@ -1730,6 +1735,37 @@ in
               unapplied-dev = true;
             };
 
+            "org/gnome/file-roller/ui" = {
+              view-sidebar = true;
+            };
+            "org/gnome/file-roller/listing" = {
+              list-mode = "as-folder";
+            };
+
+            "org/gnome/eog/plugins" = {
+              active-plugins = [
+                "fullscreen"
+                "reload"
+                "statusbar-date"
+              ];
+            };
+            "org/gnome/eog/ui" = {
+              image-gallery = false;
+              sidebar = true;
+              statusbar = true;
+            };
+            "org/gnome/eog/view" = {
+              autorotate = true;
+              extrapolate = true;
+              interpolate = true;
+              transparency = "checked";
+              use-background-color = false;
+            };
+            "org/gnome/eog/fullscreen" = {
+              loop = false;
+              upscale = false;
+            };
+
             "com/github/huluti/Curtail" = {
               file-attributes = true;
               metadata = false;
@@ -1832,45 +1868,43 @@ in
       [
         # amrnb
         # amrwb
-        # appimagekit
-        # ciscoPacketTracer8
-        # ncrack
-        # oterm
-        # p0f
+        # appimagekitk
         # reiser4progs
         # scrounge-ntfs
-        # wapiti
         above
         acl
         aircrack-ng
         alac
         amass
-        android-backup-extractor
         android-studio
         android-studio-tools
         android-tools
         anydesk
-        apktool
+        apkeep
+        apkleaks
+        apksigner
+        arduino-cli
+        arduino-ide
+        arduino-language-server
+        arduinoOTA
         aribb24
         aribb25
         arj
-        arping
         audacity
         autopsy
         avrdude
         baobab
+        bash-language-server
         bettercap
         bfcal
         binwalk
         blackbox-terminal
         bleachbit
         blender
-        bloodhound
         bluez-tools
         brightnessctl
         btrfs-progs
         bulk_extractor
-        bully
         burpsuite
         bustle
         butt
@@ -1879,9 +1913,7 @@ in
         cabextract
         celt
         certbot-full
-        cewl
         chmlib
-        chntpw
         clang
         clang-analyzer
         clang-manpages
@@ -1891,13 +1923,14 @@ in
         cloc
         cloudflare-warp
         cmake
+        cmake-language-server
         codec2
         collision
         commix
+        copilot-language-server
         coreutils-full
         cpio
         crowbar
-        crunch
         cryptsetup
         cups-filters
         cups-pdf-to-pdf
@@ -1907,50 +1940,34 @@ in
         d-spy
         darktable
         dart
-        davtest
-        dbd
         dbeaver-bin
         dconf-editor
         debase
-        dejsonlz4
         dirb
-        dirbuster
         dmg2img
         dmidecode
-        dmitry
-        dns2tcp
-        dnschef
-        dnsenum
-        dnsmap
         dnsrecon
+        dockerfile-language-server-nodejs
         dosfstools
-        driftnet
         dsniff
         e2fsprogs
         efibootmgr
         enum4linux
+        eog
         esptool
         ettercap
-        evil-winrm
         evtest
         evtest-qt
-        exe2hex
         exfatprogs
         f2fs-tools
         faac
         faad2
-        fcrackzip
-        fd
         fdk_aac
         ffmpeg-full
         ffmpegthumbnailer
-        ffuf
-        fh
-        fierce
         file
+        file-roller
         flutter
-        foremost
-        fping
         fritzing
         fwupd-efi
         gcc
@@ -1959,6 +1976,7 @@ in
         ghidra
         gimp-with-plugins
         git-doc
+        git-filter-repo
         glib
         glibc
         gnome-font-viewer
@@ -1968,7 +1986,6 @@ in
         gnused
         gnutar
         gnutls
-        gobuster
         gophish
         gource
         gparted
@@ -1977,13 +1994,9 @@ in
         gsm
         gtk-vnc
         guestfs-tools
-        guymager
         gzip
         hardinfo2
-        hash-identifier
         hashcat
-        hashdeep
-        hashid
         hdparm
         hfsprogs
         hieroglyphic
@@ -1999,24 +2012,14 @@ in
         ideviceinstaller
         idevicerestore
         iftop
-        image-roll
         inkscape
         inotify-tools
         jfsutils
         john
         johnny
-        jq
         jxrlib
         keepassxc
         kernelshark
-        kind
-        kismet
-        kubectl
-        kubectl-graph
-        kubectl-tree
-        kubectl-view-allocations
-        kubectl-view-secret
-        kubernetes
         laudanum
         lbd
         lha
@@ -2025,6 +2028,7 @@ in
         libGLU
         libaom
         libappimage
+        libass
         libde265
         libdvdcss
         libdvdnav
@@ -2045,17 +2049,14 @@ in
         libopenraw
         libopus
         libosinfo
-        libportal
         libqalculate
         libusb1
         libuuid
         libva-utils
-        libvirt
         libvpx
         libwebp
         libxfs
         libzip
-        ligolo-ng
         linuxConsoleTools
         lrzip
         lshw
@@ -2069,30 +2070,20 @@ in
         lzlib
         lzop
         macchanger
-        magicrescue
         masscan
         massdns
-        mdk3-master
-        medusa
+        media-player-info
         meld
         mesa-demos
         metasploit
         mimikatz
-        minicom
-        miredo
         mission-center
         mitmproxy
         monkeysAudio
-        mozlz4a
         msfpc
         mtools
         nautilus
-        nautilus-open-any-terminal
-        nbtscan
-        netcat-gnu
         netdiscover
-        netexec
-        netmask
         netsniff-ng
         networkmanagerapplet
         nikto
@@ -2102,6 +2093,8 @@ in
         nix-diff
         nix-index
         nix-info
+        nixd
+        nixdoc
         nixfmt-rfc-style
         nixos-icons
         nixpkgs-lint
@@ -2109,25 +2102,19 @@ in
         nmap
         ntfs3g
         nuclei
-        onesixtyone
         onionshare-gui
         onlyoffice-desktopeditors
         opencore-amr
         openh264
         openjpeg
         openssl
-        ophcrack
-        ophcrack-cli
         p7zip
         papirus-folders
         parsero
         patchelf
         pciutils
         pcre
-        pdf-parser
-        pdfid
         php84
-        pixiewps
         pjsip
         pkg-config
         platformio
@@ -2135,10 +2122,6 @@ in
         playerctl
         podman-compose
         podman-desktop
-        powersploit
-        proxychains
-        ptunnel
-        pwnat
         pwvucontrol
         python313Full
         qalculate-gtk
@@ -2148,17 +2131,13 @@ in
         radare2
         rar
         readline
-        reaverwps-t6x
         reiserfsprogs
         remmina
         responder
-        ripgrep
         rpPPPoE
         rpmextract
-        rsmangler
         rtl-sdr-librtlsdr
         rzip
-        samdump2
         sane-backends
         sbc
         scalpel
@@ -2175,8 +2154,6 @@ in
         slurp
         smartmontools
         smbmap
-        snmpcheck
-        snort
         social-engineer-toolkit
         songrec
         spice
@@ -2184,16 +2161,11 @@ in
         spice-protocol
         spooftooph
         sqlmap
-        ssldump
-        sslh
         sslscan
         sslsplit
-        steghide
         subfinder
-        sushi
         swaks
-        tcpdump
-        tcpreplay
+        systemd-language-server
         telegram-desktop
         texliveFull
         thc-hydra
@@ -2205,7 +2177,6 @@ in
         trufflehog
         udftools
         udiskie
-        udptunnel
         unar
         unicode-emoji
         universal-android-debloater
@@ -2230,9 +2201,7 @@ in
         waylevel
         weevely
         wev
-        wfuzz
         wget
-        whatweb
         which
         whois
         wifite2
@@ -2242,7 +2211,6 @@ in
         wpscan
         x264
         x265
-        xarchiver
         xdg-user-dirs
         xdg-utils
         xfsdump
@@ -2254,8 +2222,6 @@ in
         xz
         yaml-language-server
         yara
-        yersinia
-        zenity
         zip
         zlib
         zpaq
@@ -2488,89 +2454,89 @@ in
       defaultApplications = {
         "inode/directory" = "nautilus.desktop";
 
-        "image/aces" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/apng" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/avci" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/avcs" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/avif" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/bmp" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/cgm" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/dicom-rle" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/dpx" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/emf" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/fits" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/g3fax" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/gif" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/heic" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/heic-sequence" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/heif" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/heif-sequence" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/hej2k" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/hsj2" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/ief" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/j2c" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jaii" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jais" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jls" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jp2" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jpeg" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jph" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jphc" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jpm" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jpx" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jxl" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jxr" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jxrA" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jxrS" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jxs" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jxsc" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jxsi" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/jxss" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/ktx" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/ktx2" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/naplps" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/png" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/prs.btif" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/prs.pti" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/pwg-raster" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/svg+xml" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/t38" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/tiff" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/tiff-fx" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.adobe.photoshop" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.airzip.accelerator.azv" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.cns.inf2" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.dece.graphic" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.djvu" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.dvb.subtitle" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.dwg" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.dxf" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.fastbidsheet" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.fpx" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.fst" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.fujixerox.edmics-mmr" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.fujixerox.edmics-rlc" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.globalgraphics.pgb" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.microsoft.icon" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.mix" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.mozilla.apng" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.ms-modi" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.net-fpx" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.pco.b16" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.radiance" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.sealed.png" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.sealedmedia.softseal.gif" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.sealedmedia.softseal.jpg" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.svf" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.tencent.tap" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.valve.source.texture" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.wap.wbmp" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.xiff" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/vnd.zbrush.pcx" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/webp" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/wmf" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/x-emf" = "com.github.weclaw1.ImageRoll.desktop";
-        "image/x-wmf" = "com.github.weclaw1.ImageRoll.desktop";
+        "image/aces" = "org.gnome.eog.desktop";
+        "image/apng" = "org.gnome.eog.desktop";
+        "image/avci" = "org.gnome.eog.desktop";
+        "image/avcs" = "org.gnome.eog.desktop";
+        "image/avif" = "org.gnome.eog.desktop";
+        "image/bmp" = "org.gnome.eog.desktop";
+        "image/cgm" = "org.gnome.eog.desktop";
+        "image/dicom-rle" = "org.gnome.eog.desktop";
+        "image/dpx" = "org.gnome.eog.desktop";
+        "image/emf" = "org.gnome.eog.desktop";
+        "image/fits" = "org.gnome.eog.desktop";
+        "image/g3fax" = "org.gnome.eog.desktop";
+        "image/gif" = "org.gnome.eog.desktop";
+        "image/heic" = "org.gnome.eog.desktop";
+        "image/heic-sequence" = "org.gnome.eog.desktop";
+        "image/heif" = "org.gnome.eog.desktop";
+        "image/heif-sequence" = "org.gnome.eog.desktop";
+        "image/hej2k" = "org.gnome.eog.desktop";
+        "image/hsj2" = "org.gnome.eog.desktop";
+        "image/ief" = "org.gnome.eog.desktop";
+        "image/j2c" = "org.gnome.eog.desktop";
+        "image/jaii" = "org.gnome.eog.desktop";
+        "image/jais" = "org.gnome.eog.desktop";
+        "image/jls" = "org.gnome.eog.desktop";
+        "image/jp2" = "org.gnome.eog.desktop";
+        "image/jpeg" = "org.gnome.eog.desktop";
+        "image/jph" = "org.gnome.eog.desktop";
+        "image/jphc" = "org.gnome.eog.desktop";
+        "image/jpm" = "org.gnome.eog.desktop";
+        "image/jpx" = "org.gnome.eog.desktop";
+        "image/jxl" = "org.gnome.eog.desktop";
+        "image/jxr" = "org.gnome.eog.desktop";
+        "image/jxrA" = "org.gnome.eog.desktop";
+        "image/jxrS" = "org.gnome.eog.desktop";
+        "image/jxs" = "org.gnome.eog.desktop";
+        "image/jxsc" = "org.gnome.eog.desktop";
+        "image/jxsi" = "org.gnome.eog.desktop";
+        "image/jxss" = "org.gnome.eog.desktop";
+        "image/ktx" = "org.gnome.eog.desktop";
+        "image/ktx2" = "org.gnome.eog.desktop";
+        "image/naplps" = "org.gnome.eog.desktop";
+        "image/png" = "org.gnome.eog.desktop";
+        "image/prs.btif" = "org.gnome.eog.desktop";
+        "image/prs.pti" = "org.gnome.eog.desktop";
+        "image/pwg-raster" = "org.gnome.eog.desktop";
+        "image/svg+xml" = "org.gnome.eog.desktop";
+        "image/t38" = "org.gnome.eog.desktop";
+        "image/tiff" = "org.gnome.eog.desktop";
+        "image/tiff-fx" = "org.gnome.eog.desktop";
+        "image/vnd.adobe.photoshop" = "org.gnome.eog.desktop";
+        "image/vnd.airzip.accelerator.azv" = "org.gnome.eog.desktop";
+        "image/vnd.cns.inf2" = "org.gnome.eog.desktop";
+        "image/vnd.dece.graphic" = "org.gnome.eog.desktop";
+        "image/vnd.djvu" = "org.gnome.eog.desktop";
+        "image/vnd.dvb.subtitle" = "org.gnome.eog.desktop";
+        "image/vnd.dwg" = "org.gnome.eog.desktop";
+        "image/vnd.dxf" = "org.gnome.eog.desktop";
+        "image/vnd.fastbidsheet" = "org.gnome.eog.desktop";
+        "image/vnd.fpx" = "org.gnome.eog.desktop";
+        "image/vnd.fst" = "org.gnome.eog.desktop";
+        "image/vnd.fujixerox.edmics-mmr" = "org.gnome.eog.desktop";
+        "image/vnd.fujixerox.edmics-rlc" = "org.gnome.eog.desktop";
+        "image/vnd.globalgraphics.pgb" = "org.gnome.eog.desktop";
+        "image/vnd.microsoft.icon" = "org.gnome.eog.desktop";
+        "image/vnd.mix" = "org.gnome.eog.desktop";
+        "image/vnd.mozilla.apng" = "org.gnome.eog.desktop";
+        "image/vnd.ms-modi" = "org.gnome.eog.desktop";
+        "image/vnd.net-fpx" = "org.gnome.eog.desktop";
+        "image/vnd.pco.b16" = "org.gnome.eog.desktop";
+        "image/vnd.radiance" = "org.gnome.eog.desktop";
+        "image/vnd.sealed.png" = "org.gnome.eog.desktop";
+        "image/vnd.sealedmedia.softseal.gif" = "org.gnome.eog.desktop";
+        "image/vnd.sealedmedia.softseal.jpg" = "org.gnome.eog.desktop";
+        "image/vnd.svf" = "org.gnome.eog.desktop";
+        "image/vnd.tencent.tap" = "org.gnome.eog.desktop";
+        "image/vnd.valve.source.texture" = "org.gnome.eog.desktop";
+        "image/vnd.wap.wbmp" = "org.gnome.eog.desktop";
+        "image/vnd.xiff" = "org.gnome.eog.desktop";
+        "image/vnd.zbrush.pcx" = "org.gnome.eog.desktop";
+        "image/webp" = "org.gnome.eog.desktop";
+        "image/wmf" = "org.gnome.eog.desktop";
+        "image/x-emf" = "org.gnome.eog.desktop";
+        "image/x-wmf" = "org.gnome.eog.desktop";
 
         "audio/1d-interleaved-parityfec" = "vlc.desktop";
         "audio/32kadpcm" = "vlc.desktop";
@@ -2855,15 +2821,15 @@ in
         "font/woff" = "org.gnome.font-viewer.desktop";
         "font/woff2" = "org.gnome.font-viewer.desktop";
 
-        "application/gzip" = "xarchiver.desktop";
-        "application/vnd.rar" = "xarchiver.desktop";
-        "application/x-7z-compressed" = "xarchiver.desktop";
-        "application/x-arj" = "xarchiver.desktop";
-        "application/x-bzip2" = "xarchiver.desktop";
-        "application/x-gtar" = "xarchiver.desktop";
-        "application/x-rar-compressed " = "xarchiver.desktop"; # More common than "application/vnd.rar"
-        "application/x-tar" = "xarchiver.desktop";
-        "application/zip" = "xarchiver.desktop";
+        "application/gzip" = "org.gnome.FileRoller.desktop";
+        "application/vnd.rar" = "org.gnome.FileRoller.desktop";
+        "application/x-7z-compressed" = "org.gnome.FileRoller.desktop";
+        "application/x-arj" = "org.gnome.FileRoller.desktop";
+        "application/x-bzip2" = "org.gnome.FileRoller.desktop";
+        "application/x-gtar" = "org.gnome.FileRoller.desktop";
+        "application/x-rar-compressed " = "org.gnome.FileRoller.desktop"; # More common than "application/vnd.rar"
+        "application/x-tar" = "org.gnome.FileRoller.desktop";
+        "application/zip" = "org.gnome.FileRoller.desktop";
 
         "x-scheme-handler/http" = "librewolf.desktop";
         "x-scheme-handler/https" = "librewolf.desktop";
@@ -4347,10 +4313,9 @@ in
             package = pkgs.zed-editor;
             installRemoteServer = false;
 
-            extraPackages = with pkgs; [
-              nixd
-              nil
-            ];
+            # extraPackages = with pkgs; [
+
+            # ];
 
             extensions = [
               "basher"
@@ -4373,6 +4338,10 @@ in
               "mermaid"
               "nix"
               "php"
+              "postgres-language-server"
+              "pylsp"
+              "python-refactoring"
+              "python-requirements"
               "rainbow-csv"
               "rpmspec"
               "scheme"
@@ -4395,8 +4364,7 @@ in
               languages = {
                 Nix = {
                   language_servers = [
-                    "nil"
-                    "!nixd"
+                    "nixd"
                   ];
 
                   formatter = {
@@ -4408,7 +4376,7 @@ in
               };
 
               lsp = {
-                nil = {
+                nixd = {
                   initialization_options = {
                     formatting = {
                       command = [
