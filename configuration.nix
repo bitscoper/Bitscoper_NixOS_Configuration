@@ -1889,6 +1889,7 @@ in
         # amrwb
         # appimagekitk
         # fritzing
+        # gnss-sdr
         # reiser4progs
         # scrounge-ntfs
         # sdrangel
@@ -1978,6 +1979,7 @@ in
         ffmpegthumbnailer
         file
         file-roller
+        flightgear
         flutter
         fwupd-efi
         gcc
@@ -2040,6 +2042,7 @@ in
         libdvdread
         libepoxy
         libfreeaptx
+        libfreefare
         libftdi1
         libgcc
         libgpg-error
@@ -2079,6 +2082,8 @@ in
         media-player-info
         meld
         mesa-demos
+        mfcuk
+        mfoc
         mission-center
         monkeysAudio
         mtools
@@ -2950,8 +2955,8 @@ in
             ];
           };
 
-          plugins = [
-
+          plugins = with pkgs.hyprlandPlugins; [
+            hypr-dynamic-cursors
           ];
 
           xwayland.enable = true;
@@ -3220,6 +3225,28 @@ in
 
               hide_on_key_press = false;
               hide_on_touch = true;
+            };
+
+            "plugin:dynamic-cursors" = {
+              enabled = true;
+              hyprcursor = {
+                enabled = true;
+                nearest = true;
+                resolution = -1;
+              };
+
+              threshold = 1;
+              mode = "rotate";
+              rotate = {
+                length = cursor.size;
+              };
+
+              shake = {
+                enabled = true;
+                effects = false;
+                nearest = true;
+                ipc = true;
+              };
             };
 
             binds = {
@@ -4644,7 +4671,6 @@ in
 
 # sdkmanager --licenses
 # flutter doctor --android-licenses
-# flutter doctor -v
 
 # FIXME: 05ac-033e-Gamepad > Rumble
 # FIXME: ELAN7001 SPI Fingerprint Sensor
