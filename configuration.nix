@@ -1906,7 +1906,6 @@ in
         apksigner
         arduino-cli
         arduino-ide
-        arduino-language-server
         arduinoOTA
         aribb24
         aribb25
@@ -1915,7 +1914,6 @@ in
         autopsy
         avrdude
         baobab
-        bash-language-server
         bfcal
         binwalk
         blackbox-terminal
@@ -1931,6 +1929,7 @@ in
         bzip2
         bzip3
         cabextract
+        celestia
         celt
         certbot-full
         chmlib
@@ -1943,10 +1942,8 @@ in
         cloc
         cloudflare-warp
         cmake
-        cmake-language-server
         codec2
         collision
-        copilot-language-server
         coreutils-full
         cpio
         cryptsetup
@@ -1965,7 +1962,6 @@ in
         dmg2img
         dmidecode
         dnsrecon
-        dockerfile-language-server-nodejs
         dosfstools
         e2fsprogs
         efibootmgr
@@ -2016,8 +2012,6 @@ in
         hw-probe
         hwloc
         hydra-check
-        hyprcursor
-        hyprls
         hyprpicker
         hyprpolkitagent
         i2c-tools
@@ -2026,6 +2020,7 @@ in
         inkscape
         inotify-tools
         jfsutils
+        jmol
         john
         johnny
         jxrlib
@@ -2166,14 +2161,12 @@ in
         subfinder
         subtitleedit
         swaks
-        systemd-language-server
         telegram-desktop
         texliveFull
         theharvester
         thermald
         tor-browser
         tree
-        tree-sitter
         trufflehog
         udftools
         udiskie
@@ -2220,7 +2213,6 @@ in
         xoscope
         xvidcore
         xz
-        yaml-language-server
         yara
         zip
         zlib
@@ -2361,7 +2353,6 @@ in
         session
         sockets
         sodium
-        xdebug
         xml
         xmlreader
         xmlwriter
@@ -2373,56 +2364,16 @@ in
 
       # ])
       ++ (with python313Packages; [
-        bangla
         black
-        datetime
-        matplotlib
         numpy
         pandas
         pillow
         pip
         pyserial
-        requests
         seaborn
       ])
       ++ (with texlivePackages; [
-        bangla
         latexmk
-        quran
-        quran-bn
-        quran-en
-      ])
-      ++ (with tree-sitter-grammars; [
-        tree-sitter-bash
-        tree-sitter-c
-        tree-sitter-cmake
-        tree-sitter-comment
-        tree-sitter-cpp
-        tree-sitter-css
-        tree-sitter-dart
-        tree-sitter-devicetree
-        tree-sitter-dockerfile
-        tree-sitter-fish
-        tree-sitter-html
-        tree-sitter-http
-        tree-sitter-hyprlang
-        tree-sitter-javascript
-        tree-sitter-jsdoc
-        tree-sitter-json
-        tree-sitter-json5
-        tree-sitter-latex
-        tree-sitter-make
-        tree-sitter-markdown
-        tree-sitter-markdown-inline
-        tree-sitter-nix
-        tree-sitter-php
-        tree-sitter-python
-        tree-sitter-query
-        tree-sitter-regex
-        tree-sitter-scheme
-        tree-sitter-sql
-        tree-sitter-toml
-        tree-sitter-yaml
       ])
       ++ (with ghidra-extensions; [
         findcrypt
@@ -4327,7 +4278,6 @@ in
               "env"
               "fish"
               "flutter-snippets"
-              "graphql"
               "http"
               "hyprlang"
               "ini"
