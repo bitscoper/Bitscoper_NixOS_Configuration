@@ -1891,8 +1891,8 @@ in
         # fritzing
         # gnss-sdr
         # reiser4progs
-        # scrounge-ntfs
         # sdrangel
+        # share-preview
         above
         acl
         aircrack-ng
@@ -2139,6 +2139,7 @@ in
         reiserfsprogs
         remmina
         rpPPPoE
+        rpi-imager
         rpmextract
         rtl-sdr-librtlsdr
         rzip
@@ -2170,6 +2171,7 @@ in
         texliveFull
         theharvester
         thermald
+        time
         tor-browser
         tree
         trufflehog
@@ -2955,9 +2957,9 @@ in
             ];
           };
 
-          plugins = with pkgs.hyprlandPlugins; [
-            hypr-dynamic-cursors
-          ];
+          # plugins = with pkgs.hyprlandPlugins; [
+          #   hypr-dynamic-cursors
+          # ];
 
           xwayland.enable = true;
 
@@ -2965,7 +2967,10 @@ in
 
           settings = {
             monitor = [
-              ", highres, auto, 1" # Name, Resolution, Position, Scale
+              # Name, Resolution, Position, Scale, Transform-Parameter, Transform
+              ", highres, auto, 1, transform, 0"
+              "eDP-1, highres, auto, 1, transform, 0"
+              "HDMI-A-1, highres, auto, 1, transform, 1"
             ];
 
             env = [
@@ -3227,27 +3232,27 @@ in
               hide_on_touch = true;
             };
 
-            "plugin:dynamic-cursors" = {
-              enabled = true;
-              hyprcursor = {
-                enabled = true;
-                nearest = true;
-                resolution = -1;
-              };
+            # "plugin:dynamic-cursors" = {
+            #   enabled = true;
+            #   hyprcursor = {
+            #     enabled = true;
+            #     nearest = true;
+            #     resolution = -1;
+            #   };
 
-              threshold = 1;
-              mode = "rotate";
-              rotate = {
-                length = cursor.size;
-              };
+            #   threshold = 1;
+            #   mode = "rotate";
+            #   rotate = {
+            #     length = cursor.size;
+            #   };
 
-              shake = {
-                enabled = true;
-                effects = false;
-                nearest = true;
-                ipc = true;
-              };
-            };
+            #   shake = {
+            #     enabled = true;
+            #     effects = false;
+            #     nearest = true;
+            #     ipc = true;
+            #   };
+            # };
 
             binds = {
               disable_keybind_grabbing = true;
@@ -4663,6 +4668,7 @@ in
       }
     ];
 
+    users.root = { };
     users.bitscoper = { };
 
     verbose = true;
@@ -4677,3 +4683,4 @@ in
 # FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
 # FIXME: hardinfo2
+# FIXME: rpi-imager
