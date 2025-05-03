@@ -204,24 +204,8 @@ in
       allowUnfree = true;
     };
 
-    overlays = [
-      (final: prev: {
-        qt6Packages = prev.qt6Packages.overrideScope (
-          _: kprev: {
-            qt6gtk2 = kprev.qt6gtk2.overrideAttrs (_: {
-              version = "0.5-unstable-2025-03-04";
-              src = final.fetchFromGitLab {
-                domain = "opencode.net";
-                owner = "trialuser";
-                repo = "qt6gtk2";
-                rev = "d7c14bec2c7a3d2a37cde60ec059fc0ed4efee67";
-                hash = "sha256-6xD0lBiGWC3PXFyM2JW16/sDwicw4kWSCnjnNwUT4PI=";
-              };
-            });
-          }
-        );
-      })
-    ];
+    # overlays = [
+    # ];
   };
 
   appstream.enable = true;
@@ -618,6 +602,15 @@ in
       dbusPackage = pkgs.dbus;
 
       implementation = "broker";
+    };
+
+    timesyncd = {
+      enable = true;
+
+      servers = config.networking.timeServers;
+      fallbackServers = config.networking.timeServers;
+
+      extraConfig = '''';
     };
 
     btrfs.autoScrub = {
@@ -1961,6 +1954,7 @@ in
         cloc
         cloudflare-warp
         cmake
+        code-nautilus
         codec2
         collision
         coreutils-full
@@ -3088,7 +3082,7 @@ in
               ", XF86Mail, exec, thunderbird"
               "SUPER, M, exec, thunderbird"
 
-              "SUPER, E, exec, codium"
+              "SUPER, E, exec, code"
               "SUPER, D, exec, dbeaver"
 
               "SUPER, V, exec, vlc"
@@ -4312,7 +4306,7 @@ in
 
           vscode = {
             enable = true;
-            package = pkgs.vscodium;
+            package = pkgs.vscode;
             mutableExtensionsDir = false;
 
             profiles = {
@@ -4326,10 +4320,17 @@ in
                     alefragnani.bookmarks
                     alexisvt.flutter-snippets
                     anweber.vscode-httpyac
+                    bierner.comment-tagged-templates
                     bierner.docs-view
+                    bierner.emojisense
                     bierner.github-markdown-preview
+                    bierner.markdown-checkbox
+                    bierner.markdown-emoji
+                    bierner.markdown-footnotes
                     bierner.markdown-mermaid
+                    bierner.markdown-preview-github-styles
                     bradgashler.htmltagwrap
+                    chanhx.crabviz
                     christian-kohler.path-intellisense
                     codezombiech.gitignore
                     coolbear.systemd-unit-file
@@ -4338,49 +4339,63 @@ in
                     davidanson.vscode-markdownlint
                     dendron.adjust-heading-level
                     devsense.phptools-vscode
+                    dotenv.dotenv-vscode
                     dracula-theme.theme-dracula
                     ecmel.vscode-html-css
                     edonet.vscode-command-runner
                     esbenp.prettier-vscode
+                    ethansk.restore-terminals
                     fabiospampinato.vscode-open-in-github
                     firefox-devtools.vscode-firefox-debug
                     formulahendry.auto-close-tag
                     formulahendry.auto-rename-tag
+                    formulahendry.code-runner
                     foxundermoon.shell-format
                     github.copilot
                     github.copilot-chat
                     github.vscode-github-actions
                     github.vscode-pull-request-github
+                    gitlab.gitlab-workflow
                     grapecity.gc-excelviewer
                     gruntfuggly.todo-tree
                     hars.cppsnippets
                     hbenl.vscode-test-explorer
                     hediet.vscode-drawio
                     ibm.output-colorizer
-                    irongeek.vscode-env
+                    iciclesoft.workspacesort
+                    iliazeus.vscode-ansi
+                    illixion.vscode-vibrancy-continued
                     james-yu.latex-workshop
                     jbockle.jbockle-format-files
+                    jellyedwards.gitsweep
+                    jkillian.custom-local-formatters
                     jnoortheen.nix-ide
                     jock.svg
                     kamikillerto.vscode-colorize
                     llvm-vs-code-extensions.vscode-clangd
                     mads-hartmann.bash-ide-vscode
                     mechatroner.rainbow-csv
+                    meganrogge.template-string-converter
                     mishkinf.goto-next-previous-member
+                    mkhl.direnv
                     moshfeu.compare-folders
+                    sanaajani.taskrunnercode
                     ms-azuretools.vscode-docker
                     ms-python.black-formatter
                     ms-python.debugpy
                     ms-python.isort
+                    slevesque.vscode-multiclip
                     ms-python.python
                     ms-toolsai.datawrangler
                     ms-toolsai.jupyter
                     ms-toolsai.jupyter-keymap
                     ms-toolsai.jupyter-renderers
+                    rioj7.commandonallfiles
                     ms-toolsai.vscode-jupyter-cell-tags
                     ms-toolsai.vscode-jupyter-slideshow
                     ms-vscode-remote.remote-containers
                     ms-vscode-remote.remote-ssh
+                    stylelint.vscode-stylelint
                     ms-vscode-remote.remote-ssh-edit
                     ms-vscode.cmake-tools
                     ms-vscode.cpptools
@@ -4403,6 +4418,7 @@ in
                     tailscale.vscode-tailscale
                     tamasfe.even-better-toml
                     timonwong.shellcheck
+                    vscode-icons-team.vscode-icons
                     tyriar.sort-lines
                     usernamehw.errorlens
                     vincaslt.highlight-matching-tag
