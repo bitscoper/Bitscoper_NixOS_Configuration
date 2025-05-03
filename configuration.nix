@@ -227,11 +227,14 @@ in
   appstream.enable = true;
 
   i18n = {
-    supportedLocales = [
-      "all"
+    defaultLocale = "en_US.UTF-8";
+    extraLocales = [
+      # "all"
+      "ar_SA.UTF-8"
+      "bn_BD"
+      "ru_RU.UTF-8"
     ];
 
-    defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
       LC_ADDRESS = config.i18n.defaultLocale;
       LC_IDENTIFICATION = config.i18n.defaultLocale;
@@ -259,7 +262,11 @@ in
   };
 
   networking = {
+    enableIPv6 = true;
+
+    domain = "bitscoper";
     hostName = "Bitscoper-WorkStation";
+    fqdn = "${config.networking.hostName}.${config.networking.domain}";
 
     wireless = {
       dbusControlled = true;
@@ -300,6 +307,13 @@ in
     nameservers = [
       "1.1.1.3#one.one.one.one"
       "1.0.0.3#one.one.one.one"
+    ];
+
+    timeServers = [
+      "0.nixos.pool.ntp.org"
+      "1.nixos.pool.ntp.org"
+      "2.nixos.pool.ntp.org"
+      "3.nixos.pool.ntp.org"
     ];
   };
 
@@ -1477,7 +1491,7 @@ in
 
       interactiveShellInit = ''
         if command -q nix-your-shell
-         nix-your-shell fish | source
+        nix-your-shell fish | source
         end
       '';
     };
@@ -1603,6 +1617,10 @@ in
 
     nano = {
       enable = true;
+      package = pkgs.nano;
+
+      syntaxHighlight = true;
+
       nanorc = ''
         set linenumbers
         set softwrap
@@ -2106,6 +2124,7 @@ in
         nixpkgs-review
         nmap
         ntfs3g
+        ntp
         nuclei
         onionshare-gui
         onlyoffice-desktopeditors
@@ -2970,7 +2989,7 @@ in
               # Name, Resolution, Position, Scale, Transform-Parameter, Transform
               ", highres, auto, 1, transform, 0"
               "eDP-1, highres, auto, 1, transform, 0"
-              "HDMI-A-1, highres, auto, 1, transform, 1"
+              "HDMI-A-1, highres, auto, 1, transform, 0"
             ];
 
             env = [
@@ -3050,7 +3069,7 @@ in
 
               "SUPER, C, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
 
-              ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/Screenshot_$(date +'%Y-%B-%d_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\""
+              ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/ScreenShot_$(date +'%B-%d-%Y_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\""
 
               "SUPER, A, exec, rofi -show drun -disable-history"
               "SUPER, R, exec, rofi -show run -disable-history"
@@ -3069,7 +3088,7 @@ in
               ", XF86Mail, exec, thunderbird"
               "SUPER, M, exec, thunderbird"
 
-              "SUPER, E, exec, zeditor"
+              "SUPER, E, exec, codium"
               "SUPER, D, exec, dbeaver"
 
               "SUPER, V, exec, vlc"
@@ -4291,272 +4310,148 @@ in
             };
           };
 
-          zed-editor = {
+          vscode = {
             enable = true;
-            package = pkgs.zed-editor;
-            installRemoteServer = false;
+            package = pkgs.vscodium;
+            mutableExtensionsDir = false;
 
-            # extraPackages = with pkgs; [
-
-            # ];
-
-            extensions = [
-              "basher"
-              "csv"
-              "dart"
-              "docker-compose"
-              "dockerfile"
-              "dracula"
-              "env"
-              "fish"
-              "flutter-snippets"
-              "http"
-              "hyprlang"
-              "ini"
-              "latex"
-              "live-server"
-              "log"
-              "make"
-              "mermaid"
-              "nix"
-              "php"
-              "postgres-language-server"
-              "pylsp"
-              "python-refactoring"
-              "python-requirements"
-              "rainbow-csv"
-              "rpmspec"
-              "scheme"
-              "sql"
-              "ssh-config"
-              "ultralytics-snippets"
-              "unicode"
-              "xml"
-            ];
-
-            userSettings = {
-              features = {
-                copilot = true;
-              };
-
-              load_direnv = "shell_hook";
-
-              enable_language_server = true;
-
-              languages = {
-                Nix = {
-                  language_servers = [
-                    "nixd"
+            profiles = {
+              default = {
+                extensions =
+                  with pkgs.vscode-extensions;
+                  [
+                    aaron-bond.better-comments
+                    adpyke.codesnap
+                    albymor.increment-selection
+                    alefragnani.bookmarks
+                    alexisvt.flutter-snippets
+                    anweber.vscode-httpyac
+                    bierner.docs-view
+                    bierner.github-markdown-preview
+                    bierner.markdown-mermaid
+                    bradgashler.htmltagwrap
+                    christian-kohler.path-intellisense
+                    codezombiech.gitignore
+                    coolbear.systemd-unit-file
+                    dart-code.dart-code
+                    dart-code.flutter
+                    davidanson.vscode-markdownlint
+                    dendron.adjust-heading-level
+                    devsense.phptools-vscode
+                    dracula-theme.theme-dracula
+                    ecmel.vscode-html-css
+                    edonet.vscode-command-runner
+                    esbenp.prettier-vscode
+                    fabiospampinato.vscode-open-in-github
+                    firefox-devtools.vscode-firefox-debug
+                    formulahendry.auto-close-tag
+                    formulahendry.auto-rename-tag
+                    foxundermoon.shell-format
+                    github.copilot
+                    github.copilot-chat
+                    github.vscode-github-actions
+                    github.vscode-pull-request-github
+                    grapecity.gc-excelviewer
+                    gruntfuggly.todo-tree
+                    hars.cppsnippets
+                    hbenl.vscode-test-explorer
+                    hediet.vscode-drawio
+                    ibm.output-colorizer
+                    irongeek.vscode-env
+                    james-yu.latex-workshop
+                    jbockle.jbockle-format-files
+                    jnoortheen.nix-ide
+                    jock.svg
+                    kamikillerto.vscode-colorize
+                    llvm-vs-code-extensions.vscode-clangd
+                    mads-hartmann.bash-ide-vscode
+                    mechatroner.rainbow-csv
+                    mishkinf.goto-next-previous-member
+                    moshfeu.compare-folders
+                    ms-azuretools.vscode-docker
+                    ms-python.black-formatter
+                    ms-python.debugpy
+                    ms-python.isort
+                    ms-python.python
+                    ms-toolsai.datawrangler
+                    ms-toolsai.jupyter
+                    ms-toolsai.jupyter-keymap
+                    ms-toolsai.jupyter-renderers
+                    ms-toolsai.vscode-jupyter-cell-tags
+                    ms-toolsai.vscode-jupyter-slideshow
+                    ms-vscode-remote.remote-containers
+                    ms-vscode-remote.remote-ssh
+                    ms-vscode-remote.remote-ssh-edit
+                    ms-vscode.cmake-tools
+                    ms-vscode.cpptools
+                    ms-vscode.hexeditor
+                    ms-vscode.live-server
+                    ms-vscode.makefile-tools
+                    ms-vscode.test-adapter-converter
+                    ms-vsliveshare.vsliveshare
+                    ms-windows-ai-studio.windows-ai-studio
+                    oderwat.indent-rainbow
+                    platformio.platformio-vscode-ide
+                    quicktype.quicktype
+                    redhat.vscode-xml
+                    redhat.vscode-yaml
+                    rubymaniac.vscode-paste-and-indent
+                    ryu1kn.partial-diff
+                    shardulm94.trailing-spaces
+                    skyapps.fish-vscode
+                    spywhere.guides
+                    tailscale.vscode-tailscale
+                    tamasfe.even-better-toml
+                    timonwong.shellcheck
+                    tyriar.sort-lines
+                    usernamehw.errorlens
+                    vincaslt.highlight-matching-tag
+                    visualstudioexptteam.intellicode-api-usage-examples
+                    visualstudioexptteam.vscodeintellicode
+                    vscjava.vscode-gradle
+                    wmaurer.change-case
+                    zainchen.json
+                  ]
+                  ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+                    {
+                      name = "vscode-serial-monitor";
+                      publisher = "ms-vscode";
+                      version = "0.13.250503001";
+                      sha256 = "iuni/DybnUxdbvggvlCidurW4GevVPvwYO7/5i+S1ok=";
+                    }
+                    {
+                      name = "unique-lines";
+                      publisher = "bibhasdn";
+                      version = "1.0.0";
+                      sha256 = "W0ZpZ6+vjkfNfOtekx5NWOFTyxfWAiB0XYcIwHabFPQ=";
+                    }
+                    {
+                      name = "pubspec-assist";
+                      publisher = "jeroen-meijer";
+                      version = "2.3.2";
+                      sha256 = "+Mkcbeq7b+vkuf2/LYT10mj46sULixLNKGpCEk1Eu/0=";
+                    }
+                    {
+                      name = "vscode-sort-json";
+                      publisher = "richie5um2";
+                      version = "1.20.0";
+                      sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
+                    }
+                    {
+                      name = "vscode-print";
+                      publisher = "pdconsec";
+                      version = "1.4.0";
+                      sha256 = "jAZ1F5neIFSevy0bNuHabh8pUbm5vuuxjmot08GctPc=";
+                    }
                   ];
 
-                  formatter = {
-                    external = {
-                      command = "nixfmt";
-                    };
-                  };
-                };
+                enableUpdateCheck = true;
+                enableExtensionUpdateCheck = true;
+
+                # userSettings = {
+                # };
               };
-
-              lsp = {
-                nixd = {
-                  initialization_options = {
-                    formatting = {
-                      command = [
-                        "nixfmt"
-                      ];
-                    };
-                  };
-                };
-              };
-
-              diagnostics = {
-                include_warnings = true;
-
-                inline = {
-                  enabled = true;
-                };
-              };
-
-              git = { };
-
-              telemetry = {
-                diagnostics = false;
-                metrics = false;
-              };
-
-              theme = {
-                mode = "dark";
-                dark = "One Dark";
-                light = "One Light";
-              };
-
-              icon_theme = {
-                mode = "dark";
-                dark = "Zed (Default)";
-                light = "Zed (Default)";
-              };
-
-              ui_font_family = font_name.sans_serif;
-
-              project_panel = {
-                auto_fold_dirs = false;
-                auto_reveal_entries = true;
-                button = true;
-                dock = "left";
-                file_icons = true;
-                folder_icons = true;
-                git_status = true;
-                show_diagnostics = "all";
-
-                indent_guides = {
-                  show = "always";
-                };
-
-                scrollbar = {
-                  show = "always";
-                };
-              };
-
-              outline_panel = {
-                auto_fold_dirs = false;
-                auto_reveal_entries = true;
-                button = true;
-                dock = "left";
-                file_icons = true;
-                folder_icons = true;
-                git_status = true;
-
-                indent_guides = {
-                  show = "always";
-                };
-
-                scrollbar = {
-                  show = "always";
-                };
-              };
-
-              tab_bar = {
-                show = true;
-                show_nav_history_buttons = true;
-                show_tab_bar_buttons = true;
-              };
-
-              preview_tabs = {
-                enabled = true;
-                enable_preview_from_code_navigation = true;
-                enable_preview_from_file_finder = true;
-              };
-
-              tabs = {
-                activate_on_close = "history";
-                close_position = "right";
-                file_icons = true;
-                git_status = true;
-                show_close_button = "hover";
-                show_diagnostic = "all";
-              };
-
-              toolbar = {
-                breadcrumbs = true;
-                quick_actions = true;
-                selections_menu = true;
-              };
-
-              scrollbar = {
-                cursors = true;
-                diagnostics = "all";
-                git_diff = true;
-                search_results = true;
-                selected_symbol = true;
-                selected_text = true;
-                show = "always";
-
-                axes = {
-                  horizontal = true;
-                  vertical = true;
-                };
-              };
-
-              indent_guides = {
-                enabled = true;
-                coloring = "indent_aware";
-                # background_coloring = "indent_aware";
-              };
-
-              assistant = {
-                button = true;
-                dock = "right";
-                enabled = true;
-              };
-
-              terminal = {
-                blinking = "terminal_controlled";
-                button = true;
-                copy_on_select = false;
-                dock = "bottom";
-                font_family = font_name.mono;
-                line_height = "standard";
-                shell = "system";
-                working_directory = "current_project_directory";
-
-                toolbar = {
-                  breadcrumbs = true;
-                };
-
-                scrollbar = {
-                  show = "always";
-                };
-
-                detect_venv = {
-                  on = {
-                    directories = [
-                      ".env"
-                      ".venv"
-                      "env"
-                      "venv"
-                    ];
-                    activate_script = "default";
-                  };
-                };
-              };
-
-              show_call_status_icon = true;
-
-              buffer_font_family = font_name.mono;
-              soft_wrap = "editor_width";
-              show_whitespaces = "all";
-              cursor_blink = true;
-              cursor_shape = "bar";
-
-              hover_popover_enabled = true;
-              current_line_highlight = "all";
-              selection_highlight = true;
-
-              seed_search_query_from_cursor = "selection";
-              use_smartcase_search = false;
-
-              show_completions_on_input = true;
-              show_completion_documentation = true;
-              show_edit_predictions = true;
-
-              hard_tabs = false;
-
-              use_autoclose = true;
-              always_treat_brackets_as_autoclosed = false;
-
-              format_on_save = "on";
-              remove_trailing_whitespace_on_save = false;
-              ensure_final_newline_on_save = true;
-
-              calls = {
-                mute_on_join = true;
-                share_on_join = false;
-              };
-
-              confirm_quit = false;
             };
-
-            userKeymaps = { };
           };
 
           matplotlib = {
@@ -4682,5 +4577,6 @@ in
 # FIXME: ELAN7001 SPI Fingerprint Sensor
 # FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
+# FIXME: Waybar > Clock / Calendar
 # FIXME: hardinfo2
 # FIXME: rpi-imager
