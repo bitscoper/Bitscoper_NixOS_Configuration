@@ -186,8 +186,8 @@ in
       sandbox = true;
       auto-optimise-store = true;
 
-      cores = 0; # 0 = All
-      # max-jobs = 1;
+      cores = 1; # 0 = All
+      max-jobs = 1;
     };
 
     gc = {
@@ -213,7 +213,7 @@ in
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocales = [
-      # "all"
+      "C.UTF-8"
       "ar_SA.UTF-8"
       "bn_BD"
       "ru_RU.UTF-8"
@@ -221,14 +221,18 @@ in
 
     extraLocaleSettings = {
       LC_ADDRESS = config.i18n.defaultLocale;
+      LC_COLLATE = config.i18n.defaultLocale;
+      LC_CTYPE = config.i18n.defaultLocale;
       LC_IDENTIFICATION = config.i18n.defaultLocale;
       LC_MEASUREMENT = config.i18n.defaultLocale;
+      LC_MESSAGES = config.i18n.defaultLocale;
       LC_MONETARY = config.i18n.defaultLocale;
       LC_NAME = config.i18n.defaultLocale;
       LC_NUMERIC = config.i18n.defaultLocale;
       LC_PAPER = config.i18n.defaultLocale;
       LC_TELEPHONE = config.i18n.defaultLocale;
       LC_TIME = config.i18n.defaultLocale;
+      LC_ALL = config.i18n.defaultLocale;
     };
 
     inputMethod = {
@@ -327,41 +331,7 @@ in
           unixAuth = true;
           nodelay = false;
 
-          fprintAuth = true;
-
-          logFailures = true;
-
-          enableGnomeKeyring = true;
-
-          gnupg = {
-            enable = true;
-            storeOnly = false;
-            noAutostart = false;
-          };
-        };
-
-        sddm = {
-          unixAuth = true;
-          nodelay = false;
-
-          fprintAuth = true;
-
-          logFailures = true;
-
-          enableGnomeKeyring = true;
-
-          gnupg = {
-            enable = true;
-            storeOnly = false;
-            noAutostart = false;
-          };
-        };
-
-        hyprlock = {
-          unixAuth = true;
-          nodelay = false;
-
-          fprintAuth = true;
+          # fprintAuth = true;
 
           logFailures = true;
 
@@ -613,6 +583,11 @@ in
       extraConfig = '''';
     };
 
+    fwupd = {
+      enable = true;
+      package = pkgs.fwupd;
+    };
+
     btrfs.autoScrub = {
       enable = true;
 
@@ -620,11 +595,6 @@ in
       fileSystems = [
         "/"
       ];
-    };
-
-    fwupd = {
-      enable = true;
-      package = pkgs.fwupd;
     };
 
     acpid = {
@@ -662,64 +632,6 @@ in
       hibernateKeyLongPress = "ignore";
     };
 
-    fprintd = {
-      enable = true;
-      package = if config.services.fprintd.tod.enable then pkgs.fprintd-tod else pkgs.fprintd;
-      # tod = {
-      #   enable = true;
-      #   driver = ;
-      # };
-    };
-
-    displayManager = {
-      enable = true;
-      preStart = '''';
-
-      sddm = {
-        enable = true;
-        package = pkgs.kdePackages.sddm; # Qt 6
-
-        extraPackages = with pkgs; [
-          kdePackages.qtmultimedia
-        ];
-
-        wayland = {
-          enable = true;
-          compositor = "weston";
-        };
-
-        enableHidpi = true;
-        theme = "sddm-astronaut-theme";
-
-        autoNumlock = true;
-
-        autoLogin.relogin = false;
-
-        settings = {
-          Theme = {
-            CursorTheme = cursor.theme.name;
-            CursorSize = cursor.size;
-
-            Font = font_name.sans_serif;
-          };
-        };
-
-        stopScript = '''';
-      };
-
-      defaultSession = "hyprland-uwsm";
-
-      autoLogin = {
-        enable = false;
-        user = null;
-      };
-
-      logToJournal = true;
-      logToFile = true;
-    };
-
-    gnome.gnome-keyring.enable = true;
-
     udev = {
       enable = true;
       packages = with pkgs; [
@@ -730,18 +642,6 @@ in
         steam-devices-udev-rules
         usb-blaster-udev-rules
       ];
-    };
-
-    gvfs = {
-      enable = true;
-      package = pkgs.gvfs;
-    };
-
-    udisks2 = {
-      enable = true;
-      package = pkgs.udisks2;
-
-      mountOnMedia = false;
     };
 
     libinput = {
@@ -772,6 +672,85 @@ in
         tappingDragLock = true;
         sendEventsMode = "enabled";
       };
+    };
+
+    fprintd = {
+      enable = true;
+      package = if config.services.fprintd.tod.enable then pkgs.fprintd-tod else pkgs.fprintd;
+      # tod = {
+      #   enable = true;
+      #   driver = ;
+      # };
+    };
+
+    displayManager = {
+      enable = true;
+      preStart = '''';
+
+      defaultSession = "gnome";
+
+      autoLogin = {
+        enable = false;
+        user = null;
+      };
+
+      logToJournal = true;
+      logToFile = true;
+    };
+
+    xserver = {
+      enable = true;
+
+      displayManager = {
+        gdm = {
+          enable = true;
+          wayland = true;
+
+          banner = config.networking.hostName;
+          autoSuspend = false;
+
+          settings = { };
+
+          debug = false;
+        };
+      };
+
+      desktopManager = {
+        gnome = {
+          enable = true;
+
+          extraGSettingsOverridePackages = with pkgs; [
+
+          ];
+          extraGSettingsOverrides = '''';
+
+          debug = false;
+        };
+
+        xterm.enable = false;
+      };
+
+      excludePackages = with pkgs; [
+        xterm
+      ];
+    };
+
+    gnome = {
+      core-os-services.enable = true;
+      core-shell.enable = true;
+      core-utilities.enable = true;
+      glib-networking.enable = true;
+      gnome-browser-connector.enable = true;
+      gnome-keyring.enable = true;
+      gnome-online-accounts.enable = true;
+      gnome-remote-desktop.enable = true;
+      gnome-settings-daemon.enable = true;
+      gnome-user-share.enable = true;
+    };
+
+    gvfs = {
+      enable = true;
+      package = pkgs.gvfs;
     };
 
     pipewire = {
@@ -838,7 +817,96 @@ in
 
     pulseaudio.enable = false;
 
-    blueman.enable = true;
+    phpfpm = {
+      settings = { };
+
+      phpOptions = ''
+        default_charset = "UTF-8"
+        error_reporting = E_ALL
+        display_errors = Off
+        log_errors = On
+        cgi.force_redirect = 1
+        expose_php = On
+        file_uploads = On
+        session.cookie_lifetime = 0
+        session.use_cookies = 1
+        session.use_only_cookies = 1
+        session.use_strict_mode = 1
+        session.cookie_httponly = 1
+        session.cookie_secure = 1
+        session.cookie_samesite = "Strict"
+        session.gc_maxlifetime = 43200
+        session.use_trans_sid = O
+        session.cache_limiter = nocache
+        session.sid_length = 248
+      '';
+    };
+
+    avahi = {
+      enable = true;
+      package = pkgs.avahi;
+
+      ipv4 = true;
+      ipv6 = true;
+
+      nssmdns4 = true;
+      nssmdns6 = true;
+
+      wideArea = true;
+
+      publish = {
+        enable = true;
+        domain = true;
+        addresses = true;
+        workstation = true;
+        hinfo = true;
+        userServices = true;
+      };
+
+      domainName = config.networking.hostName;
+      hostName = config.networking.hostName;
+
+      openFirewall = true;
+    };
+
+    openssh = {
+      enable = true;
+      package = pkgs.openssh;
+
+      listenAddresses = [
+        {
+          addr = "0.0.0.0";
+        }
+      ];
+      ports = [
+        22
+      ];
+      allowSFTP = true;
+
+      banner = config.networking.hostName;
+
+      authorizedKeysInHomedir = true;
+
+      settings = {
+        PermitRootLogin = "yes";
+        PasswordAuthentication = true;
+        X11Forwarding = false;
+        StrictModes = true;
+        UseDns = true;
+        LogLevel = "ERROR";
+      };
+
+      openFirewall = true;
+    };
+    sshd.enable = true;
+
+    cockpit = {
+      enable = true;
+      package = pkgs.cockpit;
+
+      port = 9090;
+      openFirewall = true;
+    };
 
     printing = {
       enable = true;
@@ -887,35 +955,7 @@ in
       openFirewall = true;
     };
     ipp-usb.enable = true;
-
     system-config-printer.enable = true;
-
-    avahi = {
-      enable = true;
-      package = pkgs.avahi;
-
-      ipv4 = true;
-      ipv6 = true;
-
-      nssmdns4 = true;
-      nssmdns6 = true;
-
-      wideArea = true;
-
-      publish = {
-        enable = true;
-        domain = true;
-        addresses = true;
-        workstation = true;
-        hinfo = true;
-        userServices = true;
-      };
-
-      domainName = config.networking.hostName;
-      hostName = config.networking.hostName;
-
-      openFirewall = true;
-    };
 
     bind = {
       enable = false;
@@ -939,68 +979,13 @@ in
       '';
     };
 
-    openssh = {
+    memcached = {
       enable = true;
-      package = pkgs.openssh;
-
-      listenAddresses = [
-        {
-          addr = "0.0.0.0";
-        }
-      ];
-      ports = [
-        22
-      ];
-      allowSFTP = true;
-
-      banner = config.networking.hostName;
-
-      authorizedKeysInHomedir = true;
-
-      settings = {
-        PermitRootLogin = "yes";
-        PasswordAuthentication = true;
-        X11Forwarding = false;
-        StrictModes = true;
-        UseDns = true;
-        LogLevel = "ERROR";
-      };
-
-      openFirewall = true;
-    };
-    sshd.enable = true;
-
-    cockpit = {
-      enable = true;
-      package = pkgs.cockpit;
-
-      port = 9090;
-      openFirewall = true;
-    };
-
-    phpfpm = {
-      settings = { };
-
-      phpOptions = ''
-        default_charset = "UTF-8"
-        error_reporting = E_ALL
-        display_errors = Off
-        log_errors = On
-        cgi.force_redirect = 1
-        expose_php = On
-        file_uploads = On
-        session.cookie_lifetime = 0
-        session.use_cookies = 1
-        session.use_only_cookies = 1
-        session.use_strict_mode = 1
-        session.cookie_httponly = 1
-        session.cookie_secure = 1
-        session.cookie_samesite = "Strict"
-        session.gc_maxlifetime = 43200
-        session.use_trans_sid = O
-        session.cache_limiter = nocache
-        session.sid_length = 248
-      '';
+      listen = "0.0.0.0";
+      port = 11211;
+      enableUnixSocket = false;
+      maxMemory = 64; # Megabytes
+      maxConnections = 256;
     };
 
     postgresql = {
@@ -1049,15 +1034,6 @@ in
         DELETE FROM mysql.user WHERE `Host`='localhost' AND `User`='root';
         flush privileges;
       '';
-    };
-
-    memcached = {
-      enable = true;
-      listen = "0.0.0.0";
-      port = 11211;
-      enableUnixSocket = false;
-      maxMemory = 64; # Megabytes
-      maxConnections = 256;
     };
 
     postfix = {
@@ -1336,67 +1312,6 @@ in
       openFirewall = true;
     };
 
-    tor = {
-      enable = false;
-      package = pkgs.tor;
-
-      relay = {
-        enable = false;
-
-        # role = ;
-      };
-
-      client = {
-        enable = false;
-
-        dns.enable = true;
-
-        onionServices = { };
-      };
-
-      torsocks = {
-        enable = config.services.tor.client.enable;
-        allowInbound = true;
-      };
-
-      controlSocket.enable = false;
-
-      enableGeoIP = true;
-
-      settings = {
-        Nickname = config.networking.hostName;
-        ContactInfo = "bitscoper@${config.networking.hostName}";
-
-        IPv6Exit = true;
-        ClientUseIPv4 = true;
-        ClientUseIPv6 = true;
-
-        ExtendAllowPrivateAddresses = false;
-        RefuseUnknownExits = true;
-        ServerDNSDetectHijacking = true;
-        ServerDNSRandomizeCase = true;
-
-        FetchServerDescriptors = true;
-        FetchHidServDescriptors = true;
-        FetchUselessDescriptors = false;
-        DownloadExtraInfo = false;
-
-        CellStatistics = false;
-        ConnDirectionStatistics = false;
-        DirReqStatistics = false;
-        EntryStatistics = false;
-        ExitPortStatistics = false;
-        ExtraInfoStatistics = false;
-        HiddenServiceStatistics = false;
-        MainloopStats = false;
-        PaddingStatistics = false;
-
-        LogMessageDomains = false;
-      };
-
-      openFirewall = true;
-    };
-
     logrotate = {
       enable = true;
 
@@ -1413,7 +1328,6 @@ in
       package = pkgs.nix-ld;
 
       libraries = with pkgs; [
-        # libepoxy
         glib.out
         libGL
         llvmPackages.stdenv.cc.cc.lib
@@ -1421,25 +1335,18 @@ in
       ];
     };
 
+    java = {
+      enable = true;
+      package = pkgs.jdk23;
+
+      binfmt = true;
+    };
+
     appimage = {
       enable = true;
       package = pkgs.appimage-run;
 
       binfmt = true;
-    };
-
-    uwsm = {
-      enable = true;
-      package = pkgs.uwsm;
-    };
-
-    hyprland = {
-      enable = true;
-      package = pkgs.hyprland;
-      portalPackage = pkgs.xdg-desktop-portal-hyprland;
-
-      withUWSM = true;
-      xwayland.enable = true;
     };
 
     xwayland.enable = true;
@@ -1504,30 +1411,11 @@ in
       silent = false;
     };
 
-    nautilus-open-any-terminal = {
-      enable = true;
-      terminal = "blackbox";
-    };
-
     nix-index = {
       package = pkgs.nix-index;
 
       enableBashIntegration = true;
       enableFishIntegration = true;
-    };
-
-    java = {
-      enable = true;
-      package = pkgs.jdk23;
-
-      binfmt = true;
-    };
-
-    ssh = {
-      package = pkgs.openssh;
-
-      startAgent = true;
-      agentTimeout = null;
     };
 
     gnupg = {
@@ -1540,22 +1428,18 @@ in
         enableExtraSocket = true;
         enableSSHSupport = false;
 
-        pinentryPackage = (
-          pkgs.pinentry-rofi.override {
-            rofi = pkgs.rofi-wayland;
-          }
-        );
+        pinentryPackage = pkgs.pinentry-gnome3;
       };
 
       dirmngr.enable = true;
     };
 
-    nm-applet = {
-      enable = true;
-      indicator = true;
-    };
+    ssh = {
+      package = pkgs.openssh;
 
-    seahorse.enable = true;
+      startAgent = true;
+      agentTimeout = null;
+    };
 
     git = {
       enable = true;
@@ -1582,15 +1466,22 @@ in
       };
     };
 
-    adb.enable = true;
-
     usbtop.enable = true;
 
-    system-config-printer.enable = true;
+    adb.enable = true;
 
-    virt-manager = {
+    nano = {
       enable = true;
-      package = pkgs.virt-manager;
+      package = pkgs.nano;
+
+      syntaxHighlight = true;
+
+      nanorc = ''
+        set linenumbers
+        set softwrap
+        set indicator
+        set autoindent
+      '';
     };
 
     bat = {
@@ -1608,19 +1499,18 @@ in
       settings = { };
     };
 
-    nano = {
+    virt-manager = {
       enable = true;
-      package = pkgs.nano;
-
-      syntaxHighlight = true;
-
-      nanorc = ''
-        set linenumbers
-        set softwrap
-        set indicator
-        set autoindent
-      '';
+      package = pkgs.virt-manager;
     };
+
+    system-config-printer.enable = true;
+
+    calls.enable = true;
+    file-roller.enable = true;
+    gnome-disks.enable = true;
+    gnome-terminal.enable = true;
+    seahorse.enable = true;
 
     thunderbird = {
       enable = true;
@@ -1637,24 +1527,24 @@ in
       usbmon.enable = true;
     };
 
-    steam = {
-      enable = true;
-      package = pkgs.steam;
-
-      # extraCompatPackages = with pkgs; [
-
-      # ];
-
-      localNetworkGameTransfers.openFirewall = true;
-      remotePlay.openFirewall = true;
-      dedicatedServer.openFirewall = true;
-    };
-
     localsend = {
       enable = true;
       package = pkgs.localsend;
 
       openFirewall = true;
+    };
+
+    steam = {
+      enable = true;
+      package = pkgs.steam;
+
+      extraCompatPackages = with pkgs; [
+
+      ];
+
+      localNetworkGameTransfers.openFirewall = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
     };
 
     dconf = {
@@ -1666,25 +1556,6 @@ in
           settings = {
             "system/locale" = {
               region = config.i18n.defaultLocale;
-            };
-
-            "com/raggesilver/BlackBox" = {
-              context-aware-header-bar = true;
-              easy-copy-paste = false;
-              fill-tabs = true;
-              font = "${font_name.mono} 12";
-              headerbar-drag-area = true;
-              notify-process-completion = true;
-              pretty = true;
-              remember-window-size = false;
-              show-headerbar = true;
-              show-menu-button = true;
-              show-scrollbars = true;
-              terminal-bell = true;
-              theme-bold-is-bright = false;
-              theme-dark = "Dracula";
-              theme-light = "Dracula Light";
-              use-overlay-scrolling = true;
             };
 
             "org/gnome/desktop/privacy" = {
@@ -1772,30 +1643,6 @@ in
               list-mode = "as-folder";
             };
 
-            "org/gnome/eog/plugins" = {
-              active-plugins = [
-                "fullscreen"
-                "reload"
-                "statusbar-date"
-              ];
-            };
-            "org/gnome/eog/ui" = {
-              image-gallery = false;
-              sidebar = true;
-              statusbar = true;
-            };
-            "org/gnome/eog/view" = {
-              autorotate = true;
-              extrapolate = true;
-              interpolate = true;
-              transparency = "checked";
-              use-background-color = false;
-            };
-            "org/gnome/eog/fullscreen" = {
-              loop = false;
-              upscale = false;
-            };
-
             "com/github/huluti/Curtail" = {
               file-attributes = true;
               metadata = false;
@@ -1860,8 +1707,6 @@ in
   };
 
   environment = {
-    enableDebugInfo = false;
-
     enableAllTerminfo = true;
 
     wordlist = {
@@ -1897,7 +1742,7 @@ in
       with pkgs;
       [
         # amrnb
-        # amrwb
+        # amrwbf
         # appimagekitk
         # fritzing
         # gnss-sdr
@@ -1926,13 +1771,11 @@ in
         autopsy
         avrdude
         baobab
-        bfcal
+        binary
         binwalk
-        blackbox-terminal
         bleachbit
         blender
         bluez-tools
-        brightnessctl
         btrfs-progs
         bulk_extractor
         burpsuite
@@ -1950,7 +1793,6 @@ in
         clang-manpages
         clang-tools
         clinfo
-        cliphist
         cloc
         cloudflare-warp
         cmake
@@ -1978,7 +1820,6 @@ in
         dosfstools
         e2fsprogs
         efibootmgr
-        eog
         esptool
         evtest
         evtest-qt
@@ -1990,8 +1831,6 @@ in
         ffmpeg-full
         ffmpegthumbnailer
         file
-        file-roller
-        flightgear
         flutter
         fwupd-efi
         gcc
@@ -2003,7 +1842,15 @@ in
         git-filter-repo
         glib
         glibc
+        gnome-calculator
+        gnome-calendar
+        gnome-characters
+        gnome-clocks
+        gnome-connections
         gnome-font-viewer
+        gnome-logs
+        gnome-tweaks
+        gnome-weather
         gnugrep
         gnulib
         gnumake
@@ -2013,7 +1860,6 @@ in
         gource
         gparted
         gpredict
-        grim
         gsm
         gtk-vnc
         guestfs-tools
@@ -2026,8 +1872,6 @@ in
         hw-probe
         hwloc
         hydra-check
-        hyprpicker
-        hyprpolkitagent
         i2c-tools
         iaito
         iftop
@@ -2067,7 +1911,6 @@ in
         libopenraw
         libopus
         libosinfo
-        libqalculate
         libusb1
         libuuid
         libva-utils
@@ -2077,6 +1920,7 @@ in
         libxfs
         libzip
         linuxConsoleTools
+        loupe
         lrzip
         lshw
         lsof
@@ -2096,13 +1940,12 @@ in
         mesa-demos
         mfcuk
         mfoc
-        mission-center
         monkeysAudio
         mtools
         nautilus
         netdiscover
         netsniff-ng
-        networkmanagerapplet
+        ngrok
         nikto
         nilfs-utils
         ninja
@@ -2137,12 +1980,9 @@ in
         pkg-config
         platformio
         platformio-core
-        playerctl
         podman-compose
         podman-desktop
-        pwvucontrol
         python313Full
-        qalculate-gtk
         qbittorrent
         qemu-utils
         qpwgraph
@@ -2150,7 +1990,6 @@ in
         rar
         readline
         reiserfsprogs
-        remmina
         rpPPPoE
         rpi-imager
         rpmextract
@@ -2168,7 +2007,6 @@ in
         sherlock
         sipvicious
         sleuthkit
-        slurp
         smartmontools
         smbmap
         songrec
@@ -2189,7 +2027,6 @@ in
         tree
         trufflehog
         udftools
-        udiskie
         unar
         unicode-emoji
         universal-android-debloater
@@ -2206,13 +2043,11 @@ in
         vulkan-tools
         wafw00f
         wavpack
-        waybar-mpris
         waycheck
         wayland
         wayland-protocols
         wayland-utils
         waylevel
-        webcamoid
         wev
         wget
         which
@@ -2238,82 +2073,6 @@ in
         zlib
         zpaq
         zstd
-        (sddm-astronaut.override {
-          embeddedTheme = "astronaut";
-
-          themeConfig = {
-            # ScreenWidth = 1920;
-            # ScreenHeight = 1080;
-            ScreenPadding = 0;
-
-            BackgroundColor = dracula_theme.hex.background;
-            BackgroundHorizontalAlignment = "center";
-            BackgroundVerticalAlignment = "center";
-            Background = wallpaper;
-            CropBackground = false;
-            DimBackgroundImage = "0.0";
-
-            FullBlur = false;
-            PartialBlur = false;
-
-            HaveFormBackground = false;
-            FormPosition = "center";
-
-            HideLoginButton = false;
-            HideSystemButtons = false;
-            HideVirtualKeyboard = false;
-            VirtualKeyboardPosition = "center";
-
-            # MainColor = ; # TODO
-            # AccentColor = ; # TODO
-
-            # HighlightBorderColor= ; # TODO
-            # HighlightBackgroundColor= ; # TODO
-            # HighlightTextColor= ; # TODO
-
-            HeaderTextColor = dracula_theme.hex.foreground;
-            TimeTextColor = dracula_theme.hex.foreground;
-            DateTextColor = dracula_theme.hex.foreground;
-
-            IconColor = dracula_theme.hex.foreground;
-            PlaceholderTextColor = dracula_theme.hex.foreground;
-            WarningColor = dracula_theme.hex.red;
-
-            # LoginFieldBackgroundColor = ; # TODO
-            # LoginFieldTextColor = ; # TODO
-            # UserIconColor = ; # TODO
-            # HoverUserIconColor = ; # TODO
-
-            # PasswordFieldBackgroundColor = ; # TODO
-            # PasswordFieldTextColor = ; # TODO
-            # PasswordIconColor = ; # TODO
-            # HoverPasswordIconColor = ; # TODO
-
-            # LoginButtonBackgroundColor = ; # TODO
-            LoginButtonTextColor = dracula_theme.hex.foreground;
-
-            SystemButtonsIconsColor = dracula_theme.hex.foreground;
-            # HoverSystemButtonsIconsColor = ; # TODO
-
-            SessionButtonTextColor = dracula_theme.hex.foreground;
-            # HoverSessionButtonTextColor = ; # TODO
-
-            VirtualKeyboardButtonTextColor = dracula_theme.hex.foreground;
-            # HoverVirtualKeyboardButtonTextColor = ; # TODO
-
-            DropdownBackgroundColor = dracula_theme.hex.background;
-            DropdownSelectedBackgroundColor = dracula_theme.hex.current_line;
-            DropdownTextColor = dracula_theme.hex.foreground;
-
-            HeaderText = "";
-
-            HourFormat = "\"hh:mm A\"";
-            DateFormat = "\"MMMM dd, yyyy\"";
-
-            PasswordFocus = true;
-            AllowEmptyPassword = false;
-          };
-        })
       ]
       ++ (with unixtools; [
         arp
@@ -2340,6 +2099,15 @@ in
         gst-plugins-ugly
         gst-vaapi
         gstreamer
+      ])
+      ++ (with gnomeExtensions; [
+        # clipboard-indicator
+        blur-my-shell
+        desktop-cube
+        pano
+        places-status-indicator
+        removable-drive-menu
+        vitals
       ])
       ++ (with php84Extensions; [
         bz2
@@ -2411,6 +2179,21 @@ in
         applytransforms
         textext
       ]);
+
+    gnome.excludePackages = with pkgs; [
+      epiphany
+      evince
+      geary
+      gnome-contacts
+      gnome-maps
+      gnome-music
+      gnome-text-editor
+      gnome-tour
+      totem
+      yelp
+    ];
+
+    enableDebugInfo = false;
   };
 
   xdg = {
@@ -2425,89 +2208,89 @@ in
       defaultApplications = {
         "inode/directory" = "nautilus.desktop";
 
-        "image/aces" = "org.gnome.eog.desktop";
-        "image/apng" = "org.gnome.eog.desktop";
-        "image/avci" = "org.gnome.eog.desktop";
-        "image/avcs" = "org.gnome.eog.desktop";
-        "image/avif" = "org.gnome.eog.desktop";
-        "image/bmp" = "org.gnome.eog.desktop";
-        "image/cgm" = "org.gnome.eog.desktop";
-        "image/dicom-rle" = "org.gnome.eog.desktop";
-        "image/dpx" = "org.gnome.eog.desktop";
-        "image/emf" = "org.gnome.eog.desktop";
-        "image/fits" = "org.gnome.eog.desktop";
-        "image/g3fax" = "org.gnome.eog.desktop";
-        "image/gif" = "org.gnome.eog.desktop";
-        "image/heic" = "org.gnome.eog.desktop";
-        "image/heic-sequence" = "org.gnome.eog.desktop";
-        "image/heif" = "org.gnome.eog.desktop";
-        "image/heif-sequence" = "org.gnome.eog.desktop";
-        "image/hej2k" = "org.gnome.eog.desktop";
-        "image/hsj2" = "org.gnome.eog.desktop";
-        "image/ief" = "org.gnome.eog.desktop";
-        "image/j2c" = "org.gnome.eog.desktop";
-        "image/jaii" = "org.gnome.eog.desktop";
-        "image/jais" = "org.gnome.eog.desktop";
-        "image/jls" = "org.gnome.eog.desktop";
-        "image/jp2" = "org.gnome.eog.desktop";
-        "image/jpeg" = "org.gnome.eog.desktop";
-        "image/jph" = "org.gnome.eog.desktop";
-        "image/jphc" = "org.gnome.eog.desktop";
-        "image/jpm" = "org.gnome.eog.desktop";
-        "image/jpx" = "org.gnome.eog.desktop";
-        "image/jxl" = "org.gnome.eog.desktop";
-        "image/jxr" = "org.gnome.eog.desktop";
-        "image/jxrA" = "org.gnome.eog.desktop";
-        "image/jxrS" = "org.gnome.eog.desktop";
-        "image/jxs" = "org.gnome.eog.desktop";
-        "image/jxsc" = "org.gnome.eog.desktop";
-        "image/jxsi" = "org.gnome.eog.desktop";
-        "image/jxss" = "org.gnome.eog.desktop";
-        "image/ktx" = "org.gnome.eog.desktop";
-        "image/ktx2" = "org.gnome.eog.desktop";
-        "image/naplps" = "org.gnome.eog.desktop";
-        "image/png" = "org.gnome.eog.desktop";
-        "image/prs.btif" = "org.gnome.eog.desktop";
-        "image/prs.pti" = "org.gnome.eog.desktop";
-        "image/pwg-raster" = "org.gnome.eog.desktop";
-        "image/svg+xml" = "org.gnome.eog.desktop";
-        "image/t38" = "org.gnome.eog.desktop";
-        "image/tiff" = "org.gnome.eog.desktop";
-        "image/tiff-fx" = "org.gnome.eog.desktop";
-        "image/vnd.adobe.photoshop" = "org.gnome.eog.desktop";
-        "image/vnd.airzip.accelerator.azv" = "org.gnome.eog.desktop";
-        "image/vnd.cns.inf2" = "org.gnome.eog.desktop";
-        "image/vnd.dece.graphic" = "org.gnome.eog.desktop";
-        "image/vnd.djvu" = "org.gnome.eog.desktop";
-        "image/vnd.dvb.subtitle" = "org.gnome.eog.desktop";
-        "image/vnd.dwg" = "org.gnome.eog.desktop";
-        "image/vnd.dxf" = "org.gnome.eog.desktop";
-        "image/vnd.fastbidsheet" = "org.gnome.eog.desktop";
-        "image/vnd.fpx" = "org.gnome.eog.desktop";
-        "image/vnd.fst" = "org.gnome.eog.desktop";
-        "image/vnd.fujixerox.edmics-mmr" = "org.gnome.eog.desktop";
-        "image/vnd.fujixerox.edmics-rlc" = "org.gnome.eog.desktop";
-        "image/vnd.globalgraphics.pgb" = "org.gnome.eog.desktop";
-        "image/vnd.microsoft.icon" = "org.gnome.eog.desktop";
-        "image/vnd.mix" = "org.gnome.eog.desktop";
-        "image/vnd.mozilla.apng" = "org.gnome.eog.desktop";
-        "image/vnd.ms-modi" = "org.gnome.eog.desktop";
-        "image/vnd.net-fpx" = "org.gnome.eog.desktop";
-        "image/vnd.pco.b16" = "org.gnome.eog.desktop";
-        "image/vnd.radiance" = "org.gnome.eog.desktop";
-        "image/vnd.sealed.png" = "org.gnome.eog.desktop";
-        "image/vnd.sealedmedia.softseal.gif" = "org.gnome.eog.desktop";
-        "image/vnd.sealedmedia.softseal.jpg" = "org.gnome.eog.desktop";
-        "image/vnd.svf" = "org.gnome.eog.desktop";
-        "image/vnd.tencent.tap" = "org.gnome.eog.desktop";
-        "image/vnd.valve.source.texture" = "org.gnome.eog.desktop";
-        "image/vnd.wap.wbmp" = "org.gnome.eog.desktop";
-        "image/vnd.xiff" = "org.gnome.eog.desktop";
-        "image/vnd.zbrush.pcx" = "org.gnome.eog.desktop";
-        "image/webp" = "org.gnome.eog.desktop";
-        "image/wmf" = "org.gnome.eog.desktop";
-        "image/x-emf" = "org.gnome.eog.desktop";
-        "image/x-wmf" = "org.gnome.eog.desktop";
+        "image/aces" = "org.gnome.Loupe.desktop";
+        "image/apng" = "org.gnome.Loupe.desktop";
+        "image/avci" = "org.gnome.Loupe.desktop";
+        "image/avcs" = "org.gnome.Loupe.desktop";
+        "image/avif" = "org.gnome.Loupe.desktop";
+        "image/bmp" = "org.gnome.Loupe.desktop";
+        "image/cgm" = "org.gnome.Loupe.desktop";
+        "image/dicom-rle" = "org.gnome.Loupe.desktop";
+        "image/dpx" = "org.gnome.Loupe.desktop";
+        "image/emf" = "org.gnome.Loupe.desktop";
+        "image/fits" = "org.gnome.Loupe.desktop";
+        "image/g3fax" = "org.gnome.Loupe.desktop";
+        "image/gif" = "org.gnome.Loupe.desktop";
+        "image/heic" = "org.gnome.Loupe.desktop";
+        "image/heic-sequence" = "org.gnome.Loupe.desktop";
+        "image/heif" = "org.gnome.Loupe.desktop";
+        "image/heif-sequence" = "org.gnome.Loupe.desktop";
+        "image/hej2k" = "org.gnome.Loupe.desktop";
+        "image/hsj2" = "org.gnome.Loupe.desktop";
+        "image/ief" = "org.gnome.Loupe.desktop";
+        "image/j2c" = "org.gnome.Loupe.desktop";
+        "image/jaii" = "org.gnome.Loupe.desktop";
+        "image/jais" = "org.gnome.Loupe.desktop";
+        "image/jls" = "org.gnome.Loupe.desktop";
+        "image/jp2" = "org.gnome.Loupe.desktop";
+        "image/jpeg" = "org.gnome.Loupe.desktop";
+        "image/jph" = "org.gnome.Loupe.desktop";
+        "image/jphc" = "org.gnome.Loupe.desktop";
+        "image/jpm" = "org.gnome.Loupe.desktop";
+        "image/jpx" = "org.gnome.Loupe.desktop";
+        "image/jxl" = "org.gnome.Loupe.desktop";
+        "image/jxr" = "org.gnome.Loupe.desktop";
+        "image/jxrA" = "org.gnome.Loupe.desktop";
+        "image/jxrS" = "org.gnome.Loupe.desktop";
+        "image/jxs" = "org.gnome.Loupe.desktop";
+        "image/jxsc" = "org.gnome.Loupe.desktop";
+        "image/jxsi" = "org.gnome.Loupe.desktop";
+        "image/jxss" = "org.gnome.Loupe.desktop";
+        "image/ktx" = "org.gnome.Loupe.desktop";
+        "image/ktx2" = "org.gnome.Loupe.desktop";
+        "image/naplps" = "org.gnome.Loupe.desktop";
+        "image/png" = "org.gnome.Loupe.desktop";
+        "image/prs.btif" = "org.gnome.Loupe.desktop";
+        "image/prs.pti" = "org.gnome.Loupe.desktop";
+        "image/pwg-raster" = "org.gnome.Loupe.desktop";
+        "image/svg+xml" = "org.gnome.Loupe.desktop";
+        "image/t38" = "org.gnome.Loupe.desktop";
+        "image/tiff" = "org.gnome.Loupe.desktop";
+        "image/tiff-fx" = "org.gnome.Loupe.desktop";
+        "image/vnd.adobe.photoshop" = "org.gnome.Loupe.desktop";
+        "image/vnd.airzip.accelerator.azv" = "org.gnome.Loupe.desktop";
+        "image/vnd.cns.inf2" = "org.gnome.Loupe.desktop";
+        "image/vnd.dece.graphic" = "org.gnome.Loupe.desktop";
+        "image/vnd.djvu" = "org.gnome.Loupe.desktop";
+        "image/vnd.dvb.subtitle" = "org.gnome.Loupe.desktop";
+        "image/vnd.dwg" = "org.gnome.Loupe.desktop";
+        "image/vnd.dxf" = "org.gnome.Loupe.desktop";
+        "image/vnd.fastbidsheet" = "org.gnome.Loupe.desktop";
+        "image/vnd.fpx" = "org.gnome.Loupe.desktop";
+        "image/vnd.fst" = "org.gnome.Loupe.desktop";
+        "image/vnd.fujixerox.edmics-mmr" = "org.gnome.Loupe.desktop";
+        "image/vnd.fujixerox.edmics-rlc" = "org.gnome.Loupe.desktop";
+        "image/vnd.globalgraphics.pgb" = "org.gnome.Loupe.desktop";
+        "image/vnd.microsoft.icon" = "org.gnome.Loupe.desktop";
+        "image/vnd.mix" = "org.gnome.Loupe.desktop";
+        "image/vnd.mozilla.apng" = "org.gnome.Loupe.desktop";
+        "image/vnd.ms-modi" = "org.gnome.Loupe.desktop";
+        "image/vnd.net-fpx" = "org.gnome.Loupe.desktop";
+        "image/vnd.pco.b16" = "org.gnome.Loupe.desktop";
+        "image/vnd.radiance" = "org.gnome.Loupe.desktop";
+        "image/vnd.sealed.png" = "org.gnome.Loupe.desktop";
+        "image/vnd.sealedmedia.softseal.gif" = "org.gnome.Loupe.desktop";
+        "image/vnd.sealedmedia.softseal.jpg" = "org.gnome.Loupe.desktop";
+        "image/vnd.svf" = "org.gnome.Loupe.desktop";
+        "image/vnd.tencent.tap" = "org.gnome.Loupe.desktop";
+        "image/vnd.valve.source.texture" = "org.gnome.Loupe.desktop";
+        "image/vnd.wap.wbmp" = "org.gnome.Loupe.desktop";
+        "image/vnd.xiff" = "org.gnome.Loupe.desktop";
+        "image/vnd.zbrush.pcx" = "org.gnome.Loupe.desktop";
+        "image/webp" = "org.gnome.Loupe.desktop";
+        "image/wmf" = "org.gnome.Loupe.desktop";
+        "image/x-emf" = "org.gnome.Loupe.desktop";
+        "image/x-wmf" = "org.gnome.Loupe.desktop";
 
         "audio/1d-interleaved-parityfec" = "vlc.desktop";
         "audio/32kadpcm" = "vlc.desktop";
@@ -2820,7 +2603,7 @@ in
     portal = {
       enable = true;
       extraPortals = with pkgs; [
-        xdg-desktop-portal-hyprland
+        xdg-desktop-portal-gnome
       ];
 
       xdgOpenUsePortal = false; # Opening Programs
@@ -2928,19 +2711,14 @@ in
             package = cursor.theme.package;
             size = cursor.size;
 
-            hyprcursor = {
-              enable = true;
-              size = cursor.size;
-            };
-
             gtk.enable = true;
           };
 
           preferXdgDirectories = true;
 
-          # packages = with pkgs; [
+          packages = with pkgs; [
 
-          # ];
+          ];
 
           sessionVariables = { };
 
@@ -2951,393 +2729,6 @@ in
           enableDebugInfo = false;
 
           stateVersion = "24.11";
-        };
-
-        wayland.windowManager.hyprland = {
-          enable = true;
-          package = pkgs.hyprland;
-
-          systemd = {
-            enable = false;
-            enableXdgAutostart = true;
-
-            # extraCommands = [
-
-            # ];
-
-            variables = [
-              "--all"
-            ];
-          };
-
-          # plugins = with pkgs.hyprlandPlugins; [
-          #   hypr-dynamic-cursors
-          # ];
-
-          xwayland.enable = true;
-
-          sourceFirst = true;
-
-          settings = {
-            monitor = [
-              # Name, Resolution, Position, Scale, Transform-Parameter, Transform
-              ", highres, auto, 1, transform, 0"
-              "eDP-1, highres, auto, 1, transform, 0"
-              "HDMI-A-1, highres, auto, 1, transform, 0"
-            ];
-
-            env = [
-              "XCURSOR_SIZE, ${toString cursor.size}"
-            ];
-
-            exec-once = [
-              "uwsm app -- ${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
-
-              "uwsm app -- udiskie --tray --appindicator --automount --notify --file-manager nautilus"
-
-              "sleep 2 && uwsm app -- keepassxc"
-
-              "uwsm app -- wl-paste --type text --watch cliphist store"
-              "uwsm app -- wl-paste --type image --watch cliphist store"
-
-              "setfacl --modify user:jellyfin:--x ~ & adb start-server &"
-
-              "systemctl --user start warp-taskbar"
-
-              "rm -rf ~/.local/share/applications/waydroid.*"
-            ];
-
-            bind = [
-              "SUPER, L, exec, hyprlock --immediate"
-              "SUPER CTRL, L, exec, uwsm stop"
-              "SUPER CTRL, P, exec, systemctl poweroff"
-              "SUPER CTRL, R, exec, systemctl reboot"
-
-              "SUPER, 1, workspace, 1"
-              "SUPER, 2, workspace, 2"
-              "SUPER, 3, workspace, 3"
-              "SUPER, 4, workspace, 4"
-              "SUPER, 5, workspace, 5"
-              "SUPER, 6, workspace, 6"
-              "SUPER, 7, workspace, 7"
-              "SUPER, 8, workspace, 8"
-              "SUPER, 9, workspace, 9"
-              "SUPER, 0, workspace, 10"
-              "SUPER, mouse_down, workspace, e+1"
-              "SUPER, mouse_up, workspace, e-1"
-              "SUPER, S, togglespecialworkspace, magic"
-
-              "SUPER, left, movefocus, l"
-              "SUPER, right, movefocus, r"
-              "SUPER, up, movefocus, u"
-              "SUPER, down, movefocus, d"
-
-              "SUPER SHIFT, T, togglesplit,"
-              "SUPER SHIFT, F, togglefloating,"
-              ", F11, fullscreen, 0"
-              "SUPER, Q, killactive,"
-
-              "SUPER SHIFT, 1, movetoworkspace, 1"
-              "SUPER SHIFT, 2, movetoworkspace, 2"
-              "SUPER SHIFT, 3, movetoworkspace, 3"
-              "SUPER SHIFT, 4, movetoworkspace, 4"
-              "SUPER SHIFT, 5, movetoworkspace, 5"
-              "SUPER SHIFT, 6, movetoworkspace, 6"
-              "SUPER SHIFT, 7, movetoworkspace, 7"
-              "SUPER SHIFT, 8, movetoworkspace, 8"
-              "SUPER SHIFT, 9, movetoworkspace, 9"
-              "SUPER SHIFT, 0, movetoworkspace, 10"
-              "SUPER SHIFT, S, movetoworkspace, special:magic"
-
-              "SUPER SHIFT ALT, 1, movetoworkspacesilent, 1"
-              "SUPER SHIFT ALT, 2, movetoworkspacesilent, 2"
-              "SUPER SHIFT ALT, 3, movetoworkspacesilent, 3"
-              "SUPER SHIFT ALT, 4, movetoworkspacesilent, 4"
-              "SUPER SHIFT ALT, 5, movetoworkspacesilent, 5"
-              "SUPER SHIFT ALT, 6, movetoworkspacesilent, 6"
-              "SUPER SHIFT ALT, 7, movetoworkspacesilent, 7"
-              "SUPER SHIFT ALT, 8, movetoworkspacesilent, 8"
-              "SUPER SHIFT ALT, 9, movetoworkspacesilent, 9"
-              "SUPER SHIFT ALT, 0, movetoworkspacesilent, 10"
-              "SUPER SHIFT ALT, S, movetoworkspacesilent, special:magic"
-
-              "SUPER, C, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
-
-              ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/ScreenShot_$(date +'%B-%d-%Y_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\""
-
-              "SUPER, A, exec, rofi -show drun -disable-history"
-              "SUPER, R, exec, rofi -show run -disable-history"
-
-              "SUPER, T, exec, blackbox"
-              "SUPER ALT, T, exec, blackbox sh -c \"bash\""
-
-              ", XF86Explorer, exec, nautilus"
-              "SUPER, F, exec, nautilus"
-
-              "SUPER, U, exec, missioncenter"
-
-              "SUPER, W, exec, librewolf"
-              "SUPER ALT, W, exec, librewolf --private-window"
-
-              ", XF86Mail, exec, thunderbird"
-              "SUPER, M, exec, thunderbird"
-
-              "SUPER, E, exec, code"
-              "SUPER, D, exec, dbeaver"
-
-              "SUPER, V, exec, vlc"
-            ];
-
-            bindm = [
-              "SUPER, mouse:272, movewindow"
-              "SUPER, mouse:273, resizewindow"
-            ];
-
-            bindl = [
-              ", XF86AudioPlay, exec, playerctl play-pause"
-              ", XF86AudioPause, exec, playerctl play-pause"
-              ", XF86AudioStop, exec, playerctl stop"
-
-              ", XF86AudioPrev, exec, playerctl previous"
-              ", XF86AudioNext, exec, playerctl next"
-            ];
-
-            bindel = [
-              ", XF86MonBrightnessUp, exec, brightnessctl s 1%+"
-              ", XF86MonBrightnessDown, exec, brightnessctl s 1%-"
-
-              ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+"
-              ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-"
-              ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-              ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-            ];
-
-            general = {
-              allow_tearing = false;
-
-              gaps_workspaces = 0;
-
-              layout = "dwindle";
-
-              gaps_in = 2;
-              gaps_out = 4;
-
-              no_border_on_floating = false;
-
-              border_size = 1;
-              "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg"; # TODO
-              "col.inactive_border" = "rgba(595959aa)"; # TODO
-
-              no_focus_fallback = false;
-
-              resize_on_border = true;
-              hover_icon_on_border = true;
-
-              snap = {
-                enabled = true;
-                border_overlap = false;
-              };
-            };
-
-            ecosystem = {
-              no_update_news = false;
-            };
-
-            misc = {
-              disable_autoreload = false;
-
-              allow_session_lock_restore = true;
-
-              key_press_enables_dpms = true;
-              mouse_move_enables_dpms = true;
-
-              vfr = true;
-              vrr = 1;
-
-              render_ahead_of_time = false;
-
-              mouse_move_focuses_monitor = true;
-
-              disable_hyprland_logo = false;
-              force_default_wallpaper = 1;
-              disable_splash_rendering = true;
-
-              font_family = font_name.sans_serif;
-
-              close_special_on_empty = true;
-
-              animate_mouse_windowdragging = false;
-              animate_manual_resizes = false;
-
-              exit_window_retains_fullscreen = false;
-
-              layers_hog_keyboard_focus = true;
-
-              focus_on_activate = false;
-
-              middle_click_paste = true;
-            };
-
-            dwindle = {
-              pseudotile = false;
-
-              use_active_for_splits = true;
-              force_split = 0; # Follows Mouse
-              smart_split = false;
-              preserve_split = true;
-
-              smart_resizing = true;
-            };
-
-            xwayland = {
-              enabled = true;
-              force_zero_scaling = true;
-              use_nearest_neighbor = true;
-            };
-
-            windowrule = [
-              "suppressevent maximize, class:.*"
-              "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
-            ];
-
-            input = {
-              kb_layout = "us";
-
-              numlock_by_default = true;
-
-              follow_mouse = 1;
-              focus_on_close = 1;
-
-              left_handed = false;
-              sensitivity = 1; # Mouse
-              natural_scroll = false;
-
-              touchpad = {
-                natural_scroll = true;
-
-                tap-to-click = true;
-                tap-and-drag = true;
-                drag_lock = true;
-
-                disable_while_typing = true;
-              };
-
-              touchdevice = {
-                enabled = true;
-              };
-
-              tablet = {
-                left_handed = false;
-              };
-            };
-
-            cursor = {
-              no_hardware_cursors = false;
-
-              enable_hyprcursor = true;
-              sync_gsettings_theme = true;
-
-              persistent_warps = true;
-
-              no_warps = false;
-
-              hide_on_key_press = false;
-              hide_on_touch = true;
-            };
-
-            # "plugin:dynamic-cursors" = {
-            #   enabled = true;
-            #   hyprcursor = {
-            #     enabled = true;
-            #     nearest = true;
-            #     resolution = -1;
-            #   };
-
-            #   threshold = 1;
-            #   mode = "rotate";
-            #   rotate = {
-            #     length = cursor.size;
-            #   };
-
-            #   shake = {
-            #     enabled = true;
-            #     effects = false;
-            #     nearest = true;
-            #     ipc = true;
-            #   };
-            # };
-
-            binds = {
-              disable_keybind_grabbing = true;
-              pass_mouse_when_bound = false;
-
-              window_direction_monitor_fallback = true;
-            };
-
-            gestures = {
-              # Touchpad
-              workspace_swipe = true;
-              workspace_swipe_invert = true;
-
-              # Touchscreen
-              workspace_swipe_touch = false;
-              workspace_swipe_touch_invert = false;
-
-              workspace_swipe_create_new = true;
-              workspace_swipe_forever = true;
-            };
-
-            decoration = {
-              dim_special = 0.25;
-
-              rounding = 8;
-
-              active_opacity = 1.0;
-              fullscreen_opacity = 1.0;
-              inactive_opacity = 1.0;
-
-              dim_inactive = false;
-              dim_strength = 0.0;
-
-              blur.enabled = false;
-              shadow.enabled = false;
-            };
-
-            animations = {
-              enabled = true;
-              first_launch_animation = true;
-
-              bezier = [
-                "easeOutQuint, 0.23, 1, 0.32, 1"
-                "easeInOutCubic, 0.65, 0.05, 0.36, 1"
-                "linear, 0, 0, 1, 1"
-                "almostLinear, 0.5, 0.5, 0.75, 1.0"
-                "quick, 0.15, 0, 0.1, 1"
-              ];
-
-              animation = [
-                "global, 1, 10, default"
-                "border, 1, 5.39, easeOutQuint"
-                "windows, 1, 4.79, easeOutQuint"
-                "windowsIn, 1, 4.1, easeOutQuint, popin 87%"
-                "windowsOut, 1, 1.49, linear, popin 87%"
-                "fadeIn, 1, 1.73, almostLinear"
-                "fadeOut, 1, 1.46, almostLinear"
-                "fade, 1, 3.03, quick"
-                "layers, 1, 3.81, easeOutQuint"
-                "layersIn, 1, 4, easeOutQuint, fade"
-                "layersOut, 1, 1.5, linear, fade"
-                "fadeLayersIn, 1, 1.79, almostLinear"
-                "fadeLayersOut, 1, 1.39, almostLinear"
-                "workspaces, 1, 1.94, almostLinear, fade"
-                "workspacesIn, 1, 1.21, almostLinear, fade"
-                "workspacesOut, 1, 1.94, almostLinear, fade"
-              ];
-              # Name, On/Off, Speed, Curve [, Style]
-            };
-          };
-
-          extraConfig = '''';
         };
 
         xdg = {
@@ -3401,879 +2792,9 @@ in
           };
         };
 
-        services = {
-          mako = {
-            enable = true;
-            package = pkgs.mako;
-
-            actions = true;
-
-            anchor = "top-right";
-            layer = "top";
-            margin = "10";
-            sort = "-time";
-            maxVisible = 5; # -1 = Disabled
-            ignoreTimeout = false;
-            defaultTimeout = 0; # 0 = Disabled
-
-            borderRadius = 8;
-            borderSize = 1;
-            borderColor = dracula_theme.hex.comment;
-            backgroundColor = dracula_theme.hex.background;
-            padding = "4";
-            icons = true;
-            maxIconSize = 16;
-            markup = true;
-            font = "${font_name.sans_serif} 11";
-            textColor = dracula_theme.hex.foreground;
-            format = "<b>%s</b>\\n%b";
-
-            extraConfig = ''
-              history=1
-
-              on-notify=none
-              on-button-left=dismiss
-              on-button-right=exec makoctl menu rofi -dmenu -p 'Choose Action'
-              on-button-middle=none
-              on-touch=exec  makoctl menu rofi -dmenu -p 'Choose Action'
-
-              [urgency=low]
-              border-color=${dracula_theme.hex.current_line}
-
-              [urgency=normal]
-              border-color=${dracula_theme.hex.comment}
-
-              [urgency=high]
-              border-color=${dracula_theme.hex.red}
-            '';
-          };
-
-          hyprpaper = {
-            enable = true;
-            package = pkgs.hyprpaper;
-
-            settings = {
-              ipc = "on";
-
-              splash = false;
-
-              preload = [
-                wallpaper
-              ];
-
-              wallpaper = [
-                ", ${wallpaper}"
-              ];
-            };
-          };
-        };
+        services = { };
 
         programs = {
-          hyprlock = {
-            enable = true;
-            package = pkgs.hyprlock;
-
-            sourceFirst = true;
-
-            settings = {
-              general = {
-                disable_loading_bar = true;
-                immediate_render = true;
-                fractional_scaling = 2; # 2 = Automatic
-
-                no_fade_in = false;
-                no_fade_out = false;
-
-                hide_cursor = false;
-                text_trim = false;
-
-                grace = 0;
-                ignore_empty_input = true;
-              };
-
-              auth = {
-                pam = {
-                  enabled = true;
-                };
-              };
-
-              background = [
-                {
-                  monitor = "";
-                  path = wallpaper;
-                }
-              ];
-
-              label = [
-                {
-                  monitor = "";
-                  halign = "center";
-                  valign = "top";
-                  position = "0, -128";
-
-                  text_align = "center";
-                  font_family = font_name.sans_serif;
-                  color = dracula_theme.rgba.foreground;
-                  font_size = 64;
-                  text = "$TIME12";
-                }
-
-                {
-                  monitor = "";
-                  halign = "center";
-                  valign = "center";
-                  position = "0, 0";
-
-                  text_align = "center";
-                  font_family = font_name.sans_serif;
-                  color = dracula_theme.rgba.foreground;
-                  font_size = 16;
-                  text = "$DESC"; # Full Name
-                }
-              ];
-
-              input-field = [
-                {
-                  monitor = "";
-                  halign = "center";
-                  valign = "bottom";
-                  position = "0, 128";
-
-                  size = "256, 48";
-                  rounding = 16;
-                  outline_thickness = 1;
-                  # outer_color = ""; # TODO
-                  shadow_passes = 0;
-                  hide_input = false;
-                  inner_color = dracula_theme.rgba.current_line;
-                  font_family = font_name.sans_serif;
-                  font_color = dracula_theme.rgba.foreground;
-                  placeholder_text = "Password";
-                  dots_center = true;
-                  dots_rounding = -1;
-
-                  fade_on_empty = true;
-
-                  invert_numlock = false;
-                  # capslock_color = ""; # TODO
-                  # numlock_color = ""; # TODO
-                  # bothlock_color = ""; # TODO
-
-                  # check_color = ""; # TODO
-                  # fail_color = ""; # TODO
-                  fail_text = "<i>$FAIL <b>($ATTEMPTS)</b></i>";
-                  fail_timeout = 2000;
-                }
-              ];
-            };
-
-            extraConfig = '''';
-          };
-
-          rofi =
-            let
-              rofi_theme = pkgs.writeTextFile {
-                name = "Rofi_Theme.rasi";
-                text = ''
-                  * {
-                    margin: 0;
-                    background-color: transparent;
-                    padding: 0;
-                    spacing: 0;
-                    text-color: ${dracula_theme.hex.foreground};
-                  }
-
-                  window {
-                    width: 768px;
-                    border: 1px;
-                    border-radius: 16px;
-                    border-color: ${dracula_theme.hex.purple};
-                    background-color: ${dracula_theme.hex.background};
-                  }
-
-                  mainbox {
-                    padding: 16px;
-                  }
-
-                  inputbar {
-                    border: 1px;
-                    border-radius: 8px;
-                    border-color: ${dracula_theme.hex.comment};
-                    background-color: ${dracula_theme.hex.current_line};
-                    padding: 8px;
-                    spacing: 8px;
-                    children: [ "prompt", "entry" ];
-                  }
-
-                  prompt {
-                    text-color: ${dracula_theme.hex.foreground};
-                  }
-
-                  entry {
-                    placeholder-color: ${dracula_theme.hex.comment};
-                    placeholder: "Search";
-                  }
-
-                  listview {
-                    margin: 16px 0px 0px 0px;
-                    fixed-height: false;
-                    lines: 8;
-                    columns: 2;
-                  }
-
-                  element {
-                    border-radius: 8px;
-                    padding: 8px;
-                    spacing: 8px;
-                    children: [ "element-icon", "element-text" ];
-                  }
-
-                  element-icon {
-                    vertical-align: 0.5;
-                    size: 1em;
-                  }
-
-                  element-text {
-                    text-color: inherit;
-                  }
-
-                  element.selected {
-                    background-color: ${dracula_theme.hex.current_line};
-                  }
-                '';
-              };
-            in
-            {
-              enable = true;
-              package = pkgs.rofi-wayland;
-              # plugins = with pkgs; [
-
-              # ];
-
-              cycle = false;
-              terminal = "${pkgs.blackbox-terminal}/bin/blackbox";
-
-              location = "center";
-
-              font = "${font_name.sans_serif} 11";
-
-              extraConfig = {
-                show-icons = true;
-                display-drun = "Applications";
-
-                disable-history = false;
-              };
-
-              theme = "${rofi_theme}";
-            };
-
-          waybar = {
-            enable = true;
-            package = pkgs.waybar;
-
-            systemd = {
-              enable = true;
-              # target = ;
-            };
-
-            settings = {
-              top_bar = {
-                start_hidden = false;
-                reload_style_on_change = true;
-                position = "top";
-                exclusive = true;
-                layer = "top";
-                passthrough = false;
-                fixed-center = true;
-                spacing = 4;
-
-                modules-left = [
-                  "power-profiles-daemon"
-                  "idle_inhibitor"
-                  "backlight"
-                  "pulseaudio"
-                  "bluetooth"
-                  "network"
-                ];
-
-                modules-center = [
-                  "clock"
-                ];
-
-                modules-right = [
-                  "privacy"
-                  "mpris"
-                  "keyboard-state"
-                  "systemd-failed-units"
-                  "disk"
-                  "memory"
-                  "cpu"
-                  "battery"
-                ];
-
-                power-profiles-daemon = {
-                  format = "{icon}";
-                  format-icons = {
-                    performance = "";
-                    balanced = "";
-                    power-saver = "";
-                  };
-
-                  tooltip = true;
-                  tooltip-format = "Driver: {driver}\nProfile: {profile}";
-                };
-
-                idle_inhibitor = {
-                  start-activated = false;
-
-                  format = "{icon}";
-                  format-icons = {
-                    activated = "";
-                    deactivated = "";
-                  };
-
-                  tooltip = true;
-                  tooltip-format-activated = "{status}";
-                  tooltip-format-deactivated = "{status}";
-                };
-
-                backlight = {
-                  device = "intel_backlight";
-                  interval = 1;
-
-                  format = "{percent}% {icon}";
-                  format-icons = [
-                    ""
-                    ""
-                    ""
-                    ""
-                    ""
-                    ""
-                    ""
-                    ""
-                    ""
-                  ];
-
-                  tooltip = true;
-                  tooltip-format = "{percent}% {icon}";
-
-                  on-scroll-up = "brightnessctl s +1%";
-                  on-scroll-down = "brightnessctl s 1%-";
-                  reverse-scrolling = false;
-                  reverse-mouse-scrolling = false;
-                  scroll-step = 1.0;
-                };
-
-                pulseaudio = {
-                  format = "{volume}% {icon} {format_source}";
-                  format-muted = "{icon} {format_source}";
-
-                  format-bluetooth = "{volume}% {icon} 󰂱 {format_source}";
-                  format-bluetooth-muted = "{icon} 󰂱 {format_source}";
-
-                  format-source = " {volume}% ";
-                  format-source-muted = "";
-
-                  format-icons = {
-                    default = [
-                      ""
-                      ""
-                      ""
-                    ];
-                    default-muted = "";
-
-                    speaker = "󰓃";
-                    speaker-muted = "󰓄";
-
-                    headphone = "󰋋";
-                    headphone-muted = "󰟎";
-
-                    headset = "󰋎";
-                    headset-muted = "󰋐";
-
-                    hands-free = "󰏳";
-                    hands-free-muted = "󰗿";
-
-                    phone = "";
-                    phone-muted = "";
-
-                    portable = "";
-                    portable-muted = "";
-
-                    hdmi = "󰽟";
-                    hdmi-muted = "󰽠";
-
-                    hifi = "󰴸";
-                    hifi-muted = "󰓄";
-
-                    car = "󰄋";
-                    car-muted = "󰸜";
-                  };
-
-                  tooltip = true;
-                  tooltip-format = "{desc}";
-
-                  scroll-step = 1.0;
-                  reverse-scrolling = false;
-                  reverse-mouse-scrolling = false;
-                  max-volume = 100;
-                  on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+";
-                  on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-";
-
-                  on-click = "pwvucontrol";
-                };
-
-                bluetooth = {
-                  format = "{status} {icon}";
-                  format-disabled = "Disabled {icon}";
-                  format-off = "Off {icon}";
-                  format-on = "On {icon}";
-                  format-connected = "{device_alias} {icon}";
-                  format-connected-battery = "{device_alias} 󰂱 ({device_battery_percentage}%)";
-                  format-icons = {
-                    no-controller = "󰂲";
-                    disabled = "󰂲";
-                    off = "󰂲";
-                    on = "󰂯";
-                    connected = "󰂱";
-                  };
-
-                  tooltip = true;
-                  tooltip-format = "Status: {status}\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}";
-                  tooltip-format-disabled = "Status: Disabled";
-                  tooltip-format-off = "Status: Off";
-                  tooltip-format-on = "Status: On\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}";
-                  tooltip-format-connected = "Status: Connected\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}\nConnected Devices ({num_connections}): {device_enumerate}";
-                  tooltip-format-connected-battery = "Status: Connected\nController Address: {controller_address} ({controller_address_type})\nController Alias: {controller_alias}\nConnected Devices ({num_connections}): {device_enumerate}";
-                  tooltip-format-enumerate-connected = "\n\tAddress: {device_address} ({device_address_type})\n\tAlias: {device_alias}";
-                  tooltip-format-enumerate-connected-battery = "\n\tAddress: {device_address} ({device_address_type})\n\tAlias: {device_alias}\n\tBattery: {device_battery_percentage}%";
-
-                  on-click = "blueman-manager";
-                };
-
-                network = {
-                  interval = 1;
-
-                  format = "{bandwidthUpBytes} {bandwidthDownBytes}";
-                  format-disconnected = "Disconnected 󱘖";
-                  format-linked = "No IP 󰀦";
-                  format-ethernet = "{bandwidthUpBytes}   {bandwidthDownBytes}";
-                  format-wifi = "{bandwidthUpBytes}   {bandwidthDownBytes}";
-
-                  tooltip = true;
-                  tooltip-format = "Interface: {ifname}\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation: {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
-                  tooltip-format-disconnected = "Disconnected";
-                  tooltip-format-ethernet = "Interface: {ifname}\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation= {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
-                  tooltip-format-wifi = "Interface: {ifname}\nESSID: {essid}\nFrequency: {frequency} GHz\nStrength: {signaldBm} dBm ({signalStrength}%)\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation: {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
-
-                  on-click = "nm-connection-editor";
-                };
-
-                clock = {
-                  timezone = config.time.timeZone;
-                  locale = "en_US";
-                  interval = 1;
-
-                  format = "{:%I:%M:%S %p}";
-                  format-alt = "{:%A, %B %d, %Y}";
-
-                  tooltip = true;
-                  tooltip-format = "<tt><small>{calendar}</small></tt>";
-
-                  calendar = {
-                    mode = "year";
-                    mode-mon-col = 3;
-                    weeks-pos = "right";
-
-                    format = {
-                      months = "<b>{}</b>";
-                      days = "{}";
-                      weekdays = "<b>{}</b>";
-                      weeks = "<i>{:%U}</i>";
-                      today = "<u>{}</u>";
-                    };
-                  };
-                };
-
-                mpris = {
-                  interval = 1;
-
-                  format = "{player_icon}";
-
-                  tooltip-format = "Title: {title}\nArtist: {artist}\nAlbum: {album}\n{status}: {position}/{length}\nPlayer: {player}";
-
-                  player-icons = {
-                    default = "";
-
-                    vlc = "󰕼";
-                    chromium = "";
-                  };
-                };
-
-                privacy = {
-                  icon-size = 14;
-                  icon-spacing = 8;
-                  transition-duration = 200;
-
-                  modules = [
-                    {
-                      type = "screenshare";
-                      tooltip = true;
-                      tooltip-icon-size = 16;
-                    }
-                    {
-                      type = "audio-in";
-                      tooltip = true;
-                      tooltip-icon-size = 16;
-                    }
-                  ];
-                };
-
-                keyboard-state = {
-                  capslock = true;
-                  numlock = true;
-
-                  format = {
-                    capslock = "󰪛";
-                    numlock = "󰎦";
-                  };
-                };
-
-                systemd-failed-units = {
-                  system = true;
-                  user = true;
-
-                  hide-on-ok = false;
-
-                  format = "{nr_failed_system}, {nr_failed_user} ";
-                  format-ok = "";
-                };
-
-                disk = {
-                  path = "/";
-                  unit = "GB";
-                  interval = 1;
-
-                  format = "{percentage_used}% 󰋊";
-
-                  tooltip = true;
-                  tooltip-format = "Total: {specific_total} GB\nUsed: {specific_used} GB ({percentage_used}%)\nFree: {specific_free} GB ({percentage_free}%)";
-
-                  on-click = "missioncenter";
-                };
-
-                memory = {
-                  interval = 1;
-
-                  format = "{percentage}% ";
-
-                  tooltip = true;
-                  tooltip-format = "Used RAM: {used} GiB ({percentage}%)\nUsed Swap: {swapUsed} GiB ({swapPercentage}%)\nAvailable RAM: {avail} GiB\nAvailable Swap: {swapAvail} GiB";
-
-                  on-click = "missioncenter";
-                };
-
-                cpu = {
-                  interval = 1;
-
-                  format = "{usage}% ";
-
-                  tooltip = true;
-
-                  on-click = "missioncenter";
-                };
-
-                battery = {
-                  bat = "BAT0";
-                  adapter = "AC0";
-                  design-capacity = false;
-                  weighted-average = true;
-                  interval = 1;
-
-                  full-at = 100;
-                  states = {
-                    warning = 25;
-                    critical = 10;
-                  };
-
-                  format = "{capacity}% {icon}";
-                  format-plugged = "{capacity}% ";
-                  format-charging = "{capacity}% ";
-                  format-full = "{capacity}% {icon}";
-                  format-alt = "{time} {icon}";
-                  format-time = "{H} h {m} min";
-                  format-icons = [
-                    ""
-                    ""
-                    ""
-                    ""
-                    ""
-                  ];
-
-                  tooltip = true;
-                  tooltip-format = "Capacity: {capacity}%\nPower: {power} W\n{timeTo}\nCycles: {cycles}\nHealth: {health}%";
-                };
-              };
-
-              bottom_bar = {
-                start_hidden = false;
-                reload_style_on_change = true;
-                position = "bottom";
-                exclusive = true;
-                layer = "top";
-                passthrough = false;
-                fixed-center = true;
-                spacing = 0;
-
-                modules-left = [
-                  "hyprland/workspaces"
-                  "wlr/taskbar"
-                ];
-
-                modules-center = [
-                  "hyprland/window"
-                ];
-
-                modules-right = [
-                  "tray"
-                ];
-
-                "hyprland/workspaces" = {
-                  all-outputs = false;
-                  show-special = true;
-                  special-visible-only = false;
-                  active-only = false;
-                  format = "{name}";
-                  move-to-monitor = false;
-                };
-
-                "wlr/taskbar" = {
-                  all-outputs = false;
-                  active-first = false;
-                  sort-by-app-id = false;
-                  format = "{icon}";
-                  icon-theme = "Dracula";
-                  icon-size = 14;
-                  markup = true;
-
-                  tooltip = true;
-                  tooltip-format = "Title: {title}\nName: {name}\nID: {app_id}\nState: {state}";
-
-                  on-click = "activate";
-                };
-
-                "hyprland/window" = {
-                  separate-outputs = true;
-                  icon = false;
-
-                  format = "{title}";
-                };
-
-                tray = {
-                  show-passive-items = true;
-                  reverse-direction = false;
-                  icon-size = 14;
-                  spacing = 4;
-                };
-              };
-            };
-
-            style = ''
-              * {
-                font-family: ${font_name.sans_serif};
-                font-size: 14px;
-              }
-
-              window#waybar {
-                border: none;
-                background-color: transparent;
-              }
-
-              .modules-right > widget:last-child > #workspaces {
-                margin-right: 0;
-              }
-
-              .modules-left > widget:first-child > #workspaces {
-                margin-left: 0;
-              }
-
-              #power-profiles-daemon,
-              #idle_inhibitor,
-              #backlight,
-              #pulseaudio,
-              #bluetooth,
-              #network,
-              #keyboard-state,
-              #clock,
-              #mpris,
-              #privacy,
-              #systemd-failed-units,
-              #disk,
-              #memory,
-              #cpu,
-              #battery,
-              #window {
-                border-radius: 16px;
-                background-color: ${dracula_theme.hex.background};
-                padding: 2px 8px;
-                color: ${dracula_theme.hex.foreground};
-              }
-
-              #power-profiles-daemon.power-saver {
-                color: ${dracula_theme.hex.green};
-              }
-
-              #power-profiles-daemon.balanced {
-                color: ${dracula_theme.hex.cyan};
-              }
-
-              #power-profiles-daemon.performance {
-                color: ${dracula_theme.hex.foreground};
-              }
-
-              #idle_inhibitor.deactivated {
-                color: ${dracula_theme.hex.foreground};
-              }
-
-              #idle_inhibitor.activated {
-                color: ${dracula_theme.hex.cyan};
-              }
-
-              #pulseaudio.muted,
-              #pulseaudio.source-muted {
-                color: ${dracula_theme.hex.red};
-              }
-
-              #pulseaudio.bluetooth {
-                color: ${dracula_theme.hex.foreground};
-              }
-
-              #bluetooth.no-controller,
-              #bluetooth.disabled,
-              #bluetooth.off {
-                color: ${dracula_theme.hex.red};
-              }
-
-              #bluetooth.on,
-              #bluetooth.discoverable,
-              #bluetooth.pairable {
-                color: ${dracula_theme.hex.foreground};
-              }
-
-              #bluetooth.discovering,
-              #bluetooth.connected {
-                color: ${dracula_theme.hex.cyan};
-              }
-
-              #network.disabled,
-              #network.disconnected,
-              #network.linked {
-                color: ${dracula_theme.hex.red};
-              }
-
-              #network.etherenet,
-              #network.wifi {
-                color: ${dracula_theme.hex.foreground};
-              }
-
-              #mpris.playing {
-                color: ${dracula_theme.hex.cyan};
-              }
-
-              #privacy-item.audio-in,
-              #privacy-item.screenshare {
-                color: ${dracula_theme.hex.cyan};
-              }
-
-              #keyboard-state label {
-                margin: 0px 4px;
-              }
-
-              #keyboard-state label.locked {
-                color: ${dracula_theme.hex.cyan};
-              }
-
-              #systemd-failed-units.ok {
-                color: ${dracula_theme.hex.foreground};
-              }
-
-              #systemd-failed-units.degraded {
-                color: ${dracula_theme.hex.red};
-              }
-
-              #battery.plugged,
-              #battery.full {
-                color: ${dracula_theme.hex.foreground};
-              }
-
-              #battery.charging {
-                color: ${dracula_theme.hex.cyan};
-              }
-
-              #battery.warning {
-                color: ${dracula_theme.hex.yellow};
-              }
-
-              #battery.critical {
-                color: ${dracula_theme.hex.red};
-              }
-
-              #workspaces,
-              #taskbar,
-              #tray {
-                background-color: transparent;
-              }
-
-              button {
-                margin: 0px 2px;
-                border-radius: 16px;
-                background-color: ${dracula_theme.hex.background};
-                padding: 0px;
-                color: ${dracula_theme.hex.foreground};
-              }
-
-              button * {
-                padding: 0px 4px;
-              }
-
-              button.active {
-                background-color: ${dracula_theme.hex.current_line};
-              }
-
-              #window label {
-                padding: 0px 4px;
-                font-size: 11px;
-              }
-
-              #tray > widget {
-                border-radius: 16px;
-                background-color: ${dracula_theme.hex.background};
-                color: ${dracula_theme.hex.foreground};
-              }
-
-              #tray image {
-                padding: 0px 8px;
-              }
-
-              #tray > .passive {
-                -gtk-icon-effect: dim;
-              }
-
-              #tray > .active {
-                background-color: ${dracula_theme.hex.current_line};
-              }
-
-              #tray > .needs-attention {
-                background-color: ${dracula_theme.hex.comment};
-                -gtk-icon-effect: highlight;
-              }
-
-              #tray > widget:hover {
-                background-color: ${dracula_theme.hex.current_line};
-              }
-            '';
-          };
-
           dircolors = {
             enable = true;
             package = pkgs.coreutils;
@@ -4481,9 +3002,9 @@ in
           gh = {
             enable = true;
             package = pkgs.gh;
-            # extensions = with pkgs; [
+            extensions = with pkgs; [
 
-            # ];
+            ];
 
             gitCredentialHelper = {
               enable = true;
@@ -4523,9 +3044,9 @@ in
               en_US
               en-us
             ];
-            # nativeMessagingHosts = with pkgs; [
+            nativeMessagingHosts = with pkgs; [
 
-            # ];
+            ];
 
             commandLineArgs = [
 
@@ -4591,8 +3112,6 @@ in
 
 # FIXME: 05ac-033e-Gamepad > Rumble
 # FIXME: ELAN7001 SPI Fingerprint Sensor
-# FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
-# FIXME: Waybar > Clock / Calendar
 # FIXME: hardinfo2
 # FIXME: rpi-imager
