@@ -186,8 +186,8 @@ in
       sandbox = true;
       auto-optimise-store = true;
 
-      cores = 1; # 0 = All
-      max-jobs = 1;
+      cores = 0; # 0 = All
+      # max-jobs = 1;
     };
 
     gc = {
@@ -1509,7 +1509,6 @@ in
     calls.enable = true;
     file-roller.enable = true;
     gnome-disks.enable = true;
-    gnome-terminal.enable = true;
     seahorse.enable = true;
 
     thunderbird = {
@@ -1842,14 +1841,33 @@ in
         git-filter-repo
         glib
         glibc
+        gnome-autoar
+        gnome-backgrounds
+        gnome-bluetooth
         gnome-calculator
         gnome-calendar
         gnome-characters
         gnome-clocks
+        gnome-color-manager
         gnome-connections
+        gnome-console
+        gnome-control-center
+        gnome-decoder
+        gnome-epub-thumbnailer
+        gnome-extensions-cli
+        gnome-firmware
         gnome-font-viewer
+        gnome-frog
+        gnome-graphs
         gnome-logs
+        gnome-multi-writer
+        gnome-nettool
+        gnome-power-manager
+        gnome-system-monitor
+        gnome-themes-extra
         gnome-tweaks
+        gnome-user-docs
+        gnome-video-effects
         gnome-weather
         gnugrep
         gnulib
@@ -2005,10 +2023,12 @@ in
         serial-studio
         shared-mime-info
         sherlock
+        simple-scan
         sipvicious
         sleuthkit
         smartmontools
         smbmap
+        snapshot
         songrec
         spice
         spice-gtk
@@ -2099,6 +2119,9 @@ in
         gst-plugins-ugly
         gst-vaapi
         gstreamer
+      ])
+      ++ (with pkgs.gnome; [
+        nixos-gsettings-overrides
       ])
       ++ (with gnomeExtensions; [
         # clipboard-indicator
