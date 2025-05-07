@@ -1557,6 +1557,16 @@ in
               region = config.i18n.defaultLocale;
             };
 
+            "org/gnome/shell" = {
+              last-selected-power-profile = "performance";
+            };
+            "org/gnome/settings-daemon/plugins/power" = {
+              idle-dim = false;
+              power-button-action = "interactive";
+              power-saver-profile-on-low-battery = false;
+              sleep-inactive-ac-type = "nothing";
+              sleep-inactive-battery-type = "nothing";
+            };
             "org/gnome/desktop/privacy" = {
               remember-app-usage = false;
               remember-recent-files = false;
@@ -1566,6 +1576,16 @@ in
               send-software-usage-stats = false;
               usb-protection = true;
             };
+            "org/gnome/desktop/screensaver" = {
+              lock-enabled = false;
+            };
+            "org/gnome/desktop/interface" = {
+              show-battery-percentage = true;
+            };
+            "org/gnome/desktop/notifications" = {
+              show-in-lock-screen = true;
+            };
+
             "org/gtk/gtk4/settings/file-chooser" = {
               sort-directories-first = true;
             };
@@ -1586,13 +1606,11 @@ in
               ];
             };
 
-            "io/missioncenter/MissionCenter" = {
-              apps-page-core-count-affects-percentages = true;
-              apps-page-merged-process-stats = false;
-              apps-page-remember-sorting = false;
-              performance-page-network-dynamic-scaling = true;
-              performance-smooth-graphs = false;
-              window-interface-style = "dark";
+            "org/gnome/file-roller/ui" = {
+              view-sidebar = true;
+            };
+            "org/gnome/file-roller/listing" = {
+              list-mode = "as-folder";
             };
 
             "org/virt-manager/virt-manager" = {
@@ -1633,13 +1651,6 @@ in
               poweroff = true;
               removedev = true;
               unapplied-dev = true;
-            };
-
-            "org/gnome/file-roller/ui" = {
-              view-sidebar = true;
-            };
-            "org/gnome/file-roller/listing" = {
-              list-mode = "as-folder";
             };
 
             "com/github/huluti/Curtail" = {
@@ -1876,7 +1887,6 @@ in
         gnutar
         gnutls
         gource
-        gparted
         gpredict
         gsm
         gtk-vnc
@@ -2213,7 +2223,6 @@ in
       gnome-text-editor
       gnome-tour
       totem
-      yelp
     ];
 
     enableDebugInfo = false;
