@@ -6,56 +6,52 @@
   ...
 }:
 let
+  android_nixpkgs =
+    pkgs.callPackage
+      (import (
+        builtins.fetchGit {
+          url = "https://github.com/tadfisher/android-nixpkgs.git";
+        }
+      ))
+      {
+        channel = "stable";
+      };
+  android_sdk = android_nixpkgs.sdk (
+    sdkPkgs: with sdkPkgs; [
+      build-tools-36-0-0
+      cmdline-tools-latest
+      emulator
+      extras-google-auto
+      extras-google-google-play-services
+      platform-tools
+      platforms-android-36
+      system-images-android-36-google-apis-playstore-x86-64
+    ]
+  );
+  android_sdk_path = "${android_sdk}/share/android-sdk";
+
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
 
-  font_name = {
-    mono = "NotoMono Nerd Font";
-    sans_serif = "NotoSans Nerd Font";
-    serif = "NotoSerif Nerd Font";
-    emoji = "Noto Color Emoji";
-  };
+  font_preferences = {
+    package = pkgs.nerd-fonts.noto;
 
-  dracula_theme = {
-    hex = {
-      background = "#282A36";
-      current_line = "#44475A";
-      foreground = "#F8F8F2";
-      comment = "#6272A4";
-      cyan = "#8BE9FD";
-      green = "#50FA7B";
-      orange = "#FFB86C";
-      pink = "#FF79C6";
-      purple = "#BD93F9";
-      red = "#FF5555";
-      yellow = "#F1FA8C";
+    name = {
+      mono = "NotoMono Nerd Font";
+      sans_serif = "NotoSans Nerd Font";
+      serif = "NotoSerif Nerd Font";
+      emoji = "Noto Color Emoji";
     };
 
-    rgba = {
-      background = "rgba(40, 42, 54, 1.0)";
-      current_line = "rgba(68, 71, 90, 1.0)";
-      foreground = "rgba(248, 248, 242, 1.0)";
-      comment = "rgba(98, 114, 164, 1.0)";
-      cyan = "rgba(139, 233, 253, 1.0)";
-      green = "rgba(80, 250, 123, 1.0)";
-      orange = "rgba(255, 184, 108, 1.0)";
-      pink = "rgba(255, 121, 198, 1.0)";
-      purple = "rgba(189, 147, 249, 1.0)";
-      red = "rgba(255, 85, 85, 1.0)";
-      yellow = "rgba(241, 250, 140, 1.0)";
-    };
+    size = 11;
   };
 
   cursor = {
     theme = {
-      name = "Bibata-Modern-Classic";
-      package = pkgs.bibata-cursors;
+      package = pkgs.gnome-themes-extra;
+      name = "Adwaita";
     };
 
     size = 24;
-  };
-
-  wallpaper = builtins.fetchurl {
-    url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
   };
 
   secrets = import ./secrets.nix;
@@ -204,8 +200,9 @@ in
       allowUnfree = true;
     };
 
-    # overlays = [
-    # ];
+    overlays = [
+
+    ];
   };
 
   appstream.enable = true;
@@ -216,7 +213,6 @@ in
       "C.UTF-8"
       "ar_SA.UTF-8"
       "bn_BD"
-      "ru_RU.UTF-8"
     ];
 
     extraLocaleSettings = {
@@ -1511,6 +1507,32 @@ in
     gnome-disks.enable = true;
     seahorse.enable = true;
 
+    firefox = {
+      enable = true;
+      package = pkgs.firefox-devedition;
+      languagePacks = [
+        "ar"
+        "bn"
+        "en-US"
+      ];
+
+      nativeMessagingHosts = {
+        packages = with pkgs; [
+
+        ];
+      };
+
+      policies = { };
+
+      autoConfig = '''';
+
+      preferences = {
+        "security.warn_submit_secure_to_insecure" = true;
+
+      };
+      preferencesStatus = "locked";
+    };
+
     thunderbird = {
       enable = true;
       package = pkgs.thunderbird-latest;
@@ -1556,16 +1578,34 @@ in
             "system/locale" = {
               region = config.i18n.defaultLocale;
             };
-
-            "org/gnome/shell" = {
-              last-selected-power-profile = "performance";
+            "system/proxy" = {
+              mode = "auto";
             };
+
             "org/gnome/settings-daemon/plugins/power" = {
               idle-dim = false;
               power-button-action = "interactive";
               power-saver-profile-on-low-battery = false;
               sleep-inactive-ac-type = "nothing";
               sleep-inactive-battery-type = "nothing";
+            };
+            "org/gnome/settings-daemon/plugins/color" = {
+              night-light-enabled = false;
+            };
+            "org/gnome/desktop/peripherals/keyboard" = {
+              numlock-state = true;
+            };
+            "org/gnome/desktop/media-handling" = {
+              autorun-never = false;
+            };
+            "org/gnome/desktop/input-sources" = {
+              show-all-sources = true;
+            };
+            "org/gnome/desktop/sound" = {
+              event-sounds = true;
+            };
+            "org/gnome/desktop/datetime" = {
+              automatic-timezone = false;
             };
             "org/gnome/desktop/privacy" = {
               remember-app-usage = false;
@@ -1579,13 +1619,50 @@ in
             "org/gnome/desktop/screensaver" = {
               lock-enabled = false;
             };
-            "org/gnome/desktop/interface" = {
-              show-battery-percentage = true;
-            };
             "org/gnome/desktop/notifications" = {
               show-in-lock-screen = true;
             };
+            "org/gnome/desktop/interface" = {
+              clock-show-date = true;
+              clock-show-weekday = true;
+              color-scheme = "prefer-dark";
+              document-font-name = "${font_preferences.name.sans_serif} ${toString font_preferences.size}";
+              enable-hot-corners = true;
+              gtk-enable-primary-paste = true;
+              gtk-key-theme = "Default";
+              monospace-font-name = "${font_preferences.name.mono} ${toString font_preferences.size}";
+              show-battery-percentage = true;
+            };
+            "org/gnome/desktop/calendar" = {
+              show-weekdate = true;
+            };
+            "org/gnome/shell" = {
+              last-selected-power-profile = "performance";
+            };
+            "org/gnome/shell/app-switcher" = {
+              current-workspace-only = false;
+            };
+            "org/gnome/mutter" = {
+              attach-modal-dialogs = false;
+              center-new-windows = true;
+              dynamic-workspaces = true;
+              edge-tiling = true;
+              workspaces-only-on-primary = false;
+            };
+            "org/gnome/desktop/wm/preferences" = {
+              action-double-click-titlebar = "toggle-maximize";
+              action-middle-click-titlebar = "toggle-maximize-vertically";
+              action-right-click-titlebar = "menu";
+              auto-raise = true;
+              button-layout = "appmenu:minimize,maximize,close";
+              focus-mode = "mouse";
+              mouse-button-modifier = "<Super>";
+              resize-with-right-button = false;
+            };
 
+            "org/gtk/settings/file-chooser" = {
+              clock-format = "12h";
+            };
             "org/gtk/gtk4/settings/file-chooser" = {
               sort-directories-first = true;
             };
@@ -1696,19 +1773,19 @@ in
 
       defaultFonts = {
         monospace = [
-          font_name.mono
+          font_preferences.name.mono
         ];
 
         sansSerif = [
-          font_name.sans_serif
+          font_preferences.name.sans_serif
         ];
 
         serif = [
-          font_name.serif
+          font_preferences.name.serif
         ];
 
         emoji = [
-          font_name.emoji
+          font_preferences.name.emoji
         ];
       };
 
@@ -1764,9 +1841,8 @@ in
         aircrack-ng
         alac
         amass
-        android-studio
-        android-studio-tools
         android-tools
+        android_sdk
         anydesk
         apkeep
         apkleaks
@@ -1875,7 +1951,6 @@ in
         gnome-nettool
         gnome-power-manager
         gnome-system-monitor
-        gnome-themes-extra
         gnome-tweaks
         gnome-user-docs
         gnome-video-effects
@@ -1998,7 +2073,6 @@ in
         openjpeg
         openssl
         p7zip
-        papirus-folders
         parabolic
         patchelf
         pciutils
@@ -2645,8 +2719,8 @@ in
   qt = {
     enable = true;
 
-    platformTheme = "gtk2";
-    style = "gtk2";
+    platformTheme = "gnome";
+    style = "adwaita-dark";
   };
 
   documentation = {
@@ -2787,17 +2861,13 @@ in
           enable = true;
 
           theme = {
-            name = "Dracula";
-            package = pkgs.dracula-theme;
+            name = "Adwaita-dark";
+            package = pkgs.gnome-themes-extra;
           };
 
           iconTheme = {
-            name = "Papirus-Dark";
-            package = (
-              pkgs.papirus-icon-theme.override {
-                color = "black";
-              }
-            );
+            name = "Adwaita";
+            package = pkgs.adwaita-icon-theme;
           };
 
           cursorTheme = {
@@ -2807,20 +2877,20 @@ in
           };
 
           font = {
-            name = font_name.sans_serif;
-            package = pkgs.nerd-fonts.noto;
-            size = 11;
+            name = font_preferences.name.sans_serif;
+            package = font_preferences.package;
+            size = font_preferences.size;
           };
         };
 
         qt = {
           enable = true;
 
-          platformTheme.name = "gtk2";
+          platformTheme.name = "adwaita";
 
           style = {
-            name = "gtk2";
-            # package = pkgs. ;
+            name = "adwaita-qt";
+            package = pkgs.adwaita-qt6;
           };
         };
 
@@ -2844,17 +2914,6 @@ in
             package = pkgs.nix-your-shell;
 
             enableFishIntegration = true;
-          };
-
-          librewolf = {
-            enable = true;
-            languagePacks = [
-
-            ];
-
-            settings = {
-              "privacy.resistFingerprinting" = false;
-            };
           };
 
           vscode = {
@@ -2893,7 +2952,6 @@ in
                     dendron.adjust-heading-level
                     devsense.phptools-vscode
                     dotenv.dotenv-vscode
-                    dracula-theme.theme-dracula
                     ecmel.vscode-html-css
                     edonet.vscode-command-runner
                     esbenp.prettier-vscode
@@ -3139,7 +3197,6 @@ in
   };
 }
 
-# sdkmanager --licenses
 # flutter doctor --android-licenses
 
 # FIXME: 05ac-033e-Gamepad > Rumble
