@@ -21,11 +21,10 @@ let
       build-tools-36-0-0
       cmdline-tools-latest
       emulator
-      extras-google-auto
-      extras-google-google-play-services
       platform-tools
       platforms-android-36
       system-images-android-36-google-apis-playstore-x86-64
+      tools
     ]
   );
   android_sdk_path = "${android_sdk}/share/android-sdk";
@@ -198,6 +197,7 @@ in
 
     config = {
       allowUnfree = true;
+      android_sdk.accept_license = true;
     };
 
     overlays = [
@@ -1582,6 +1582,9 @@ in
               mode = "auto";
             };
 
+            "org/gnome/system/location" = {
+              enabled = true;
+            };
             "org/gnome/settings-daemon/plugins/power" = {
               idle-dim = false;
               power-button-action = "interactive";
@@ -1595,10 +1598,28 @@ in
             "org/gnome/desktop/peripherals/keyboard" = {
               numlock-state = true;
             };
+            "org/gnome/desktop/peripherals/pointingstick" = {
+              scroll-method = "default";
+            };
+            "org/gnome/desktop/peripherals/mouse" = {
+              accel-profile = "default";
+              left-handed = false;
+              natural-scroll = false;
+            };
+            "org/gnome/desktop/peripherals/touchpad" = {
+              click-method = "areas";
+              disable-while-typing = true;
+              edge-scrolling-enabled = false;
+              natural-scroll = true;
+              send-events = "enabled";
+              tap-to-click = true;
+              two-finger-scrolling-enabled = true;
+            };
             "org/gnome/desktop/media-handling" = {
               autorun-never = false;
             };
             "org/gnome/desktop/input-sources" = {
+              per-window = false;
               show-all-sources = true;
             };
             "org/gnome/desktop/sound" = {
@@ -1608,6 +1629,7 @@ in
               automatic-timezone = false;
             };
             "org/gnome/desktop/privacy" = {
+              disable-camera = false;
               remember-app-usage = false;
               remember-recent-files = false;
               remove-old-temp-files = true;
@@ -1635,6 +1657,12 @@ in
             };
             "org/gnome/desktop/calendar" = {
               show-weekdate = true;
+            };
+            "org/gnome/desktop/search-providers" = {
+              disable-external = false;
+            };
+            "org/gnome/desktop/file-sharing" = {
+              require-password = "always";
             };
             "org/gnome/shell" = {
               last-selected-power-profile = "performance";
@@ -1806,7 +1834,10 @@ in
 
     stub-ld.enable = true;
 
-    variables = { };
+    variables = {
+      ANDROID_SDK_ROOT = android_sdk_path;
+      ANDROID_HOME = android_sdk_path;
+    };
 
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
@@ -1842,7 +1873,7 @@ in
         alac
         amass
         android-tools
-        android_sdk
+        android_sdk # Custom
         anydesk
         apkeep
         apkleaks
@@ -2861,13 +2892,13 @@ in
           enable = true;
 
           theme = {
-            name = "Adwaita-dark";
             package = pkgs.gnome-themes-extra;
+            name = "Adwaita-dark";
           };
 
           iconTheme = {
-            name = "Adwaita";
             package = pkgs.adwaita-icon-theme;
+            name = "Adwaita";
           };
 
           cursorTheme = {
@@ -2889,8 +2920,8 @@ in
           platformTheme.name = "adwaita";
 
           style = {
-            name = "adwaita-qt";
             package = pkgs.adwaita-qt6;
+            name = "adwaita-qt";
           };
         };
 
