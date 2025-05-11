@@ -741,7 +741,7 @@ in
 
     gvfs = {
       enable = true;
-      package = pkgs.gvfs;
+      package = pkgs.gnome.gvfs;
     };
 
     pipewire = {
@@ -1595,9 +1595,6 @@ in
               numlock-state = true;
               repeat = true;
             };
-            "org/gnome/desktop/peripherals/pointingstick" = {
-              scroll-method = "default";
-            };
             "org/gnome/desktop/peripherals/mouse" = {
               accel-profile = "default";
               left-handed = false;
@@ -1611,6 +1608,9 @@ in
               send-events = "enabled";
               tap-to-click = true;
               two-finger-scrolling-enabled = true;
+            };
+            "org/gnome/desktop/peripherals/pointingstick" = {
+              scroll-method = "default";
             };
             "org/gnome/desktop/media-handling" = {
               autorun-never = false;
@@ -1644,8 +1644,12 @@ in
             "org/gnome/desktop/datetime" = {
               automatic-timezone = false;
             };
+            "org/gnome/desktop/session" = {
+              idle-delay = pkgs.lib.gvariant.mkUint32 0; # 0 = Disabled
+            };
             "org/gnome/desktop/privacy" = {
               disable-camera = false;
+              old-files-age = pkgs.lib.gvariant.mkUint32 1; # 1 = 1 day
               remember-app-usage = false;
               remember-recent-files = false;
               remove-old-temp-files = true;
@@ -1675,6 +1679,17 @@ in
               locate-pointer = true;
               monospace-font-name = "${font_preferences.name.mono} ${toString font_preferences.size}";
               show-battery-percentage = true;
+            };
+            "org/gnome/desktop/wm/preferences" = {
+              action-double-click-titlebar = "toggle-maximize";
+              action-middle-click-titlebar = "toggle-maximize-vertically";
+              action-right-click-titlebar = "menu";
+              auto-raise = true;
+              button-layout = "appmenu:minimize,maximize,close";
+              focus-mode = "mouse";
+              mouse-button-modifier = "<Super>";
+              resize-with-right-button = false;
+              visual-bell = false;
             };
             "org/gnome/desktop/calendar" = {
               show-weekdate = true;
@@ -1708,6 +1723,9 @@ in
               invert-lightness = false;
             };
             "org/gnome/shell" = {
+              # app-picker-layout = pkgs.lib.gvariant.mkEmptyArray (pkgs.lib.gvariant.type.string); # Alphabetical Sort
+              always-show-log-out = true;
+              disable-extension-version-validation = false;
               disable-user-extensions = false;
               enabled-extensions = [
                 "appindicatorsupport@rgcjonas.gmail.com"
@@ -1719,10 +1737,56 @@ in
                 "places-menu@gnome-shell-extensions.gcampax.github.com"
                 "system-monitor@gnome-shell-extensions.gcampax.github.com"
               ];
+              favorite-apps = [
+                "org.gnome.Console.desktop"
+                "org.gnome.Nautilus.desktop"
+                "firefox-devedition.desktop"
+                "thunderbird.desktop"
+                "org.fritzing.Fritzing.desktop"
+                "code.desktop"
+                "butt.desktop"
+                "com.obsproject.Studio.desktop"
+                "sdrangel.desktop"
+                "sdrpp.desktop"
+                "virt-manager.desktop"
+              ];
               last-selected-power-profile = "performance";
             };
             "org/gnome/shell/app-switcher" = {
               current-workspace-only = false;
+            };
+            "org/gnome/shell/extensions/appindicator" = {
+              legacy-tray-enabled = true;
+            };
+            "org/gnome/shell/extensions/gsconnect" = {
+              keep-alive-when-locked = true;
+              name = config.networking.hostName;
+              show-indicators = true;
+            };
+            "org/gnome/shell/extensions/desktop-cube" = {
+              do-explode = true;
+              enable-desktop-dragging = true;
+              enable-desktop-edge-switch = true;
+              enable-overview-dragging = true;
+              enable-overview-edge-switch = true;
+              enable-panel-dragging = true;
+              last-first-gap = true;
+            };
+            "org/gnome/shell/extensions/pano" = {
+              item-date-font-family = font_preferences.name.sans_serif;
+              item-title-font-family = font_preferences.name.sans_serif;
+              keep-search-entry = false;
+              link-previews = true;
+              open-links-in-browser = true;
+              paste-on-select = false;
+              play-audio-on-copy = false;
+              search-bar-font-family = font_preferences.name.sans_serif;
+              send-notification-on-copy = false;
+              session-only-mode = true;
+              show-indicator = true;
+              sync-primary = true;
+              watch-exclusion-list = true;
+              wiggle-indicator = true;
             };
             "org/gnome/mutter" = {
               attach-modal-dialogs = false;
@@ -1730,17 +1794,6 @@ in
               dynamic-workspaces = true;
               edge-tiling = true;
               workspaces-only-on-primary = false;
-            };
-            "org/gnome/desktop/wm/preferences" = {
-              action-double-click-titlebar = "toggle-maximize";
-              action-middle-click-titlebar = "toggle-maximize-vertically";
-              action-right-click-titlebar = "menu";
-              auto-raise = true;
-              button-layout = "appmenu:minimize,maximize,close";
-              focus-mode = "mouse";
-              mouse-button-modifier = "<Super>";
-              resize-with-right-button = false;
-              visual-bell = false;
             };
 
             "org/gtk/settings/file-chooser" = {
@@ -1771,6 +1824,14 @@ in
             };
             "org/gnome/file-roller/listing" = {
               list-mode = "as-folder";
+            };
+
+            "org/gnome/Console" = {
+              audible-bell = true;
+              ignore-scrollback-limit = true;
+              theme = "night";
+              use-system-font = true;
+              visual-bell = true;
             };
 
             "org/virt-manager/virt-manager" = {
@@ -1813,11 +1874,90 @@ in
               unapplied-dev = true;
             };
 
+            "org/gnome/gnome-system-monitor" = {
+              cpu-smooth-graph = true;
+              kill-dialog = true;
+              network-in-bits = false;
+              network-total-in-bits = false;
+              process-memory-in-iec = true;
+              resources-memory-in-iec = true;
+              show-all-fs = true;
+              show-dependencies = true;
+              show-whose-processes = "all";
+              smooth-refresh = true;
+              solaris-mode = true;
+            };
+            "org/gnome/gnome-system-monitor/proctree" = {
+              col-0-visible = true;
+              col-1-visible = true;
+              col-2-visible = true;
+              col-3-visible = true;
+              col-4-visible = true;
+              col-6-visible = true;
+              col-7-visible = true;
+              col-8-visible = true;
+              col-9-visible = true;
+              col-10-visible = true;
+              col-11-visible = true;
+              col-12-visible = true;
+              col-14-visible = true;
+              col-15-visible = true;
+              col-16-visible = true;
+              col-17-visible = true;
+              col-18-visible = true;
+              col-19-visible = true;
+              col-20-visible = true;
+              col-21-visible = true;
+              col-22-visible = true;
+              col-23-visible = true;
+              col-24-visible = true;
+              col-25-visible = true;
+              col-26-visible = true;
+            };
+            "org/gnome/gnome-system-monitor/disksview" = {
+              col-available-visible = true;
+              col-device-visible = true;
+              col-directory-visible = true;
+              col-free-visible = true;
+              col-total-visible = true;
+              col-type-visible = true;
+              col-used-visible = true;
+            };
+
+            "org/gnome/Snapshot" = {
+              enable-audio-recording = true;
+              play-shutter-sound = true;
+              show-composition-guidelines = true;
+            };
+
             "com/github/huluti/Curtail" = {
               file-attributes = true;
               metadata = false;
               new-file = true;
               recursive = true;
+            };
+
+            "org/gnome/simple-scan" = {
+              postproc-keep-original = true;
+            };
+
+            "com/github/tenderowl/frog" = {
+              telemetry = false;
+            };
+
+            "app/drey/EarTag" = {
+              musicbrainz-cover-size = "Maximum size";
+            };
+
+            "org/gnome/Music" = {
+              inhibit-suspend = true;
+            };
+
+            "org/gnome/Totem" = {
+              audio-output-type = "stereo";
+              autoload-subtitles = true;
+              subtitle-encoding = "UTF-8";
+              subtitle-font = "${font_preferences.name.sans_serif} ${toString (font_preferences.size * 2)}";
             };
 
             "org/gnome/meld" = {
@@ -1828,6 +1968,37 @@ in
               show-line-numbers = true;
               show-overview-map = true;
               wrap-mode = "word";
+            };
+
+            "org/gnome/calculator" = {
+              show-thousands = true;
+              show-zeroes = true;
+            };
+
+            "io/gitlab/adhami3310/Converter" = {
+              show-less-popular = true;
+            };
+
+            "org/gnome/maps" = {
+              show-scale = true;
+            };
+
+            "org/gnome/GWeather4" = {
+              temperature-unit = "centigrade";
+            };
+
+            "app/drey/Dialect" = {
+              color-scheme = "dark";
+              show-pronunciation = true;
+              src-auto = true;
+            };
+
+            "org/gnome/Contacts" = {
+              sort-on-surname = false;
+            };
+
+            "org/gnome/Calls" = {
+              auto-use-default-origins = true;
             };
           };
         }
@@ -1930,9 +2101,6 @@ in
         apkeep
         apkleaks
         apksigner
-        arduino-cli
-        arduino-ide
-        arduinoOTA
         aribb24
         aribb25
         arj
@@ -1981,7 +2149,9 @@ in
         dart
         dbeaver-bin
         dconf-editor
+        dconf2nix
         debase
+        dialect
         dirb
         dmg2img
         dmidecode
@@ -2034,11 +2204,13 @@ in
         gnome-frog
         gnome-graphs
         gnome-logs
+        gnome-maps
         gnome-multi-writer
         gnome-music
         gnome-nettool
         gnome-power-manager
         gnome-system-monitor
+        gnome-tecla
         gnome-tweaks
         gnome-user-docs
         gnome-video-effects
@@ -2176,7 +2348,6 @@ in
         podman-compose
         podman-desktop
         python313Full
-        qbittorrent
         qemu-utils
         qpwgraph
         radare2
@@ -2224,6 +2395,7 @@ in
         time
         tor-browser
         totem
+        transmission_4-gtk
         tree
         trufflehog
         udftools
@@ -2387,7 +2559,6 @@ in
       epiphany
       evince
       geary
-      gnome-maps
       gnome-text-editor
       gnome-tour
       yelp
@@ -2680,7 +2851,6 @@ in
                     github.copilot-chat
                     github.vscode-github-actions
                     github.vscode-pull-request-github
-                    gitlab.gitlab-workflow
                     grapecity.gc-excelviewer
                     gruntfuggly.todo-tree
                     hars.cppsnippets
@@ -2911,10 +3081,10 @@ in
   };
 }
 
-# flutter doctor --android-licenses
+# gsettings reset org.gnome.shell app-picker-layout
 
 # FIXME: 05ac-033e-Gamepad > Rumble
 # FIXME: ELAN7001 SPI Fingerprint Sensor
 # FIXME: MariaDB > Login
+# FIXME: Qt
 # FIXME: hardinfo2
-# FIXME: rpi-imager
