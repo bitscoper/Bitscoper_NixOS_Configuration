@@ -41,7 +41,7 @@ let
       emoji = "Noto Color Emoji";
     };
 
-    size = 11;
+    size = 12;
   };
 
   cursor = {
@@ -233,15 +233,10 @@ in
 
     inputMethod = {
       enable = true;
-      type = "fcitx5";
-
-      fcitx5 = {
-        waylandFrontend = true;
-
-        addons = with pkgs; [
-          fcitx5-openbangla-keyboard
-        ];
-      };
+      type = "ibus";
+      ibus.engines = with pkgs.ibus-engines; [
+        openbangla-keyboard
+      ];
     };
   };
 
@@ -1518,7 +1513,8 @@ in
 
       nativeMessagingHosts = {
         packages = with pkgs; [
-
+          gnomeExtensions.gsconnect
+          keepassxc
         ];
       };
 
@@ -1622,6 +1618,24 @@ in
             "org/gnome/desktop/input-sources" = {
               per-window = false;
               show-all-sources = true;
+              sources = [
+                (pkgs.lib.gvariant.mkTuple [
+                  "xkb"
+                  "us"
+                ])
+                (pkgs.lib.gvariant.mkTuple [
+                  "ibus"
+                  "OpenBangla"
+                ])
+                (pkgs.lib.gvariant.mkTuple [
+                  "xkb"
+                  "bd"
+                ])
+                (pkgs.lib.gvariant.mkTuple [
+                  "xkb"
+                  "ara"
+                ])
+              ];
             };
             "org/gnome/desktop/sound" = {
               allow-volume-above-100-percent = true;
@@ -1647,6 +1661,8 @@ in
               show-in-lock-screen = true;
             };
             "org/gnome/desktop/interface" = {
+              # overlay-scrolling = true;
+              clock-format = "12h";
               clock-show-date = true;
               clock-show-weekday = true;
               color-scheme = "prefer-dark";
@@ -1658,7 +1674,6 @@ in
               gtk-key-theme = "Default";
               locate-pointer = true;
               monospace-font-name = "${font_preferences.name.mono} ${toString font_preferences.size}";
-              overlay-scrolling = true;
               show-battery-percentage = true;
             };
             "org/gnome/desktop/calendar" = {
@@ -1674,6 +1689,7 @@ in
               always-show-universal-access-status = false;
             };
             "org/gnome/desktop/a11y/keyboard" = {
+              enable = false;
               bouncekeys-enable = false;
               mousekeys-enable = false;
               slowkeys-enable = false;
@@ -1692,6 +1708,17 @@ in
               invert-lightness = false;
             };
             "org/gnome/shell" = {
+              disable-user-extensions = false;
+              enabled-extensions = [
+                "appindicatorsupport@rgcjonas.gmail.com"
+                "blur-my-shell@aunetx"
+                "desktop-cube@schneegans.github.com"
+                "drive-menu@gnome-shell-extensions.gcampax.github.com"
+                "gsconnect@andyholmes.github.io"
+                "pano@elhan.io"
+                "places-menu@gnome-shell-extensions.gcampax.github.com"
+                "system-monitor@gnome-shell-extensions.gcampax.github.com"
+              ];
               last-selected-power-profile = "performance";
             };
             "org/gnome/shell/app-switcher" = {
@@ -1888,13 +1915,10 @@ in
       with pkgs;
       [
         # amrnb
-        # amrwbf
-        # appimagekitk
-        # fritzing
+        # amrwb
+        # appimagekit
         # gnss-sdr
         # reiser4progs
-        # sdrangel
-        # share-preview
         above
         acl
         aircrack-ng
@@ -1979,6 +2003,7 @@ in
         ffmpegthumbnailer
         file
         flutter
+        fritzing
         fwupd-efi
         gcc
         gdb
@@ -1999,6 +2024,7 @@ in
         gnome-color-manager
         gnome-connections
         gnome-console
+        gnome-contacts
         gnome-control-center
         gnome-decoder
         gnome-epub-thumbnailer
@@ -2168,8 +2194,10 @@ in
         schroedinger
         scrcpy
         screen
+        sdrangel
         sdrpp
         serial-studio
+        share-preview
         shared-mime-info
         sherlock
         simple-scan
@@ -2276,13 +2304,13 @@ in
         nixos-gsettings-overrides
       ])
       ++ (with gnomeExtensions; [
-        # clipboard-indicator
+        appindicator
         blur-my-shell
         desktop-cube
+        gsconnect
         pano
         places-status-indicator
         removable-drive-menu
-        vitals
       ])
       ++ (with php84Extensions; [
         bz2
@@ -2359,10 +2387,10 @@ in
       epiphany
       evince
       geary
-      gnome-contacts
       gnome-maps
       gnome-text-editor
       gnome-tour
+      yelp
     ];
 
     enableDebugInfo = false;
@@ -2402,12 +2430,12 @@ in
     };
   };
 
-  qt = {
-    enable = true;
+  # qt = {
+  #   enable = true;
 
-    platformTheme = "gnome";
-    style = "adwaita-dark";
-  };
+  #   platformTheme = "gnome";
+  #   style = "adwaita-dark";
+  # };
 
   documentation = {
     enable = true;
