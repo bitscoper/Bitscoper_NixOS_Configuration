@@ -1060,11 +1060,10 @@ in
       enable = true;
 
       enableImap = true;
-      enablePop3 = true;
       enableLmtp = true;
+      enablePop3 = false;
       protocols = [
         "imap"
-        "pop3"
         "lmtp"
       ];
 
@@ -1728,6 +1727,7 @@ in
               disable-extension-version-validation = false;
               disable-user-extensions = false;
               enabled-extensions = [
+                "Vitals@CoreCoding.com"
                 "appindicatorsupport@rgcjonas.gmail.com"
                 "blur-my-shell@aunetx"
                 "desktop-cube@schneegans.github.com"
@@ -1735,7 +1735,6 @@ in
                 "gsconnect@andyholmes.github.io"
                 "pano@elhan.io"
                 "places-menu@gnome-shell-extensions.gcampax.github.com"
-                "system-monitor@gnome-shell-extensions.gcampax.github.com"
               ];
               favorite-apps = [
                 "org.gnome.Console.desktop"
@@ -1763,15 +1762,6 @@ in
               name = config.networking.hostName;
               show-indicators = true;
             };
-            "org/gnome/shell/extensions/desktop-cube" = {
-              do-explode = true;
-              enable-desktop-dragging = true;
-              enable-desktop-edge-switch = true;
-              enable-overview-dragging = true;
-              enable-overview-edge-switch = true;
-              enable-panel-dragging = true;
-              last-first-gap = true;
-            };
             "org/gnome/shell/extensions/pano" = {
               item-date-font-family = font_preferences.name.sans_serif;
               item-title-font-family = font_preferences.name.sans_serif;
@@ -1787,6 +1777,41 @@ in
               sync-primary = true;
               watch-exclusion-list = true;
               wiggle-indicator = true;
+            };
+            "org/gnome/shell/extensions/vitals" = {
+              fixed-widths = false;
+              hide-icons = false;
+              hide-zeros = false;
+              hot-sensors = [
+                "_processor_usage_"
+                "_memory_usage_"
+                "__network-rx_max__"
+                "__network-tx_max__"
+              ];
+              include-public-ip = true;
+              include-static-gpu-info = true;
+              include-static-info = true;
+              menu-centered = true;
+              show-battery = true;
+              show-fan = true;
+              show-gpu = true;
+              show-memory = true;
+              show-network = true;
+              show-processor = true;
+              show-storage = true;
+              show-system = true;
+              show-temperature = true;
+              show-voltage = true;
+              use-higher-precision = true;
+            };
+            "org/gnome/shell/extensions/desktop-cube" = {
+              do-explode = true;
+              enable-desktop-dragging = true;
+              enable-desktop-edge-switch = true;
+              enable-overview-dragging = true;
+              enable-overview-edge-switch = true;
+              enable-panel-dragging = true;
+              last-first-gap = true;
             };
             "org/gnome/mutter" = {
               attach-modal-dialogs = false;
@@ -1954,10 +1979,10 @@ in
             };
 
             "org/gnome/Totem" = {
+              # subtitle-encoding = "UTF-8";
+              # subtitle-font = "${font_preferences.name.sans_serif} ${toString (font_preferences.size * 2)}";
               audio-output-type = "stereo";
               autoload-subtitles = true;
-              subtitle-encoding = "UTF-8";
-              subtitle-font = "${font_preferences.name.sans_serif} ${toString (font_preferences.size * 2)}";
             };
 
             "org/gnome/meld" = {
@@ -2240,6 +2265,7 @@ in
         iftop
         inkscape
         inotify-tools
+        jellyfin-media-player
         jfsutils
         jmol
         john
@@ -2300,6 +2326,7 @@ in
         macchanger
         masscan
         massdns
+        mattermost-desktop
         media-player-info
         meld
         mesa-demos
@@ -2483,6 +2510,7 @@ in
         pano
         places-status-indicator
         removable-drive-menu
+        vitals
       ])
       ++ (with php84Extensions; [
         bz2
@@ -2579,7 +2607,349 @@ in
       defaultApplications = {
         "inode/directory" = "nautilus.desktop";
 
+        "image/aces" = "org.gnome.Loupe.desktop";
+        "image/apng" = "org.gnome.Loupe.desktop";
+        "image/avci" = "org.gnome.Loupe.desktop";
+        "image/avcs" = "org.gnome.Loupe.desktop";
+        "image/avif" = "org.gnome.Loupe.desktop";
+        "image/bmp" = "org.gnome.Loupe.desktop";
+        "image/cgm" = "org.gnome.Loupe.desktop";
+        "image/dicom-rle" = "org.gnome.Loupe.desktop";
+        "image/dpx" = "org.gnome.Loupe.desktop";
+        "image/emf" = "org.gnome.Loupe.desktop";
+        "image/fits" = "org.gnome.Loupe.desktop";
+        "image/g3fax" = "org.gnome.Loupe.desktop";
+        "image/gif" = "org.gnome.Loupe.desktop";
+        "image/heic" = "org.gnome.Loupe.desktop";
+        "image/heic-sequence" = "org.gnome.Loupe.desktop";
+        "image/heif" = "org.gnome.Loupe.desktop";
+        "image/heif-sequence" = "org.gnome.Loupe.desktop";
+        "image/hej2k" = "org.gnome.Loupe.desktop";
+        "image/hsj2" = "org.gnome.Loupe.desktop";
+        "image/ief" = "org.gnome.Loupe.desktop";
+        "image/j2c" = "org.gnome.Loupe.desktop";
+        "image/jaii" = "org.gnome.Loupe.desktop";
+        "image/jais" = "org.gnome.Loupe.desktop";
+        "image/jls" = "org.gnome.Loupe.desktop";
+        "image/jp2" = "org.gnome.Loupe.desktop";
+        "image/jpeg" = "org.gnome.Loupe.desktop";
+        "image/jph" = "org.gnome.Loupe.desktop";
+        "image/jphc" = "org.gnome.Loupe.desktop";
+        "image/jpm" = "org.gnome.Loupe.desktop";
+        "image/jpx" = "org.gnome.Loupe.desktop";
+        "image/jxl" = "org.gnome.Loupe.desktop";
+        "image/jxr" = "org.gnome.Loupe.desktop";
+        "image/jxrA" = "org.gnome.Loupe.desktop";
+        "image/jxrS" = "org.gnome.Loupe.desktop";
+        "image/jxs" = "org.gnome.Loupe.desktop";
+        "image/jxsc" = "org.gnome.Loupe.desktop";
+        "image/jxsi" = "org.gnome.Loupe.desktop";
+        "image/jxss" = "org.gnome.Loupe.desktop";
+        "image/ktx" = "org.gnome.Loupe.desktop";
+        "image/ktx2" = "org.gnome.Loupe.desktop";
+        "image/naplps" = "org.gnome.Loupe.desktop";
+        "image/png" = "org.gnome.Loupe.desktop";
+        "image/prs.btif" = "org.gnome.Loupe.desktop";
+        "image/prs.pti" = "org.gnome.Loupe.desktop";
+        "image/pwg-raster" = "org.gnome.Loupe.desktop";
+        "image/svg+xml" = "org.gnome.Loupe.desktop";
+        "image/t38" = "org.gnome.Loupe.desktop";
+        "image/tiff" = "org.gnome.Loupe.desktop";
+        "image/tiff-fx" = "org.gnome.Loupe.desktop";
+        "image/vnd.adobe.photoshop" = "org.gnome.Loupe.desktop";
+        "image/vnd.airzip.accelerator.azv" = "org.gnome.Loupe.desktop";
+        "image/vnd.cns.inf2" = "org.gnome.Loupe.desktop";
+        "image/vnd.dece.graphic" = "org.gnome.Loupe.desktop";
+        "image/vnd.djvu" = "org.gnome.Loupe.desktop";
+        "image/vnd.dvb.subtitle" = "org.gnome.Loupe.desktop";
+        "image/vnd.dwg" = "org.gnome.Loupe.desktop";
+        "image/vnd.dxf" = "org.gnome.Loupe.desktop";
+        "image/vnd.fastbidsheet" = "org.gnome.Loupe.desktop";
+        "image/vnd.fpx" = "org.gnome.Loupe.desktop";
+        "image/vnd.fst" = "org.gnome.Loupe.desktop";
+        "image/vnd.fujixerox.edmics-mmr" = "org.gnome.Loupe.desktop";
+        "image/vnd.fujixerox.edmics-rlc" = "org.gnome.Loupe.desktop";
+        "image/vnd.globalgraphics.pgb" = "org.gnome.Loupe.desktop";
+        "image/vnd.microsoft.icon" = "org.gnome.Loupe.desktop";
+        "image/vnd.mix" = "org.gnome.Loupe.desktop";
+        "image/vnd.mozilla.apng" = "org.gnome.Loupe.desktop";
+        "image/vnd.ms-modi" = "org.gnome.Loupe.desktop";
+        "image/vnd.net-fpx" = "org.gnome.Loupe.desktop";
+        "image/vnd.pco.b16" = "org.gnome.Loupe.desktop";
+        "image/vnd.radiance" = "org.gnome.Loupe.desktop";
+        "image/vnd.sealed.png" = "org.gnome.Loupe.desktop";
+        "image/vnd.sealedmedia.softseal.gif" = "org.gnome.Loupe.desktop";
+        "image/vnd.sealedmedia.softseal.jpg" = "org.gnome.Loupe.desktop";
+        "image/vnd.svf" = "org.gnome.Loupe.desktop";
+        "image/vnd.tencent.tap" = "org.gnome.Loupe.desktop";
+        "image/vnd.valve.source.texture" = "org.gnome.Loupe.desktop";
+        "image/vnd.wap.wbmp" = "org.gnome.Loupe.desktop";
+        "image/vnd.xiff" = "org.gnome.Loupe.desktop";
+        "image/vnd.zbrush.pcx" = "org.gnome.Loupe.desktop";
+        "image/webp" = "org.gnome.Loupe.desktop";
+        "image/wmf" = "org.gnome.Loupe.desktop";
+        "image/x-emf" = "org.gnome.Loupe.desktop";
+        "image/x-wmf" = "org.gnome.Loupe.desktop";
+
+        "audio/1d-interleaved-parityfec" = "org.gnome.Music.desktop";
+        "audio/32kadpcm" = "org.gnome.Music.desktop";
+        "audio/3gpp" = "org.gnome.Music.desktop";
+        "audio/3gpp2" = "org.gnome.Music.desktop";
+        "audio/AMR" = "org.gnome.Music.desktop";
+        "audio/AMR-WB" = "org.gnome.Music.desktop";
+        "audio/ATRAC-ADVANCED-LOSSLESS" = "org.gnome.Music.desktop";
+        "audio/ATRAC-X" = "org.gnome.Music.desktop";
+        "audio/ATRAC3" = "org.gnome.Music.desktop";
+        "audio/BV16" = "org.gnome.Music.desktop";
+        "audio/BV32" = "org.gnome.Music.desktop";
+        "audio/CN" = "org.gnome.Music.desktop";
+        "audio/DAT12" = "org.gnome.Music.desktop";
+        "audio/DV" = "org.gnome.Music.desktop";
+        "audio/DVI4" = "org.gnome.Music.desktop";
+        "audio/EVRC" = "org.gnome.Music.desktop";
+        "audio/EVRC-QCP" = "org.gnome.Music.desktop";
+        "audio/EVRC0" = "org.gnome.Music.desktop";
+        "audio/EVRC1" = "org.gnome.Music.desktop";
+        "audio/EVRCB" = "org.gnome.Music.desktop";
+        "audio/EVRCB0" = "org.gnome.Music.desktop";
+        "audio/EVRCB1" = "org.gnome.Music.desktop";
+        "audio/EVRCNW" = "org.gnome.Music.desktop";
+        "audio/EVRCNW0" = "org.gnome.Music.desktop";
+        "audio/EVRCNW1" = "org.gnome.Music.desktop";
+        "audio/EVRCWB" = "org.gnome.Music.desktop";
+        "audio/EVRCWB0" = "org.gnome.Music.desktop";
+        "audio/EVRCWB1" = "org.gnome.Music.desktop";
+        "audio/EVS" = "org.gnome.Music.desktop";
+        "audio/G711-0" = "org.gnome.Music.desktop";
+        "audio/G719" = "org.gnome.Music.desktop";
+        "audio/G722" = "org.gnome.Music.desktop";
+        "audio/G7221" = "org.gnome.Music.desktop";
+        "audio/G723" = "org.gnome.Music.desktop";
+        "audio/G726-16" = "org.gnome.Music.desktop";
+        "audio/G726-24" = "org.gnome.Music.desktop";
+        "audio/G726-32" = "org.gnome.Music.desktop";
+        "audio/G726-40" = "org.gnome.Music.desktop";
+        "audio/G728" = "org.gnome.Music.desktop";
+        "audio/G729" = "org.gnome.Music.desktop";
+        "audio/G7291" = "org.gnome.Music.desktop";
+        "audio/G729D" = "org.gnome.Music.desktop";
+        "audio/G729E" = "org.gnome.Music.desktop";
+        "audio/GSM" = "org.gnome.Music.desktop";
+        "audio/GSM-EFR" = "org.gnome.Music.desktop";
+        "audio/GSM-HR-08" = "org.gnome.Music.desktop";
+        "audio/L16" = "org.gnome.Music.desktop";
+        "audio/L20" = "org.gnome.Music.desktop";
+        "audio/L24" = "org.gnome.Music.desktop";
+        "audio/L8" = "org.gnome.Music.desktop";
+        "audio/LPC" = "org.gnome.Music.desktop";
+        "audio/MELP" = "org.gnome.Music.desktop";
+        "audio/MELP1200" = "org.gnome.Music.desktop";
+        "audio/MELP2400" = "org.gnome.Music.desktop";
+        "audio/MELP600" = "org.gnome.Music.desktop";
+        "audio/MP4A-LATM" = "org.gnome.Music.desktop";
+        "audio/MPA" = "org.gnome.Music.desktop";
+        "audio/PCMA" = "org.gnome.Music.desktop";
+        "audio/PCMA-WB" = "org.gnome.Music.desktop";
+        "audio/PCMU" = "org.gnome.Music.desktop";
+        "audio/PCMU-WB" = "org.gnome.Music.desktop";
+        "audio/QCELP" = "org.gnome.Music.desktop";
+        "audio/RED" = "org.gnome.Music.desktop";
+        "audio/SMV" = "org.gnome.Music.desktop";
+        "audio/SMV-QCP" = "org.gnome.Music.desktop";
+        "audio/SMV0" = "org.gnome.Music.desktop";
+        "audio/TETRA_ACELP" = "org.gnome.Music.desktop";
+        "audio/TETRA_ACELP_BB" = "org.gnome.Music.desktop";
+        "audio/TSVCIS" = "org.gnome.Music.desktop";
+        "audio/UEMCLIP" = "org.gnome.Music.desktop";
+        "audio/VDVI" = "org.gnome.Music.desktop";
+        "audio/VMR-WB" = "org.gnome.Music.desktop";
+        "audio/aac" = "org.gnome.Music.desktop";
+        "audio/ac3" = "org.gnome.Music.desktop";
+        "audio/amr-wb+" = "org.gnome.Music.desktop";
+        "audio/aptx" = "org.gnome.Music.desktop";
+        "audio/asc" = "org.gnome.Music.desktop";
+        "audio/basic" = "org.gnome.Music.desktop";
+        "audio/clearmode" = "org.gnome.Music.desktop";
+        "audio/dls" = "org.gnome.Music.desktop";
+        "audio/dsr-es201108" = "org.gnome.Music.desktop";
+        "audio/dsr-es202050" = "org.gnome.Music.desktop";
+        "audio/dsr-es202211" = "org.gnome.Music.desktop";
+        "audio/dsr-es202212" = "org.gnome.Music.desktop";
+        "audio/eac3" = "org.gnome.Music.desktop";
+        "audio/encaprtp" = "org.gnome.Music.desktop";
+        "audio/flac" = "org.gnome.Music.desktop";
+        "audio/flexfec" = "org.gnome.Music.desktop";
+        "audio/fwdred" = "org.gnome.Music.desktop";
+        "audio/iLBC" = "org.gnome.Music.desktop";
+        "audio/ip-mr_v2.5" = "org.gnome.Music.desktop";
+        "audio/matroska" = "org.gnome.Music.desktop";
+        "audio/mhas" = "org.gnome.Music.desktop";
+        "audio/midi-clip" = "org.gnome.Music.desktop";
+        "audio/mobile-xmf" = "org.gnome.Music.desktop";
+        "audio/mp4" = "org.gnome.Music.desktop";
+        "audio/mpa-robust" = "org.gnome.Music.desktop";
+        "audio/mpeg" = "org.gnome.Music.desktop";
+        "audio/mpeg4-generic" = "org.gnome.Music.desktop";
+        "audio/ogg" = "org.gnome.Music.desktop";
+        "audio/opus" = "org.gnome.Music.desktop";
+        "audio/parityfec" = "org.gnome.Music.desktop";
+        "audio/prs.sid" = "org.gnome.Music.desktop";
+        "audio/raptorfec" = "org.gnome.Music.desktop";
+        "audio/rtp-enc-aescm128" = "org.gnome.Music.desktop";
+        "audio/rtp-midi" = "org.gnome.Music.desktop";
+        "audio/rtploopback" = "org.gnome.Music.desktop";
+        "audio/rtx" = "org.gnome.Music.desktop";
+        "audio/scip" = "org.gnome.Music.desktop";
+        "audio/sofa" = "org.gnome.Music.desktop";
+        "audio/sp-midi" = "org.gnome.Music.desktop";
+        "audio/speex" = "org.gnome.Music.desktop";
+        "audio/t140c" = "org.gnome.Music.desktop";
+        "audio/t38" = "org.gnome.Music.desktop";
+        "audio/telephone-event" = "org.gnome.Music.desktop";
+        "audio/tone" = "org.gnome.Music.desktop";
+        "audio/ulpfec" = "org.gnome.Music.desktop";
+        "audio/usac" = "org.gnome.Music.desktop";
+        "audio/vnd.3gpp.iufp" = "org.gnome.Music.desktop";
+        "audio/vnd.4SB" = "org.gnome.Music.desktop";
+        "audio/vnd.CELP" = "org.gnome.Music.desktop";
+        "audio/vnd.audiokoz" = "org.gnome.Music.desktop";
+        "audio/vnd.cisco.nse" = "org.gnome.Music.desktop";
+        "audio/vnd.cmles.radio-events" = "org.gnome.Music.desktop";
+        "audio/vnd.cns.anp1" = "org.gnome.Music.desktop";
+        "audio/vnd.cns.inf1" = "org.gnome.Music.desktop";
+        "audio/vnd.dece.audio" = "org.gnome.Music.desktop";
+        "audio/vnd.digital-winds" = "org.gnome.Music.desktop";
+        "audio/vnd.dlna.adts" = "org.gnome.Music.desktop";
+        "audio/vnd.dolby.heaac.1" = "org.gnome.Music.desktop";
+        "audio/vnd.dolby.heaac.2" = "org.gnome.Music.desktop";
+        "audio/vnd.dolby.mlp" = "org.gnome.Music.desktop";
+        "audio/vnd.dolby.mps" = "org.gnome.Music.desktop";
+        "audio/vnd.dolby.pl2" = "org.gnome.Music.desktop";
+        "audio/vnd.dolby.pl2x" = "org.gnome.Music.desktop";
+        "audio/vnd.dolby.pl2z" = "org.gnome.Music.desktop";
+        "audio/vnd.dolby.pulse.1" = "org.gnome.Music.desktop";
+        "audio/vnd.dra" = "org.gnome.Music.desktop";
+        "audio/vnd.dts" = "org.gnome.Music.desktop";
+        "audio/vnd.dts.hd" = "org.gnome.Music.desktop";
+        "audio/vnd.dts.uhd" = "org.gnome.Music.desktop";
+        "audio/vnd.dvb.file" = "org.gnome.Music.desktop";
+        "audio/vnd.everad.plj" = "org.gnome.Music.desktop";
+        "audio/vnd.hns.audio" = "org.gnome.Music.desktop";
+        "audio/vnd.lucent.voice" = "org.gnome.Music.desktop";
+        "audio/vnd.ms-playready.media.pya" = "org.gnome.Music.desktop";
+        "audio/vnd.nokia.mobile-xmf" = "org.gnome.Music.desktop";
+        "audio/vnd.nortel.vbk" = "org.gnome.Music.desktop";
+        "audio/vnd.nuera.ecelp4800" = "org.gnome.Music.desktop";
+        "audio/vnd.nuera.ecelp7470" = "org.gnome.Music.desktop";
+        "audio/vnd.nuera.ecelp9600" = "org.gnome.Music.desktop";
+        "audio/vnd.octel.sbc" = "org.gnome.Music.desktop";
+        "audio/vnd.presonus.multitrack" = "org.gnome.Music.desktop";
+        "audio/vnd.qcelp" = "org.gnome.Music.desktop";
+        "audio/vnd.rhetorex.32kadpcm" = "org.gnome.Music.desktop";
+        "audio/vnd.rip" = "org.gnome.Music.desktop";
+        "audio/vnd.sealedmedia.softseal.mpeg" = "org.gnome.Music.desktop";
+        "audio/vnd.vmx.cvsd" = "org.gnome.Music.desktop";
+        "audio/vorbis" = "org.gnome.Music.desktop";
+        "audio/vorbis-config" = "org.gnome.Music.desktop";
+
+        "video/1d-interleaved-parityfec" = "org.gnome.Totem.desktop";
+        "video/3gpp" = "org.gnome.Totem.desktop";
+        "video/3gpp-tt" = "org.gnome.Totem.desktop";
+        "video/3gpp2" = "org.gnome.Totem.desktop";
+        "video/AV1" = "org.gnome.Totem.desktop";
+        "video/BMPEG" = "org.gnome.Totem.desktop";
+        "video/BT656" = "org.gnome.Totem.desktop";
+        "video/CelB" = "org.gnome.Totem.desktop";
+        "video/DV" = "org.gnome.Totem.desktop";
+        "video/FFV1" = "org.gnome.Totem.desktop";
+        "video/H261" = "org.gnome.Totem.desktop";
+        "video/H263" = "org.gnome.Totem.desktop";
+        "video/H263-1998" = "org.gnome.Totem.desktop";
+        "video/H263-2000" = "org.gnome.Totem.desktop";
+        "video/H264" = "org.gnome.Totem.desktop";
+        "video/H264-RCDO" = "org.gnome.Totem.desktop";
+        "video/H264-SVC" = "org.gnome.Totem.desktop";
+        "video/H265" = "org.gnome.Totem.desktop";
+        "video/H266" = "org.gnome.Totem.desktop";
+        "video/JPEG" = "org.gnome.Totem.desktop";
+        "video/MP1S" = "org.gnome.Totem.desktop";
+        "video/MP2P" = "org.gnome.Totem.desktop";
+        "video/MP2T" = "org.gnome.Totem.desktop";
+        "video/MP4V-ES" = "org.gnome.Totem.desktop";
+        "video/MPV" = "org.gnome.Totem.desktop";
+        "video/SMPTE292M" = "org.gnome.Totem.desktop";
+        "video/VP8" = "org.gnome.Totem.desktop";
+        "video/VP9" = "org.gnome.Totem.desktop";
+        "video/encaprtp" = "org.gnome.Totem.desktop";
+        "video/evc" = "org.gnome.Totem.desktop";
+        "video/flexfec" = "org.gnome.Totem.desktop";
+        "video/iso.segment" = "org.gnome.Totem.desktop";
+        "video/jpeg2000" = "org.gnome.Totem.desktop";
+        "video/jxsv" = "org.gnome.Totem.desktop";
+        "video/matroska" = "org.gnome.Totem.desktop";
+        "video/matroska-3d" = "org.gnome.Totem.desktop";
+        "video/mj2" = "org.gnome.Totem.desktop";
+        "video/mp4" = "org.gnome.Totem.desktop";
+        "video/mpeg" = "org.gnome.Totem.desktop";
+        "video/mpeg4-generic" = "org.gnome.Totem.desktop";
+        "video/nv" = "org.gnome.Totem.desktop";
+        "video/ogg" = "org.gnome.Totem.desktop";
+        "video/parityfec" = "org.gnome.Totem.desktop";
+        "video/pointer" = "org.gnome.Totem.desktop";
+        "video/quicktime" = "org.gnome.Totem.desktop";
+        "video/raptorfec" = "org.gnome.Totem.desktop";
+        "video/raw" = "org.gnome.Totem.desktop";
+        "video/rtp-enc-aescm128" = "org.gnome.Totem.desktop";
+        "video/rtploopback" = "org.gnome.Totem.desktop";
+        "video/rtx" = "org.gnome.Totem.desktop";
+        "video/scip" = "org.gnome.Totem.desktop";
+        "video/smpte291" = "org.gnome.Totem.desktop";
+        "video/ulpfec" = "org.gnome.Totem.desktop";
+        "video/vc1" = "org.gnome.Totem.desktop";
+        "video/vc2" = "org.gnome.Totem.desktop";
+        "video/vnd.CCTV" = "org.gnome.Totem.desktop";
+        "video/vnd.dece.hd" = "org.gnome.Totem.desktop";
+        "video/vnd.dece.mobile" = "org.gnome.Totem.desktop";
+        "video/vnd.dece.mp4" = "org.gnome.Totem.desktop";
+        "video/vnd.dece.pd" = "org.gnome.Totem.desktop";
+        "video/vnd.dece.sd" = "org.gnome.Totem.desktop";
+        "video/vnd.dece.video" = "org.gnome.Totem.desktop";
+        "video/vnd.directv.mpeg" = "org.gnome.Totem.desktop";
+        "video/vnd.directv.mpeg-tts" = "org.gnome.Totem.desktop";
+        "video/vnd.dlna.mpeg-tts" = "org.gnome.Totem.desktop";
+        "video/vnd.dvb.file" = "org.gnome.Totem.desktop";
+        "video/vnd.fvt" = "org.gnome.Totem.desktop";
+        "video/vnd.hns.video" = "org.gnome.Totem.desktop";
+        "video/vnd.iptvforum.1dparityfec-1010" = "org.gnome.Totem.desktop";
+        "video/vnd.iptvforum.1dparityfec-2005" = "org.gnome.Totem.desktop";
+        "video/vnd.iptvforum.2dparityfec-1010" = "org.gnome.Totem.desktop";
+        "video/vnd.iptvforum.2dparityfec-2005" = "org.gnome.Totem.desktop";
+        "video/vnd.iptvforum.ttsavc" = "org.gnome.Totem.desktop";
+        "video/vnd.iptvforum.ttsmpeg2" = "org.gnome.Totem.desktop";
+        "video/vnd.motorola.video" = "org.gnome.Totem.desktop";
+        "video/vnd.motorola.videop" = "org.gnome.Totem.desktop";
+        "video/vnd.mpegurl" = "org.gnome.Totem.desktop";
+        "video/vnd.ms-playready.media.pyv" = "org.gnome.Totem.desktop";
+        "video/vnd.nokia.interleaved-multimedia" = "org.gnome.Totem.desktop";
+        "video/vnd.nokia.mp4vr" = "org.gnome.Totem.desktop";
+        "video/vnd.nokia.videovoip" = "org.gnome.Totem.desktop";
+        "video/vnd.objectvideo" = "org.gnome.Totem.desktop";
+        "video/vnd.radgamettools.bink" = "org.gnome.Totem.desktop";
+        "video/vnd.radgamettools.smacker" = "org.gnome.Totem.desktop";
+        "video/vnd.sealed.mpeg1" = "org.gnome.Totem.desktop";
+        "video/vnd.sealed.mpeg4" = "org.gnome.Totem.desktop";
+        "video/vnd.sealed.swf" = "org.gnome.Totem.desktop";
+        "video/vnd.sealedmedia.softseal.mov" = "org.gnome.Totem.desktop";
+        "video/vnd.uvvu.mp4" = "org.gnome.Totem.desktop";
+        "video/vnd.vivo" = "org.gnome.Totem.desktop";
+        "video/vnd.youtube.yt" = "org.gnome.Totem.desktop";
+
         "application/pdf" = "firefox-devedition.desktop";
+
+        "x-scheme-handler/http" = "firefox-devedition.desktop";
+        "x-scheme-handler/https" = "firefox-devedition.desktop";
+
+        "x-scheme-handler/mailto" = "thunderbird.desktop";
       };
     };
 
