@@ -563,6 +563,10 @@ in
       dbusPackage = pkgs.dbus;
 
       implementation = "broker";
+
+      packages = with pkgs; [
+
+      ];
     };
 
     timesyncd = {
@@ -628,6 +632,7 @@ in
       packages = with pkgs; [
         android-udev-rules
         game-devices-udev-rules
+        gnome-settings-daemon
         libmtp.out
         rtl-sdr
         steam-devices-udev-rules
@@ -1172,6 +1177,8 @@ in
       openFirewall = true;
     };
 
+    sysprof.enable = true;
+
     logrotate = {
       enable = true;
 
@@ -1386,13 +1393,42 @@ in
         ];
       };
 
-      policies = { };
+      policies = {
+        Extensions = {
+          Install = [
+            "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/gnome-shell-integration/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/gsconnect/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/search_by_image/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/single-file/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/tab-disguiser/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
+          ];
+
+          Locked = [
+            "chrome-gnome-shell@gnome.org"
+            "gsconnect@andyholmes.github.io"
+            "jid1-BoFifL9Vbdl2zQ@jetpack"
+            "uBlock0@raymondhill.net"
+            "{19b92b95-9cca-4f8d-b364-37a81f7133d5}"
+            "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}"
+            "{531906d3-e22f-4a6c-a102-8057b88a1a63}"
+          ];
+        };
+      };
 
       autoConfig = '''';
 
       preferences = {
+        "browser.contentblocking.category" = "strict";
+        "browser.search.region" = "BD";
+        "browser.search.suggest.enabled.private" = true;
+        "dom.security.https_only_mode" = true;
+        "privacy.globalprivacycontrol.enabled" = true;
         "security.warn_submit_secure_to_insecure" = true;
-
+        # "privacy.fingerprintingProtection" = true;
+        # "privacy.trackingprotection.enabled" = true;
       };
       preferencesStatus = "locked";
     };
@@ -2453,7 +2489,7 @@ in
 
       removedAssociations = { };
 
-      # https://www.iana.org/assignments/media-types/media-types.xhtml # Excluding "application/x-*" and "x-scheme-handler/*"
+      # https://www.iana.org/assignments/media-types/media-types.xhtml
       defaultApplications = {
         "inode/directory" = "nautilus.desktop";
 
