@@ -493,8 +493,6 @@ in
       enable = true;
       openFirewall = true;
     };
-
-    steam-hardware.enable = true;
   };
 
   virtualisation = {
@@ -635,7 +633,6 @@ in
         gnome-settings-daemon
         libmtp.out
         rtl-sdr
-        steam-devices-udev-rules
         usb-blaster-udev-rules
       ];
     };
@@ -873,6 +870,9 @@ in
         {
           addr = "0.0.0.0";
         }
+        {
+          addr = "::";
+        }
       ];
       ports = [
         22
@@ -977,7 +977,7 @@ in
 
     memcached = {
       enable = true;
-      listen = "0.0.0.0";
+      listen = "*";
       port = 11211;
       enableUnixSocket = false;
       maxMemory = 64; # Megabytes
@@ -1018,7 +1018,7 @@ in
 
       settings = {
         mysqld = {
-          bind-address = "0.0.0.0";
+          bind-address = "*";
           port = 3306;
 
           sql_mode = "";
@@ -1107,7 +1107,7 @@ in
       enable = true;
       package = pkgs.open-webui;
 
-      host = "0.0.0.0";
+      host = "*";
       port = 11111;
 
       environment = {
@@ -1453,19 +1453,6 @@ in
       package = pkgs.localsend;
 
       openFirewall = true;
-    };
-
-    steam = {
-      enable = true;
-      package = pkgs.steam;
-
-      extraCompatPackages = with pkgs; [
-
-      ];
-
-      localNetworkGameTransfers.openFirewall = true;
-      remotePlay.openFirewall = true;
-      dedicatedServer.openFirewall = true;
     };
 
     dconf = {
