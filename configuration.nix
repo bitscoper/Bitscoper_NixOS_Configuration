@@ -1400,20 +1400,23 @@ in
             "https://addons.mozilla.org/firefox/downloads/latest/gnome-shell-integration/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/gsconnect/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/languagetool/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/search_by_image/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/single-file/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/tab-disguiser/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/zjm-whatfont/latest.xpi"
           ];
 
           Locked = [
-            "chrome-gnome-shell@gnome.org"
-            "gsconnect@andyholmes.github.io"
-            "jid1-BoFifL9Vbdl2zQ@jetpack"
-            "uBlock0@raymondhill.net"
-            "{19b92b95-9cca-4f8d-b364-37a81f7133d5}"
-            "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}"
-            "{531906d3-e22f-4a6c-a102-8057b88a1a63}"
+            "chrome-gnome-shell@gnome.org" # GNOME Shell Integration
+            "gsconnect@andyholmes.github.io" # GSConnect
+            "jid1-BoFifL9Vbdl2zQ@jetpack" # Decentraleyes
+            "uBlock0@raymondhill.net" # uBlock Origin
+            "{19b92b95-9cca-4f8d-b364-37a81f7133d5}" # Tab Disguiser
+            "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}" # Search by Image
+            "{531906d3-e22f-4a6c-a102-8057b88a1a63}" # SingleFile
+            "{dcb8caa2-63fa-41aa-a508-a45c5990ebdd}" # WhatFont
           ];
         };
       };
