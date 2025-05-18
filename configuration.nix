@@ -729,9 +729,9 @@ in
     };
 
     gnome = {
+      core-apps.enable = true;
       core-os-services.enable = true;
       core-shell.enable = true;
-      core-utilities.enable = true;
       glib-networking.enable = true;
       gnome-browser-connector.enable = true;
       gnome-keyring.enable = true;
@@ -2362,6 +2362,7 @@ in
         autopair
         done
         fish-you-should-use
+        sponge
       ])
       ++ (with gst_all_1; [
         gst-libav
@@ -3265,11 +3266,13 @@ in
               en-us
             ];
             nativeMessagingHosts = with pkgs; [
-
+              keepassxc
             ];
 
             commandLineArgs = [
-
+              "--ozone-platform=wayland"
+              "--password-store=gnome"
+              "--proxy-auto-detect"
             ];
           };
 
