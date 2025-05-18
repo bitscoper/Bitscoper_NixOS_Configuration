@@ -94,7 +94,6 @@ in
     kernelPackages = pkgs.linuxPackages_zen;
 
     extraModulePackages = with config.boot.kernelPackages; [
-      akvcam
     ];
 
     kernelModules = [
@@ -563,7 +562,6 @@ in
       implementation = "broker";
 
       packages = with pkgs; [
-
       ];
     };
 
@@ -713,7 +711,6 @@ in
           enable = true;
 
           extraGSettingsOverridePackages = with pkgs; [
-
           ];
           extraGSettingsOverrides = '''';
 
@@ -2426,7 +2423,6 @@ in
         zlib
       ])
       # ++ (with php84Packages; [
-
       # ])
       ++ (with python313Packages; [
         black
@@ -2458,6 +2454,7 @@ in
       ]);
 
     gnome.excludePackages = with pkgs; [
+      decibels
       epiphany
       evince
       geary
@@ -2955,7 +2952,6 @@ in
           preferXdgDirectories = true;
 
           packages = with pkgs; [
-
           ];
 
           sessionVariables = { };
@@ -3196,6 +3192,12 @@ in
                       sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
                     }
                     {
+                      name = "arb-editor";
+                      publisher = "Google";
+                      version = "0.2.1";
+                      sha256 = "uHdQeW9ZXYg6+VnD6cb5CU10/xV5hCtxt5K+j0qb7as=";
+                    }
+                    {
                       name = "vscode-print";
                       publisher = "pdconsec";
                       version = "1.4.0";
@@ -3224,7 +3226,6 @@ in
             enable = true;
             package = pkgs.gh;
             extensions = with pkgs; [
-
             ];
 
             gitCredentialHelper = {
@@ -3265,9 +3266,7 @@ in
               en_US
               en-us
             ];
-            nativeMessagingHosts = with pkgs; [
-              keepassxc
-            ];
+            nativeMessagingHosts = config.programs.firefox.nativeMessagingHosts.packages;
 
             commandLineArgs = [
               "--ozone-platform=wayland"
