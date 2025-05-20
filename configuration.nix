@@ -1633,6 +1633,8 @@ in
                 "firefox-devedition.desktop"
                 "thunderbird.desktop"
                 "org.fritzing.Fritzing.desktop"
+                "org.kicad.kicad.desktop"
+                "serial-studio.desktop"
                 "code.desktop"
                 "com.obsproject.Studio.desktop"
                 "sdrangel.desktop"
@@ -1736,9 +1738,6 @@ in
 
             "org/gnome/file-roller/ui" = {
               view-sidebar = true;
-            };
-            "org/gnome/file-roller/listing" = {
-              list-mode = "as-folder";
             };
 
             "org/gnome/Console" = {
@@ -2142,6 +2141,7 @@ in
         jxrlib
         keepassxc
         kernelshark
+        kicad
         letterpress
         lha
         lhasa
