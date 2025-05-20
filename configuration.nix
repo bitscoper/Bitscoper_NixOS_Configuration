@@ -631,7 +631,6 @@ in
         gnome-settings-daemon
         libmtp.out
         rtl-sdr
-        usb-blaster-udev-rules
       ];
     };
 
@@ -1998,6 +1997,7 @@ in
         apkeep
         apkleaks
         apksigner
+        aptdec
         aribb24
         aribb25
         arj
@@ -2172,6 +2172,7 @@ in
         libosinfo
         libusb1
         libuuid
+        libuvc
         libva-utils
         libvpx
         libwebcam
@@ -2312,8 +2313,6 @@ in
         wafw00f
         wavpack
         waycheck
-        wayland
-        wayland-protocols
         wayland-utils
         waylevel
         webfontkitgenerator
@@ -2338,6 +2337,7 @@ in
         xvidcore
         xz
         yara
+        zenity
         zip
         zlib
         zpaq
