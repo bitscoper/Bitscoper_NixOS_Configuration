@@ -200,7 +200,6 @@ in
     };
 
     overlays = [
-
     ];
   };
 
@@ -208,11 +207,7 @@ in
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
-    extraLocales = [
-      "C.UTF-8"
-      "ar_SA.UTF-8"
-      "bn_BD"
-    ];
+    extraLocales = "all";
 
     extraLocaleSettings = {
       LC_ADDRESS = config.i18n.defaultLocale;
@@ -1873,6 +1868,17 @@ in
               wrap-mode = "word";
             };
 
+            "org/gnome/gitg/preferences/interface" = {
+              enable-diff-highlighting = true;
+              enable-monitoring = true;
+              use-default-font = true;
+              use-gravatar = true;
+            };
+            "org/gnome/gitg/preferences/commit/message" = {
+              enable-spell-checking = true;
+              show-markup = true;
+            };
+
             "org/gnome/calculator" = {
               show-thousands = true;
               show-zeroes = true;
@@ -2077,6 +2083,7 @@ in
         gimp-with-plugins
         git-doc
         git-filter-repo
+        gitg
         glib
         glibc
         gnome-autoar
@@ -2092,7 +2099,6 @@ in
         gnome-control-center
         gnome-decoder
         gnome-epub-thumbnailer
-        gnome-extensions-cli
         gnome-firmware
         gnome-font-viewer
         gnome-frog
@@ -2161,6 +2167,7 @@ in
         libftdi1
         libgcc
         libgpg-error
+        libgsf
         libguestfs
         libheif
         libilbc
@@ -2207,6 +2214,7 @@ in
         nautilus
         netdiscover
         netsniff-ng
+        networkmanagerapplet
         ngrok
         nikto
         nilfs-utils
