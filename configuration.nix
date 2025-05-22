@@ -35,7 +35,7 @@ let
     package = pkgs.nerd-fonts.noto;
 
     name = {
-      mono = "NotoMono Nerd Font";
+      mono = "NotoMono Nerd Font Mono";
       sans_serif = "NotoSans Nerd Font";
       serif = "NotoSerif Nerd Font";
       emoji = "Noto Color Emoji";
@@ -1858,6 +1858,12 @@ in
               musicbrainz-cover-size = "Maximum size";
             };
 
+            "org/gnome/GHex" = {
+              dark-mode = "on";
+              display-control-characters = true;
+              font = "${font_preferences.name.mono} ${toString font_preferences.size}";
+            };
+
             "org/gnome/meld" = {
               enable-space-drawer = true;
               highlight-current-line = true;
@@ -2079,6 +2085,7 @@ in
         gcc
         gdb
         gdk-pixbuf
+        ghex
         ghidra
         gimp-with-plugins
         git-doc
@@ -2105,6 +2112,7 @@ in
         gnome-graphs
         gnome-logs
         gnome-maps
+        gnome-menus
         gnome-multi-writer
         gnome-nettool
         gnome-power-manager
@@ -2258,6 +2266,7 @@ in
         radare2
         rar
         readline
+        refine
         reiserfsprogs
         rpPPPoE
         rpi-imager
@@ -2283,6 +2292,7 @@ in
         smbmap
         snapshot
         songrec
+        soundconverter
         spice
         spice-gtk
         spice-protocol
