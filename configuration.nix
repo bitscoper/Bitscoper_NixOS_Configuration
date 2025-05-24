@@ -1427,13 +1427,6 @@ in
       preferencesStatus = "locked";
     };
 
-    thunderbird = {
-      enable = true;
-      package = pkgs.thunderbird-latest;
-
-      preferences = { };
-    };
-
     wireshark = {
       enable = true;
       package = pkgs.wireshark;
@@ -1621,12 +1614,13 @@ in
                 "gsconnect@andyholmes.github.io"
                 "pano@elhan.io"
                 "places-menu@gnome-shell-extensions.gcampax.github.com"
+                "tilingshell@ferrarodomenico.com"
               ];
               favorite-apps = [
                 "org.gnome.Console.desktop"
                 "org.gnome.Nautilus.desktop"
                 "firefox-devedition.desktop"
-                "thunderbird.desktop"
+                "org.gnome.Geary.desktop"
                 "org.fritzing.Fritzing.desktop"
                 "org.kicad.kicad.desktop"
                 "serial-studio.desktop"
@@ -1690,6 +1684,10 @@ in
               show-temperature = true;
               show-voltage = true;
               use-higher-precision = true;
+            };
+            "org/gnome/shell/extensions/tilingshell" = {
+              enable-snap-assist = true;
+              show-indicator = true;
             };
             "org/gnome/shell/extensions/desktop-cube" = {
               do-explode = true;
@@ -1907,6 +1905,18 @@ in
               show-pronunciation = true;
               src-auto = true;
             };
+
+            "org/gnome/Geary" = {
+              autoselect = false;
+              display-preview = true;
+              images-trusted-domains = [ "*" ];
+              optional-plugins = [
+                "email-templates"
+                "mail-merge"
+                "sent-sound"
+              ];
+              run-in-background = true;
+            };
           };
         }
       ];
@@ -2085,6 +2095,7 @@ in
         gcc
         gdb
         gdk-pixbuf
+        geary
         ghex
         ghidra
         gimp-with-plugins
@@ -2103,6 +2114,7 @@ in
         gnome-color-manager
         gnome-connections
         gnome-console
+        gnome-contacts
         gnome-control-center
         gnome-decoder
         gnome-epub-thumbnailer
@@ -2399,6 +2411,7 @@ in
         pano
         places-status-indicator
         removable-drive-menu
+        tiling-shell
         vitals
       ])
       ++ (with php84Extensions; [
@@ -2476,7 +2489,6 @@ in
       epiphany
       evince
       geary
-      gnome-contacts
       gnome-music
       gnome-text-editor
       gnome-tour
@@ -2841,7 +2853,7 @@ in
         "x-scheme-handler/http" = "firefox-devedition.desktop";
         "x-scheme-handler/https" = "firefox-devedition.desktop";
 
-        "x-scheme-handler/mailto" = "thunderbird.desktop";
+        "x-scheme-handler/mailto" = "org.gnome.Geary.desktop";
       };
     };
 
