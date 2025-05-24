@@ -565,8 +565,6 @@ in
 
       servers = config.networking.timeServers;
       fallbackServers = config.networking.timeServers;
-
-      extraConfig = '''';
     };
 
     fwupd = {
@@ -703,11 +701,6 @@ in
       desktopManager = {
         gnome = {
           enable = true;
-
-          extraGSettingsOverridePackages = with pkgs; [
-          ];
-          extraGSettingsOverrides = '''';
-
           debug = false;
         };
 
@@ -1074,8 +1067,6 @@ in
       showPAMFailure = true;
 
       pluginSettings = { };
-
-      extraConfig = '''';
     };
 
     jellyfin = {
@@ -2019,6 +2010,7 @@ in
         apkleaks
         apksigner
         aptdec
+        aria2
         aribb24
         aribb25
         arj
@@ -2272,6 +2264,7 @@ in
         platformio-core
         podman-compose
         podman-desktop
+        progress
         python313Full
         qemu-utils
         qpwgraph
@@ -3063,8 +3056,6 @@ in
             enableFishIntegration = true;
 
             settings = { };
-
-            extraConfig = '''';
           };
 
           nix-your-shell = {
@@ -3248,8 +3239,6 @@ in
             enable = true;
 
             config = { };
-
-            extraConfig = '''';
           };
 
           gh = {
@@ -3345,8 +3334,6 @@ in
             package = pkgs.yt-dlp;
 
             settings = { };
-
-            extraConfig = '''';
           };
         };
       }
