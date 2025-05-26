@@ -1474,8 +1474,6 @@ in
         Extensions = {
           Install = [
             "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi"
-            "https://addons.mozilla.org/firefox/downloads/latest/gnome-shell-integration/latest.xpi"
-            "https://addons.mozilla.org/firefox/downloads/latest/gsconnect/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/languagetool/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/search_by_image/latest.xpi"
@@ -1486,8 +1484,6 @@ in
           ];
 
           Locked = [
-            "chrome-gnome-shell@gnome.org" # GNOME Shell Integration
-            "gsconnect@andyholmes.github.io" # GSConnect
             "jid1-BoFifL9Vbdl2zQ@jetpack" # Decentraleyes
             "uBlock0@raymondhill.net" # uBlock Origin
             "{19b92b95-9cca-4f8d-b364-37a81f7133d5}" # Tab Disguiser
@@ -1817,7 +1813,6 @@ in
         avrdude
         baobab
         binary
-        bfcal
         binwalk
         blackbox-terminal
         bleachbit
@@ -1903,7 +1898,6 @@ in
         gnome-logs
         gnome-multi-writer
         gnome-nettool
-        gnome-weather
         gnugrep
         gnulib
         gnumake
@@ -1933,6 +1927,7 @@ in
         iftop
         inkscape
         inotify-tools
+        isocodes
         jellyfin-media-player
         jfsutils
         jmol
@@ -1950,7 +1945,9 @@ in
         libaom
         libappimage
         libass
+        libbluray
         libcamera
+        libcdio
         libde265
         libdvdcss
         libdvdnav
@@ -1970,6 +1967,7 @@ in
         libopenraw
         libopus
         libosinfo
+        libsamplerate
         libusb1
         libuuid
         libuvc
@@ -1980,12 +1978,14 @@ in
         libxfs
         libzip
         linuxConsoleTools
+        logdy
         lrzip
         lshw
         lsof
         lsscsi
         lvm2
         lynis
+        lyto
         lz4
         lzham
         lzip
@@ -2002,6 +2002,7 @@ in
         mfoc
         mission-center
         monkeysAudio
+        mousam
         mtools
         nautilus
         netdiscover
@@ -2101,18 +2102,22 @@ in
         udftools
         udiskie
         unar
+        unicode-character-database
         unicode-emoji
         universal-android-debloater
         unix-privesc-check
         unrar
         unzip
+        usbimager
         usbutils
         util-linux
+        vcdimager
         virt-viewer
         virtio-win
         virtiofsd
         vlc
         vlc-bittorrent
+        vulkan-caps-viewer
         vulkan-tools
         wafw00f
         wavpack
@@ -2124,6 +2129,7 @@ in
         webfontkitgenerator
         wev
         wget
+        whatfiles
         which
         whois
         wifite2
@@ -2871,7 +2877,6 @@ in
             enableXdgAutostart = true;
 
             # extraCommands = [
-
             # ];
 
             variables = [
@@ -3309,6 +3314,15 @@ in
         };
 
         services = {
+          swaync = {
+            enable = true;
+            package = pkgs.swaynotificationcenter;
+
+            # settings = { };
+
+            # style = '''';
+          };
+
           hyprpaper = {
             enable = true;
             package = pkgs.hyprpaper;
@@ -3513,7 +3527,7 @@ in
 
               location = "center";
 
-              font = "${font_preferences.name.sans_serif} 11";
+              font = "${font_preferences.name.sans_serif} ${toString font_preferences.size}";
 
               extraConfig = {
                 show-icons = true;
