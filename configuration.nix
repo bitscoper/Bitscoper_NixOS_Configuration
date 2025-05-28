@@ -18,9 +18,9 @@ let
       };
   android_sdk = android_nixpkgs.sdk (
     sdkPkgs: with sdkPkgs; [
+      # emulator
       build-tools-36-0-0
       cmdline-tools-latest
-      emulator
       platform-tools
       platforms-android-36
       system-images-android-36-google-apis-playstore-x86-64
@@ -310,8 +310,10 @@ in
       allowPing = true;
 
       allowedTCPPorts = [
+        5900 # VNC
       ];
       allowedUDPPorts = [
+        5900 # VNC
       ];
     };
 
@@ -608,7 +610,7 @@ in
     package = pkgs.systemd;
 
     packages = with pkgs; [
-      cloudflare-warp
+      cloudflare-warp # Unfree
       hardinfo2
     ];
 
@@ -1155,66 +1157,6 @@ in
       openFirewall = true;
     };
 
-    open-webui = {
-      enable = true;
-      package = pkgs.open-webui;
-
-      host = "*";
-      port = 11111;
-
-      environment = {
-        ANONYMIZED_TELEMETRY = "False";
-        DO_NOT_TRACK = "True";
-
-        DEFAULT_LOCALE = "en";
-
-        ENABLE_ADMIN_CHAT_ACCESS = "True";
-        ENABLE_ADMIN_EXPORT = "True";
-        SHOW_ADMIN_DETAILS = "True";
-        ADMIN_EMAIL = "bitscoper@${config.networking.hostName}";
-
-        USER_PERMISSIONS_WORKSPACE_MODELS_ACCESS = "True";
-        USER_PERMISSIONS_WORKSPACE_KNOWLEDGE_ACCESS = "True";
-        USER_PERMISSIONS_WORKSPACE_PROMPTS_ACCESS = "True";
-        USER_PERMISSIONS_WORKSPACE_TOOLS_ACCESS = "True";
-
-        USER_PERMISSIONS_CHAT_TEMPORARY = "True";
-        USER_PERMISSIONS_CHAT_FILE_UPLOAD = "True";
-        USER_PERMISSIONS_CHAT_EDIT = "True";
-        USER_PERMISSIONS_CHAT_DELETE = "True";
-
-        ENABLE_CHANNELS = "True";
-
-        ENABLE_REALTIME_CHAT_SAVE = "True";
-
-        ENABLE_AUTOCOMPLETE_GENERATION = "True";
-        AUTOCOMPLETE_GENERATION_INPUT_MAX_LENGTH = "-1";
-
-        ENABLE_RAG_WEB_SEARCH = "True";
-        ENABLE_SEARCH_QUERY_GENERATION = "True";
-
-        ENABLE_TAGS_GENERATION = "True";
-
-        ENABLE_IMAGE_GENERATION = "True";
-
-        YOUTUBE_LOADER_LANGUAGE = "en";
-
-        ENABLE_MESSAGE_RATING = "True";
-
-        ENABLE_COMMUNITY_SHARING = "True";
-
-        ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION = "True";
-        WEBUI_SESSION_COOKIE_SAME_SITE = "strict";
-        WEBUI_SESSION_COOKIE_SECURE = "True";
-        WEBUI_AUTH = "False";
-
-        ENABLE_OLLAMA_API = "True";
-        OLLAMA_BASE_URL = "http://127.0.0.1:11434";
-      };
-
-      openFirewall = true;
-    };
-
     wordpress = {
       sites = { };
     };
@@ -1709,7 +1651,7 @@ in
   fonts = {
     enableDefaultPackages = false;
     packages = with pkgs; [
-      corefonts
+      corefonts # Unfree
       nerd-fonts.noto
       noto-fonts
       noto-fonts-cjk-sans
@@ -1791,15 +1733,17 @@ in
         # amrwb
         # appimagekit
         # gnss-sdr
+        # graphia
+        # networkminer
         # reiser4progs
         above
         acl
         aircrack-ng
         alac
+        alpaca
         amass
-        android-tools
         android_sdk # Custom
-        anydesk
+        android-tools
         apkeep
         apkleaks
         apksigner
@@ -1821,7 +1765,6 @@ in
         brightnessctl
         btrfs-progs
         bulk_extractor
-        burpsuite
         bustle
         bzip2
         bzip3
@@ -1837,9 +1780,8 @@ in
         clinfo
         cliphist
         cloc
-        cloudflare-warp
+        cloudflare-warp # Unfree
         cmake
-        code-nautilus
         codec2
         collision
         coreutils-full
@@ -1871,7 +1813,6 @@ in
         evtest-qt
         exfatprogs
         f2fs-tools
-        faac
         faad2
         fdk_aac
         ffmpeg-full
@@ -1882,7 +1823,6 @@ in
         fwupd-efi
         gcc
         gdb
-        gdk-pixbuf
         ghidra
         gimp-with-plugins
         git-doc
@@ -1896,7 +1836,6 @@ in
         gnome-frog
         gnome-graphs
         gnome-logs
-        gnome-multi-writer
         gnome-nettool
         gnugrep
         gnulib
@@ -1907,8 +1846,10 @@ in
         gource
         gparted
         gpredict
+        graphs
         grim
         gsm
+        gtk-vnc
         gtk-vnc
         guestfs-tools
         gzip
@@ -1938,10 +1879,7 @@ in
         kernelshark
         kicad
         letterpress
-        lha
         lhasa
-        libGL
-        libGLU
         libaom
         libappimage
         libass
@@ -1955,8 +1893,10 @@ in
         libepoxy
         libfreeaptx
         libfreefare
-        libftdi1
+        libftdi1 # Update of libftdi
         libgcc
+        libGL
+        libGLU
         libgpg-error
         libguestfs
         libheif
@@ -1964,14 +1904,15 @@ in
         liblc3
         libnotify
         libogg
-        libopenraw
         libopus
         libosinfo
+        libraw
         libsamplerate
         libusb1
         libuuid
         libuvc
         libva-utils
+        libvncserver
         libvpx
         libwebcam
         libwebp
@@ -2004,11 +1945,12 @@ in
         monkeysAudio
         mousam
         mtools
+        mtr-gui
         nautilus
         netdiscover
         nethogs
         netsniff-ng
-        ngrok
+        ngrok # Unfree
         nikto
         nilfs-utils
         ninja
@@ -2055,12 +1997,11 @@ in
         qemu-utils
         qpwgraph
         radare2
-        rar
         readline
         reiserfsprogs
-        rpPPPoE
         rpi-imager
         rpmextract
+        rpPPPoE
         rtl-sdr-librtlsdr
         rzip
         sane-backends
@@ -2092,6 +2033,7 @@ in
         swaks
         switcheroo
         telegram-desktop
+        telegraph
         texliveFull
         theharvester
         thermald
@@ -2106,8 +2048,8 @@ in
         unicode-emoji
         universal-android-debloater
         unix-privesc-check
-        unrar
         unzip
+        upnp-router-control
         usbimager
         usbutils
         util-linux
@@ -2125,6 +2067,7 @@ in
         waycheck
         wayland-utils
         waylevel
+        wayvnc
         webcamoid
         webfontkitgenerator
         wev
@@ -2136,7 +2079,6 @@ in
         win-spice
         wl-clipboard
         woff2
-        wpscan
         x264
         x265
         xdg-user-dirs
@@ -2996,7 +2938,7 @@ in
               ", XF86Mail, exec, thunderbird"
               "SUPER, M, exec, thunderbird"
 
-              "SUPER, E, exec, code"
+              "SUPER, E, exec, zeditor"
               "SUPER, D, exec, dbeaver"
 
               "SUPER, V, exec, vlc"
@@ -3778,6 +3720,7 @@ in
                     default = "";
 
                     vlc = "󰕼";
+                    firefox = "󰈹";
                     chromium = "";
                   };
                 };
@@ -4163,180 +4106,271 @@ in
             enableFishIntegration = true;
           };
 
-          vscode = {
+          zed-editor = {
             enable = true;
-            package = pkgs.vscode;
-            mutableExtensionsDir = false;
+            package = pkgs.zed-editor;
+            installRemoteServer = false;
 
-            profiles = {
-              default = {
-                extensions =
-                  with pkgs.vscode-extensions;
-                  [
-                    aaron-bond.better-comments
-                    adpyke.codesnap
-                    albymor.increment-selection
-                    alefragnani.bookmarks
-                    alexisvt.flutter-snippets
-                    anweber.vscode-httpyac
-                    bierner.comment-tagged-templates
-                    bierner.docs-view
-                    bierner.emojisense
-                    bierner.github-markdown-preview
-                    bierner.markdown-checkbox
-                    bierner.markdown-emoji
-                    bierner.markdown-footnotes
-                    bierner.markdown-mermaid
-                    bierner.markdown-preview-github-styles
-                    bradgashler.htmltagwrap
-                    chanhx.crabviz
-                    christian-kohler.path-intellisense
-                    codezombiech.gitignore
-                    coolbear.systemd-unit-file
-                    dart-code.dart-code
-                    dart-code.flutter
-                    davidanson.vscode-markdownlint
-                    dendron.adjust-heading-level
-                    devsense.phptools-vscode
-                    dotenv.dotenv-vscode
-                    dracula-theme.theme-dracula
-                    ecmel.vscode-html-css
-                    edonet.vscode-command-runner
-                    esbenp.prettier-vscode
-                    ethansk.restore-terminals
-                    fabiospampinato.vscode-open-in-github
-                    firefox-devtools.vscode-firefox-debug
-                    formulahendry.auto-close-tag
-                    formulahendry.auto-rename-tag
-                    formulahendry.code-runner
-                    foxundermoon.shell-format
-                    github.copilot
-                    github.copilot-chat
-                    github.vscode-github-actions
-                    github.vscode-pull-request-github
-                    grapecity.gc-excelviewer
-                    gruntfuggly.todo-tree
-                    hars.cppsnippets
-                    hbenl.vscode-test-explorer
-                    hediet.vscode-drawio
-                    ibm.output-colorizer
-                    iciclesoft.workspacesort
-                    iliazeus.vscode-ansi
-                    illixion.vscode-vibrancy-continued
-                    james-yu.latex-workshop
-                    jbockle.jbockle-format-files
-                    jellyedwards.gitsweep
-                    jkillian.custom-local-formatters
-                    jnoortheen.nix-ide
-                    jock.svg
-                    kamikillerto.vscode-colorize
-                    llvm-vs-code-extensions.vscode-clangd
-                    mads-hartmann.bash-ide-vscode
-                    mechatroner.rainbow-csv
-                    meganrogge.template-string-converter
-                    mishkinf.goto-next-previous-member
-                    mkhl.direnv
-                    moshfeu.compare-folders
-                    ms-azuretools.vscode-docker
-                    ms-python.black-formatter
-                    ms-python.debugpy
-                    ms-python.isort
-                    ms-python.python
-                    ms-toolsai.datawrangler
-                    ms-toolsai.jupyter
-                    ms-toolsai.jupyter-keymap
-                    ms-toolsai.jupyter-renderers
-                    ms-toolsai.vscode-jupyter-cell-tags
-                    ms-toolsai.vscode-jupyter-slideshow
-                    ms-vscode-remote.remote-containers
-                    ms-vscode-remote.remote-ssh
-                    ms-vscode-remote.remote-ssh-edit
-                    ms-vscode.cmake-tools
-                    ms-vscode.cpptools
-                    ms-vscode.hexeditor
-                    ms-vscode.live-server
-                    ms-vscode.makefile-tools
-                    ms-vscode.test-adapter-converter
-                    ms-vsliveshare.vsliveshare
-                    ms-windows-ai-studio.windows-ai-studio
-                    oderwat.indent-rainbow
-                    platformio.platformio-vscode-ide
-                    quicktype.quicktype
-                    redhat.vscode-xml
-                    redhat.vscode-yaml
-                    rioj7.commandonallfiles
-                    rubymaniac.vscode-paste-and-indent
-                    ryu1kn.partial-diff
-                    sanaajani.taskrunnercode
-                    shardulm94.trailing-spaces
-                    skyapps.fish-vscode
-                    slevesque.vscode-multiclip
-                    spywhere.guides
-                    stylelint.vscode-stylelint
-                    tailscale.vscode-tailscale
-                    tamasfe.even-better-toml
-                    timonwong.shellcheck
-                    usernamehw.errorlens
-                    vincaslt.highlight-matching-tag
-                    visualstudioexptteam.intellicode-api-usage-examples
-                    visualstudioexptteam.vscodeintellicode
-                    vscjava.vscode-gradle
-                    vscode-icons-team.vscode-icons
-                    wmaurer.change-case
-                    zainchen.json
-                  ]
-                  ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-                    {
-                      name = "unique-lines";
-                      publisher = "bibhasdn";
-                      version = "1.0.0";
-                      sha256 = "W0ZpZ6+vjkfNfOtekx5NWOFTyxfWAiB0XYcIwHabFPQ=";
-                    }
-                    {
-                      name = "vscode-sort";
-                      publisher = "henriiik";
-                      version = "0.2.5";
-                      sha256 = "pvlSlWJTnLB9IbcVsz5HypT6NM9Ujb7UYs2kohwWVWk=";
-                    }
-                    {
-                      name = "vscode-sort-json";
-                      publisher = "richie5um2";
-                      version = "1.20.0";
-                      sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
-                    }
-                    {
-                      name = "pubspec-assist";
-                      publisher = "jeroen-meijer";
-                      version = "2.3.2";
-                      sha256 = "+Mkcbeq7b+vkuf2/LYT10mj46sULixLNKGpCEk1Eu/0=";
-                    }
-                    {
-                      name = "arb-editor";
-                      publisher = "Google";
-                      version = "0.2.1";
-                      sha256 = "uHdQeW9ZXYg6+VnD6cb5CU10/xV5hCtxt5K+j0qb7as=";
-                    }
-                    {
-                      name = "vscode-serial-monitor";
-                      publisher = "ms-vscode";
-                      version = "0.13.250503001";
-                      sha256 = "iuni/DybnUxdbvggvlCidurW4GevVPvwYO7/5i+S1ok=";
-                    }
-                    {
-                      name = "vscode-print";
-                      publisher = "pdconsec";
-                      version = "1.4.0";
-                      sha256 = "jAZ1F5neIFSevy0bNuHabh8pUbm5vuuxjmot08GctPc=";
-                    }
+            extraPackages = with pkgs; [
+            ];
+
+            extensions = [
+              "basher"
+              "csv"
+              "dart"
+              "docker-compose"
+              "dockerfile"
+              "dracula"
+              "env"
+              "fish"
+              "flutter-snippets"
+              "http"
+              "hyprlang"
+              "ini"
+              "latex"
+              "live-server"
+              "log"
+              "make"
+              "mermaid"
+              "nix"
+              "php"
+              "postgres-language-server"
+              "pylsp"
+              "python-refactoring"
+              "python-requirements"
+              "rainbow-csv"
+              "rpmspec"
+              "scheme"
+              "sql"
+              "ssh-config"
+              "ultralytics-snippets"
+              "unicode"
+              "xml"
+            ];
+
+            userSettings = {
+              features = {
+                copilot = true;
+              };
+
+              load_direnv = "shell_hook";
+
+              enable_language_server = true;
+
+              languages = {
+                Nix = {
+                  language_servers = [
+                    "nixd"
                   ];
 
-                enableUpdateCheck = true;
-                enableExtensionUpdateCheck = true;
-
-                # userSettings = {
-                # };
+                  formatter = {
+                    external = {
+                      command = "nixfmt";
+                    };
+                  };
+                };
               };
+
+              lsp = {
+                nixd = {
+                  initialization_options = {
+                    formatting = {
+                      command = [
+                        "nixfmt"
+                      ];
+                    };
+                  };
+                };
+              };
+
+              diagnostics = {
+                include_warnings = true;
+
+                inline = {
+                  enabled = true;
+                };
+              };
+
+              git = { };
+
+              telemetry = {
+                diagnostics = false;
+                metrics = false;
+              };
+
+              theme = {
+                mode = "dark";
+                dark = "One Dark";
+                light = "One Light";
+              };
+
+              icon_theme = {
+                mode = "dark";
+                dark = "Zed (Default)";
+                light = "Zed (Default)";
+              };
+
+              ui_font_family = font_preferences.name.sans_serif;
+
+              project_panel = {
+                auto_fold_dirs = false;
+                auto_reveal_entries = true;
+                button = true;
+                dock = "left";
+                file_icons = true;
+                folder_icons = true;
+                git_status = true;
+                show_diagnostics = "all";
+
+                indent_guides = {
+                  show = "always";
+                };
+
+                scrollbar = {
+                  show = "always";
+                };
+              };
+
+              outline_panel = {
+                auto_fold_dirs = false;
+                auto_reveal_entries = true;
+                button = true;
+                dock = "left";
+                file_icons = true;
+                folder_icons = true;
+                git_status = true;
+
+                indent_guides = {
+                  show = "always";
+                };
+
+                scrollbar = {
+                  show = "always";
+                };
+              };
+
+              tab_bar = {
+                show = true;
+                show_nav_history_buttons = true;
+                show_tab_bar_buttons = true;
+              };
+
+              preview_tabs = {
+                enabled = true;
+                enable_preview_from_code_navigation = true;
+                enable_preview_from_file_finder = true;
+              };
+
+              tabs = {
+                activate_on_close = "history";
+                close_position = "right";
+                file_icons = true;
+                git_status = true;
+                show_close_button = "hover";
+                show_diagnostic = "all";
+              };
+
+              toolbar = {
+                breadcrumbs = true;
+                quick_actions = true;
+                selections_menu = true;
+              };
+
+              scrollbar = {
+                cursors = true;
+                diagnostics = "all";
+                git_diff = true;
+                search_results = true;
+                selected_symbol = true;
+                selected_text = true;
+                show = "always";
+
+                axes = {
+                  horizontal = true;
+                  vertical = true;
+                };
+              };
+
+              indent_guides = {
+                enabled = true;
+                coloring = "indent_aware";
+                # background_coloring = "indent_aware";
+              };
+
+              assistant = {
+                button = true;
+                dock = "right";
+                enabled = true;
+              };
+
+              terminal = {
+                blinking = "terminal_controlled";
+                button = true;
+                copy_on_select = false;
+                dock = "bottom";
+                font_family = font_preferences.name.mono;
+                line_height = "standard";
+                shell = "system";
+                working_directory = "current_project_directory";
+
+                toolbar = {
+                  breadcrumbs = true;
+                };
+
+                scrollbar = {
+                  show = "always";
+                };
+
+                detect_venv = {
+                  on = {
+                    directories = [
+                      ".env"
+                      ".venv"
+                      "env"
+                      "venv"
+                    ];
+                    activate_script = "default";
+                  };
+                };
+              };
+
+              show_call_status_icon = true;
+
+              buffer_font_family = font_preferences.name.mono;
+              soft_wrap = "editor_width";
+              show_whitespaces = "all";
+              cursor_blink = true;
+              cursor_shape = "bar";
+
+              hover_popover_enabled = true;
+              current_line_highlight = "all";
+              selection_highlight = true;
+
+              seed_search_query_from_cursor = "selection";
+              use_smartcase_search = false;
+
+              show_completions_on_input = true;
+              show_completion_documentation = true;
+              show_edit_predictions = true;
+
+              hard_tabs = false;
+
+              use_autoclose = true;
+              always_treat_brackets_as_autoclosed = false;
+
+              format_on_save = "on";
+              remove_trailing_whitespace_on_save = false;
+              ensure_final_newline_on_save = true;
+
+              calls = {
+                mute_on_join = true;
+                share_on_join = false;
+              };
+
+              confirm_quit = false;
             };
+
+            userKeymaps = { };
           };
 
           matplotlib = {
