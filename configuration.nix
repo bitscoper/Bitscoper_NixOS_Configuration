@@ -1419,6 +1419,7 @@ in
             "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/languagetool/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/search_by_image/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/simple-mass-downloader/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/single-file/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/tab-disguiser/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
@@ -1426,6 +1427,7 @@ in
           ];
 
           Locked = [
+            "gelprec.smd@gmail.com" # Simple mass download
             "jid1-BoFifL9Vbdl2zQ@jetpack" # Decentraleyes
             "uBlock0@raymondhill.net" # uBlock Origin
             "{19b92b95-9cca-4f8d-b364-37a81f7133d5}" # Tab Disguiser
@@ -3260,7 +3262,21 @@ in
             enable = true;
             package = pkgs.swaynotificationcenter;
 
-            # settings = { };
+            settings = {
+              fit-to-screen = false;
+              hide-on-action = true;
+              hide-on-clear = true;
+              keyboard-shortcuts = true;
+              layer = "overlay";
+              notification-2fa-action = true;
+              notification-inline-replies = true;
+              relative-timestamps = true;
+              script-fail-notify = true;
+              text-empty = "No Notifications";
+              timeout = 8;
+              timeout-critical = 0; # 0 = Disable
+              timeout-low = 4;
+            };
 
             # style = '''';
           };
@@ -3515,6 +3531,7 @@ in
                 ];
 
                 modules-right = [
+                  "custom/swaync"
                   "privacy"
                   "mpris"
                   "keyboard-state"
@@ -3725,6 +3742,29 @@ in
                   };
                 };
 
+                "custom/swaync" = {
+                  format = "{} {icon}";
+                  format-icons = {
+                    notification = "<span foreground='red'><sup></sup></span>";
+                    none = "";
+                    dnd-notification = "<span foreground='red'><sup></sup></span>";
+                    dnd-none = "";
+                    inhibited-notification = "<span foreground='red'><sup></sup></span>";
+                    inhibited-none = "";
+                    dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
+                    dnd-inhibited-none = "";
+                  };
+
+                  tooltip = false;
+
+                  return-type = "json";
+                  exec-if = "which swaync-client";
+                  exec = "swaync-client -swb";
+                  on-click = "swaync-client -t -sw";
+                  on-click-right = "swaync-client -d -sw";
+                  escape = true;
+                };
+
                 privacy = {
                   icon-size = 14;
                   icon-spacing = 8;
@@ -3921,6 +3961,7 @@ in
               #keyboard-state,
               #clock,
               #mpris,
+              #custom-swaync,
               #privacy,
               #systemd-failed-units,
               #disk,
@@ -3993,6 +4034,10 @@ in
 
               #mpris.playing {
                 color: ${dracula_theme.hex.cyan};
+              }
+
+              #custom-swaync {
+                font-family: ${font_preferences.name.mono};
               }
 
               #privacy-item.audio-in,
