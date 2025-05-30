@@ -1301,11 +1301,7 @@ in
         enableExtraSocket = true;
         enableSSHSupport = false;
 
-        pinentryPackage = (
-          pkgs.pinentry-rofi.override {
-            rofi = pkgs.rofi-wayland;
-          }
-        );
+        pinentryPackage = pkgs.pinentry-gtk2;
       };
 
       dirmngr.enable = true;
@@ -1387,7 +1383,7 @@ in
 
     nautilus-open-any-terminal = {
       enable = true;
-      terminal = "blackbox";
+      terminal = "tilix";
     };
 
     file-roller.enable = true;
@@ -1487,23 +1483,26 @@ in
               enable-overamplification = true;
             };
 
-            "com/raggesilver/BlackBox" = {
-              context-aware-header-bar = true;
-              easy-copy-paste = false;
-              fill-tabs = true;
-              font = "${font_preferences.name.mono} ${toString font_preferences.size}";
-              headerbar-drag-area = true;
-              notify-process-completion = true;
-              pretty = true;
-              remember-window-size = false;
-              show-headerbar = true;
-              show-menu-button = true;
-              show-scrollbars = true;
-              terminal-bell = true;
-              theme-bold-is-bright = false;
-              theme-dark = "Dracula";
-              theme-light = "Dracula Light";
-              use-overlay-scrolling = true;
+            "com/gexperts/Tilix" = {
+              auto-hide-mouse = false;
+              close-with-last-session = false;
+              control-scroll-zoom = true;
+              enable-wide-handle = true;
+              encodings = [
+                "UTF-8"
+              ];
+              focus-follow-mouse = true;
+              middle-click-close = false;
+              new-instance-mode = "new-window";
+              paste-strip-first-char = false;
+              paste-strip-trailing-whitespace = false;
+              tab-position = "top";
+              terminal-title-show-when-single = true;
+              terminal-title-style = "normal";
+              theme-variant = "dark";
+              use-overlay-scrollbar = false;
+              window-save-state = false;
+              window-style = "normal";
             };
 
             "org/gnome/desktop/privacy" = {
@@ -1760,7 +1759,6 @@ in
         baobab
         binary
         binwalk
-        blackbox-terminal
         bleachbit
         blender
         bluez-tools
@@ -1852,7 +1850,6 @@ in
         grim
         gsm
         gtk-vnc
-        gtk-vnc
         guestfs-tools
         gzip
         hardinfo2
@@ -1863,8 +1860,13 @@ in
         hw-probe
         hwloc
         hydra-check
+        hyprland-protocols
+        hyprland-qt-support
+        hyprland-qtutils
+        hyprls
         hyprpicker
         hyprpolkitagent
+        hyprsysteminfo
         i2c-tools
         iaito
         iftop
@@ -2036,9 +2038,12 @@ in
         switcheroo
         telegram-desktop
         telegraph
+        terminal-colors
+        terminaltexteffects
         texliveFull
         theharvester
         thermald
+        tilix
         time
         tor-browser
         tree
@@ -2919,15 +2924,14 @@ in
               "SUPER SHIFT ALT, 0, movetoworkspacesilent, 10"
               "SUPER SHIFT ALT, S, movetoworkspacesilent, special:magic"
 
-              "SUPER, C, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+              "SUPER, C, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
 
               ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/ScreenShot_$(date +'%B-%d-%Y_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\""
 
-              "SUPER, A, exec, rofi -show drun -disable-history"
-              "SUPER, R, exec, rofi -show run -disable-history"
+              "SUPER, A, exec, wofi --show drun --disable-history"
+              "SUPER, R, exec, wofi --show run --disable-history"
 
-              "SUPER, T, exec, blackbox"
-              "SUPER ALT, T, exec, blackbox sh -c \"bash\""
+              "SUPER, T, exec, tilix"
 
               ", XF86Explorer, exec, nautilus"
               "SUPER, F, exec, nautilus"
@@ -3220,8 +3224,22 @@ in
           enable = true;
 
           theme = {
-            name = "Dracula";
-            package = pkgs.dracula-theme;
+            name = "Jasper-Grey-Dark";
+            package = (
+              pkgs.jasper-gtk-theme.override {
+                themeVariants = [
+                  "grey"
+                ];
+                colorVariants = [
+                  "dark"
+                ];
+                sizeVariants = [
+                  "standard"
+                ];
+                tweaks = [
+                ];
+              }
+            );
           };
 
           iconTheme = {
@@ -3401,101 +3419,57 @@ in
             };
           };
 
-          rofi =
-            let
-              rofi_theme = pkgs.writeTextFile {
-                name = "Rofi_Theme.rasi";
-                text = ''
-                  * {
-                    margin: 0;
-                    background-color: transparent;
-                    padding: 0;
-                    spacing: 0;
-                    text-color: ${dracula_theme.hex.foreground};
-                  }
+          wofi = {
+            enable = true;
+            package = pkgs.wofi;
 
-                  window {
-                    width: 768px;
-                    border: 1px;
-                    border-radius: 16px;
-                    border-color: ${dracula_theme.hex.purple};
-                    background-color: ${dracula_theme.hex.background};
-                  }
-
-                  mainbox {
-                    padding: 16px;
-                  }
-
-                  inputbar {
-                    border: 1px;
-                    border-radius: 8px;
-                    border-color: ${dracula_theme.hex.comment};
-                    background-color: ${dracula_theme.hex.current_line};
-                    padding: 8px;
-                    spacing: 8px;
-                    children: [ "prompt", "entry" ];
-                  }
-
-                  prompt {
-                    text-color: ${dracula_theme.hex.foreground};
-                  }
-
-                  entry {
-                    placeholder-color: ${dracula_theme.hex.comment};
-                    placeholder: "Search";
-                  }
-
-                  listview {
-                    margin: 16px 0px 0px 0px;
-                    fixed-height: false;
-                    lines: 8;
-                    columns: 2;
-                  }
-
-                  element {
-                    border-radius: 8px;
-                    padding: 8px;
-                    spacing: 8px;
-                    children: [ "element-icon", "element-text" ];
-                  }
-
-                  element-icon {
-                    vertical-align: 0.5;
-                    size: 1em;
-                  }
-
-                  element-text {
-                    text-color: inherit;
-                  }
-
-                  element.selected {
-                    background-color: ${dracula_theme.hex.current_line};
-                  }
-                '';
-              };
-            in
-            {
-              enable = true;
-              package = pkgs.rofi-wayland;
-              plugins = with pkgs; [
-              ];
-
-              cycle = false;
-              terminal = "${pkgs.blackbox-terminal}/bin/blackbox";
-
+            settings = {
+              normal_window = false;
+              layer = "overlay";
               location = "center";
 
-              font = "${font_preferences.name.sans_serif} ${toString font_preferences.size}";
+              gtk_dark = true;
+              columns = 2;
+              dynamic_lines = true;
+              hide_scroll = false;
 
-              extraConfig = {
-                show-icons = true;
-                display-drun = "Applications";
+              hide_search = false;
+              prompt = "Search";
+              show_all = true;
+              allow_markup = true;
+              allow_images = true;
+              image_size = 32;
+              no_actions = false;
 
-                disable-history = false;
-              };
+              insensitive = true;
 
-              theme = "${rofi_theme}";
+              single_click = true;
+              term = "tilix";
             };
+
+            style = ''
+              window {
+                border-radius: 16px;
+              }
+
+              #outer-box {
+                padding: 16px;
+              }
+
+              #inner-box {
+                margin-top: 16px;
+              }
+
+              #entry {
+                margin-top: 8px;
+                margin-bottom: 8px;
+              }
+
+              #img {
+                margin-right: 4px;
+              }
+            '';
+          };
 
           waybar = {
             enable = true;
@@ -4165,7 +4139,6 @@ in
               "dart"
               "docker-compose"
               "dockerfile"
-              "dracula"
               "env"
               "fish"
               "flutter-snippets"
@@ -4536,5 +4509,6 @@ in
 # FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
 # FIXME: Notifications
+# FIXME: Wofi > Window > Border Radius
 # FIXME: hardinfo2
 # FIXME: rpi-imager
