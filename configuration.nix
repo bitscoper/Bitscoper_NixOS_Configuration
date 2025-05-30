@@ -1591,8 +1591,10 @@ in
               show-less-popular = true;
             };
 
-            "org/gnome/GWeather4" = {
-              temperature-unit = "centigrade";
+            "io/github/amit9838/mousam" = {
+              unit = "metric";
+              use-24h-clock = false;
+              use-gradient-bg = true;
             };
 
             "io/missioncenter/MissionCenter" = {
@@ -1743,8 +1745,8 @@ in
         alac
         alpaca
         amass
-        android_sdk # Custom
         android-tools
+        android_sdk # Custom
         apkeep
         apkleaks
         apksigner
@@ -1912,6 +1914,7 @@ in
         libosinfo
         libraw
         libsamplerate
+        libserialport
         libusb1
         libuuid
         libuvc
