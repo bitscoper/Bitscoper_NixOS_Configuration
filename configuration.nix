@@ -1573,10 +1573,6 @@ in
               telemetry = false;
             };
 
-            "app/drey/EarTag" = {
-              musicbrainz-cover-size = "Maximum size";
-            };
-
             "org/gnome/meld" = {
               enable-space-drawer = true;
               highlight-current-line = true;
@@ -1736,8 +1732,6 @@ in
         # amrwb
         # appimagekit
         # gnss-sdr
-        # graphia
-        # networkminer
         # reiser4progs
         above
         acl
@@ -1759,6 +1753,7 @@ in
         autopsy
         avrdude
         baobab
+        bcachefs-tools
         binary
         binwalk
         bleachbit
@@ -1807,7 +1802,6 @@ in
         dnsrecon
         dosfstools
         e2fsprogs
-        eartag
         efibootmgr
         eog
         esptool
@@ -1983,7 +1977,6 @@ in
         openssl
         p7zip
         paper-clip
-        papirus-folders
         parabolic
         patchelf
         pciutils
@@ -1992,7 +1985,6 @@ in
         pjsip
         pkg-config
         platformio
-        platformio-core
         playerctl
         podman-compose
         podman-desktop
@@ -2039,6 +2031,8 @@ in
         subtitleedit
         swaks
         switcheroo
+        szyszka
+        tagger
         telegram-desktop
         telegraph
         terminal-colors
@@ -3884,7 +3878,6 @@ in
                   active-first = false;
                   sort-by-app-id = false;
                   format = "{icon}";
-                  icon-theme = "Dracula";
                   icon-size = 14;
                   markup = true;
 
@@ -4113,7 +4106,7 @@ in
 
           dircolors = {
             enable = true;
-            package = pkgs.coreutils;
+            package = pkgs.coreutils-full;
 
             enableBashIntegration = true;
             enableFishIntegration = true;
