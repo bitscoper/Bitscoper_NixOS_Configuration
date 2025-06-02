@@ -6,6 +6,8 @@
   ...
 }:
 let
+  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
+
   android_nixpkgs =
     pkgs.callPackage
       (import (
@@ -29,7 +31,7 @@ let
   );
   android_sdk_path = "${android_sdk}/share/android-sdk";
 
-  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
+  backlight_device = "intel_backlight";
 
   font_preferences = {
     package = pkgs.nerd-fonts.noto;
@@ -44,36 +46,6 @@ let
     size = 12;
   };
 
-  dracula_theme = {
-    hex = {
-      background = "#282A36";
-      current_line = "#44475A";
-      foreground = "#F8F8F2";
-      comment = "#6272A4";
-      cyan = "#8BE9FD";
-      green = "#50FA7B";
-      orange = "#FFB86C";
-      pink = "#FF79C6";
-      purple = "#BD93F9";
-      red = "#FF5555";
-      yellow = "#F1FA8C";
-    };
-
-    rgba = {
-      background = "rgba(40, 42, 54, 1.0)";
-      current_line = "rgba(68, 71, 90, 1.0)";
-      foreground = "rgba(248, 248, 242, 1.0)";
-      comment = "rgba(98, 114, 164, 1.0)";
-      cyan = "rgba(139, 233, 253, 1.0)";
-      green = "rgba(80, 250, 123, 1.0)";
-      orange = "rgba(255, 184, 108, 1.0)";
-      pink = "rgba(255, 121, 198, 1.0)";
-      purple = "rgba(189, 147, 249, 1.0)";
-      red = "rgba(255, 85, 85, 1.0)";
-      yellow = "rgba(241, 250, 140, 1.0)";
-    };
-  };
-
   cursor = {
     theme = {
       name = "Bibata-Modern-Classic";
@@ -82,6 +54,84 @@ let
 
     size = 24;
   };
+
+  jasper_grey_dark_gtk_theme = (
+    pkgs.jasper-gtk-theme.override {
+      themeVariants = [
+        "grey"
+      ];
+      colorVariants = [
+        "dark"
+      ];
+      sizeVariants = [
+        "standard"
+      ];
+      tweaks = [
+      ];
+    }
+  );
+
+  gtk4_css_file = builtins.readFile "${jasper_grey_dark_gtk_theme}/share/themes/Jasper-Grey-Dark/gtk-4.0/gtk-dark.css";
+  gtk4_css_lines = builtins.filter (x: builtins.isString x) (builtins.split "\n" gtk4_css_file);
+
+  gtk4_css_color_lines = builtins.filter (
+    line: builtins.match "^@define-color [^ ]+ [^;]+;" line != null
+  ) gtk4_css_lines;
+  gtk4_color_list = builtins.filter (x: x != null) (
+    builtins.map (
+      line:
+      let
+        m = builtins.match "@define-color ([^ ]+) ([^;]+);" line;
+      in
+      if m == null then
+        null
+      else
+        {
+          name = builtins.elemAt m 0;
+          value = builtins.elemAt m 1;
+        }
+    ) gtk4_css_color_lines
+  );
+  gtk4_color_attributes = builtins.listToAttrs gtk4_color_list;
+
+  colors = {
+    hex = {
+      background = gtk4_color_attributes.theme_bg_color;
+      base_background = gtk4_color_attributes.theme_base_color;
+      insensitive_background = gtk4_color_attributes.insensitive_bg_color;
+      insensitive_base_background = gtk4_color_attributes.insensitive_base_color;
+      selected_background = gtk4_color_attributes.theme_selected_bg_color;
+      content_view_background = gtk4_color_attributes.content_view_bg;
+      text_view_background = gtk4_color_attributes.text_view_bg;
+      unfocused_background = gtk4_color_attributes.theme_unfocused_bg_color;
+      unfocused_base_background = gtk4_color_attributes.theme_unfocused_base_color;
+      unfocused_selected_background = gtk4_color_attributes.theme_unfocused_selected_bg_color;
+
+      foreground = gtk4_color_attributes.theme_fg_color;
+      unfocused_foreground = gtk4_color_attributes.theme_unfocused_fg_color;
+
+      text = gtk4_color_attributes.theme_text_color;
+      unfocused_text = gtk4_color_attributes.theme_unfocused_text_color;
+      placeholder_text = gtk4_color_attributes.placeholder_text_color;
+
+      error = gtk4_color_attributes.error_color;
+      warning = gtk4_color_attributes.warning_color;
+      success = gtk4_color_attributes.success_color;
+    };
+
+    rgba = {
+      borders = gtk4_color_attributes.borders;
+      unfocused_borders = gtk4_color_attributes.unfocused_borders;
+
+      insensitive_foreground = gtk4_color_attributes.insensitive_fg_color;
+      selected_foreground = gtk4_color_attributes.theme_selected_fg_color;
+      unfocused_selected_foreground = gtk4_color_attributes.theme_unfocused_selected_fg_color;
+      unfocused_insensitive_color = gtk4_color_attributes.unfocused_insensitive_color;
+    };
+  };
+
+  border_radius = 16;
+  animation_duration = 200; # ms
 
   wallpaper = builtins.fetchurl {
     url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
@@ -208,7 +258,9 @@ in
 
     settings = {
       experimental-features = [
+        "flakes"
         "nix-command"
+        "pipe-operators"
       ];
 
       require-sigs = true;
@@ -2108,7 +2160,7 @@ in
             # ScreenHeight = 1080;
             ScreenPadding = 0;
 
-            BackgroundColor = dracula_theme.hex.background;
+            BackgroundColor = colors.hex.background;
             BackgroundHorizontalAlignment = "center";
             BackgroundVerticalAlignment = "center";
             Background = wallpaper;
@@ -2126,46 +2178,46 @@ in
             HideVirtualKeyboard = false;
             VirtualKeyboardPosition = "center";
 
-            # MainColor = ; # TODO
-            # AccentColor = ; # TODO
+            # MainColor = ""; # TODO
+            # AccentColor = ""; # TODO
 
-            # HighlightBorderColor= ; # TODO
-            # HighlightBackgroundColor= ; # TODO
-            # HighlightTextColor= ; # TODO
+            # HighlightBorderColor= ""; # TODO
+            # HighlightBackgroundColor= ""; # TODO
+            # HighlightTextColor= ""; # TODO
 
-            HeaderTextColor = dracula_theme.hex.foreground;
-            TimeTextColor = dracula_theme.hex.foreground;
-            DateTextColor = dracula_theme.hex.foreground;
+            HeaderTextColor = colors.hex.foreground;
+            TimeTextColor = colors.hex.foreground;
+            DateTextColor = colors.hex.foreground;
 
-            IconColor = dracula_theme.hex.foreground;
-            PlaceholderTextColor = dracula_theme.hex.foreground;
-            WarningColor = dracula_theme.hex.red;
+            IconColor = colors.hex.foreground;
+            PlaceholderTextColor = colors.hex.foreground;
+            WarningColor = colors.hex.error;
 
-            # LoginFieldBackgroundColor = ; # TODO
-            # LoginFieldTextColor = ; # TODO
-            # UserIconColor = ; # TODO
-            # HoverUserIconColor = ; # TODO
+            # LoginFieldBackgroundColor = ""; # TODO
+            # LoginFieldTextColor = ""; # TODO
+            # UserIconColor = ""; # TODO
+            # HoverUserIconColor = ""; # TODO
 
-            # PasswordFieldBackgroundColor = ; # TODO
-            # PasswordFieldTextColor = ; # TODO
-            # PasswordIconColor = ; # TODO
-            # HoverPasswordIconColor = ; # TODO
+            # PasswordFieldBackgroundColor = ""; # TODO
+            # PasswordFieldTextColor = ""; # TODO
+            # PasswordIconColor = ""; # TODO
+            # HoverPasswordIconColor = ""; # TODO
 
-            # LoginButtonBackgroundColor = ; # TODO
-            LoginButtonTextColor = dracula_theme.hex.foreground;
+            # LoginButtonBackgroundColor = ""; # TODO
+            LoginButtonTextColor = colors.hex.foreground;
 
-            SystemButtonsIconsColor = dracula_theme.hex.foreground;
-            # HoverSystemButtonsIconsColor = ; # TODO
+            SystemButtonsIconsColor = colors.hex.foreground;
+            # HoverSystemButtonsIconsColor = ""; # TODO
 
-            SessionButtonTextColor = dracula_theme.hex.foreground;
-            # HoverSessionButtonTextColor = ; # TODO
+            SessionButtonTextColor = colors.hex.foreground;
+            # HoverSessionButtonTextColor = ""; # TODO
 
-            VirtualKeyboardButtonTextColor = dracula_theme.hex.foreground;
-            # HoverVirtualKeyboardButtonTextColor = ; # TODO
+            VirtualKeyboardButtonTextColor = colors.hex.foreground;
+            # HoverVirtualKeyboardButtonTextColor = ""; # TODO
 
-            DropdownBackgroundColor = dracula_theme.hex.background;
-            DropdownSelectedBackgroundColor = dracula_theme.hex.current_line;
-            DropdownTextColor = dracula_theme.hex.foreground;
+            DropdownBackgroundColor = colors.hex.background;
+            DropdownSelectedBackgroundColor = colors.hex.base_background;
+            DropdownTextColor = colors.hex.foreground;
 
             HeaderText = "";
 
@@ -3222,21 +3274,7 @@ in
 
           theme = {
             name = "Jasper-Grey-Dark";
-            package = (
-              pkgs.jasper-gtk-theme.override {
-                themeVariants = [
-                  "grey"
-                ];
-                colorVariants = [
-                  "dark"
-                ];
-                sizeVariants = [
-                  "standard"
-                ];
-                tweaks = [
-                ];
-              }
-            );
+            package = jasper_grey_dark_gtk_theme;
           };
 
           iconTheme = {
@@ -3278,19 +3316,88 @@ in
             package = pkgs.swaynotificationcenter;
 
             settings = {
+              "\$schema" = "${pkgs.swaynotificationcenter}/etc/xdg/swaync/configSchema.json";
+              cssPriority = "application";
+
+              layer-shell = true;
+              layer-shell-cover-screen = true;
               fit-to-screen = false;
-              hide-on-action = true;
-              hide-on-clear = true;
-              keyboard-shortcuts = true;
+
+              control-center-layer = "overlay";
+              control-center-exclusive-zone = true;
+              control-center-positionX = "right";
+              control-center-positionY = "top";
+              control-center-margin-top = 8;
+              control-center-margin-right = 8;
+              control-center-margin-bottom = 8;
+              control-center-margin-left = 8;
+
               layer = "overlay";
-              notification-2fa-action = true;
-              notification-inline-replies = true;
-              relative-timestamps = true;
-              script-fail-notify = true;
+              positionX = "right";
+              positionY = "top";
+
               text-empty = "No Notifications";
+              widgets = [
+                "title"
+                "dnd"
+                "notifications"
+                "mpris"
+                "volume"
+                "backlight"
+              ];
+              widget-config = {
+                title = {
+                  text = "Notifications";
+
+                  clear-all-button = true;
+                  button-text = "Clear";
+                };
+
+                dnd = {
+                  text = "Do Not Disturb";
+                };
+
+                mpris = {
+                  image-radius = border_radius;
+                  blur = true;
+                };
+
+                volume = {
+                  label = "Volume";
+
+                  empty-list-label = "No Active Sink Inputs";
+                  expand-button-label = "⇧";
+                  collapse-button-label = "⇩";
+                  animation-type = "slide_down";
+                  animation-duration = animation_duration;
+
+                  show-per-app = true;
+                  show-per-app-icon = true;
+                  show-per-app-label = true;
+                };
+
+                backlight = {
+                  label = "Brightness";
+                  subsystem = "backlight";
+                  device = backlight_device;
+                  min = 0;
+                };
+              };
+
+              image-visibility = "when-available";
+              relative-timestamps = true;
+              notification-inline-replies = true;
+              notification-2fa-action = true;
+              transition-time = animation_duration;
+
               timeout = 8;
               timeout-critical = 0; # 0 = Disable
               timeout-low = 4;
+
+              keyboard-shortcuts = true;
+              hide-on-action = true;
+              hide-on-clear = true;
+              script-fail-notify = true;
             };
 
             # style = '''';
@@ -3361,7 +3468,7 @@ in
 
                   text_align = "center";
                   font_family = font_preferences.name.sans_serif;
-                  color = dracula_theme.rgba.foreground;
+                  # color = ""; # TODO
                   font_size = 64;
                   text = "$TIME12";
                 }
@@ -3374,7 +3481,7 @@ in
 
                   text_align = "center";
                   font_family = font_preferences.name.sans_serif;
-                  color = dracula_theme.rgba.foreground;
+                  # color = ""; # TODO
                   font_size = 16;
                   text = "$DESC"; # Full Name
                 }
@@ -3393,9 +3500,9 @@ in
                   # outer_color = ""; # TODO
                   shadow_passes = 0;
                   hide_input = false;
-                  inner_color = dracula_theme.rgba.current_line;
+                  # inner_color = ""; # TODO
                   font_family = font_preferences.name.sans_serif;
-                  font_color = dracula_theme.rgba.foreground;
+                  # font_color = ""; # TODO
                   placeholder_text = "Password";
                   dots_center = true;
                   dots_rounding = -1;
@@ -3427,7 +3534,8 @@ in
 
               gtk_dark = true;
               columns = 2;
-              dynamic_lines = true;
+              dynamic_lines = false;
+              lines = 9; # 9 -1 = 8
               hide_scroll = false;
 
               hide_search = false;
@@ -3446,7 +3554,7 @@ in
 
             style = ''
               window {
-                border-radius: 16px;
+                border-radius: ${toString border_radius}px;
               }
 
               #outer-box {
@@ -3458,8 +3566,8 @@ in
               }
 
               #entry {
-                margin-top: 8px;
-                margin-bottom: 8px;
+                margin-top: 4px;
+                margin-bottom: 4px;
               }
 
               #img {
@@ -3489,7 +3597,6 @@ in
                 spacing = 4;
 
                 modules-left = [
-                  "clock"
                   "group/backlight-and-ppd-and-idle-inhibitor"
                   "group/pulseaudio-and-bluetooth"
                   "group/hardware-statistics"
@@ -3498,6 +3605,7 @@ in
                 ];
 
                 modules-center = [
+                  "clock"
                 ];
 
                 modules-right = [
@@ -3542,13 +3650,13 @@ in
                   drawer = {
                     click-to-reveal = false;
                     transition-left-to-right = true;
-                    transition-duration = 400; # ms
+                    transition-duration = animation_duration;
                   };
                   "orientation" = "inherit";
                 };
 
                 backlight = {
-                  device = "intel_backlight";
+                  device = backlight_device;
                   interval = 1;
 
                   format = "{percent}% {icon}";
@@ -3608,7 +3716,7 @@ in
                   drawer = {
                     click-to-reveal = false;
                     transition-left-to-right = true;
-                    transition-duration = 400; # ms
+                    transition-duration = animation_duration;
                   };
                   "orientation" = "inherit";
                 };
@@ -3710,7 +3818,7 @@ in
                   drawer = {
                     click-to-reveal = false;
                     transition-left-to-right = true;
-                    transition-duration = 400; # ms
+                    transition-duration = animation_duration;
                   };
                   "orientation" = "inherit";
                 };
@@ -3799,7 +3907,7 @@ in
                 };
 
                 privacy = {
-                  icon-size = 14;
+                  icon-size = font_preferences.size;
                   icon-spacing = 8;
                   transition-duration = 200;
 
@@ -3807,12 +3915,12 @@ in
                     {
                       type = "screenshare";
                       tooltip = true;
-                      tooltip-icon-size = 16;
+                      tooltip-icon-size = font_preferences.size;
                     }
                     {
                       type = "audio-in";
                       tooltip = true;
-                      tooltip-icon-size = 16;
+                      tooltip-icon-size = font_preferences.size;
                     }
                   ];
                 };
@@ -3825,7 +3933,7 @@ in
                   drawer = {
                     click-to-reveal = false;
                     transition-left-to-right = false;
-                    transition-duration = 400; # ms
+                    transition-duration = animation_duration;
                   };
                   "orientation" = "inherit";
                 };
@@ -3878,7 +3986,7 @@ in
                   drawer = {
                     click-to-reveal = false;
                     transition-left-to-right = false;
-                    transition-duration = 400; # ms
+                    transition-duration = animation_duration;
                   };
                   "orientation" = "inherit";
                 };
@@ -3897,7 +4005,7 @@ in
                   active-first = false;
                   sort-by-app-id = false;
                   format = "{icon}";
-                  icon-size = 14;
+                  icon-size = font_preferences.size;
                   markup = true;
 
                   tooltip = true;
@@ -3942,67 +4050,64 @@ in
               #cpu,
               #battery,
               #window {
-                border-radius: 16px;
-                background-color: ${dracula_theme.hex.background};
+                border-radius: ${toString border_radius}px;
+                background-color: ${colors.hex.background};
                 padding: 2px 8px;
-                color: ${dracula_theme.hex.foreground};
+                color: ${colors.hex.foreground};
               }
 
-              #power-profiles-daemon.power-saver {
-                color: ${dracula_theme.hex.green};
-              }
-
+              #power-profiles-daemon.power-saver,
               #power-profiles-daemon.balanced {
-                color: ${dracula_theme.hex.cyan};
+                color: ${colors.hex.success};
               }
 
               #power-profiles-daemon.performance {
-                color: ${dracula_theme.hex.foreground};
+                color: ${colors.hex.foreground};
               }
 
               #idle_inhibitor.deactivated {
-                color: ${dracula_theme.hex.foreground};
+                color: ${colors.hex.foreground};
               }
 
               #idle_inhibitor.activated {
-                color: ${dracula_theme.hex.cyan};
+                color: ${colors.hex.success};
               }
 
               #pulseaudio.muted,
               #pulseaudio.source-muted {
-                color: ${dracula_theme.hex.red};
+                color: ${colors.hex.error};
               }
 
               #pulseaudio.bluetooth {
-                color: ${dracula_theme.hex.foreground};
+                color: ${colors.hex.foreground};
               }
 
               #bluetooth.no-controller,
               #bluetooth.disabled,
               #bluetooth.off {
-                color: ${dracula_theme.hex.red};
+                color: ${colors.hex.error};
               }
 
               #bluetooth.on,
               #bluetooth.discoverable,
               #bluetooth.pairable {
-                color: ${dracula_theme.hex.foreground};
+                color: ${colors.hex.foreground};
               }
 
               #bluetooth.discovering,
               #bluetooth.connected {
-                color: ${dracula_theme.hex.cyan};
+                color: ${colors.hex.success};
               }
 
               #network.disabled,
               #network.disconnected,
               #network.linked {
-                color: ${dracula_theme.hex.red};
+                color: ${colors.hex.error};
               }
 
               #network.etherenet,
               #network.wifi {
-                color: ${dracula_theme.hex.foreground};
+                color: ${colors.hex.foreground};
               }
 
               #custom-swaync {
@@ -4011,32 +4116,32 @@ in
 
               #privacy-item.audio-in,
               #privacy-item.screenshare {
-                color: ${dracula_theme.hex.cyan};
+                color: ${colors.hex.success};
               }
 
               #systemd-failed-units.ok {
-                color: ${dracula_theme.hex.foreground};
+                color: ${colors.hex.foreground};
               }
 
               #systemd-failed-units.degraded {
-                color: ${dracula_theme.hex.red};
+                color: ${colors.hex.error};
               }
 
               #battery.plugged,
               #battery.full {
-                color: ${dracula_theme.hex.foreground};
+                color: ${colors.hex.foreground};
               }
 
               #battery.charging {
-                color: ${dracula_theme.hex.cyan};
+                color: ${colors.hex.success};
               }
 
               #battery.warning {
-                color: ${dracula_theme.hex.yellow};
+                color: ${colors.hex.warning};
               }
 
               #battery.critical {
-                color: ${dracula_theme.hex.red};
+                color: ${colors.hex.error};
               }
 
               #workspaces,
@@ -4047,10 +4152,10 @@ in
 
               button {
                 margin: 0px 2px;
-                border-radius: 16px;
-                background-color: ${dracula_theme.hex.background};
+                border-radius: ${toString border_radius}px;
+                background-color: ${colors.hex.background};
                 padding: 0px;
-                color: ${dracula_theme.hex.foreground};
+                color: ${colors.hex.foreground};
               }
 
               button * {
@@ -4058,7 +4163,7 @@ in
               }
 
               button.active {
-                background-color: ${dracula_theme.hex.current_line};
+                background-color: ${colors.hex.base_background};
               }
 
               #window label {
@@ -4067,9 +4172,9 @@ in
               }
 
               #tray > widget {
-                border-radius: 16px;
-                background-color: ${dracula_theme.hex.background};
-                color: ${dracula_theme.hex.foreground};
+                border-radius: ${toString border_radius}px;
+                background-color: ${colors.hex.background};
+                color: ${colors.hex.foreground};
               }
 
               #tray image {
@@ -4081,16 +4186,16 @@ in
               }
 
               #tray > .active {
-                background-color: ${dracula_theme.hex.current_line};
+                background-color: ${colors.hex.base_background};
               }
 
               #tray > .needs-attention {
-                background-color: ${dracula_theme.hex.comment};
+                background-color: ${colors.hex.success};
                 -gtk-icon-effect: highlight;
               }
 
               #tray > widget:hover {
-                background-color: ${dracula_theme.hex.current_line};
+                background-color: ${colors.hex.base_background};
               }
             '';
           };
@@ -4455,7 +4560,7 @@ in
               obs-mute-filter
               obs-pipewire-audio-capture
               obs-replay-source
-              obs-rgb-levels-filter
+              obs-rgb-levels
               obs-scale-to-sound
               obs-shaderfilter
               obs-source-clone
