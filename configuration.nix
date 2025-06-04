@@ -71,6 +71,8 @@ let
     }
   );
 
+  gtk_theme_name = "Jasper-Grey-Dark";
+
   gtk4_css_file = builtins.readFile "${jasper_grey_dark_gtk_theme}/share/themes/Jasper-Grey-Dark/gtk-4.0/gtk-dark.css";
   gtk4_css_lines = builtins.filter (x: builtins.isString x) (builtins.split "\n" gtk4_css_file);
 
@@ -422,23 +424,6 @@ in
         };
 
         sddm = {
-          unixAuth = true;
-          nodelay = false;
-
-          fprintAuth = true;
-
-          logFailures = true;
-
-          enableGnomeKeyring = true;
-
-          gnupg = {
-            enable = true;
-            storeOnly = false;
-            noAutostart = false;
-          };
-        };
-
-        hyprlock = {
           unixAuth = true;
           nodelay = false;
 
@@ -1276,6 +1261,33 @@ in
 
     xwayland.enable = true;
 
+    gtklock = {
+      enable = true;
+      package = pkgs.gtklock;
+      modules = with pkgs; [
+        gtklock-playerctl-module
+        gtklock-powerbar-module
+        gtklock-userinfo-module
+      ];
+
+      config = {
+        main = {
+          time-format = "%I:%M %p";
+          gtk-theme = gtk_theme_name;
+        };
+      };
+
+      style = ''
+        window {
+          background-image: url("${wallpaper}");
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: cover;
+          background-color: ${colors.hex.background};
+        }
+      '';
+    };
+
     bash = {
       completion = {
         enable = true;
@@ -1865,7 +1877,9 @@ in
         fdk_aac
         ffmpeg-full
         ffmpegthumbnailer
+        fh
         file
+        flake-checker
         flutter
         fritzing
         fwupd-efi
@@ -2920,7 +2934,7 @@ in
             ];
 
             bind = [
-              "SUPER, L, exec, hyprlock --immediate"
+              "SUPER, L, exec, gtklock"
               "SUPER CTRL, L, exec, uwsm stop"
               "SUPER CTRL, P, exec, systemctl poweroff"
               "SUPER CTRL, R, exec, systemctl reboot"
@@ -2993,7 +3007,7 @@ in
               ", XF86Mail, exec, thunderbird"
               "SUPER, M, exec, thunderbird"
 
-              "SUPER, E, exec, zeditor"
+              "SUPER, E, exec, codium"
               "SUPER, D, exec, dbeaver"
 
               "SUPER, V, exec, vlc"
@@ -3273,7 +3287,7 @@ in
           enable = true;
 
           theme = {
-            name = "Jasper-Grey-Dark";
+            name = gtk_theme_name;
             package = jasper_grey_dark_gtk_theme;
           };
 
@@ -3339,11 +3353,9 @@ in
               text-empty = "No Notifications";
               widgets = [
                 "title"
-                "dnd"
                 "notifications"
                 "mpris"
-                "volume"
-                "backlight"
+                "dnd"
               ];
               widget-config = {
                 title = {
@@ -3353,34 +3365,13 @@ in
                   button-text = "Clear";
                 };
 
-                dnd = {
-                  text = "Do Not Disturb";
-                };
-
                 mpris = {
                   image-radius = border_radius;
                   blur = true;
                 };
 
-                volume = {
-                  label = "Volume";
-
-                  empty-list-label = "No Active Sink Inputs";
-                  expand-button-label = "⇧";
-                  collapse-button-label = "⇩";
-                  animation-type = "slide_down";
-                  animation-duration = animation_duration;
-
-                  show-per-app = true;
-                  show-per-app-icon = true;
-                  show-per-app-label = true;
-                };
-
-                backlight = {
-                  label = "Brightness";
-                  subsystem = "backlight";
-                  device = backlight_device;
-                  min = 0;
+                dnd = {
+                  text = "Do Not Disturb";
                 };
               };
 
@@ -3400,7 +3391,68 @@ in
               script-fail-notify = true;
             };
 
-            # style = '''';
+            style = ''
+              .blank-window {
+                background: transparent;
+              }
+
+              .control-center {
+                border-radius: ${toString border_radius}px;
+                background-color: ${colors.hex.background};
+                font-size: ${toString font_preferences.size}px;
+                color: ${colors.hex.foreground};
+              }
+
+              .widget-title,
+              .widget-dnd  {
+                font-size: ${toString (font_preferences.size * 1.5)}px;
+                color: ${colors.hex.foreground};
+              }
+
+              .widget-title > button {
+                border-radius: ${toString border_radius}px;
+              }
+
+              .notification-row .notification-background .notification {
+                border-radius: ${toString border_radius}px;
+              }
+
+              .notification-row .notification-background .notification .notification-default-action {
+                border-radius: ${toString border_radius}px;
+              }
+
+              .notification-row .notification-background .notification .notification-default-action .notification-content {
+                border-radius: ${toString border_radius}px;
+              }
+
+              .notification-row .notification-background .notification .notification-default-action .notification-content .body-image {
+                border-radius: ${toString border_radius}px;
+              }
+
+              .notification-row .notification-background .notification .notification-default-action .notification-content .inline-reply .inline-reply-entry {
+                border-radius: ${toString border_radius}px;
+              }
+
+              .notification-row .notification-background .notification .notification-default-action .notification-content .inline-reply .inline-reply-button {
+                border-radius: ${toString border_radius}px;
+              }
+
+              .widget-mpris .widget-mpris-player {
+                border-radius: ${toString border_radius}px;
+              }
+
+              .widget-mpris .widget-mpris-player .widget-mpris-album-art {
+                border-radius: ${toString border_radius}px;
+              }
+
+              .widget-dnd > switch {
+                border-radius: ${toString border_radius}px;
+              }
+
+              .widget-dnd > switch slider {
+                border-radius: ${toString border_radius}px;
+              }
+            '';
           };
 
           hyprpaper = {
@@ -3424,105 +3476,6 @@ in
         };
 
         programs = {
-          hyprlock = {
-            enable = true;
-            package = pkgs.hyprlock;
-
-            sourceFirst = true;
-
-            settings = {
-              general = {
-                disable_loading_bar = true;
-                immediate_render = true;
-                fractional_scaling = 2; # 2 = Automatic
-
-                no_fade_in = false;
-                no_fade_out = false;
-
-                hide_cursor = false;
-                text_trim = false;
-
-                grace = 0;
-                ignore_empty_input = true;
-              };
-
-              auth = {
-                pam = {
-                  enabled = true;
-                };
-              };
-
-              background = [
-                {
-                  monitor = "";
-                  path = wallpaper;
-                }
-              ];
-
-              label = [
-                {
-                  monitor = "";
-                  halign = "center";
-                  valign = "top";
-                  position = "0, -128";
-
-                  text_align = "center";
-                  font_family = font_preferences.name.sans_serif;
-                  # color = ""; # TODO
-                  font_size = 64;
-                  text = "$TIME12";
-                }
-
-                {
-                  monitor = "";
-                  halign = "center";
-                  valign = "center";
-                  position = "0, 0";
-
-                  text_align = "center";
-                  font_family = font_preferences.name.sans_serif;
-                  # color = ""; # TODO
-                  font_size = 16;
-                  text = "$DESC"; # Full Name
-                }
-              ];
-
-              input-field = [
-                {
-                  monitor = "";
-                  halign = "center";
-                  valign = "bottom";
-                  position = "0, 128";
-
-                  size = "256, 48";
-                  rounding = 16;
-                  outline_thickness = 1;
-                  # outer_color = ""; # TODO
-                  shadow_passes = 0;
-                  hide_input = false;
-                  # inner_color = ""; # TODO
-                  font_family = font_preferences.name.sans_serif;
-                  # font_color = ""; # TODO
-                  placeholder_text = "Password";
-                  dots_center = true;
-                  dots_rounding = -1;
-
-                  fade_on_empty = true;
-
-                  invert_numlock = false;
-                  # capslock_color = ""; # TODO
-                  # numlock_color = ""; # TODO
-                  # bothlock_color = ""; # TODO
-
-                  # check_color = ""; # TODO
-                  # fail_color = ""; # TODO
-                  fail_text = "<i>$FAIL <b>($ATTEMPTS)</b></i>";
-                  fail_timeout = 2000;
-                }
-              ];
-            };
-          };
-
           wofi = {
             enable = true;
             package = pkgs.wofi;
@@ -3544,7 +3497,7 @@ in
               allow_markup = true;
               allow_images = true;
               image_size = 32;
-              no_actions = false;
+              no_actions = true;
 
               insensitive = true;
 
@@ -4217,271 +4170,180 @@ in
             enableFishIntegration = true;
           };
 
-          zed-editor = {
+          vscode = {
             enable = true;
-            package = pkgs.zed-editor;
-            installRemoteServer = false;
+            package = pkgs.vscodium;
+            mutableExtensionsDir = false;
 
-            extraPackages = with pkgs; [
-            ];
-
-            extensions = [
-              "basher"
-              "csv"
-              "dart"
-              "docker-compose"
-              "dockerfile"
-              "env"
-              "fish"
-              "flutter-snippets"
-              "http"
-              "hyprlang"
-              "ini"
-              "latex"
-              "live-server"
-              "log"
-              "make"
-              "mermaid"
-              "nix"
-              "php"
-              "postgres-language-server"
-              "pylsp"
-              "python-refactoring"
-              "python-requirements"
-              "rainbow-csv"
-              "rpmspec"
-              "scheme"
-              "sql"
-              "ssh-config"
-              "ultralytics-snippets"
-              "unicode"
-              "xml"
-            ];
-
-            userSettings = {
-              features = {
-                copilot = true;
-              };
-
-              load_direnv = "shell_hook";
-
-              enable_language_server = true;
-
-              languages = {
-                Nix = {
-                  language_servers = [
-                    "nixd"
+            profiles = {
+              default = {
+                extensions =
+                  with pkgs.vscode-extensions;
+                  [
+                    aaron-bond.better-comments
+                    adpyke.codesnap
+                    albymor.increment-selection
+                    alefragnani.bookmarks
+                    alexisvt.flutter-snippets
+                    anweber.vscode-httpyac
+                    bierner.comment-tagged-templates
+                    bierner.docs-view
+                    bierner.emojisense
+                    bierner.github-markdown-preview
+                    bierner.markdown-checkbox
+                    bierner.markdown-emoji
+                    bierner.markdown-footnotes
+                    bierner.markdown-mermaid
+                    bierner.markdown-preview-github-styles
+                    bradgashler.htmltagwrap
+                    chanhx.crabviz
+                    christian-kohler.path-intellisense
+                    codezombiech.gitignore
+                    coolbear.systemd-unit-file
+                    dart-code.dart-code
+                    dart-code.flutter
+                    davidanson.vscode-markdownlint
+                    dendron.adjust-heading-level
+                    devsense.phptools-vscode
+                    dotenv.dotenv-vscode
+                    ecmel.vscode-html-css
+                    edonet.vscode-command-runner
+                    esbenp.prettier-vscode
+                    ethansk.restore-terminals
+                    fabiospampinato.vscode-open-in-github
+                    firefox-devtools.vscode-firefox-debug
+                    formulahendry.auto-close-tag
+                    formulahendry.auto-rename-tag
+                    formulahendry.code-runner
+                    foxundermoon.shell-format
+                    github.copilot
+                    github.copilot-chat
+                    github.vscode-github-actions
+                    github.vscode-pull-request-github
+                    grapecity.gc-excelviewer
+                    gruntfuggly.todo-tree
+                    hars.cppsnippets
+                    hbenl.vscode-test-explorer
+                    hediet.vscode-drawio
+                    ibm.output-colorizer
+                    iciclesoft.workspacesort
+                    iliazeus.vscode-ansi
+                    illixion.vscode-vibrancy-continued
+                    james-yu.latex-workshop
+                    jbockle.jbockle-format-files
+                    jellyedwards.gitsweep
+                    jkillian.custom-local-formatters
+                    jnoortheen.nix-ide
+                    jock.svg
+                    kamikillerto.vscode-colorize
+                    llvm-vs-code-extensions.vscode-clangd
+                    mads-hartmann.bash-ide-vscode
+                    mechatroner.rainbow-csv
+                    meganrogge.template-string-converter
+                    mishkinf.goto-next-previous-member
+                    mkhl.direnv
+                    moshfeu.compare-folders
+                    ms-azuretools.vscode-docker
+                    ms-python.black-formatter
+                    ms-python.debugpy
+                    ms-python.isort
+                    ms-python.python
+                    ms-toolsai.datawrangler
+                    ms-toolsai.jupyter
+                    ms-toolsai.jupyter-keymap
+                    ms-toolsai.jupyter-renderers
+                    ms-toolsai.vscode-jupyter-cell-tags
+                    ms-toolsai.vscode-jupyter-slideshow
+                    ms-vscode-remote.remote-containers
+                    ms-vscode-remote.remote-ssh
+                    ms-vscode-remote.remote-ssh-edit
+                    ms-vscode.cmake-tools
+                    ms-vscode.cpptools
+                    ms-vscode.hexeditor
+                    ms-vscode.live-server
+                    ms-vscode.makefile-tools
+                    ms-vscode.test-adapter-converter
+                    ms-vsliveshare.vsliveshare
+                    ms-windows-ai-studio.windows-ai-studio
+                    oderwat.indent-rainbow
+                    platformio.platformio-vscode-ide
+                    quicktype.quicktype
+                    redhat.vscode-xml
+                    redhat.vscode-yaml
+                    rioj7.commandonallfiles
+                    rubymaniac.vscode-paste-and-indent
+                    ryu1kn.partial-diff
+                    sanaajani.taskrunnercode
+                    shardulm94.trailing-spaces
+                    skyapps.fish-vscode
+                    slevesque.vscode-multiclip
+                    spywhere.guides
+                    stylelint.vscode-stylelint
+                    tailscale.vscode-tailscale
+                    tamasfe.even-better-toml
+                    timonwong.shellcheck
+                    usernamehw.errorlens
+                    vincaslt.highlight-matching-tag
+                    visualstudioexptteam.intellicode-api-usage-examples
+                    visualstudioexptteam.vscodeintellicode
+                    vscjava.vscode-gradle
+                    vscode-icons-team.vscode-icons
+                    wmaurer.change-case
+                    zainchen.json
+                  ]
+                  ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+                    {
+                      name = "unique-lines";
+                      publisher = "bibhasdn";
+                      version = "1.0.0";
+                      sha256 = "W0ZpZ6+vjkfNfOtekx5NWOFTyxfWAiB0XYcIwHabFPQ=";
+                    }
+                    {
+                      name = "vscode-sort";
+                      publisher = "henriiik";
+                      version = "0.2.5";
+                      sha256 = "pvlSlWJTnLB9IbcVsz5HypT6NM9Ujb7UYs2kohwWVWk=";
+                    }
+                    {
+                      name = "vscode-sort-json";
+                      publisher = "richie5um2";
+                      version = "1.20.0";
+                      sha256 = "Jobx5Pf4SYQVR2I4207RSSP9I85qtVY6/2Nvs/Vvi/0=";
+                    }
+                    {
+                      name = "pubspec-assist";
+                      publisher = "jeroen-meijer";
+                      version = "2.3.2";
+                      sha256 = "+Mkcbeq7b+vkuf2/LYT10mj46sULixLNKGpCEk1Eu/0=";
+                    }
+                    {
+                      name = "arb-editor";
+                      publisher = "Google";
+                      version = "0.2.1";
+                      sha256 = "uHdQeW9ZXYg6+VnD6cb5CU10/xV5hCtxt5K+j0qb7as=";
+                    }
+                    {
+                      name = "vscode-serial-monitor";
+                      publisher = "ms-vscode";
+                      version = "0.13.250503001";
+                      sha256 = "iuni/DybnUxdbvggvlCidurW4GevVPvwYO7/5i+S1ok=";
+                    }
+                    {
+                      name = "vscode-print";
+                      publisher = "pdconsec";
+                      version = "1.4.0";
+                      sha256 = "jAZ1F5neIFSevy0bNuHabh8pUbm5vuuxjmot08GctPc=";
+                    }
                   ];
 
-                  formatter = {
-                    external = {
-                      command = "nixfmt";
-                    };
-                  };
-                };
+                enableUpdateCheck = true;
+                enableExtensionUpdateCheck = true;
+
+                # userSettings = {
+                # };
               };
-
-              lsp = {
-                nixd = {
-                  initialization_options = {
-                    formatting = {
-                      command = [
-                        "nixfmt"
-                      ];
-                    };
-                  };
-                };
-              };
-
-              diagnostics = {
-                include_warnings = true;
-
-                inline = {
-                  enabled = true;
-                };
-              };
-
-              git = { };
-
-              telemetry = {
-                diagnostics = false;
-                metrics = false;
-              };
-
-              theme = {
-                mode = "dark";
-                dark = "One Dark";
-                light = "One Light";
-              };
-
-              icon_theme = {
-                mode = "dark";
-                dark = "Zed (Default)";
-                light = "Zed (Default)";
-              };
-
-              ui_font_family = font_preferences.name.sans_serif;
-
-              project_panel = {
-                auto_fold_dirs = false;
-                auto_reveal_entries = true;
-                button = true;
-                dock = "left";
-                file_icons = true;
-                folder_icons = true;
-                git_status = true;
-                show_diagnostics = "all";
-
-                indent_guides = {
-                  show = "always";
-                };
-
-                scrollbar = {
-                  show = "always";
-                };
-              };
-
-              outline_panel = {
-                auto_fold_dirs = false;
-                auto_reveal_entries = true;
-                button = true;
-                dock = "left";
-                file_icons = true;
-                folder_icons = true;
-                git_status = true;
-
-                indent_guides = {
-                  show = "always";
-                };
-
-                scrollbar = {
-                  show = "always";
-                };
-              };
-
-              tab_bar = {
-                show = true;
-                show_nav_history_buttons = true;
-                show_tab_bar_buttons = true;
-              };
-
-              preview_tabs = {
-                enabled = true;
-                enable_preview_from_code_navigation = true;
-                enable_preview_from_file_finder = true;
-              };
-
-              tabs = {
-                activate_on_close = "history";
-                close_position = "right";
-                file_icons = true;
-                git_status = true;
-                show_close_button = "hover";
-                show_diagnostic = "all";
-              };
-
-              toolbar = {
-                breadcrumbs = true;
-                quick_actions = true;
-                selections_menu = true;
-              };
-
-              scrollbar = {
-                cursors = true;
-                diagnostics = "all";
-                git_diff = true;
-                search_results = true;
-                selected_symbol = true;
-                selected_text = true;
-                show = "always";
-
-                axes = {
-                  horizontal = true;
-                  vertical = true;
-                };
-              };
-
-              indent_guides = {
-                enabled = true;
-                coloring = "indent_aware";
-                # background_coloring = "indent_aware";
-              };
-
-              assistant = {
-                button = true;
-                dock = "right";
-                enabled = true;
-              };
-
-              terminal = {
-                blinking = "terminal_controlled";
-                button = true;
-                copy_on_select = false;
-                dock = "bottom";
-                font_family = font_preferences.name.mono;
-                line_height = "standard";
-                shell = "system";
-                working_directory = "current_project_directory";
-
-                toolbar = {
-                  breadcrumbs = true;
-                };
-
-                scrollbar = {
-                  show = "always";
-                };
-
-                detect_venv = {
-                  on = {
-                    directories = [
-                      ".env"
-                      ".venv"
-                      "env"
-                      "venv"
-                    ];
-                    activate_script = "default";
-                  };
-                };
-              };
-
-              show_call_status_icon = true;
-
-              buffer_font_family = font_preferences.name.mono;
-              soft_wrap = "editor_width";
-              show_whitespaces = "all";
-              cursor_blink = true;
-              cursor_shape = "bar";
-
-              hover_popover_enabled = true;
-              current_line_highlight = "all";
-              selection_highlight = true;
-
-              seed_search_query_from_cursor = "selection";
-              use_smartcase_search = false;
-
-              show_completions_on_input = true;
-              show_completion_documentation = true;
-              show_edit_predictions = true;
-
-              hard_tabs = false;
-
-              use_autoclose = true;
-              always_treat_brackets_as_autoclosed = false;
-
-              format_on_save = "on";
-              remove_trailing_whitespace_on_save = false;
-              ensure_final_newline_on_save = true;
-
-              calls = {
-                mute_on_join = true;
-                share_on_join = false;
-              };
-
-              confirm_quit = false;
             };
-
-            userKeymaps = { };
-          };
+          }; # Unfree
 
           matplotlib = {
             enable = true;
@@ -4601,6 +4463,6 @@ in
 # FIXME: Hyprpaper Delay
 # FIXME: MariaDB > Login
 # FIXME: Notifications
-# FIXME: Wofi > Window > Border Radius
+# FIXME: Wofi > Window > Border Radius > Background
 # FIXME: hardinfo2
 # FIXME: rpi-imager
