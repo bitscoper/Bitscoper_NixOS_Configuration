@@ -43,7 +43,7 @@ let
       emoji = "Noto Color Emoji";
     };
 
-    size = 12;
+    size = 16;
   };
 
   cursor = {

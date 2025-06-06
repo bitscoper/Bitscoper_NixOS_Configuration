@@ -5,3 +5,65 @@
 My NixOS Configuration
 
 </div>
+
+---
+
+- **Channel:** [NixOS Unstable](https://nixos.org/channels/nixos-unstable)
+- **Kernel:** [Linux Zen](https://github.com/zen-kernel/zen-kernel/)
+- **Display Server Protocol:** [Wayland](https://gitlab.freedesktop.org/wayland/wayland/)
+- **Display Manager (DM) / Greeter:** [Simple Desktop Display Manager (SDDM)](https://github.com/sddm/sddm/)
+- **Session Manager:** [Universal Wayland Session Manager (UWSM)](https://github.com/Vladimir-csp/uwsm/)
+- **Wayland Compositor:** [Hyprland](https://github.com/hyprwm/Hyprland/)
+
+---
+
+- **Status Bar:** [Waybar](https://github.com/Alexays/Waybar/)
+- **Notification Daemon and Center:** [Sway Notification Center](https://github.com/ErikReider/SwayNotificationCenter/)
+- **Input Method (IM) Framework:** [Fcitx 5](https://github.com/fcitx/fcitx5/)
+- **Lock Screen:** [gtklock](https://github.com/jovanlanik/gtklock/)
+- **Menu / Launcher:** [wofi](https://hg.sr.ht/~scoopta/wofi)
+
+---
+
+- **Font Family:** [Noto Nerd](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Noto/)
+- **Cursor:** [Bibata Modern Classic](https://github.com/ful1e5/Bibata_Cursor/)
+- **GTK Theme:** [Jasper Grey Dark](https://github.com/vinceliuice/Jasper-gtk-theme/)
+- **Wallpaper Utility:** [Hyprpaper](https://github.com/hyprwm/hyprpaper/)
+
+---
+
+- **Terminal Emulator:** [Tilix](https://github.com/gnunn1/tilix/)
+- **Disk Partition Editors:** [GNOME Disks](https://gitlab.gnome.org/GNOME/gnome-disk-utility/), and [GParted](https://gitlab.gnome.org/GNOME/gparted/)
+- **File Manager:** [Nautilus](https://gitlab.gnome.org/GNOME/nautilus/)
+- **Archive Manager:** [File Roller](https://gitlab.gnome.org/GNOME/file-roller/)
+
+---
+
+- **Image Viewer**: [Eye of GNOME (EOG)](https://gitlab.gnome.org/GNOME/eog/)
+- **Media Player:** [VLC media player](https://code.videolan.org/videolan/vlc/)
+- **Software Defined Radio (SDR) Clients:** [SDRangel](https://github.com/f4exb/sdrangel/), and [SDR++](https://github.com/AlexandreRouma/SDRPlusPlus/)
+
+---
+
+- **Text Editors:** [VSCodium](https://github.com/VSCodium/vscodium/), and [nano](https://cgit.git.savannah.gnu.org/cgit/nano.git/)
+- **Image Editor:** [GNU Image Manipulation Program (GIMP)](https://gitlab.gnome.org/GNOME/gimp/)
+- **Audio Recorder and Editor:** [Audacity](https://github.com/audacity/audacity/)
+- **Office Suite:** [ONLYOFFICE Desktop Editors](https://github.com/ONLYOFFICE/DesktopEditors/)
+- **Electronics Designers:** [KiCad EDA](https://gitlab.com/kicad/code/kicad/), and [Fritzing](https://github.com/fritzing/fritzing-app/)
+
+---
+
+- **Web Browsers:** [Firefox Developer Edition](https://github.com/mozilla-firefox/firefox/), [Ungoogled Chromium](https://github.com/ungoogled-software/ungoogled-chromium/), and [Tor Browser](https://gitlab.torproject.org/tpo/applications/tor-browser/)
+- **Email Client:** [Thunderbird](https://hg-edge.mozilla.org/comm-central/)
+- **Database Client:** [DBeaver](https://github.com/dbeaver/dbeaver/)
+- **Torrent Client:** [qBittorrent](https://github.com/qbittorrent/qBittorrent/)
+
+---
+
+- **Calculator:** [Qalculate!](https://github.com/Qalculate/qalculate-gtk/)
+
+---
+
+- **Media Server:** [Jellyfin](https://github.com/jellyfin/jellyfin/)
+
+---
