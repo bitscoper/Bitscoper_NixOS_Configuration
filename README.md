@@ -9,14 +9,24 @@ My NixOS Configuration
 ---
 
 - **Channel:** [NixOS Unstable](https://nixos.org/channels/nixos-unstable)
+- **Bootloader:** [systemd-boot](https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/system/boot/loader/systemd-boot/systemd-boot.nix)
 - **Kernel:** [Linux Zen](https://github.com/zen-kernel/zen-kernel/)
-- **Display Server Protocol:** [Wayland](https://gitlab.freedesktop.org/wayland/wayland/)
+- **Shells**: [Bash](https://cgit.git.savannah.gnu.org/cgit/bash.git/), and [fish](https://github.com/fish-shell/fish-shell/)
+- **Init System / Service Manager:** [systemd](https://github.com/systemd/systemd/)
+- **Message Bus**: [D-Bus](https://gitlab.freedesktop.org/dbus/dbus/)
+- **Boot Screen:** [Plymouth](https://gitlab.freedesktop.org/plymouth/plymouth/)
+- **Network Configurator:** [NetworkManager](https://github.com/NetworkManager/NetworkManager/)
+- **Display Server Protocol:** [Wayland](https://gitlab.freedesktop.org/wayland/wayland/) -> with Xwayland Support
 - **Display Manager (DM) / Greeter:** [Simple Desktop Display Manager (SDDM)](https://github.com/sddm/sddm/)
 - **Session Manager:** [Universal Wayland Session Manager (UWSM)](https://github.com/Vladimir-csp/uwsm/)
 - **Wayland Compositor:** [Hyprland](https://github.com/hyprwm/Hyprland/)
+- **Low-Level Multimedia Framework:** [PipeWire](https://github.com/PipeWire/pipewire/)
+- **Bluetooth Protocol Stack:** [BlueZ](https://github.com/bluez/bluez/)
 
 ---
 
+- **[Polkit](https://github.com/polkit-org/polkit/) Agent:** [hyprpolkitagent](https://github.com/hyprwm/hyprpolkitagent/)
+- **Secret Service / Keyring**: [GNOME Keyring](https://gitlab.gnome.org/GNOME/gnome-keyring/)
 - **Status Bar:** [Waybar](https://github.com/Alexays/Waybar/)
 - **Notification Daemon and Center:** [Sway Notification Center](https://github.com/ErikReider/SwayNotificationCenter/)
 - **Input Method (IM) Framework:** [Fcitx 5](https://github.com/fcitx/fcitx5/)
@@ -46,8 +56,11 @@ My NixOS Configuration
 ---
 
 - **Text Editors:** [VSCodium](https://github.com/VSCodium/vscodium/), and [nano](https://cgit.git.savannah.gnu.org/cgit/nano.git/)
+- **Subtitle Editor**: [Subtitle Edit](https://github.com/SubtitleEdit/subtitleedit/)
+- **Screenshot Utility**: [slurp](https://github.com/emersion/slurp/) + [grim](https://github.com/emersion/grim/)
 - **Image Editor:** [GNU Image Manipulation Program (GIMP)](https://gitlab.gnome.org/GNOME/gimp/)
 - **Audio Recorder and Editor:** [Audacity](https://github.com/audacity/audacity/)
+- **Video Recorder and Streamer**: [OBS Studio](https://github.com/obsproject/obs-studio/)
 - **Office Suite:** [ONLYOFFICE Desktop Editors](https://github.com/ONLYOFFICE/DesktopEditors/)
 - **Electronics Designers:** [KiCad EDA](https://gitlab.com/kicad/code/kicad/), and [Fritzing](https://github.com/fritzing/fritzing-app/)
 
@@ -64,6 +77,21 @@ My NixOS Configuration
 
 ---
 
+- **Domain Name System (DNS) Server:** [Berkeley Internet Name Domain (BIND)](https://gitlab.isc.org/isc-projects/bind9/)
+- **Print Server**: [CUPS](https://github.com/OpenPrinting/cups/)
+- **Memory Object Cache Server:** [memcached](https://github.com/memcached/memcached/)
+- **Database Servers:** [PostgreSQL](https://git.postgresql.org/gitweb/?p=postgresql.git), and [MariaDB](https://github.com/MariaDB/server/)
+- **Mail Transfer Agent (MTA) Server**: [Postfix](http://ftp.porcupine.org/mirrors/postfix-release/index.html)
+- **Internet Message Access Protocol (IMAP) Server:** [Dovecot](https://github.com/dovecot/core/)
+- **Domain Keys Identified Mail (DKIM) Authentication Server**: [OpenDKIM](https://github.com/trusteddomainproject/OpenDKIM/)
 - **Media Server:** [Jellyfin](https://github.com/jellyfin/jellyfin/)
 
 ---
+
+- **Virtual Machine (VM) Hypervisor:** [QEMU](https://github.com/qemu/qemu/)  -> KVM
+- **Container Engine**: [Podman](https://github.com/containers/podman/) -> with Docker Compatibility
+- **Android Container Environment**: [Waydroid](https://github.com/waydroid/waydroid/)
+
+---
+
+And many more ...
