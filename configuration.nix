@@ -20,9 +20,9 @@ let
       };
   android_sdk = android_nixpkgs.sdk (
     sdkPkgs: with sdkPkgs; [
-      # emulator
       build-tools-36-0-0
       cmdline-tools-latest
+      emulator
       platform-tools
       platforms-android-36
       system-images-android-36-google-apis-playstore-x86-64
@@ -472,6 +472,11 @@ in
     polkit = {
       enable = true;
       package = pkgs.polkit;
+    };
+
+    soteria = {
+      enable = true;
+      package = pkgs.soteria;
     };
 
     rtkit.enable = true;
@@ -1874,6 +1879,7 @@ in
         evtest
         evtest-qt
         exfatprogs
+        eyedropper
         f2fs-tools
         faad2
         fdk_aac
@@ -1928,8 +1934,6 @@ in
         hyprland-qt-support
         hyprland-qtutils
         hyprls
-        hyprpicker
-        hyprpolkitagent
         hyprsysteminfo
         i2c-tools
         iaito
@@ -2918,8 +2922,6 @@ in
             ];
 
             exec-once = [
-              "uwsm app -- ${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
-
               "uwsm app -- udiskie --tray --appindicator --automount --notify --file-manager nautilus"
 
               "sleep 2 && uwsm app -- keepassxc"
