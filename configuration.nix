@@ -1493,13 +1493,13 @@ in
           ];
 
           Locked = [
-            "gelprec.smd@gmail.com" # Simple mass download
-            "jid1-BoFifL9Vbdl2zQ@jetpack" # Decentraleyes
-            "uBlock0@raymondhill.net" # uBlock Origin
-            "{19b92b95-9cca-4f8d-b364-37a81f7133d5}" # Tab Disguiser
-            "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}" # Search by Image
-            "{531906d3-e22f-4a6c-a102-8057b88a1a63}" # SingleFile
-            "{dcb8caa2-63fa-41aa-a508-a45c5990ebdd}" # WhatFont
+            "gelprec.smd@gmail.com" # "Simple mass download"
+            "jid1-BoFifL9Vbdl2zQ@jetpack" # "Decentraleyes"
+            "uBlock0@raymondhill.net" # "uBlock Origin"
+            "{19b92b95-9cca-4f8d-b364-37a81f7133d5}" # "Tab Disguiser"
+            "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}" # "Search by Image"
+            "{531906d3-e22f-4a6c-a102-8057b88a1a63}" # "SingleFile"
+            "{dcb8caa2-63fa-41aa-a508-a45c5990ebdd}" # "WhatFont"
           ];
         };
       };
@@ -2992,7 +2992,7 @@ in
 
               "SUPER, C, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
 
-              ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/ScreenShot_$(date +'%B-%d-%Y_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\""
+              ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/ScreenShot_$(date +'%B-%d-%Y_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\"" # I use the Downloads directory for temporary work.
 
               "SUPER, A, exec, wofi --show drun --disable-history"
               "SUPER, R, exec, wofi --show run --disable-history"
@@ -3897,13 +3897,16 @@ in
                 "custom/swaync" = {
                   format = "{} {icon}";
                   format-icons = {
-                    notification = "<span foreground='red'><sup></sup></span>";
+                    notification = "<span foreground=\"${colors.hex.warning}\"><sup></sup></span>";
                     none = "";
-                    dnd-notification = "<span foreground='red'><sup></sup></span>";
-                    dnd-none = "";
-                    inhibited-notification = "<span foreground='red'><sup></sup></span>";
+
+                    inhibited-notification = "<span foreground=\"${colors.hex.warning}\"><sup></sup></span>";
                     inhibited-none = "";
-                    dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
+
+                    dnd-notification = "<span foreground=\"${colors.hex.warning}\"><sup></sup></span>";
+                    dnd-none = "";
+
+                    dnd-inhibited-notification = "<span foreground=\"${colors.hex.warning}\"><sup></sup></span>";
                     dnd-inhibited-none = "";
                   };
 
@@ -4383,7 +4386,7 @@ in
             package = pkgs.awscli2;
 
             settings = {
-              "default" = {
+              default = {
                 output = "json";
               };
             };
@@ -4396,7 +4399,6 @@ in
             package = pkgs.ungoogled-chromium;
             dictionaries = with pkgs.hunspellDictsChromium; [
               en_US
-              en-us
             ];
             nativeMessagingHosts = config.programs.firefox.nativeMessagingHosts.packages;
 
