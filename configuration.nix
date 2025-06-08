@@ -33,6 +33,8 @@ let
 
   backlight_device = "intel_backlight";
 
+  design_factor = 16;
+
   font_preferences = {
     package = pkgs.nerd-fonts.noto;
 
@@ -43,7 +45,7 @@ let
       emoji = "Noto Color Emoji";
     };
 
-    size = 16;
+    size = builtins.floor (design_factor * 0.75); # 12
   };
 
   cursor = {
@@ -52,7 +54,7 @@ let
       package = pkgs.bibata-cursors;
     };
 
-    size = 24;
+    size = builtins.floor (design_factor * 1.50); # 24
   };
 
   jasper_grey_dark_gtk_theme = (
@@ -132,7 +134,6 @@ let
     };
   };
 
-  border_radius = 16;
   animation_duration = 200; # ms
 
   wallpaper = builtins.fetchurl {
@@ -1796,6 +1797,7 @@ in
         # amrwb
         # appimagekit
         # gnss-sdr
+        # logdy
         # reiser4progs
         above
         acl
@@ -1803,8 +1805,8 @@ in
         alac
         alpaca
         amass
-        android-tools
         android_sdk # Custom
+        android-tools
         apkeep
         apkleaks
         apksigner
@@ -1986,7 +1988,6 @@ in
         libxfs
         libzip
         linuxConsoleTools
-        logdy
         lrzip
         lshw
         lsof
@@ -3215,7 +3216,7 @@ in
             decoration = {
               dim_special = 0.25;
 
-              rounding = 8;
+              rounding = builtins.floor (design_factor * 0.50); # 8
 
               active_opacity = 1.0;
               fullscreen_opacity = 1.0;
@@ -3341,10 +3342,10 @@ in
               control-center-exclusive-zone = true;
               control-center-positionX = "right";
               control-center-positionY = "top";
-              control-center-margin-top = 8;
-              control-center-margin-right = 8;
-              control-center-margin-bottom = 8;
-              control-center-margin-left = 8;
+              control-center-margin-top = builtins.floor (design_factor * 0.50); # 8
+              control-center-margin-right = builtins.floor (design_factor * 0.50); # 8
+              control-center-margin-bottom = builtins.floor (design_factor * 0.50); # 8
+              control-center-margin-left = builtins.floor (design_factor * 0.50); # 8
 
               layer = "overlay";
               positionX = "right";
@@ -3366,7 +3367,7 @@ in
                 };
 
                 mpris = {
-                  image-radius = border_radius;
+                  image-radius = design_factor;
                   blur = true;
                 };
 
@@ -3397,7 +3398,7 @@ in
               }
 
               .control-center {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
                 background-color: ${colors.hex.background};
                 font-size: ${toString font_preferences.size}px;
                 color: ${colors.hex.foreground};
@@ -3410,47 +3411,47 @@ in
               }
 
               .widget-title > button {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
               }
 
               .notification-row .notification-background .notification {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
               }
 
               .notification-row .notification-background .notification .notification-default-action {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
               }
 
               .notification-row .notification-background .notification .notification-default-action .notification-content {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
               }
 
               .notification-row .notification-background .notification .notification-default-action .notification-content .body-image {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
               }
 
               .notification-row .notification-background .notification .notification-default-action .notification-content .inline-reply .inline-reply-entry {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
               }
 
               .notification-row .notification-background .notification .notification-default-action .notification-content .inline-reply .inline-reply-button {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
               }
 
               .widget-mpris .widget-mpris-player {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
               }
 
               .widget-mpris .widget-mpris-player .widget-mpris-album-art {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
               }
 
               .widget-dnd > switch {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
               }
 
               .widget-dnd > switch slider {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
               }
             '';
           };
@@ -3507,7 +3508,7 @@ in
 
             style = ''
               window {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
               }
 
               #outer-box {
@@ -3861,7 +3862,7 @@ in
 
                 privacy = {
                   icon-size = font_preferences.size;
-                  icon-spacing = 8;
+                  icon-spacing = builtins.floor (design_factor * 0.50); # 8
                   transition-duration = 200;
 
                   modules = [
@@ -4003,7 +4004,7 @@ in
               #cpu,
               #battery,
               #window {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
                 background-color: ${colors.hex.background};
                 padding: 2px 8px;
                 color: ${colors.hex.foreground};
@@ -4105,7 +4106,7 @@ in
 
               button {
                 margin: 0px 2px;
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
                 background-color: ${colors.hex.background};
                 padding: 0px;
                 color: ${colors.hex.foreground};
@@ -4125,7 +4126,7 @@ in
               }
 
               #tray > widget {
-                border-radius: ${toString border_radius}px;
+                border-radius: ${toString design_factor}px;
                 background-color: ${colors.hex.background};
                 color: ${colors.hex.foreground};
               }
