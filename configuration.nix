@@ -1840,6 +1840,7 @@ in
         celestia
         celt
         certbot-full
+        chainsaw
         chmlib
         clang
         clang-analyzer
@@ -1867,6 +1868,7 @@ in
         dconf-editor
         dconf2nix
         debase
+        dig
         dirb
         dmg2img
         dmidecode
@@ -1927,6 +1929,7 @@ in
         hdparm
         hfsprogs
         hieroglyphic
+        host
         hw-probe
         hwloc
         hydra-check
@@ -2005,6 +2008,7 @@ in
         lzlib
         lzop
         macchanger
+        mailutils
         masscan
         massdns
         mattermost-desktop
@@ -2044,6 +2048,7 @@ in
         onionshare-gui
         onlyoffice-desktopeditors
         opencore-amr
+        opendmarc
         openh264
         openjpeg
         openssl
@@ -2117,6 +2122,7 @@ in
         tor-browser
         tree
         trufflehog
+        trustymail
         udftools
         udiskie
         unar
