@@ -332,7 +332,7 @@ in
   networking = {
     enableIPv6 = true;
 
-    domain = "bitscoper";
+    domain = "local";
     hostName = "Bitscoper-WorkStation";
     fqdn = "${config.networking.hostName}.${config.networking.domain}";
 
@@ -942,7 +942,7 @@ in
       nssmdns4 = true;
       nssmdns6 = true;
 
-      wideArea = true;
+      wideArea = false;
 
       publish = {
         enable = true;
@@ -953,7 +953,7 @@ in
         userServices = true;
       };
 
-      domainName = config.networking.hostName;
+      domainName = config.networking.domain;
       hostName = config.networking.hostName;
 
       openFirewall = true;
@@ -976,7 +976,7 @@ in
       ];
       allowSFTP = true;
 
-      banner = config.networking.hostName;
+      banner = config.networking.fqdn;
 
       authorizedKeysInHomedir = true;
 
@@ -1030,10 +1030,10 @@ in
 
       extraConf = ''
         DefaultLanguage en
-        ServerName ${config.networking.hostName}
+        ServerName ${config.networking.fqdn}
         ServerAlias *
         ServerTokens Full
-        ServerAdmin bitscoper@${config.networking.hostName}
+        ServerAdmin bitscoper@${config.networking.fqdn}
         BrowseLocalProtocols all
         BrowseWebIF On
         HostNameLookups On
@@ -1138,9 +1138,9 @@ in
       enableSubmission = true;
       enableSubmissions = true;
 
-      domain = config.networking.hostName;
-      hostname = config.networking.hostName;
-      origin = config.networking.hostName;
+      domain = config.networking.fqdn;
+      hostname = config.networking.fqdn;
+      origin = config.networking.fqdn;
 
       virtualMapType = "pcre";
       aliasMapType = "pcre";
@@ -1154,7 +1154,7 @@ in
     opendkim = {
       enable = true;
 
-      domains = "csl:${config.networking.hostName}";
+      domains = "csl:${config.networking.fqdn}";
       selector = "default";
 
       settings = { };
