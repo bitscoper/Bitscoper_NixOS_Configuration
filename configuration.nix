@@ -211,10 +211,19 @@ in
     plymouth = {
       enable = true;
 
+      # themePackages = [
+      #   pkgs.nixos-bgrt-plymouth
+      # ];
+      # theme = "nixos-bgrt";
+
+      theme = "lone";
       themePackages = [
-        pkgs.nixos-bgrt-plymouth
+        (pkgs.adi1090x-plymouth-themes.override {
+          selected_themes = [config.boot.plymouth.theme];
+        })
       ];
-      theme = "nixos-bgrt";
+
+      font = "${pkgs.nerd-fonts.noto}/share/fonts/truetype/NerdFonts/Noto/NotoSansNerdFont-Regular.ttf";
 
       extraConfig = ''
         UseFirmwareBackground=true
@@ -1890,6 +1899,7 @@ in
         fh
         file
         flake-checker
+        flightgear
         flutter
         fritzing
         fwupd-efi
@@ -1982,6 +1992,7 @@ in
         libopus
         libosinfo
         libraw
+        libreoffice-fresh
         libsamplerate
         libserialport
         libusb1
@@ -2046,7 +2057,6 @@ in
         ntp
         nuclei
         onionshare-gui
-        onlyoffice-desktopeditors
         opencore-amr
         opendmarc
         openh264
@@ -2701,26 +2711,26 @@ in
         "video/vnd.vivo" = "vlc.desktop";
         "video/vnd.youtube.yt" = "vlc.desktop";
 
-        "application/vnd.oasis.opendocument.text" = "onlyoffice-desktopeditors.desktop"; # .odt
-        "application/msword" = "onlyoffice-desktopeditors.desktop"; # .doc
+        "application/vnd.oasis.opendocument.text" = "writer.desktop"; # .odt
+        "application/msword" = "writer.desktop"; # .doc
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" =
-          "onlyoffice-desktopeditors.desktop"; # .docx
+          "writer.desktop"; # .docx
         "application/vnd.openxmlformats-officedocument.wordprocessingml.template" =
-          "onlyoffice-desktopeditors.desktop"; # .dotx
+          "writer.desktop"; # .dotx
 
-        "application/vnd.oasis.opendocument.spreadsheet" = "onlyoffice-desktopeditors.desktop"; # .ods
-        "application/vnd.ms-excel" = "onlyoffice-desktopeditors.desktop"; # .xls
+        "application/vnd.oasis.opendocument.spreadsheet" = "calc.desktop"; # .ods
+        "application/vnd.ms-excel" = "calc.desktop"; # .xls
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" =
-          "onlyoffice-desktopeditors.desktop"; # .xlsx
+          "calc.desktop"; # .xlsx
         "application/vnd.openxmlformats-officedocument.spreadsheetml.template" =
-          "onlyoffice-desktopeditors.desktop"; # .xltx
+          "calc.desktop"; # .xltx
 
-        "application/vnd.oasis.opendocument.presentation" = "onlyoffice-desktopeditors.desktop"; # .odp
-        "application/vnd.ms-powerpoint" = "onlyoffice-desktopeditors.desktop"; # .ppt
+        "application/vnd.oasis.opendocument.presentation" = "impress.desktop"; # .odp
+        "application/vnd.ms-powerpoint" = "impress.desktop"; # .ppt
         "application/vnd.openxmlformats-officedocument.presentationml.presentation" =
-          "onlyoffice-desktopeditors.desktop"; # .pptx
+          "impress.desktop"; # .pptx
         "application/vnd.openxmlformats-officedocument.presentationml.template" =
-          "onlyoffice-desktopeditors.desktop"; # .potx
+          "impress.desktop"; # .potx
 
         "application/pdf" = "firefox-devedition.desktop";
 
