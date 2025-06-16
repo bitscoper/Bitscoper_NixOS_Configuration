@@ -216,7 +216,7 @@ in
       # ];
       # theme = "nixos-bgrt";
 
-      theme = "lone";
+      theme = "black_hud";
       themePackages = [
         (pkgs.adi1090x-plymouth-themes.override {
           selected_themes = [config.boot.plymouth.theme];
@@ -2138,7 +2138,7 @@ in
         unar
         unicode-character-database
         unicode-emoji
-        universal-android-debloater
+        universal-android-debloater # uad-ng
         unix-privesc-check
         unzip
         upnp-router-control

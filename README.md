@@ -64,7 +64,7 @@ My NixOS Configuration
 - **Audio Recorder and Editor:** [Audacity](https://github.com/audacity/audacity/)
 - **Video Recorder and Streamer:** [OBS Studio](https://github.com/obsproject/obs-studio/)
 - **3D Amination Tool and Video Editor:** [Blender](https://projects.blender.org/blender/blender.git)
-- **Office Suite:** [ONLYOFFICE Desktop Editors](https://github.com/ONLYOFFICE/DesktopEditors/)
+- **Office Suite:** [LibreOffice](https://git.libreoffice.org/core/)
 - **Electronics Designers:** [KiCad EDA](https://gitlab.com/kicad/code/kicad/), and [Fritzing](https://github.com/fritzing/fritzing-app/)
 
 ---
