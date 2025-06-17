@@ -219,7 +219,7 @@ in
       theme = "black_hud";
       themePackages = [
         (pkgs.adi1090x-plymouth-themes.override {
-          selected_themes = [config.boot.plymouth.theme];
+          selected_themes = [ config.boot.plymouth.theme ];
         })
       ];
 
@@ -1282,7 +1282,6 @@ in
       modules = with pkgs; [
         gtklock-playerctl-module
         gtklock-powerbar-module
-        gtklock-userinfo-module
       ];
 
       config = {
@@ -2713,24 +2712,18 @@ in
 
         "application/vnd.oasis.opendocument.text" = "writer.desktop"; # .odt
         "application/msword" = "writer.desktop"; # .doc
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" =
-          "writer.desktop"; # .docx
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.template" =
-          "writer.desktop"; # .dotx
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = "writer.desktop"; # .docx
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.template" = "writer.desktop"; # .dotx
 
         "application/vnd.oasis.opendocument.spreadsheet" = "calc.desktop"; # .ods
         "application/vnd.ms-excel" = "calc.desktop"; # .xls
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" =
-          "calc.desktop"; # .xlsx
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.template" =
-          "calc.desktop"; # .xltx
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "calc.desktop"; # .xlsx
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.template" = "calc.desktop"; # .xltx
 
         "application/vnd.oasis.opendocument.presentation" = "impress.desktop"; # .odp
         "application/vnd.ms-powerpoint" = "impress.desktop"; # .ppt
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation" =
-          "impress.desktop"; # .pptx
-        "application/vnd.openxmlformats-officedocument.presentationml.template" =
-          "impress.desktop"; # .potx
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop"; # .pptx
+        "application/vnd.openxmlformats-officedocument.presentationml.template" = "impress.desktop"; # .potx
 
         "application/pdf" = "firefox-devedition.desktop";
 
@@ -2769,10 +2762,23 @@ in
     portal = {
       enable = true;
       extraPortals = with pkgs; [
+        xdg-desktop-portal-gtk
         xdg-desktop-portal-hyprland
       ];
 
       xdgOpenUsePortal = false; # Opening Programs
+
+      config = {
+        common = {
+          default = [
+            "gtk"
+            "hyprland"
+          ];
+          "org.freedesktop.impl.portal.Secret" = [
+            "gnome-keyring"
+          ];
+        };
+      };
     };
   };
 
@@ -2938,12 +2944,12 @@ in
             ];
 
             exec-once = [
-              "uwsm app -- udiskie --tray --appindicator --automount --notify --file-manager nautilus"
+              "udiskie --tray --appindicator --automount --notify --file-manager nautilus"
 
-              "sleep 2 && uwsm app -- keepassxc"
+              "sleep 2 && keepassxc" # 2 s
 
-              "uwsm app -- wl-paste --type text --watch cliphist store"
-              "uwsm app -- wl-paste --type image --watch cliphist store"
+              "wl-paste --type text --watch cliphist store"
+              "wl-paste --type image --watch cliphist store"
 
               "setfacl --modify user:jellyfin:--x ~ & adb start-server &"
 
