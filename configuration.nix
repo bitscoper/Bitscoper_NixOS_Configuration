@@ -1278,7 +1278,8 @@ in
 
     gtklock = {
       enable = true;
-      package = pkgs.gtklock;
+      # package = pkgs.gtklock;
+      package = (pkgs.callPackage ./Custom_gtklock.nix {});
       modules = with pkgs; [
         gtklock-playerctl-module
         gtklock-powerbar-module
@@ -2774,6 +2775,7 @@ in
             "gtk"
             "hyprland"
           ];
+
           "org.freedesktop.impl.portal.Secret" = [
             "gnome-keyring"
           ];
