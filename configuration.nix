@@ -838,7 +838,10 @@ in
       logToFile = true;
     };
 
-    gnome.gnome-keyring.enable = true;
+    gnome = {
+      gnome-keyring.enable = true;
+      gcr-ssh-agent.enable = true;
+    };
 
     gvfs = {
       enable = true;
@@ -1279,7 +1282,7 @@ in
     gtklock = {
       enable = true;
       # package = pkgs.gtklock;
-      package = (pkgs.callPackage ./Custom_gtklock.nix {});
+      package = (pkgs.callPackage ./Custom_gtklock.nix { });
       modules = with pkgs; [
         gtklock-playerctl-module
         gtklock-powerbar-module
@@ -1389,7 +1392,7 @@ in
     ssh = {
       package = pkgs.openssh;
 
-      startAgent = true;
+      startAgent = false; # `services.gnome.gcr-ssh-agent.enable' and `programs.ssh.startAgent' cannot both be enabled at the same time.
       agentTimeout = null;
     };
 
