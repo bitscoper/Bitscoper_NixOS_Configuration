@@ -2993,7 +2993,7 @@ in
             bindm = [
               "SUPER, mouse:272, movewindow"
               "SUPER, mouse:273, resizewindow"
-            ];
+            ]; # Mouse
 
             bindl = [
               ", XF86AudioPlay, exec, playerctl play-pause"
@@ -3002,7 +3002,7 @@ in
 
               ", XF86AudioPrev, exec, playerctl previous"
               ", XF86AudioNext, exec, playerctl next"
-            ];
+            ]; # Will also work when locked
 
             bindel = [
               ", XF86MonBrightnessUp, exec, brightnessctl s 1%+"
@@ -3012,7 +3012,7 @@ in
               ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-"
               ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
               ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-            ];
+            ]; # Repeat and will work when locked
 
             general = {
               allow_tearing = false;
@@ -3022,13 +3022,11 @@ in
               layout = "dwindle";
 
               gaps_in = 2;
-              gaps_out = 4;
+              gaps_out = "2, 0, 0, 0"; # Top, Right, Bottom, Left
 
               no_border_on_floating = false;
 
-              border_size = 1;
-              "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg"; # TODO
-              "col.inactive_border" = "rgba(595959aa)"; # TODO
+              border_size = 0;
 
               no_focus_fallback = false;
 
