@@ -2,6 +2,7 @@
 
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -818,7 +819,7 @@ in
         enableHidpi = true;
         theme = "sddm-astronaut-theme";
 
-        autoNumlock = true;
+        autoNumlock = false;
 
         autoLogin.relogin = false;
 
@@ -1475,62 +1476,6 @@ in
       package = pkgs.virt-manager;
     };
 
-    firefox = {
-      enable = true;
-      package = pkgs.firefox-devedition;
-      languagePacks = [
-        "ar"
-        "bn"
-        "en-US"
-      ];
-
-      nativeMessagingHosts = {
-        packages = with pkgs; [
-          keepassxc
-        ];
-      };
-
-      policies = {
-        Extensions = {
-          Install = [
-            "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi"
-            "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi"
-            "https://addons.mozilla.org/firefox/downloads/latest/languagetool/latest.xpi"
-            "https://addons.mozilla.org/firefox/downloads/latest/search_by_image/latest.xpi"
-            "https://addons.mozilla.org/firefox/downloads/latest/simple-mass-downloader/latest.xpi"
-            "https://addons.mozilla.org/firefox/downloads/latest/single-file/latest.xpi"
-            "https://addons.mozilla.org/firefox/downloads/latest/tab-disguiser/latest.xpi"
-            "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
-            "https://addons.mozilla.org/firefox/downloads/latest/zjm-whatfont/latest.xpi"
-          ];
-
-          Locked = [
-            "gelprec.smd@gmail.com" # "Simple mass download"
-            "jid1-BoFifL9Vbdl2zQ@jetpack" # "Decentraleyes"
-            "uBlock0@raymondhill.net" # "uBlock Origin"
-            "{19b92b95-9cca-4f8d-b364-37a81f7133d5}" # "Tab Disguiser"
-            "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}" # "Search by Image"
-            "{531906d3-e22f-4a6c-a102-8057b88a1a63}" # "SingleFile"
-            "{dcb8caa2-63fa-41aa-a508-a45c5990ebdd}" # "WhatFont"
-          ];
-        };
-      };
-
-      autoConfig = '''';
-
-      preferences = {
-        "browser.contentblocking.category" = "strict";
-        "browser.search.region" = "BD";
-        "browser.search.suggest.enabled.private" = true;
-        "dom.security.https_only_mode" = true;
-        "privacy.globalprivacycontrol.enabled" = true;
-        "security.warn_submit_secure_to_insecure" = true;
-        # "privacy.fingerprintingProtection" = true;
-        # "privacy.trackingprotection.enabled" = true;
-      };
-      preferencesStatus = "locked";
-    };
-
     thunderbird = {
       enable = true;
       package = pkgs.thunderbird-latest;
@@ -1792,7 +1737,7 @@ in
 
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
-      CHROME_EXECUTABLE = "chromium";
+      CHROME_EXECUTABLE = "chromium-browser";
     };
 
     shellAliases = {
@@ -2729,7 +2674,7 @@ in
         "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop"; # .pptx
         "application/vnd.openxmlformats-officedocument.presentationml.template" = "impress.desktop"; # .potx
 
-        "application/pdf" = "firefox-devedition.desktop";
+        "application/pdf" = "chromium-browser.desktop";
 
         "font/collection" = "org.gnome.font-viewer.desktop";
         "font/otf" = "org.gnome.font-viewer.desktop";
@@ -2748,8 +2693,8 @@ in
         "application/x-tar" = "org.gnome.FileRoller.desktop";
         "application/zip" = "org.gnome.FileRoller.desktop";
 
-        "x-scheme-handler/http" = "firefox-devedition.desktop";
-        "x-scheme-handler/https" = "firefox-devedition.desktop";
+        "x-scheme-handler/http" = "chromium-browser.desktop";
+        "x-scheme-handler/https" = "chromium-browser.desktop";
 
         "x-scheme-handler/mailto" = "thunderbird.desktop";
       };
@@ -3031,8 +2976,8 @@ in
 
               "SUPER, U, exec, missioncenter"
 
-              "SUPER, W, exec, firefox-devedition"
-              "SUPER ALT, W, exec, firefox-devedition --private-window"
+              "SUPER, W, exec, chromium-browser"
+              "SUPER ALT, W, exec, chromium-browser --incognito"
 
               ", XF86Mail, exec, thunderbird"
               "SUPER, M, exec, thunderbird"
@@ -3158,7 +3103,7 @@ in
             input = {
               kb_layout = "us";
 
-              numlock_by_default = true;
+              numlock_by_default = false;
 
               follow_mouse = 1;
               focus_on_close = 1;
@@ -4244,7 +4189,6 @@ in
                     esbenp.prettier-vscode
                     ethansk.restore-terminals
                     fabiospampinato.vscode-open-in-github
-                    firefox-devtools.vscode-firefox-debug
                     formulahendry.auto-close-tag
                     formulahendry.auto-rename-tag
                     formulahendry.code-runner
@@ -4427,12 +4371,62 @@ in
             dictionaries = with pkgs.hunspellDictsChromium; [
               en_US
             ];
-            nativeMessagingHosts = config.programs.firefox.nativeMessagingHosts.packages;
+            nativeMessagingHosts = with pkgs; [
+              keepassxc
+            ];
+
+            extensions = [
+              {
+                # "uBlock Origin Lite"
+                id = "ddkjiahejlhfcafbddmgiahcphecmpfh";
+              }
+              {
+                # "Privacy Badger"
+                id = "pkehgijcmpdhfbdbbnkijodmdjhbjlgp";
+              }
+              {
+                # "Decentraleyes"
+                id = "ldpochfccmkkmhdbclfhpagapcfdljkj";
+              }
+              {
+                # "SponsorBlock for YouTube - Skip Sponsorships"
+                id = "mnjggcdmjocbbbhaepdhchncahnbgone";
+              }
+              {
+                # "KeePassXC-Browser"
+                id = "oboonakemofpalcgghocfoadofidjkkk";
+              }
+              {
+                # "Flutter Widget Catcher"
+                id = "fmodefdejfdmjjlfdodklhkoichndcgg";
+              }
+              {
+                # "WhatFont"
+                id = "jabopobgcpjmedljpbcaablpmlmfcogm";
+              }
+              {
+                # "Search by Image"
+                id = "cnojnbdhbhnkbcieeekonklommdnndci";
+              }
+              {
+                # "SingleFile"
+                id = "mpiodijhokgodhhofbcjdecpffjipkle";
+              }
+              {
+                # "AI Grammar Checker & Paraphraser – LanguageTool"
+                id = "oldceeleldhonbafppcapldpdifcinji";
+              }
+              {
+                # "Tab Disguiser"
+                id = "goaelnlldimhbhipidknnkijnmfgddoc";
+              }
+            ]; # It does not work with Ungoogled Chromium. I currently install the extensions manually.
 
             commandLineArgs = [
               "--ozone-platform=wayland"
               "--password-store=gnome"
               "--proxy-auto-detect"
+              "--extension-mime-request-handling=always-prompt-for-install"
             ];
           };
 
