@@ -141,6 +141,8 @@ let
     url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
   };
 
+  should_numlock_be_enabled_by_default = false;
+
   secrets = import ./secrets.nix;
 in
 {
@@ -819,7 +821,7 @@ in
         enableHidpi = true;
         theme = "sddm-astronaut-theme";
 
-        autoNumlock = false;
+        autoNumlock = should_numlock_be_enabled_by_default;
 
         autoLogin.relogin = false;
 
@@ -3058,7 +3060,7 @@ in
 
               mouse_move_focuses_monitor = true;
 
-              disable_hyprland_logo = false;
+              disable_hyprland_logo = true;
               force_default_wallpaper = 1;
               disable_splash_rendering = true;
 
@@ -3103,7 +3105,7 @@ in
             input = {
               kb_layout = "us";
 
-              numlock_by_default = false;
+              numlock_by_default = should_numlock_be_enabled_by_default;
 
               follow_mouse = 1;
               focus_on_close = 1;
@@ -4302,14 +4304,14 @@ in
                     {
                       name = "vscode-serial-monitor";
                       publisher = "ms-vscode";
-                      version = "0.13.250503001";
-                      sha256 = "iuni/DybnUxdbvggvlCidurW4GevVPvwYO7/5i+S1ok=";
+                      version = "0.13.250628001";
+                      sha256 = "uzIwkBQLA9OXNB+1Oqydw3NtJ97VKzAsiovz7XCjCvM=";
                     }
                     {
                       name = "vscode-print";
                       publisher = "pdconsec";
-                      version = "1.4.0";
-                      sha256 = "jAZ1F5neIFSevy0bNuHabh8pUbm5vuuxjmot08GctPc=";
+                      version = "1.4.1";
+                      sha256 = "abmVM9yVawX9OpS3ms7LQGJCXmefgavaVg/8zPPhMQQ=";
                     }
                   ];
 
