@@ -697,7 +697,7 @@ in
     };
 
     fwupd = {
-      enable = true;
+      enable = false; # Temporary
       package = pkgs.fwupd;
     };
 
@@ -1757,12 +1757,8 @@ in
     systemPackages =
       with pkgs;
       [
-        # amrnb
-        # amrwb
-        # appimagekit
-        # gnss-sdr
-        # logdy
-        # reiser4progs
+        # reiser4progs # Marked Broken
+        # tilix # Temporary
         above
         acl
         aircrack-ng
@@ -1903,6 +1899,7 @@ in
         iftop
         inkscape
         inotify-tools
+        inspectrum
         isocodes
         jellyfin-media-player
         jfsutils
@@ -1956,6 +1953,7 @@ in
         libxfs
         libzip
         linuxConsoleTools
+        logdy
         lrzip
         lshw
         lsof
@@ -2039,6 +2037,7 @@ in
         rpmextract
         rpPPPoE
         rtl-sdr-librtlsdr
+        rtl-sdr-osmocom
         rzip
         sane-backends
         sbc
@@ -2056,7 +2055,6 @@ in
         sleuthkit
         slurp
         smartmontools
-        smbmap
         songrec
         soundconverter
         spice
@@ -2077,7 +2075,6 @@ in
         texliveFull
         theharvester
         thermald
-        tilix
         time
         tor-browser
         tree
@@ -4434,6 +4431,7 @@ in
             enable = true;
             package = pkgs.obs-studio;
             plugins = with pkgs.obs-studio-plugins; [
+              # obs-vertical-canvas # Temporary
               droidcam-obs
               input-overlay
               obs-3d-effect
@@ -4458,7 +4456,6 @@ in
               obs-transition-table
               obs-tuna
               obs-vaapi
-              obs-vertical-canvas
               obs-vintage-filter
               obs-vkcapture
               waveform
@@ -4486,9 +4483,7 @@ in
 
 # FIXME: 05ac-033e-Gamepad > Rumble
 # FIXME: ELAN7001 SPI Fingerprint Sensor
-# FIXME: Hyprpaper Delay
-# FIXME: MariaDB > Login
-# FIXME: Notifications
-# FIXME: Wofi > Window > Border Radius > Background
 # FIXME: hardinfo2
+# FIXME: MariaDB > Login
 # FIXME: rpi-imager
+# FIXME: Wofi > Window > Border Radius > Transperant Background
