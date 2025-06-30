@@ -4368,9 +4368,9 @@ in
             dictionaries = with pkgs.hunspellDictsChromium; [
               en_US
             ];
-            nativeMessagingHosts = with pkgs; [
-              keepassxc
-            ];
+            # nativeMessagingHosts = with pkgs; [
+            #   keepassxc
+            # ];
 
             extensions = [
               {
@@ -4432,33 +4432,23 @@ in
             package = pkgs.obs-studio;
             plugins = with pkgs.obs-studio-plugins; [
               # obs-vertical-canvas # Temporary
-              droidcam-obs
-              input-overlay
               obs-3d-effect
               obs-backgroundremoval
-              obs-color-monitor
               obs-composite-blur
-              obs-freeze-filter
               obs-gradient-source
               obs-gstreamer
               obs-move-transition
               obs-multi-rtmp
               obs-mute-filter
               obs-pipewire-audio-capture
-              obs-replay-source
-              obs-rgb-levels
               obs-scale-to-sound
-              obs-shaderfilter
               obs-source-clone
               obs-source-record
               obs-source-switcher
               obs-text-pthread
               obs-transition-table
-              obs-tuna
               obs-vaapi
-              obs-vintage-filter
               obs-vkcapture
-              waveform
             ];
           };
 

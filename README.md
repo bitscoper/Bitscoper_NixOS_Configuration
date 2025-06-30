@@ -27,6 +27,7 @@ My NixOS Configuration
 
 - **[Polkit](https://github.com/polkit-org/polkit/) Agent:** [Soteria](https://github.com/imvaskel/soteria/)
 - **Secret Service / Keyring:** [GNOME Keyring](https://gitlab.gnome.org/GNOME/gnome-keyring/)
+- **Password Manager:** [KeePassXC](https://github.com/keepassxreboot/keepassxc/)
 - **Status Bar:** [Waybar](https://github.com/Alexays/Waybar/)
 - **Notification Daemon and Center:** [Sway Notification Center](https://github.com/ErikReider/SwayNotificationCenter/)
 - **Input Method (IM) Framework:** [Fcitx 5](https://github.com/fcitx/fcitx5/)
