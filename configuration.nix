@@ -138,7 +138,7 @@ let
   animation_duration = 200; # ms
 
   wallpaper = builtins.fetchurl {
-    url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
+    url = "https://raw.githubusercontent.com/bitscoper/Bitscoper_NixOS_Configuration/refs/heads/main/Wallpaper.jpg";
   };
 
   should_numlock_be_enabled_by_default = false;
@@ -1764,13 +1764,10 @@ in
         aircrack-ng
         alac
         alpaca
-        amass
         android_sdk # Custom
         android-tools
         apkeep
         apkleaks
-        apksigner
-        aptdec
         aria2
         aribb24
         aribb25
@@ -1795,8 +1792,6 @@ in
         celestia
         celt
         certbot-full
-        chainsaw
-        chmlib
         clang
         clang-analyzer
         clang-manpages
@@ -1824,7 +1819,6 @@ in
         dconf2nix
         debase
         dig
-        dirb
         dmg2img
         dmidecode
         dnsrecon
@@ -1874,26 +1868,23 @@ in
         gource
         gparted
         gpredict
-        graphs
+        graphs # Needs Description
         grim
         gsm
         gtk-vnc
         guestfs-tools
         gzip
         hardinfo2
-        hashcat
         hdparm
         hfsprogs
         hieroglyphic
         host
         hw-probe
-        hwloc
         hydra-check
         hyprland-protocols
         hyprland-qt-support
         hyprland-qtutils
         hyprls
-        hyprsysteminfo
         i2c-tools
         iaito
         iftop
@@ -1982,9 +1973,7 @@ in
         mtools
         mtr-gui
         nautilus
-        netdiscover
         nethogs
-        netsniff-ng
         networkmanagerapplet
         ngrok # Unfree
         nikto
@@ -2017,7 +2006,6 @@ in
         pciutils
         pcre
         php84
-        pjsip
         pkg-config
         platformio
         playerctl
@@ -2064,7 +2052,6 @@ in
         sslscan
         subfinder
         subtitleedit
-        swaks
         switcheroo
         szyszka
         tagger
@@ -2092,7 +2079,6 @@ in
         usbimager
         usbutils
         util-linux
-        vcdimager
         virt-viewer
         virtio-win
         virtiofsd
@@ -2113,7 +2099,6 @@ in
         whatfiles
         which
         whois
-        wifite2
         win-spice
         wl-clipboard
         woff2
