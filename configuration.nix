@@ -138,7 +138,7 @@ let
   animation_duration = 200; # ms
 
   wallpaper = builtins.fetchurl {
-    url = "https://raw.githubusercontent.com/bitscoper/Bitscoper_NixOS_Configuration/refs/heads/main/Wallpaper.jpg";
+    url = "https://raw.githubusercontent.com/bitscoper/Bitscoper_NixOS_Configuration/refs/heads/main/Wallpaper/Wallpaper.png";
   };
 
   should_numlock_be_enabled_by_default = false;
