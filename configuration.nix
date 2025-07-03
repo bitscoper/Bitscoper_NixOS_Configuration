@@ -137,8 +137,12 @@ let
 
   animation_duration = 200; # ms
 
-  wallpaper = builtins.fetchurl {
-    url = "https://raw.githubusercontent.com/bitscoper/Bitscoper_NixOS_Configuration/refs/heads/main/Wallpaper/Wallpaper.png";
+  sddm_and_gtklock_wallpaper = builtins.fetchurl {
+    url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
+  };
+
+  hyprpaper_wallpaper = builtins.fetchurl {
+    url = "https://raw.githubusercontent.com/bitscoper/Bitscoper_NixOS_Configuration/refs/heads/main/Wallpaper/Desktop_Wallpaper.png";
   };
 
   should_numlock_be_enabled_by_default = false;
@@ -214,17 +218,17 @@ in
     plymouth = {
       enable = true;
 
-      # themePackages = [
-      #   pkgs.nixos-bgrt-plymouth
-      # ];
-      # theme = "nixos-bgrt";
-
-      theme = "black_hud";
       themePackages = [
-        (pkgs.adi1090x-plymouth-themes.override {
-          selected_themes = [ config.boot.plymouth.theme ];
-        })
+        pkgs.nixos-bgrt-plymouth
       ];
+      theme = "nixos-bgrt";
+
+      # theme = "black_hud";
+      # themePackages = [
+      #   (pkgs.adi1090x-plymouth-themes.override {
+      #     selected_themes = [ config.boot.plymouth.theme ];
+      #   })
+      # ];
 
       font = "${pkgs.nerd-fonts.noto}/share/fonts/truetype/NerdFonts/Noto/NotoSansNerdFont-Regular.ttf";
 
@@ -1300,7 +1304,7 @@ in
 
       style = ''
         window {
-          background-image: url("${wallpaper}");
+          background-image: url("${sddm_and_gtklock_wallpaper}");
           background-repeat: no-repeat;
           background-position: center;
           background-size: cover;
@@ -2130,7 +2134,7 @@ in
             BackgroundColor = colors.hex.background;
             BackgroundHorizontalAlignment = "center";
             BackgroundVerticalAlignment = "center";
-            Background = wallpaper;
+            Background = sddm_and_gtklock_wallpaper;
             CropBackground = false;
             DimBackgroundImage = "0.0";
 
@@ -3422,11 +3426,11 @@ in
               splash = false;
 
               preload = [
-                wallpaper
+                hyprpaper_wallpaper
               ];
 
               wallpaper = [
-                ", ${wallpaper}"
+                ", ${hyprpaper_wallpaper}"
               ];
             };
           };
