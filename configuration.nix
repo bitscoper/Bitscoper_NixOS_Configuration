@@ -2,8 +2,9 @@
 
 {
   config,
-  lib,
+  options,
   pkgs,
+  lib,
   ...
 }:
 let
@@ -21,16 +22,23 @@ let
       };
   android_sdk = android_nixpkgs.sdk (
     sdkPkgs: with sdkPkgs; [
-      # ndk-29-0-13599879
-      # ndk-bundle
-      build-tools-35-0-1
+      build-tools-35-0-0
       build-tools-36-0-0
+      cmake-3-22-1
       cmdline-tools-latest
       emulator
       ndk-26-3-11579264
+      ndk-27-0-12077973
+      ndk-29-0-13599879
       platform-tools
+      platforms-android-30
+      platforms-android-31
+      platforms-android-32
+      platforms-android-33
+      platforms-android-34
       platforms-android-35
       platforms-android-36
+      system-images-android-36-google-apis-playstore-arm64-v8a
       system-images-android-36-google-apis-playstore-x86-64
       tools
     ]
@@ -581,7 +589,7 @@ in
           SecureConnections = "on";
           Privacy = "off";
 
-          Experimental = true;
+          Experimental = true; # Shows Battery Percentage
           KernelExperimental = true;
         };
 
@@ -672,6 +680,8 @@ in
 
   systemd = {
     package = pkgs.systemd;
+
+    enableCgroupAccounting = true;
 
     packages = with pkgs; [
       cloudflare-warp # Unfree
@@ -1253,12 +1263,14 @@ in
       enable = true;
       package = pkgs.nix-ld;
 
-      libraries = with pkgs; [
-        glib.out
-        libGL
-        llvmPackages.stdenv.cc.cc.lib
-        stdenv.cc.cc.lib
-      ];
+      libraries =
+        options.programs.nix-ld.libraries.default
+        ++ (with pkgs; [
+          glib.out
+          libGL
+          llvmPackages.stdenv.cc.cc.lib
+          stdenv.cc.cc.lib
+        ]);
     };
 
     java = {
@@ -1721,7 +1733,6 @@ in
 
     variables = {
       ANDROID_SDK_ROOT = android_sdk_path;
-      # ANDROID_NDK_ROOT = "${android_sdk_path}/ndk-bundle";
       ANDROID_HOME = android_sdk_path;
     };
 
@@ -1833,7 +1844,6 @@ in
         gcc
         gdb
         ghidra
-        ghostty
         gimp-with-plugins
         git-doc
         git-filter-repo
@@ -3515,59 +3525,6 @@ in
         };
 
         programs = {
-          wofi = {
-            enable = true;
-            package = pkgs.wofi;
-
-            settings = {
-              normal_window = false;
-              layer = "overlay";
-              location = "center";
-
-              gtk_dark = true;
-              columns = 2;
-              dynamic_lines = false;
-              lines = 9; # 9 -1 = 8
-              hide_scroll = false;
-
-              hide_search = false;
-              prompt = "Search";
-              show_all = true;
-              allow_markup = true;
-              allow_images = true;
-              image_size = 32;
-              no_actions = true;
-
-              insensitive = true;
-
-              single_click = true;
-              term = "ghostty";
-            };
-
-            style = ''
-              window {
-                border-radius: ${toString design_factor}px;
-              }
-
-              #outer-box {
-                padding: 16px;
-              }
-
-              #inner-box {
-                margin-top: 16px;
-              }
-
-              #entry {
-                margin-top: 4px;
-                margin-bottom: 4px;
-              }
-
-              #img {
-                margin-right: 4px;
-              }
-            '';
-          };
-
           waybar = {
             enable = true;
             package = pkgs.waybar;
@@ -4193,6 +4150,138 @@ in
                 background-color: ${colors.hex.base_background};
               }
             '';
+          };
+
+          wofi = {
+            enable = true;
+            package = pkgs.wofi;
+
+            settings = {
+              normal_window = false;
+              layer = "overlay";
+              location = "center";
+
+              gtk_dark = true;
+              columns = 2;
+              dynamic_lines = false;
+              lines = 9; # 9 -1 = 8
+              hide_scroll = false;
+
+              hide_search = false;
+              prompt = "Search";
+              show_all = true;
+              allow_markup = true;
+              allow_images = true;
+              image_size = 32;
+              no_actions = true;
+
+              insensitive = true;
+
+              single_click = true;
+              term = "ghostty";
+            };
+
+            style = ''
+              window {
+                border-radius: ${toString design_factor}px;
+              }
+
+              #outer-box {
+                padding: 16px;
+              }
+
+              #inner-box {
+                margin-top: 16px;
+              }
+
+              #entry {
+                margin-top: 4px;
+                margin-bottom: 4px;
+              }
+
+              #img {
+                margin-right: 4px;
+              }
+            '';
+          };
+
+          ghostty = {
+            enable = true;
+            package = pkgs.ghostty;
+
+            enableBashIntegration = true;
+            enableFishIntegration = true;
+
+            installBatSyntax = true;
+
+            clearDefaultKeybinds = false;
+
+            settings = {
+              gtk-single-instance = false;
+              gtk-opengl-debug = false;
+              linux-cgroup = "always";
+              linux-cgroup-hard-fail = true;
+              shell-integration-features = "cursor,sudo,title";
+
+              window-vsync = true;
+              window-theme = "dark";
+              gtk-titlebar = true;
+              gtk-tabs-location = "top";
+              gtk-wide-tabs = true;
+              window-title-font-family = font_preferences.name.sans_serif;
+              font-family = font_preferences.name.mono;
+              font-size = font_preferences.size;
+              background = colors.hex.background;
+              background-opacity = 1.0;
+              background-blur = false;
+              window-titlebar-foreground = colors.hex.foreground;
+              foreground = colors.hex.foreground;
+              cursor-style = "bar";
+              cursor-style-blink = true;
+              cursor-color = colors.hex.foreground;
+              cursor-opacity = 1.0;
+              selection-background = colors.hex.selected_background;
+
+              app-notifications = true;
+              window-subtitle = "working-directory";
+              window-save-state = "never";
+
+              window-new-tab-position = "current";
+
+              resize-overlay = "always";
+              resize-overlay-position = "center";
+
+              focus-follows-mouse = true;
+              clipboard-read = "allow";
+              clipboard-write = "allow";
+              clipboard-trim-trailing-spaces = false;
+              clipboard-paste-protection = false;
+
+              vt-kam-allowed = false;
+              cursor-click-to-move = true;
+              mouse-hide-while-typing = false;
+              desktop-notifications = true;
+
+              quit-after-last-window-closed = false;
+
+              maximize = false;
+              fullscreen = false;
+
+              title-report = false;
+
+              wait-after-command = true;
+              confirm-close-surface = true;
+
+              window-decoration = "client";
+
+              working-directory = "inherit";
+              window-inherit-working-directory = true;
+
+              window-padding-balance = true;
+              window-padding-x = builtins.floor (design_factor * 0.50); # 8
+              window-padding-y = builtins.floor (design_factor * 0.50); # 8
+              window-padding-color = "background";
+            };
           };
 
           dircolors = {
