@@ -21,10 +21,15 @@ let
       };
   android_sdk = android_nixpkgs.sdk (
     sdkPkgs: with sdkPkgs; [
+      # ndk-29-0-13599879
+      # ndk-bundle
+      build-tools-35-0-1
       build-tools-36-0-0
       cmdline-tools-latest
       emulator
+      ndk-26-3-11579264
       platform-tools
+      platforms-android-35
       platforms-android-36
       system-images-android-36-google-apis-playstore-x86-64
       tools
@@ -1258,7 +1263,7 @@ in
 
     java = {
       enable = true;
-      package = pkgs.jdk23;
+      package = pkgs.jdk24;
 
       binfmt = true;
     };
@@ -1472,7 +1477,7 @@ in
 
     nautilus-open-any-terminal = {
       enable = true;
-      terminal = "tilix";
+      terminal = "ghostty";
     };
 
     file-roller.enable = true;
@@ -1514,28 +1519,6 @@ in
             "com/saivert/pwvucontrol" = {
               beep-on-volume-changes = true;
               enable-overamplification = true;
-            };
-
-            "com/gexperts/Tilix" = {
-              auto-hide-mouse = false;
-              close-with-last-session = false;
-              control-scroll-zoom = true;
-              enable-wide-handle = true;
-              encodings = [
-                "UTF-8"
-              ];
-              focus-follow-mouse = true;
-              middle-click-close = false;
-              new-instance-mode = "new-window";
-              paste-strip-first-char = false;
-              paste-strip-trailing-whitespace = false;
-              tab-position = "top";
-              terminal-title-show-when-single = true;
-              terminal-title-style = "normal";
-              theme-variant = "dark";
-              use-overlay-scrollbar = false;
-              window-save-state = false;
-              window-style = "normal";
             };
 
             "org/gnome/desktop/privacy" = {
@@ -1738,6 +1721,7 @@ in
 
     variables = {
       ANDROID_SDK_ROOT = android_sdk_path;
+      # ANDROID_NDK_ROOT = "${android_sdk_path}/ndk-bundle";
       ANDROID_HOME = android_sdk_path;
     };
 
@@ -1762,7 +1746,6 @@ in
       with pkgs;
       [
         # reiser4progs # Marked Broken
-        # tilix # Temporary
         above
         acl
         aircrack-ng
@@ -1850,6 +1833,7 @@ in
         gcc
         gdb
         ghidra
+        ghostty
         gimp-with-plugins
         git-doc
         git-filter-repo
@@ -1872,6 +1856,8 @@ in
         gource
         gparted
         gpredict
+        gradle
+        gradle-completion
         graphs # Needs Description
         grim
         gsm
@@ -2310,6 +2296,101 @@ in
       defaultApplications = {
         "inode/directory" = "nautilus.desktop";
 
+        "text/1d-interleaved-parityfec" = "codium.desktop";
+        "text/cache-manifest" = "codium.desktop";
+        "text/calendar" = "codium.desktop";
+        "text/cql-expression" = "codium.desktop";
+        "text/cql-identifier" = "codium.desktop";
+        "text/cql" = "codium.desktop";
+        "text/css" = "codium.desktop";
+        "text/csv-schema" = "codium.desktop";
+        "text/csv" = "codium.desktop";
+        "text/dns" = "codium.desktop";
+        "text/encaprtp" = "codium.desktop";
+        "text/enriched" = "codium.desktop";
+        "text/example" = "codium.desktop";
+        "text/fhirpath" = "codium.desktop";
+        "text/flexfec" = "codium.desktop";
+        "text/fwdred" = "codium.desktop";
+        "text/gff3" = "codium.desktop";
+        "text/grammar-ref-list" = "codium.desktop";
+        "text/hl7v2" = "codium.desktop";
+        "text/html" = "codium.desktop";
+        "text/javascript" = "codium.desktop";
+        "text/jcr-cnd" = "codium.desktop";
+        "text/markdown" = "codium.desktop";
+        "text/mizar" = "codium.desktop";
+        "text/n3" = "codium.desktop";
+        "text/parameters" = "codium.desktop";
+        "text/parityfec" = "codium.desktop";
+        "text/plain" = "codium.desktop";
+        "text/provenance-notation" = "codium.desktop";
+        "text/prs.fallenstein.rst" = "codium.desktop";
+        "text/prs.lines.tag" = "codium.desktop";
+        "text/prs.prop.logic" = "codium.desktop";
+        "text/prs.texi" = "codium.desktop";
+        "text/raptorfec" = "codium.desktop";
+        "text/RED" = "codium.desktop";
+        "text/rfc822-headers" = "codium.desktop";
+        "text/richtext" = "codium.desktop";
+        "text/rtf" = "codium.desktop";
+        "text/rtp-enc-aescm128" = "codium.desktop";
+        "text/rtploopback" = "codium.desktop";
+        "text/rtx" = "codium.desktop";
+        "text/SGML" = "codium.desktop";
+        "text/shaclc" = "codium.desktop";
+        "text/shex" = "codium.desktop";
+        "text/spdx" = "codium.desktop";
+        "text/strings" = "codium.desktop";
+        "text/t140" = "codium.desktop";
+        "text/tab-separated-values" = "codium.desktop";
+        "text/troff" = "codium.desktop";
+        "text/turtle" = "codium.desktop";
+        "text/ulpfec" = "codium.desktop";
+        "text/uri-list" = "codium.desktop";
+        "text/vcard" = "codium.desktop";
+        "text/vnd.a" = "codium.desktop";
+        "text/vnd.abc" = "codium.desktop";
+        "text/vnd.ascii-art" = "codium.desktop";
+        "text/vnd.curl" = "codium.desktop";
+        "text/vnd.debian.copyright" = "codium.desktop";
+        "text/vnd.DMClientScript" = "codium.desktop";
+        "text/vnd.dvb.subtitle" = "codium.desktop";
+        "text/vnd.esmertec.theme-descriptor" = "codium.desktop";
+        "text/vnd.exchangeable" = "codium.desktop";
+        "text/vnd.familysearch.gedcom" = "codium.desktop";
+        "text/vnd.ficlab.flt" = "codium.desktop";
+        "text/vnd.fly" = "codium.desktop";
+        "text/vnd.fmi.flexstor" = "codium.desktop";
+        "text/vnd.gml" = "codium.desktop";
+        "text/vnd.graphviz" = "codium.desktop";
+        "text/vnd.hans" = "codium.desktop";
+        "text/vnd.hgl" = "codium.desktop";
+        "text/vnd.in3d.3dml" = "codium.desktop";
+        "text/vnd.in3d.spot" = "codium.desktop";
+        "text/vnd.IPTC.NewsML" = "codium.desktop";
+        "text/vnd.IPTC.NITF" = "codium.desktop";
+        "text/vnd.latex-z" = "codium.desktop";
+        "text/vnd.motorola.reflex" = "codium.desktop";
+        "text/vnd.ms-mediapackage" = "codium.desktop";
+        "text/vnd.net2phone.commcenter.command" = "codium.desktop";
+        "text/vnd.radisys.msml-basic-layout" = "codium.desktop";
+        "text/vnd.senx.warpscript" = "codium.desktop";
+        "text/vnd.sosi" = "codium.desktop";
+        "text/vnd.sun.j2me.app-descriptor" = "codium.desktop";
+        "text/vnd.trolltech.linguist" = "codium.desktop";
+        "text/vnd.typst" = "codium.desktop";
+        "text/vnd.vcf" = "codium.desktop";
+        "text/vnd.wap.si" = "codium.desktop";
+        "text/vnd.wap.sl" = "codium.desktop";
+        "text/vnd.wap.wml" = "codium.desktop";
+        "text/vnd.wap.wmlscript" = "codium.desktop";
+        "text/vnd.zoo.kcl" = "codium.desktop";
+        "text/vtt" = "codium.desktop";
+        "text/wgsl" = "codium.desktop";
+        "text/xml-external-parsed-entity" = "codium.desktop";
+        "text/xml" = "codium.desktop";
+
         "image/aces" = "org.gnome.eog.desktop";
         "image/apng" = "org.gnome.eog.desktop";
         "image/avci" = "org.gnome.eog.desktop";
@@ -2323,10 +2404,10 @@ in
         "image/fits" = "org.gnome.eog.desktop";
         "image/g3fax" = "org.gnome.eog.desktop";
         "image/gif" = "org.gnome.eog.desktop";
-        "image/heic" = "org.gnome.eog.desktop";
         "image/heic-sequence" = "org.gnome.eog.desktop";
-        "image/heif" = "org.gnome.eog.desktop";
+        "image/heic" = "org.gnome.eog.desktop";
         "image/heif-sequence" = "org.gnome.eog.desktop";
+        "image/heif" = "org.gnome.eog.desktop";
         "image/hej2k" = "org.gnome.eog.desktop";
         "image/hsj2" = "org.gnome.eog.desktop";
         "image/ief" = "org.gnome.eog.desktop";
@@ -2357,8 +2438,8 @@ in
         "image/pwg-raster" = "org.gnome.eog.desktop";
         "image/svg+xml" = "org.gnome.eog.desktop";
         "image/t38" = "org.gnome.eog.desktop";
-        "image/tiff" = "org.gnome.eog.desktop";
         "image/tiff-fx" = "org.gnome.eog.desktop";
+        "image/tiff" = "org.gnome.eog.desktop";
         "image/vnd.adobe.photoshop" = "org.gnome.eog.desktop";
         "image/vnd.airzip.accelerator.azv" = "org.gnome.eog.desktop";
         "image/vnd.cns.inf2" = "org.gnome.eog.desktop";
@@ -2391,26 +2472,38 @@ in
         "image/vnd.zbrush.pcx" = "org.gnome.eog.desktop";
         "image/webp" = "org.gnome.eog.desktop";
         "image/wmf" = "org.gnome.eog.desktop";
-        "image/x-emf" = "org.gnome.eog.desktop";
-        "image/x-wmf" = "org.gnome.eog.desktop";
 
         "audio/1d-interleaved-parityfec" = "vlc.desktop";
         "audio/32kadpcm" = "vlc.desktop";
         "audio/3gpp" = "vlc.desktop";
         "audio/3gpp2" = "vlc.desktop";
-        "audio/AMR" = "vlc.desktop";
+        "audio/aac" = "vlc.desktop";
+        "audio/ac3" = "vlc.desktop";
         "audio/AMR-WB" = "vlc.desktop";
+        "audio/amr-wb+" = "vlc.desktop";
+        "audio/AMR" = "vlc.desktop";
+        "audio/aptx" = "vlc.desktop";
+        "audio/asc" = "vlc.desktop";
         "audio/ATRAC-ADVANCED-LOSSLESS" = "vlc.desktop";
         "audio/ATRAC-X" = "vlc.desktop";
         "audio/ATRAC3" = "vlc.desktop";
+        "audio/basic" = "vlc.desktop";
         "audio/BV16" = "vlc.desktop";
         "audio/BV32" = "vlc.desktop";
+        "audio/clearmode" = "vlc.desktop";
         "audio/CN" = "vlc.desktop";
         "audio/DAT12" = "vlc.desktop";
+        "audio/dls" = "vlc.desktop";
+        "audio/dsr-es201108" = "vlc.desktop";
+        "audio/dsr-es202050" = "vlc.desktop";
+        "audio/dsr-es202211" = "vlc.desktop";
+        "audio/dsr-es202212" = "vlc.desktop";
         "audio/DV" = "vlc.desktop";
         "audio/DVI4" = "vlc.desktop";
-        "audio/EVRC" = "vlc.desktop";
+        "audio/eac3" = "vlc.desktop";
+        "audio/encaprtp" = "vlc.desktop";
         "audio/EVRC-QCP" = "vlc.desktop";
+        "audio/EVRC" = "vlc.desktop";
         "audio/EVRC0" = "vlc.desktop";
         "audio/EVRC1" = "vlc.desktop";
         "audio/EVRCB" = "vlc.desktop";
@@ -2423,6 +2516,9 @@ in
         "audio/EVRCWB0" = "vlc.desktop";
         "audio/EVRCWB1" = "vlc.desktop";
         "audio/EVS" = "vlc.desktop";
+        "audio/flac" = "vlc.desktop";
+        "audio/flexfec" = "vlc.desktop";
+        "audio/fwdred" = "vlc.desktop";
         "audio/G711-0" = "vlc.desktop";
         "audio/G719" = "vlc.desktop";
         "audio/G722" = "vlc.desktop";
@@ -2437,85 +2533,68 @@ in
         "audio/G7291" = "vlc.desktop";
         "audio/G729D" = "vlc.desktop";
         "audio/G729E" = "vlc.desktop";
-        "audio/GSM" = "vlc.desktop";
         "audio/GSM-EFR" = "vlc.desktop";
         "audio/GSM-HR-08" = "vlc.desktop";
+        "audio/GSM" = "vlc.desktop";
+        "audio/iLBC" = "vlc.desktop";
+        "audio/ip-mr_v2.5" = "vlc.desktop";
         "audio/L16" = "vlc.desktop";
         "audio/L20" = "vlc.desktop";
         "audio/L24" = "vlc.desktop";
         "audio/L8" = "vlc.desktop";
         "audio/LPC" = "vlc.desktop";
+        "audio/matroska" = "vlc.desktop";
         "audio/MELP" = "vlc.desktop";
         "audio/MELP1200" = "vlc.desktop";
         "audio/MELP2400" = "vlc.desktop";
         "audio/MELP600" = "vlc.desktop";
-        "audio/MP4A-LATM" = "vlc.desktop";
-        "audio/MPA" = "vlc.desktop";
-        "audio/PCMA" = "vlc.desktop";
-        "audio/PCMA-WB" = "vlc.desktop";
-        "audio/PCMU" = "vlc.desktop";
-        "audio/PCMU-WB" = "vlc.desktop";
-        "audio/QCELP" = "vlc.desktop";
-        "audio/RED" = "vlc.desktop";
-        "audio/SMV" = "vlc.desktop";
-        "audio/SMV-QCP" = "vlc.desktop";
-        "audio/SMV0" = "vlc.desktop";
-        "audio/TETRA_ACELP" = "vlc.desktop";
-        "audio/TETRA_ACELP_BB" = "vlc.desktop";
-        "audio/TSVCIS" = "vlc.desktop";
-        "audio/UEMCLIP" = "vlc.desktop";
-        "audio/VDVI" = "vlc.desktop";
-        "audio/VMR-WB" = "vlc.desktop";
-        "audio/aac" = "vlc.desktop";
-        "audio/ac3" = "vlc.desktop";
-        "audio/amr-wb+" = "vlc.desktop";
-        "audio/aptx" = "vlc.desktop";
-        "audio/asc" = "vlc.desktop";
-        "audio/basic" = "vlc.desktop";
-        "audio/clearmode" = "vlc.desktop";
-        "audio/dls" = "vlc.desktop";
-        "audio/dsr-es201108" = "vlc.desktop";
-        "audio/dsr-es202050" = "vlc.desktop";
-        "audio/dsr-es202211" = "vlc.desktop";
-        "audio/dsr-es202212" = "vlc.desktop";
-        "audio/eac3" = "vlc.desktop";
-        "audio/encaprtp" = "vlc.desktop";
-        "audio/flac" = "vlc.desktop";
-        "audio/flexfec" = "vlc.desktop";
-        "audio/fwdred" = "vlc.desktop";
-        "audio/iLBC" = "vlc.desktop";
-        "audio/ip-mr_v2.5" = "vlc.desktop";
-        "audio/matroska" = "vlc.desktop";
         "audio/mhas" = "vlc.desktop";
         "audio/midi-clip" = "vlc.desktop";
         "audio/mobile-xmf" = "vlc.desktop";
         "audio/mp4" = "vlc.desktop";
+        "audio/MP4A-LATM" = "vlc.desktop";
         "audio/mpa-robust" = "vlc.desktop";
+        "audio/MPA" = "vlc.desktop";
         "audio/mpeg" = "vlc.desktop";
         "audio/mpeg4-generic" = "vlc.desktop";
         "audio/ogg" = "vlc.desktop";
         "audio/opus" = "vlc.desktop";
         "audio/parityfec" = "vlc.desktop";
+        "audio/PCMA-WB" = "vlc.desktop";
+        "audio/PCMA" = "vlc.desktop";
+        "audio/PCMU-WB" = "vlc.desktop";
+        "audio/PCMU" = "vlc.desktop";
         "audio/prs.sid" = "vlc.desktop";
+        "audio/QCELP" = "vlc.desktop";
         "audio/raptorfec" = "vlc.desktop";
+        "audio/RED" = "vlc.desktop";
         "audio/rtp-enc-aescm128" = "vlc.desktop";
         "audio/rtp-midi" = "vlc.desktop";
         "audio/rtploopback" = "vlc.desktop";
         "audio/rtx" = "vlc.desktop";
         "audio/scip" = "vlc.desktop";
+        "audio/SMV-QCP" = "vlc.desktop";
+        "audio/SMV" = "vlc.desktop";
+        "audio/SMV0" = "vlc.desktop";
         "audio/sofa" = "vlc.desktop";
         "audio/sp-midi" = "vlc.desktop";
         "audio/speex" = "vlc.desktop";
         "audio/t140c" = "vlc.desktop";
         "audio/t38" = "vlc.desktop";
         "audio/telephone-event" = "vlc.desktop";
+        "audio/TETRA_ACELP_BB" = "vlc.desktop";
+        "audio/TETRA_ACELP" = "vlc.desktop";
         "audio/tone" = "vlc.desktop";
+        "audio/TSVCIS" = "vlc.desktop";
+        "audio/UEMCLIP" = "vlc.desktop";
         "audio/ulpfec" = "vlc.desktop";
         "audio/usac" = "vlc.desktop";
+        "audio/VDVI" = "vlc.desktop";
+        "audio/VMR-WB" = "vlc.desktop";
         "audio/vnd.3gpp.iufp" = "vlc.desktop";
         "audio/vnd.4SB" = "vlc.desktop";
-        "audio/vnd.CELP" = "vlc.desktop";
         "audio/vnd.audiokoz" = "vlc.desktop";
+        "audio/vnd.CELP" = "vlc.desktop";
         "audio/vnd.cisco.nse" = "vlc.desktop";
         "audio/vnd.cmles.radio-events" = "vlc.desktop";
         "audio/vnd.cns.anp1" = "vlc.desktop";
@@ -2532,9 +2611,9 @@ in
         "audio/vnd.dolby.pl2z" = "vlc.desktop";
         "audio/vnd.dolby.pulse.1" = "vlc.desktop";
         "audio/vnd.dra" = "vlc.desktop";
-        "audio/vnd.dts" = "vlc.desktop";
         "audio/vnd.dts.hd" = "vlc.desktop";
         "audio/vnd.dts.uhd" = "vlc.desktop";
+        "audio/vnd.dts" = "vlc.desktop";
         "audio/vnd.dvb.file" = "vlc.desktop";
         "audio/vnd.everad.plj" = "vlc.desktop";
         "audio/vnd.hns.audio" = "vlc.desktop";
@@ -2547,54 +2626,50 @@ in
         "audio/vnd.nuera.ecelp9600" = "vlc.desktop";
         "audio/vnd.octel.sbc" = "vlc.desktop";
         "audio/vnd.presonus.multitrack" = "vlc.desktop";
-        "audio/vnd.qcelp" = "vlc.desktop";
         "audio/vnd.rhetorex.32kadpcm" = "vlc.desktop";
         "audio/vnd.rip" = "vlc.desktop";
         "audio/vnd.sealedmedia.softseal.mpeg" = "vlc.desktop";
         "audio/vnd.vmx.cvsd" = "vlc.desktop";
-        "audio/vorbis" = "vlc.desktop";
         "audio/vorbis-config" = "vlc.desktop";
+        "audio/vorbis" = "vlc.desktop";
 
         "video/1d-interleaved-parityfec" = "vlc.desktop";
-        "video/3gpp" = "vlc.desktop";
         "video/3gpp-tt" = "vlc.desktop";
+        "video/3gpp" = "vlc.desktop";
         "video/3gpp2" = "vlc.desktop";
         "video/AV1" = "vlc.desktop";
         "video/BMPEG" = "vlc.desktop";
         "video/BT656" = "vlc.desktop";
         "video/CelB" = "vlc.desktop";
         "video/DV" = "vlc.desktop";
+        "video/encaprtp" = "vlc.desktop";
+        "video/evc" = "vlc.desktop";
         "video/FFV1" = "vlc.desktop";
+        "video/flexfec" = "vlc.desktop";
         "video/H261" = "vlc.desktop";
-        "video/H263" = "vlc.desktop";
         "video/H263-1998" = "vlc.desktop";
         "video/H263-2000" = "vlc.desktop";
-        "video/H264" = "vlc.desktop";
+        "video/H263" = "vlc.desktop";
         "video/H264-RCDO" = "vlc.desktop";
         "video/H264-SVC" = "vlc.desktop";
+        "video/H264" = "vlc.desktop";
         "video/H265" = "vlc.desktop";
         "video/H266" = "vlc.desktop";
+        "video/iso.segment" = "vlc.desktop";
         "video/JPEG" = "vlc.desktop";
+        "video/jpeg2000" = "vlc.desktop";
+        "video/jxsv" = "vlc.desktop";
+        "video/matroska-3d" = "vlc.desktop";
+        "video/matroska" = "vlc.desktop";
+        "video/mj2" = "vlc.desktop";
         "video/MP1S" = "vlc.desktop";
         "video/MP2P" = "vlc.desktop";
         "video/MP2T" = "vlc.desktop";
-        "video/MP4V-ES" = "vlc.desktop";
-        "video/MPV" = "vlc.desktop";
-        "video/SMPTE292M" = "vlc.desktop";
-        "video/VP8" = "vlc.desktop";
-        "video/VP9" = "vlc.desktop";
-        "video/encaprtp" = "vlc.desktop";
-        "video/evc" = "vlc.desktop";
-        "video/flexfec" = "vlc.desktop";
-        "video/iso.segment" = "vlc.desktop";
-        "video/jpeg2000" = "vlc.desktop";
-        "video/jxsv" = "vlc.desktop";
-        "video/matroska" = "vlc.desktop";
-        "video/matroska-3d" = "vlc.desktop";
-        "video/mj2" = "vlc.desktop";
         "video/mp4" = "vlc.desktop";
+        "video/MP4V-ES" = "vlc.desktop";
         "video/mpeg" = "vlc.desktop";
         "video/mpeg4-generic" = "vlc.desktop";
+        "video/MPV" = "vlc.desktop";
         "video/nv" = "vlc.desktop";
         "video/ogg" = "vlc.desktop";
         "video/parityfec" = "vlc.desktop";
@@ -2607,6 +2682,7 @@ in
         "video/rtx" = "vlc.desktop";
         "video/scip" = "vlc.desktop";
         "video/smpte291" = "vlc.desktop";
+        "video/SMPTE292M" = "vlc.desktop";
         "video/ulpfec" = "vlc.desktop";
         "video/vc1" = "vlc.desktop";
         "video/vc2" = "vlc.desktop";
@@ -2617,8 +2693,8 @@ in
         "video/vnd.dece.pd" = "vlc.desktop";
         "video/vnd.dece.sd" = "vlc.desktop";
         "video/vnd.dece.video" = "vlc.desktop";
-        "video/vnd.directv.mpeg" = "vlc.desktop";
         "video/vnd.directv.mpeg-tts" = "vlc.desktop";
+        "video/vnd.directv.mpeg" = "vlc.desktop";
         "video/vnd.dlna.mpeg-tts" = "vlc.desktop";
         "video/vnd.dvb.file" = "vlc.desktop";
         "video/vnd.fvt" = "vlc.desktop";
@@ -2646,6 +2722,8 @@ in
         "video/vnd.uvvu.mp4" = "vlc.desktop";
         "video/vnd.vivo" = "vlc.desktop";
         "video/vnd.youtube.yt" = "vlc.desktop";
+        "video/VP8" = "vlc.desktop";
+        "video/VP9" = "vlc.desktop";
 
         "application/vnd.oasis.opendocument.text" = "writer.desktop"; # .odt
         "application/msword" = "writer.desktop"; # .doc
@@ -2957,7 +3035,7 @@ in
               "SUPER, A, exec, wofi --show drun --disable-history"
               "SUPER, R, exec, wofi --show run --disable-history"
 
-              "SUPER, T, exec, tilix"
+              "SUPER, T, exec, ghostty"
 
               ", XF86Explorer, exec, nautilus"
               "SUPER, F, exec, nautilus"
@@ -3463,7 +3541,7 @@ in
               insensitive = true;
 
               single_click = true;
-              term = "tilix";
+              term = "ghostty";
             };
 
             style = ''
