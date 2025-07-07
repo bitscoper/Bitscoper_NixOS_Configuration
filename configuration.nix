@@ -38,7 +38,6 @@ let
       platforms-android-34
       platforms-android-35
       platforms-android-36
-      system-images-android-36-google-apis-playstore-arm64-v8a
       system-images-android-36-google-apis-playstore-x86-64
       tools
     ]
@@ -1763,6 +1762,7 @@ in
         alac
         alpaca
         android_sdk # Custom
+        android-backup-extractor
         android-tools
         apkeep
         apkleaks
@@ -1877,6 +1877,7 @@ in
         hardinfo2
         hdparm
         hfsprogs
+        hidapi
         hieroglyphic
         host
         hw-probe
@@ -1907,6 +1908,7 @@ in
         libappimage
         libass
         libbluray
+        libbtbb
         libcamera
         libcdio
         libde265
