@@ -1781,6 +1781,7 @@ in
         blender
         bluez-tools
         brightnessctl
+        btrfs-assistant
         btrfs-progs
         bulk_extractor
         bustle
@@ -2972,16 +2973,16 @@ in
             ];
 
             exec-once = [
-              "udiskie --tray --appindicator --automount --notify --file-manager nautilus"
+              "xhost si:localuser:root"
+
+              "setfacl --modify user:jellyfin:--x ~"
 
               "sleep 2 && keepassxc" # 2 s
-
-              "wl-paste --type text --watch cliphist store"
-              "wl-paste --type image --watch cliphist store"
-
-              "setfacl --modify user:jellyfin:--x ~ & adb start-server &"
-
+              "adb start-server"
+              "udiskie --tray --appindicator --automount --notify --file-manager nautilus"
               "systemctl --user start warp-taskbar"
+
+              "wl-paste --type text --watch cliphist store & wl-paste --type image --watch cliphist store &"
 
               "rm -rf ~/.local/share/applications/waydroid.*"
             ];
@@ -4223,66 +4224,64 @@ in
               gtk-opengl-debug = false;
               linux-cgroup = "always";
               linux-cgroup-hard-fail = true;
-              shell-integration-features = "cursor,sudo,title";
 
+              shell-integration-features = "cursor,sudo,title";
+              title-report = false;
+              vt-kam-allowed = false;
+              clipboard-read = "allow";
+              clipboard-write = "allow";
+              desktop-notifications = true;
+
+              working-directory = "inherit";
+              window-inherit-working-directory = true;
+              window-save-state = "never";
+              app-notifications = true;
+
+              window-decoration = "client";
               window-vsync = true;
               window-theme = "dark";
+
               gtk-titlebar = true;
+              window-subtitle = "working-directory";
+              window-title-font-family = font_preferences.name.sans_serif;
+              window-titlebar-foreground = colors.hex.foreground;
+
               gtk-tabs-location = "top";
               gtk-wide-tabs = true;
-              window-title-font-family = font_preferences.name.sans_serif;
-              font-family = font_preferences.name.mono;
-              font-size = font_preferences.size;
+              window-new-tab-position = "current";
+
+              window-padding-x = builtins.floor (design_factor * 0.50); # 8
+              window-padding-y = builtins.floor (design_factor * 0.50); # 8
+              window-padding-balance = true;
+              window-padding-color = "background";
+
               background = colors.hex.background;
               background-opacity = 1.0;
               background-blur = false;
-              window-titlebar-foreground = colors.hex.foreground;
+
+              font-family = font_preferences.name.mono;
+              font-size = font_preferences.size;
               foreground = colors.hex.foreground;
-              cursor-style = "bar";
-              cursor-style-blink = true;
-              cursor-color = colors.hex.foreground;
-              cursor-opacity = 1.0;
-              selection-background = colors.hex.selected_background;
-
-              app-notifications = true;
-              window-subtitle = "working-directory";
-              window-save-state = "never";
-
-              window-new-tab-position = "current";
 
               resize-overlay = "always";
               resize-overlay-position = "center";
 
+              cursor-style = "bar";
+              cursor-style-blink = true;
+              cursor-color = colors.hex.foreground;
+              cursor-opacity = 1.0;
+
+              mouse-hide-while-typing = false;
               focus-follows-mouse = true;
-              clipboard-read = "allow";
-              clipboard-write = "allow";
+              cursor-click-to-move = true;
+              selection-background = colors.hex.selected_background;
+
               clipboard-trim-trailing-spaces = false;
               clipboard-paste-protection = false;
 
-              vt-kam-allowed = false;
-              cursor-click-to-move = true;
-              mouse-hide-while-typing = false;
-              desktop-notifications = true;
-
-              quit-after-last-window-closed = false;
-
-              maximize = false;
-              fullscreen = false;
-
-              title-report = false;
-
-              wait-after-command = true;
               confirm-close-surface = true;
-
-              window-decoration = "client";
-
-              working-directory = "inherit";
-              window-inherit-working-directory = true;
-
-              window-padding-balance = true;
-              window-padding-x = builtins.floor (design_factor * 0.50); # 8
-              window-padding-y = builtins.floor (design_factor * 0.50); # 8
-              window-padding-color = "background";
+              wait-after-command = true;
+              quit-after-last-window-closed = false;
             };
           };
 
