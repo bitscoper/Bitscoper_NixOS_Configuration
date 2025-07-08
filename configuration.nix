@@ -1266,7 +1266,6 @@ in
         options.programs.nix-ld.libraries.default
         ++ (with pkgs; [
           glib.out
-          libGL
           llvmPackages.stdenv.cc.cc.lib
           stdenv.cc.cc.lib
         ]);
@@ -1281,7 +1280,14 @@ in
 
     appimage = {
       enable = true;
-      package = pkgs.appimage-run;
+      package = (
+        pkgs.appimage-run.override {
+          extraPkgs =
+            pkgs: with pkgs; [
+              libepoxy
+            ];
+        }
+      );
 
       binfmt = true;
     };
@@ -2004,7 +2010,6 @@ in
         openssl
         p7zip
         paper-clip
-        parabolic
         patchelf
         pciutils
         pcre
@@ -2057,7 +2062,6 @@ in
         subtitleedit
         switcheroo
         szyszka
-        tagger
         telegram-desktop
         telegraph
         terminal-colors
@@ -2082,6 +2086,7 @@ in
         usbimager
         usbutils
         util-linux
+        video-downloader
         virt-viewer
         virtio-win
         virtiofsd
@@ -2973,7 +2978,7 @@ in
             ];
 
             exec-once = [
-              "xhost si:localuser:root"
+              # "xhost si:localuser:root"
 
               "setfacl --modify user:jellyfin:--x ~"
 
