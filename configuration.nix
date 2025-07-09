@@ -1146,7 +1146,7 @@ in
 
     mysql = {
       enable = true;
-      package = pkgs.mariadb;
+      package = pkgs.mariadb_114;
 
       settings = {
         mysqld = {
@@ -1787,6 +1787,7 @@ in
         blender
         bluez-tools
         brightnessctl
+        btop
         btrfs-assistant
         btrfs-progs
         bulk_extractor
@@ -1811,6 +1812,7 @@ in
         coreutils-full
         cpio
         cryptsetup
+        ctop
         cups-filters
         cups-pdf-to-pdf
         cups-printers
@@ -1846,6 +1848,7 @@ in
         flake-checker
         flightgear
         flutter
+        fontfor
         fritzing
         fwupd-efi
         gcc
@@ -1909,6 +1912,7 @@ in
         keepassxc
         kernelshark
         kicad
+        kmod
         letterpress
         lhasa
         libaom
@@ -1954,6 +1958,7 @@ in
         libzip
         linuxConsoleTools
         logdy
+        logtop
         lrzip
         lshw
         lsof
@@ -2013,6 +2018,7 @@ in
         patchelf
         pciutils
         pcre
+        pg_top
         php84
         pkg-config
         platformio
@@ -2071,6 +2077,7 @@ in
         thermald
         time
         tor-browser
+        tpm2-tools
         tree
         trufflehog
         trustymail
@@ -2087,6 +2094,8 @@ in
         usbutils
         util-linux
         video-downloader
+        virt-top
+        virt-v2v
         virt-viewer
         virtio-win
         virtiofsd
@@ -4638,4 +4647,5 @@ in
 # FIXME: hardinfo2
 # FIXME: MariaDB > Login
 # FIXME: rpi-imager
+# FIXME: Unified SDDM and gtklock Themes
 # FIXME: Wofi > Window > Border Radius > Transperant Background
