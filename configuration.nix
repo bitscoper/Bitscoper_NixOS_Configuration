@@ -1491,7 +1491,7 @@ in
 
     nautilus-open-any-terminal = {
       enable = true;
-      terminal = "ghostty";
+      terminal = "tilix";
     };
 
     file-roller.enable = true;
@@ -1533,6 +1533,28 @@ in
             "com/saivert/pwvucontrol" = {
               beep-on-volume-changes = true;
               enable-overamplification = true;
+            };
+
+            "com/gexperts/Tilix" = {
+              auto-hide-mouse = false;
+              close-with-last-session = false;
+              control-scroll-zoom = true;
+              enable-wide-handle = true;
+              encodings = [
+                "UTF-8"
+              ];
+              focus-follow-mouse = true;
+              middle-click-close = false;
+              new-instance-mode = "new-window";
+              paste-strip-first-char = false;
+              paste-strip-trailing-whitespace = false;
+              tab-position = "top";
+              terminal-title-show-when-single = true;
+              terminal-title-style = "normal";
+              theme-variant = "dark";
+              use-overlay-scrollbar = false;
+              window-save-state = false;
+              window-style = "normal";
             };
 
             "org/gnome/desktop/privacy" = {
@@ -2071,6 +2093,7 @@ in
         texliveFull
         theharvester
         thermald
+        tilix
         time
         tor-browser
         tpm2-tools
@@ -3058,7 +3081,7 @@ in
               "SUPER, A, exec, wofi --show drun --disable-history"
               "SUPER, R, exec, wofi --show run --disable-history"
 
-              "SUPER, T, exec, ghostty"
+              "SUPER, T, exec, tilix"
 
               ", XF86Explorer, exec, nautilus"
               "SUPER, F, exec, nautilus"
@@ -4191,7 +4214,7 @@ in
               insensitive = true;
 
               single_click = true;
-              term = "ghostty";
+              term = "tilix";
             };
 
             style = ''
@@ -4216,83 +4239,6 @@ in
                 margin-right: 4px;
               }
             '';
-          };
-
-          ghostty = {
-            enable = true;
-            package = pkgs.ghostty;
-
-            enableBashIntegration = true;
-            enableFishIntegration = true;
-
-            installBatSyntax = true;
-
-            clearDefaultKeybinds = false;
-
-            settings = {
-              gtk-single-instance = false;
-              gtk-opengl-debug = false;
-              linux-cgroup = "always";
-              linux-cgroup-hard-fail = true;
-
-              shell-integration-features = "cursor,sudo,title";
-              title-report = false;
-              vt-kam-allowed = false;
-              clipboard-read = "allow";
-              clipboard-write = "allow";
-              desktop-notifications = true;
-
-              working-directory = "inherit";
-              window-inherit-working-directory = true;
-              window-save-state = "never";
-              app-notifications = true;
-
-              window-decoration = "client";
-              window-vsync = true;
-              window-theme = "dark";
-
-              gtk-titlebar = true;
-              window-subtitle = "working-directory";
-              window-title-font-family = font_preferences.name.sans_serif;
-              window-titlebar-foreground = colors.hex.foreground;
-
-              gtk-tabs-location = "top";
-              gtk-wide-tabs = true;
-              window-new-tab-position = "current";
-
-              window-padding-x = builtins.floor (design_factor * 0.50); # 8
-              window-padding-y = builtins.floor (design_factor * 0.50); # 8
-              window-padding-balance = true;
-              window-padding-color = "background";
-
-              background = colors.hex.background;
-              background-opacity = 1.0;
-              background-blur = false;
-
-              font-family = font_preferences.name.mono;
-              font-size = font_preferences.size;
-              foreground = colors.hex.foreground;
-
-              resize-overlay = "always";
-              resize-overlay-position = "center";
-
-              cursor-style = "bar";
-              cursor-style-blink = true;
-              cursor-color = colors.hex.foreground;
-              cursor-opacity = 1.0;
-
-              mouse-hide-while-typing = false;
-              focus-follows-mouse = true;
-              cursor-click-to-move = true;
-              selection-background = colors.hex.selected_background;
-
-              clipboard-trim-trailing-spaces = false;
-              clipboard-paste-protection = false;
-
-              confirm-close-surface = true;
-              wait-after-command = true;
-              quit-after-last-window-closed = false;
-            };
           };
 
           dircolors = {
