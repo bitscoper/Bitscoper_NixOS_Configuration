@@ -152,10 +152,7 @@ let
   sddm_and_gtklock_wallpaper = builtins.fetchurl {
     url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
   };
-
-  hyprpaper_wallpaper = builtins.fetchurl {
-    url = "https://raw.githubusercontent.com/bitscoper/Bitscoper_NixOS_Configuration/refs/heads/main/Wallpaper/Desktop_Wallpaper.png";
-  };
+  hyprpaper_wallpaper = sddm_and_gtklock_wallpaper;
 
   should_numlock_be_enabled_by_default = false;
 
@@ -1989,7 +1986,6 @@ in
         nautilus
         nethogs
         networkmanagerapplet
-        ngrok # Unfree
         nikto
         nilfs-utils
         ninja
@@ -4361,8 +4357,6 @@ in
                     formulahendry.auto-rename-tag
                     formulahendry.code-runner
                     foxundermoon.shell-format
-                    github.copilot
-                    github.copilot-chat
                     github.vscode-github-actions
                     github.vscode-pull-request-github
                     grapecity.gc-excelviewer
