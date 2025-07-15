@@ -70,31 +70,16 @@ let
     size = builtins.floor (design_factor * 1.50); # 24
   };
 
-  jasper_grey_dark_gtk_theme = (
-    pkgs.jasper-gtk-theme.override {
-      themeVariants = [
-        "grey"
-      ];
-      colorVariants = [
-        "dark"
-      ];
-      sizeVariants = [
-        "standard"
-      ];
-      tweaks = [
-      ];
-    }
-  );
+  fetched_gtk_css_file = builtins.fetchurl {
+    url = "https://gitlab.gnome.org/GNOME/gtk/-/raw/gtk-3-24/gtk/theme/Adwaita/gtk-contained-dark.css";
+  };
+  gtk_css_file = builtins.readFile fetched_gtk_css_file;
+  gtk_css_lines = builtins.filter (x: builtins.isString x) (builtins.split "\n" gtk_css_file);
 
-  gtk_theme_name = "Jasper-Grey-Dark";
-
-  gtk4_css_file = builtins.readFile "${jasper_grey_dark_gtk_theme}/share/themes/Jasper-Grey-Dark/gtk-4.0/gtk-dark.css";
-  gtk4_css_lines = builtins.filter (x: builtins.isString x) (builtins.split "\n" gtk4_css_file);
-
-  gtk4_css_color_lines = builtins.filter (
+  gtk_css_color_lines = builtins.filter (
     line: builtins.match "^@define-color [^ ]+ [^;]+;" line != null
-  ) gtk4_css_lines;
-  gtk4_color_list = builtins.filter (x: x != null) (
+  ) gtk_css_lines;
+  gtk_color_list = builtins.filter (x: x != null) (
     builtins.map (
       line:
       let
@@ -107,43 +92,43 @@ let
           name = builtins.elemAt m 0;
           value = builtins.elemAt m 1;
         }
-    ) gtk4_css_color_lines
+    ) gtk_css_color_lines
   );
-  gtk4_color_attributes = builtins.listToAttrs gtk4_color_list;
+  gtk_color_attributes = builtins.listToAttrs gtk_color_list;
 
   colors = {
     hex = {
-      background = gtk4_color_attributes.theme_bg_color;
-      base_background = gtk4_color_attributes.theme_base_color;
-      insensitive_background = gtk4_color_attributes.insensitive_bg_color;
-      insensitive_base_background = gtk4_color_attributes.insensitive_base_color;
-      selected_background = gtk4_color_attributes.theme_selected_bg_color;
-      content_view_background = gtk4_color_attributes.content_view_bg;
-      text_view_background = gtk4_color_attributes.text_view_bg;
-      unfocused_background = gtk4_color_attributes.theme_unfocused_bg_color;
-      unfocused_base_background = gtk4_color_attributes.theme_unfocused_base_color;
-      unfocused_selected_background = gtk4_color_attributes.theme_unfocused_selected_bg_color;
+      background = gtk_color_attributes.theme_bg_color;
+      base_background = gtk_color_attributes.theme_base_color;
+      insensitive_background = gtk_color_attributes.insensitive_bg_color;
+      insensitive_base_background = gtk_color_attributes.insensitive_base_color;
+      selected_background = gtk_color_attributes.theme_selected_bg_color;
+      content_view_background = gtk_color_attributes.content_view_bg;
+      text_view_background = gtk_color_attributes.text_view_bg;
+      unfocused_background = gtk_color_attributes.theme_unfocused_bg_color;
+      unfocused_base_background = gtk_color_attributes.theme_unfocused_base_color;
+      unfocused_selected_background = gtk_color_attributes.theme_unfocused_selected_bg_color;
 
-      foreground = gtk4_color_attributes.theme_fg_color;
-      unfocused_foreground = gtk4_color_attributes.theme_unfocused_fg_color;
+      foreground = gtk_color_attributes.theme_fg_color;
+      unfocused_foreground = gtk_color_attributes.theme_unfocused_fg_color;
 
-      text = gtk4_color_attributes.theme_text_color;
-      unfocused_text = gtk4_color_attributes.theme_unfocused_text_color;
-      placeholder_text = gtk4_color_attributes.placeholder_text_color;
+      text = gtk_color_attributes.theme_text_color;
+      unfocused_text = gtk_color_attributes.theme_unfocused_text_color;
+      placeholder_text = gtk_color_attributes.placeholder_text_color;
 
-      error = gtk4_color_attributes.error_color;
-      warning = gtk4_color_attributes.warning_color;
-      success = gtk4_color_attributes.success_color;
+      error = gtk_color_attributes.error_color;
+      warning = gtk_color_attributes.warning_color;
+      success = gtk_color_attributes.success_color;
     };
 
     rgba = {
-      borders = gtk4_color_attributes.borders;
-      unfocused_borders = gtk4_color_attributes.unfocused_borders;
+      borders = gtk_color_attributes.borders;
+      unfocused_borders = gtk_color_attributes.unfocused_borders;
 
-      insensitive_foreground = gtk4_color_attributes.insensitive_fg_color;
-      selected_foreground = gtk4_color_attributes.theme_selected_fg_color;
-      unfocused_selected_foreground = gtk4_color_attributes.theme_unfocused_selected_fg_color;
-      unfocused_insensitive_color = gtk4_color_attributes.unfocused_insensitive_color;
+      insensitive_foreground = gtk_color_attributes.insensitive_fg_color;
+      selected_foreground = gtk_color_attributes.theme_selected_fg_color;
+      unfocused_selected_foreground = gtk_color_attributes.theme_unfocused_selected_fg_color;
+      unfocused_insensitive_color = gtk_color_attributes.unfocused_insensitive_color;
     };
   };
 
@@ -1317,7 +1302,7 @@ in
       config = {
         main = {
           time-format = "%I:%M %p";
-          gtk-theme = gtk_theme_name;
+          gtk-theme = "Adwaita-dark";
         };
       };
 
@@ -1530,6 +1515,10 @@ in
           lockAll = true;
 
           settings = {
+            "org/gnome/desktop/interface" = {
+              color-scheme = "prefer-dark";
+            };
+
             "com/saivert/pwvucontrol" = {
               beep-on-volume-changes = true;
               enable-overamplification = true;
@@ -2847,8 +2836,8 @@ in
   qt = {
     enable = true;
 
-    platformTheme = "gtk2";
-    style = "gtk2";
+    platformTheme = "gnome";
+    style = "adwaita-dark";
   };
 
   documentation = {
@@ -3372,8 +3361,8 @@ in
           enable = true;
 
           theme = {
-            name = gtk_theme_name;
-            package = jasper_grey_dark_gtk_theme;
+            name = "Adwaita";
+            package = pkgs.gnome-themes-extra;
           };
 
           iconTheme = {
@@ -3401,12 +3390,8 @@ in
         qt = {
           enable = true;
 
-          platformTheme.name = "gtk2";
-
-          style = {
-            name = "gtk2";
-            # package = pkgs. ;
-          };
+          platformTheme.name = "adwaita";
+          style.name = "adwaita-dark";
         };
 
         services = {
@@ -4586,6 +4571,5 @@ in
 # FIXME: ELAN7001 SPI Fingerprint Sensor
 # FIXME: hardinfo2
 # FIXME: MariaDB > Login
-# FIXME: rpi-imager
 # FIXME: Unified SDDM and gtklock Themes
 # FIXME: Wofi > Window > Border Radius > Transperant Background
