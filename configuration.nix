@@ -697,7 +697,7 @@ in
     };
 
     fwupd = {
-      enable = false; # Temporary
+      enable = true;
       package = pkgs.fwupd;
     };
 
@@ -3065,7 +3065,7 @@ in
 
               "SUPER, C, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
 
-              ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/ScreenShot_$(date +'%B-%d-%Y_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\"" # I use the Downloads directory for temporary work.
+              ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/ScreenShot_$(date +'%B-%d-%Y_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\"" # I use the Downloads directory for temporary works.
 
               "SUPER, A, exec, wofi --show drun --disable-history"
               "SUPER, R, exec, wofi --show run --disable-history"
@@ -3361,7 +3361,7 @@ in
           enable = true;
 
           theme = {
-            name = "Adwaita";
+            name = "Adwaita-dark";
             package = pkgs.gnome-themes-extra;
           };
 
