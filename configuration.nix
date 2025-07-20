@@ -1769,7 +1769,13 @@ in
     systemPackages =
       with pkgs;
       [
+        # celestia
+        # darktable
+        # gimp-with-plugins
+        # gpredicts
         # reiser4progs # Marked Broken
+        # virt-top
+        # virt-v2v
         above
         acl
         aircrack-ng
@@ -1803,7 +1809,6 @@ in
         bzip2
         bzip3
         cabextract
-        celestia
         celt
         certbot-full
         clang
@@ -1827,7 +1832,6 @@ in
         curlFull
         curtail
         d-spy
-        darktable
         dart
         dbeaver-bin
         dconf-editor
@@ -1862,7 +1866,6 @@ in
         gcc
         gdb
         ghidra
-        gimp-with-plugins
         git-doc
         git-filter-repo
         glib
@@ -1883,11 +1886,9 @@ in
         gnutls
         gource
         gparted
-        gpredict
         gradle
         gradle-completion
         graphs # Needs Description
-        grim
         gsm
         gtk-vnc
         guestfs-tools
@@ -2062,7 +2063,6 @@ in
         sherlock
         sipvicious
         sleuthkit
-        slurp
         smartmontools
         songrec
         soundconverter
@@ -2074,6 +2074,7 @@ in
         subfinder
         subtitleedit
         switcheroo
+        syshud
         szyszka
         telegram-desktop
         telegraph
@@ -2102,8 +2103,6 @@ in
         usbutils
         util-linux
         video-downloader
-        virt-top
-        virt-v2v
         virt-viewer
         virtio-win
         virtiofsd
@@ -2144,6 +2143,9 @@ in
         zlib
         zpaq
         zstd
+        (flameshot.override {
+          enableWlrSupport = true;
+        })
         (sddm-astronaut.override {
           embeddedTheme = "astronaut";
 
@@ -3006,6 +3008,8 @@ in
 
               "wl-paste --type text --watch cliphist store & wl-paste --type image --watch cliphist store &"
 
+              "syshud"
+
               "rm -rf ~/.local/share/applications/waydroid.*"
             ];
 
@@ -3065,7 +3069,7 @@ in
 
               "SUPER, C, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
 
-              ", PRINT, exec, filename=\"$(xdg-user-dir DOWNLOAD)/ScreenShot_$(date +'%B-%d-%Y_%I-%M-%S_%p').png\"; grim -g \"$(slurp -d)\" -t png -l 9 \"$filename\" && wl-copy < \"$filename\"" # I use the Downloads directory for temporary works.
+              ", PRINT, exec, flameshot gui"
 
               "SUPER, A, exec, wofi --show drun --disable-history"
               "SUPER, R, exec, wofi --show run --disable-history"
@@ -4395,14 +4399,14 @@ in
                     {
                       name = "vscode-serial-monitor";
                       publisher = "ms-vscode";
-                      version = "0.13.250628001";
-                      sha256 = "uzIwkBQLA9OXNB+1Oqydw3NtJ97VKzAsiovz7XCjCvM=";
+                      version = "0.13.250720001";
+                      sha256 = "5q4QPfUyIsI2Ux6q/nz/IkQVPR3TcJn+B8oaKuVCd7c=";
                     }
                     {
                       name = "vscode-print";
                       publisher = "pdconsec";
-                      version = "1.4.1";
-                      sha256 = "abmVM9yVawX9OpS3ms7LQGJCXmefgavaVg/8zPPhMQQ=";
+                      version = "1.5.1";
+                      sha256 = "jx6PfXPbjF05B5lk3bTq8CDlkMh6E0PIFOalTnszF+o=";
                     }
                   ];
 

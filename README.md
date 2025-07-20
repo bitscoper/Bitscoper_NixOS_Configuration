@@ -34,6 +34,7 @@ My NixOS Configuration
 - **Lock Screen:** [gtklock](https://github.com/jovanlanik/gtklock/)
 - **Menu / Launcher:** [wofi](https://hg.sr.ht/~scoopta/wofi)
 - **Clipboard History Manager:** [cliphist](https://github.com/sentriz/cliphist/)
+- **On-Screen Display (OSD):** [Syshud](https://github.com/System64fumo/syshud/)
 
 ---
 
