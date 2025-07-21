@@ -134,10 +134,9 @@ let
 
   animation_duration = 200; # ms
 
-  greeter_and_lockscreen_wallpaper = builtins.fetchurl {
+  wallpaper = builtins.fetchurl {
     url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
   };
-  hyprpaper_wallpaper = greeter_and_lockscreen_wallpaper;
 
   secrets = import ./secrets.nix;
 in
@@ -792,26 +791,20 @@ in
       # };
     };
 
-    greetd =
-      let
-        session = {
-          # command = "${lib.getExe pkgs.greetd.gtkgreet} --layer-shell --background=${greeter_and_lockscreen_wallpaper} --command=\"${lib.getExe config.programs.uwsm.package} start hyprland-uwsm.desktop\"";
+    greetd = {
+      enable = true;
+      package = pkgs.greetd.greetd;
+
+      vt = 1;
+      restart = true;
+
+      settings = {
+        default_session = {
           command = "${lib.getExe pkgs.greetd.tuigreet} --greet-align center --time --greeting Welcome --user-menu --asterisks --asterisks-char \"*\" --cmd \"${lib.getExe config.programs.uwsm.package} start hyprland-uwsm.desktop\"";
           user = "bitscoper";
         };
-      in
-      {
-        enable = true;
-        package = pkgs.greetd.greetd;
-
-        vt = 1;
-        restart = true;
-
-        settings = {
-          default_session = session;
-          # initial_session = session;
-        };
       };
+    };
 
     gnome = {
       gnome-keyring.enable = true;
@@ -1280,7 +1273,7 @@ in
 
       style = ''
         window {
-          background-image: url("${greeter_and_lockscreen_wallpaper}");
+          background-image: url("${wallpaper}");
           background-repeat: no-repeat;
           background-position: center;
           background-size: cover;
@@ -2098,7 +2091,7 @@ in
         win-spice
         wl-clipboard
         woff2
-        wvkbd
+        wvkbd # wvkbd-mobintl
         x264
         x265
         xdg-user-dirs
@@ -2897,13 +2890,12 @@ in
             exec-once = [
               "setfacl --modify user:jellyfin:--x ~"
               "adb start-server"
-              "systemctl --user start warp-taskbar"
 
-              "sleep 2 && uwsm app -- keepassxc" # 2s Delay
               "uwsm app -- wl-paste --type text --watch cliphist store"
               "uwsm app -- wl-paste --type image --watch cliphist store"
-              "uwsm app -- udiskie --tray --appindicator --automount --notify --file-manager nautilus"
               "uwsm app -- syshud"
+              "uwsm app -- udiskie --tray --appindicator --automount --notify --file-manager nautilus"
+              "systemctl --user start warp-taskbar"
 
               "rm -rf ~/.local/share/applications/waydroid.*"
             ];
@@ -3409,11 +3401,11 @@ in
               splash = false;
 
               preload = [
-                hyprpaper_wallpaper
+                wallpaper
               ];
 
               wallpaper = [
-                ", ${hyprpaper_wallpaper}"
+                ", ${wallpaper}"
               ];
             };
           };
@@ -4444,4 +4436,3 @@ in
 # FIXME: MariaDB > Login
 # FIXME: Unified Greeter and Lockscreen Themes
 # FIXME: Wofi > Window > Border Radius > Transperant Background
-# TODO: Move to gtkgtreet from tuigreet
