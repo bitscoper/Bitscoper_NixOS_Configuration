@@ -134,12 +134,10 @@ let
 
   animation_duration = 200; # ms
 
-  sddm_and_gtklock_wallpaper = builtins.fetchurl {
+  greeter_and_lockscreen_wallpaper = builtins.fetchurl {
     url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
   };
-  hyprpaper_wallpaper = sddm_and_gtklock_wallpaper;
-
-  should_numlock_be_enabled_by_default = false;
+  hyprpaper_wallpaper = greeter_and_lockscreen_wallpaper;
 
   secrets = import ./secrets.nix;
 in
@@ -434,7 +432,7 @@ in
           };
         };
 
-        sddm = {
+        greetd = {
           unixAuth = true;
           nodelay = false;
 
@@ -794,52 +792,26 @@ in
       # };
     };
 
-    displayManager = {
-      enable = true;
-      preStart = '''';
-
-      defaultSession = "hyprland-uwsm";
-
-      autoLogin = {
-        enable = false;
-        user = null;
-      };
-
-      sddm = {
-        enable = true;
-        package = pkgs.kdePackages.sddm; # Qt 6
-
-        extraPackages = with pkgs; [
-          kdePackages.qtmultimedia
-        ];
-
-        wayland = {
-          enable = true;
-          compositor = "weston";
+    greetd =
+      let
+        session = {
+          # command = "${lib.getExe pkgs.greetd.gtkgreet} --layer-shell --background=${greeter_and_lockscreen_wallpaper} --command=\"${lib.getExe config.programs.uwsm.package} start hyprland-uwsm.desktop\"";
+          command = "${lib.getExe pkgs.greetd.tuigreet} --greet-align center --time --greeting Welcome --user-menu --asterisks --asterisks-char \"*\" --cmd \"${lib.getExe config.programs.uwsm.package} start hyprland-uwsm.desktop\"";
+          user = "bitscoper";
         };
+      in
+      {
+        enable = true;
+        package = pkgs.greetd.greetd;
 
-        enableHidpi = true;
-        theme = "sddm-astronaut-theme";
-
-        autoNumlock = should_numlock_be_enabled_by_default;
-
-        autoLogin.relogin = false;
+        vt = 1;
+        restart = true;
 
         settings = {
-          Theme = {
-            CursorTheme = cursor.theme.name;
-            CursorSize = cursor.size;
-
-            Font = font_preferences.name.sans_serif;
-          };
+          default_session = session;
+          # initial_session = session;
         };
-
-        stopScript = '''';
       };
-
-      logToJournal = true;
-      logToFile = true;
-    };
 
     gnome = {
       gnome-keyring.enable = true;
@@ -1308,7 +1280,7 @@ in
 
       style = ''
         window {
-          background-image: url("${sddm_and_gtklock_wallpaper}");
+          background-image: url("${greeter_and_lockscreen_wallpaper}");
           background-repeat: no-repeat;
           background-position: center;
           background-size: cover;
@@ -1769,13 +1741,13 @@ in
     systemPackages =
       with pkgs;
       [
-        # celestia
-        # darktable
-        # gimp-with-plugins
-        # gpredicts
+        # celestia # Temporary
+        # darktable # Temporary
+        # gimp-with-plugins # Temporary
+        # gpredicts # Temporary
         # reiser4progs # Marked Broken
-        # virt-top
-        # virt-v2v
+        # virt-top # Temporary
+        # virt-v2v # Temporary
         above
         acl
         aircrack-ng
@@ -1866,6 +1838,7 @@ in
         gcc
         gdb
         ghidra
+        gimp
         git-doc
         git-filter-repo
         glib
@@ -2099,7 +2072,6 @@ in
         unix-privesc-check
         unzip
         upnp-router-control
-        usbimager
         usbutils
         util-linux
         video-downloader
@@ -2126,6 +2098,7 @@ in
         win-spice
         wl-clipboard
         woff2
+        wvkbd
         x264
         x265
         xdg-user-dirs
@@ -2145,82 +2118,6 @@ in
         zstd
         (flameshot.override {
           enableWlrSupport = true;
-        })
-        (sddm-astronaut.override {
-          embeddedTheme = "astronaut";
-
-          themeConfig = {
-            # ScreenWidth = 1920;
-            # ScreenHeight = 1080;
-            ScreenPadding = 0;
-
-            BackgroundColor = colors.hex.background;
-            BackgroundHorizontalAlignment = "center";
-            BackgroundVerticalAlignment = "center";
-            Background = sddm_and_gtklock_wallpaper;
-            CropBackground = false;
-            DimBackgroundImage = "0.0";
-
-            FullBlur = false;
-            PartialBlur = false;
-
-            HaveFormBackground = false;
-            FormPosition = "center";
-
-            HideLoginButton = false;
-            HideSystemButtons = false;
-            HideVirtualKeyboard = false;
-            VirtualKeyboardPosition = "center";
-
-            # MainColor = ""; # TODO
-            # AccentColor = ""; # TODO
-
-            # HighlightBorderColor= ""; # TODO
-            # HighlightBackgroundColor= ""; # TODO
-            # HighlightTextColor= ""; # TODO
-
-            HeaderTextColor = colors.hex.foreground;
-            TimeTextColor = colors.hex.foreground;
-            DateTextColor = colors.hex.foreground;
-
-            IconColor = colors.hex.foreground;
-            PlaceholderTextColor = colors.hex.foreground;
-            WarningColor = colors.hex.error;
-
-            # LoginFieldBackgroundColor = ""; # TODO
-            # LoginFieldTextColor = ""; # TODO
-            # UserIconColor = ""; # TODO
-            # HoverUserIconColor = ""; # TODO
-
-            # PasswordFieldBackgroundColor = ""; # TODO
-            # PasswordFieldTextColor = ""; # TODO
-            # PasswordIconColor = ""; # TODO
-            # HoverPasswordIconColor = ""; # TODO
-
-            # LoginButtonBackgroundColor = ""; # TODO
-            LoginButtonTextColor = colors.hex.foreground;
-
-            SystemButtonsIconsColor = colors.hex.foreground;
-            # HoverSystemButtonsIconsColor = ""; # TODO
-
-            SessionButtonTextColor = colors.hex.foreground;
-            # HoverSessionButtonTextColor = ""; # TODO
-
-            VirtualKeyboardButtonTextColor = colors.hex.foreground;
-            # HoverVirtualKeyboardButtonTextColor = ""; # TODO
-
-            DropdownBackgroundColor = colors.hex.background;
-            DropdownSelectedBackgroundColor = colors.hex.base_background;
-            DropdownTextColor = colors.hex.foreground;
-
-            HeaderText = "";
-
-            HourFormat = "\"hh:mm A\"";
-            DateFormat = "\"MMMM dd, yyyy\"";
-
-            PasswordFocus = true;
-            AllowEmptyPassword = false;
-          };
         })
       ]
       ++ (with unixtools; [
@@ -2899,6 +2796,7 @@ in
         "podman"
         "qemu-libvirtd"
         "scanner"
+        "seat"
         "tty"
         "uucp"
         "video"
@@ -2997,18 +2895,15 @@ in
             ];
 
             exec-once = [
-              # "xhost si:localuser:root"
-
               "setfacl --modify user:jellyfin:--x ~"
-
-              "sleep 2 && keepassxc" # 2 s
               "adb start-server"
-              "udiskie --tray --appindicator --automount --notify --file-manager nautilus"
               "systemctl --user start warp-taskbar"
 
-              "wl-paste --type text --watch cliphist store & wl-paste --type image --watch cliphist store &"
-
-              "syshud"
+              "sleep 2 && uwsm app -- keepassxc" # 2s Delay
+              "uwsm app -- wl-paste --type text --watch cliphist store"
+              "uwsm app -- wl-paste --type image --watch cliphist store"
+              "uwsm app -- udiskie --tray --appindicator --automount --notify --file-manager nautilus"
+              "uwsm app -- syshud"
 
               "rm -rf ~/.local/share/applications/waydroid.*"
             ];
@@ -3069,28 +2964,28 @@ in
 
               "SUPER, C, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
 
-              ", PRINT, exec, flameshot gui"
+              ", PRINT, exec, uwsm app -- flameshot gui"
 
-              "SUPER, A, exec, wofi --show drun --disable-history"
-              "SUPER, R, exec, wofi --show run --disable-history"
+              "SUPER, A, exec, uwsm app -- wofi --show drun --disable-history | xargs -r uwsm app --"
+              "SUPER, R, exec, uwsm app -- wofi --show run --disable-history | xargs -r uwsm app --"
 
-              "SUPER, T, exec, tilix"
+              "SUPER, T, exec, uwsm app -- tilix"
 
-              ", XF86Explorer, exec, nautilus"
-              "SUPER, F, exec, nautilus"
+              ", XF86Explorer, exec, uwsm app -- nautilus"
+              "SUPER, F, exec, uwsm app -- nautilus"
 
-              "SUPER, U, exec, missioncenter"
+              "SUPER, U, exec, uwsm app -- missioncenter"
 
-              "SUPER, W, exec, chromium-browser"
-              "SUPER ALT, W, exec, chromium-browser --incognito"
+              "SUPER, W, exec, uwsm app -- chromium-browser"
+              "SUPER ALT, W, exec, uwsm app -- chromium-browser --incognito"
 
-              ", XF86Mail, exec, thunderbird"
-              "SUPER, M, exec, thunderbird"
+              ", XF86Mail, exec, uwsm app -- thunderbird"
+              "SUPER, M, exec, uwsm app -- thunderbird"
 
-              "SUPER, E, exec, codium"
-              "SUPER, D, exec, dbeaver"
+              "SUPER, E, exec, uwsm app -- codium"
+              "SUPER, D, exec, uwsm app -- dbeaver"
 
-              "SUPER, V, exec, vlc"
+              "SUPER, V, exec, uwsm app -- vlc"
             ];
 
             bindm = [
@@ -3157,8 +3052,6 @@ in
               vfr = true;
               vrr = 1;
 
-              render_ahead_of_time = false;
-
               mouse_move_focuses_monitor = true;
 
               disable_hyprland_logo = true;
@@ -3206,13 +3099,12 @@ in
             input = {
               kb_layout = "us";
 
-              numlock_by_default = should_numlock_be_enabled_by_default;
+              numlock_by_default = false;
 
               follow_mouse = 1;
               focus_on_close = 1;
 
               left_handed = false;
-              sensitivity = 1; # Mouse
               natural_scroll = false;
 
               touchpad = {
@@ -3247,28 +3139,6 @@ in
               hide_on_key_press = false;
               hide_on_touch = true;
             };
-
-            # "plugin:dynamic-cursors" = {
-            #   enabled = true;
-            #   hyprcursor = {
-            #     enabled = true;
-            #     nearest = true;
-            #     resolution = -1;
-            #   };
-
-            #   threshold = 1;
-            #   mode = "rotate";
-            #   rotate = {
-            #     length = cursor.size;
-            #   };
-
-            #   shake = {
-            #     enabled = true;
-            #     effects = false;
-            #     nearest = true;
-            #     ipc = true;
-            #   };
-            # };
 
             binds = {
               disable_keybind_grabbing = true;
@@ -3593,7 +3463,6 @@ in
                   locale = "en_US";
                   interval = 1;
 
-                  # format = "{:%I:%M:%S %p}";
                   format = "{:%I:%M %p}";
                   format-alt = "{:%A, %B %d, %Y}";
 
@@ -3751,7 +3620,7 @@ in
                   on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+";
                   on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-";
 
-                  on-click = "pwvucontrol";
+                  on-click = "uwsm app -- pwvucontrol";
                 };
 
                 bluetooth = {
@@ -3779,7 +3648,7 @@ in
                   tooltip-format-enumerate-connected = "\n\tAddress: {device_address} ({device_address_type})\n\tAlias: {device_alias}";
                   tooltip-format-enumerate-connected-battery = "\n\tAddress: {device_address} ({device_address_type})\n\tAlias: {device_alias}\n\tBattery: {device_battery_percentage}%";
 
-                  on-click = "blueman-manager";
+                  on-click = "uwsm app -- blueman-manager";
                 };
 
                 "group/hardware-statistics" = {
@@ -3835,7 +3704,7 @@ in
 
                   tooltip = true;
 
-                  on-click = "missioncenter";
+                  on-click = "uwsm app -- missioncenter";
                 };
 
                 memory = {
@@ -3846,7 +3715,7 @@ in
                   tooltip = true;
                   tooltip-format = "Used RAM: {used} GiB ({percentage}%)\nUsed Swap: {swapUsed} GiB ({swapPercentage}%)\nAvailable RAM: {avail} GiB\nAvailable Swap: {swapAvail} GiB";
 
-                  on-click = "missioncenter";
+                  on-click = "uwsm app -- missioncenter";
                 };
 
                 disk = {
@@ -3859,7 +3728,7 @@ in
                   tooltip = true;
                   tooltip-format = "Total: {specific_total} GB\nUsed: {specific_used} GB ({percentage_used}%)\nFree: {specific_free} GB ({percentage_free}%)";
 
-                  on-click = "missioncenter";
+                  on-click = "uwsm app -- missioncenter";
                 };
 
                 network = {
@@ -3877,7 +3746,7 @@ in
                   tooltip-format-ethernet = "Interface: {ifname}\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation= {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
                   tooltip-format-wifi = "Interface: {ifname}\nESSID: {essid}\nFrequency: {frequency} GHz\nStrength: {signaldBm} dBm ({signalStrength}%)\nGateway: {gwaddr}\nSubnet Mask: {netmask}\nCIDR Notation: {cidr}\nIP Address: {ipaddr}\nUp Speed: {bandwidthUpBytes}\nDown Speed: {bandwidthDownBytes}\nTotal Speed: {bandwidthTotalBytes}";
 
-                  on-click = "nm-connection-editor";
+                  on-click = "uwsm app -- nm-connection-editor";
                 };
 
                 privacy = {
@@ -3932,7 +3801,7 @@ in
 
                   return-type = "json";
                   exec-if = "which swaync-client";
-                  exec = "swaync-client -swb";
+                  exec = "uwsm app -- swaync-client -swb";
                   on-click = "swaync-client -t -sw";
                   on-click-right = "swaync-client -d -sw";
                   escape = true;
@@ -4569,11 +4438,10 @@ in
   };
 }
 
-# setfacl --modify user:jellyfin:--x ~
-
 # FIXME: 05ac-033e-Gamepad > Rumble
 # FIXME: ELAN7001 SPI Fingerprint Sensor
 # FIXME: hardinfo2
 # FIXME: MariaDB > Login
-# FIXME: Unified SDDM and gtklock Themes
+# FIXME: Unified Greeter and Lockscreen Themes
 # FIXME: Wofi > Window > Border Radius > Transperant Background
+# TODO: Move to gtkgtreet from tuigreet
