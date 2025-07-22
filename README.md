@@ -16,8 +16,8 @@ My NixOS Configuration
 - **Message Bus:** [D-Bus](https://gitlab.freedesktop.org/dbus/dbus/)
 - **Boot Screen:** [Plymouth](https://gitlab.freedesktop.org/plymouth/plymouth/)
 - **Network Configurator:** [NetworkManager](https://github.com/NetworkManager/NetworkManager/)
-- **Display Server Protocol:** [Wayland](https://gitlab.freedesktop.org/wayland/wayland/) -> with Xwayland Support
-- **Display Manager (DM) / Greeter:** [Simple Desktop Display Manager (SDDM)](https://github.com/sddm/sddm/)
+- **Display Server Protocol:** [Wayland](https://gitlab.freedesktop.org/wayland/wayland/) (with Xwayland Support)
+- **Login Manager / Greeter:** [greetd](https://git.sr.ht/~kennylevinsen/greetd/) -> [tuigreet](https://github.com/apognu/tuigreet)
 - **Session Manager:** [Universal Wayland Session Manager (UWSM)](https://github.com/Vladimir-csp/uwsm/)
 - **Wayland Compositor:** [Hyprland](https://github.com/hyprwm/Hyprland/)
 - **Low-Level Multimedia Framework:** [PipeWire](https://github.com/PipeWire/pipewire/)

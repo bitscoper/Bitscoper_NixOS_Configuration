@@ -98,37 +98,32 @@ let
 
   colors = {
     hex = {
-      background = gtk_color_attributes.theme_bg_color;
-      base_background = gtk_color_attributes.theme_base_color;
-      insensitive_background = gtk_color_attributes.insensitive_bg_color;
-      insensitive_base_background = gtk_color_attributes.insensitive_base_color;
-      selected_background = gtk_color_attributes.theme_selected_bg_color;
-      content_view_background = gtk_color_attributes.content_view_bg;
-      text_view_background = gtk_color_attributes.text_view_bg;
-      unfocused_background = gtk_color_attributes.theme_unfocused_bg_color;
-      unfocused_base_background = gtk_color_attributes.theme_unfocused_base_color;
-      unfocused_selected_background = gtk_color_attributes.theme_unfocused_selected_bg_color;
-
-      foreground = gtk_color_attributes.theme_fg_color;
-      unfocused_foreground = gtk_color_attributes.theme_unfocused_fg_color;
-
-      text = gtk_color_attributes.theme_text_color;
-      unfocused_text = gtk_color_attributes.theme_unfocused_text_color;
-      placeholder_text = gtk_color_attributes.placeholder_text_color;
-
-      error = gtk_color_attributes.error_color;
-      warning = gtk_color_attributes.warning_color;
-      success = gtk_color_attributes.success_color;
-    };
-
-    rgba = {
       borders = gtk_color_attributes.borders;
       unfocused_borders = gtk_color_attributes.unfocused_borders;
 
-      insensitive_foreground = gtk_color_attributes.insensitive_fg_color;
+      background = gtk_color_attributes.theme_bg_color;
+      base_background = gtk_color_attributes.theme_base_color;
+      selected_background = gtk_color_attributes.theme_selected_bg_color;
+      unfocused_background = gtk_color_attributes.theme_unfocused_bg_color;
+      unfocused_base_background = gtk_color_attributes.theme_unfocused_base_color;
+      unfocused_selected_background = gtk_color_attributes.theme_unfocused_selected_bg_color;
+      insensitive_background = gtk_color_attributes.insensitive_bg_color;
+      insensitive_base_background = gtk_color_attributes.insensitive_base_color;
+      content_view_background = gtk_color_attributes.content_view_bg;
+      text_view_background = gtk_color_attributes.text_view_bg;
+
+      foreground = gtk_color_attributes.theme_fg_color;
       selected_foreground = gtk_color_attributes.theme_selected_fg_color;
+      insensitive_foreground = gtk_color_attributes.insensitive_fg_color;
+      text = gtk_color_attributes.theme_text_color;
+      unfocused_foreground = gtk_color_attributes.theme_unfocused_fg_color;
       unfocused_selected_foreground = gtk_color_attributes.theme_unfocused_selected_fg_color;
       unfocused_insensitive_color = gtk_color_attributes.unfocused_insensitive_color;
+      unfocused_text = gtk_color_attributes.theme_unfocused_text_color;
+
+      warning = gtk_color_attributes.warning_color;
+      error = gtk_color_attributes.error_color;
+      success = gtk_color_attributes.success_color;
     };
   };
 
@@ -1887,6 +1882,7 @@ in
         keepassxc
         kernelshark
         kicad
+        killall
         kmod
         letterpress
         lhasa
@@ -2179,8 +2175,9 @@ in
         zip
         zlib
       ])
-      # ++ (with php84Packages; [
-      # ])
+      ++ (with php84Packages; [
+        psysh
+      ])
       ++ (with python313Packages; [
         black
         numpy
@@ -3334,7 +3331,7 @@ in
 
               .control-center {
                 border-radius: ${toString design_factor}px;
-                background-color: ${colors.hex.background};
+                background-color: ${colors.hex.borders};
                 font-size: ${toString font_preferences.size}px;
                 color: ${colors.hex.foreground};
               }
@@ -3889,7 +3886,7 @@ in
               #battery,
               #window {
                 border-radius: ${toString design_factor}px;
-                background-color: ${colors.hex.background};
+                background-color: ${colors.hex.borders};
                 padding: 2px 8px;
                 color: ${colors.hex.foreground};
               }
@@ -3991,7 +3988,7 @@ in
               button {
                 margin: 0px 2px;
                 border-radius: ${toString design_factor}px;
-                background-color: ${colors.hex.background};
+                background-color: ${colors.hex.borders};
                 padding: 0px;
                 color: ${colors.hex.foreground};
               }
@@ -4001,7 +3998,7 @@ in
               }
 
               button.active {
-                background-color: ${colors.hex.base_background};
+                background-color: ${colors.hex.background};
               }
 
               #window label {
@@ -4011,7 +4008,7 @@ in
 
               #tray > widget {
                 border-radius: ${toString design_factor}px;
-                background-color: ${colors.hex.background};
+                background-color: ${colors.hex.borders};
                 color: ${colors.hex.foreground};
               }
 
@@ -4024,7 +4021,7 @@ in
               }
 
               #tray > .active {
-                background-color: ${colors.hex.base_background};
+                background-color: ${colors.hex.borders};
               }
 
               #tray > .needs-attention {
@@ -4033,7 +4030,7 @@ in
               }
 
               #tray > widget:hover {
-                background-color: ${colors.hex.base_background};
+                background-color: ${colors.hex.background};
               }
             '';
           };
