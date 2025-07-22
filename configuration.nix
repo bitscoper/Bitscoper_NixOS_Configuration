@@ -10,6 +10,24 @@
 let
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
 
+  nix-rice = builtins.fetchTarball "https://github.com/bertof/nix-rice/archive/refs/heads/main.tar.gz";
+  nix-rice-lib = import (nix-rice + "/lib.nix") {
+    lib = pkgs.lib;
+    kitty-themes-src = null;
+  };
+
+  hex_code_to_rgba =
+    hex_color:
+    let
+      color_set = nix-rice-lib.color.hexToRgba hex_color;
+
+      red = builtins.floor color_set.r;
+      green = builtins.floor color_set.g;
+      blue = builtins.floor color_set.b;
+      alpha = builtins.floor (color_set.a / 255);
+    in
+    "rgba(${toString red}, ${toString green}, ${toString blue}, ${toString alpha})";
+
   android_nixpkgs =
     pkgs.callPackage
       (import (
@@ -3410,83 +3428,94 @@ in
                 immediate_render = true;
                 fractional_scaling = 2; # 2 = Automatic
 
-                hide_cursor = false;
                 text_trim = false;
+                hide_cursor = false;
 
                 ignore_empty_input = true;
+                fail_timeout = 2000; # ms
               };
 
               auth = {
                 pam = {
                   enabled = true;
+                  module = "hyprlock";
+                };
+
+                fingerprint = {
+                  enabled = true;
+
+                  ready_message = "Scan Fingerprint";
+                  present_message = "Scanning Fingerprint";
+
+                  retry_delay = 250; # ms
                 };
               };
 
               background = [
                 {
-                  monitor = "";
+                  monitor = ""; # All
                   path = wallpaper;
                 }
               ];
 
               label = [
                 {
-                  monitor = "";
+                  monitor = ""; # All
                   halign = "center";
                   valign = "top";
                   position = "0, -128";
 
                   text_align = "center";
                   font_family = font_preferences.name.sans_serif;
-                  # color = ""; # TODO
-                  font_size = 64;
+                  color = hex_code_to_rgba colors.hex.foreground;
+                  font_size = design_factor * 4;
                   text = "$TIME12";
                 }
 
                 {
-                  monitor = "";
+                  monitor = ""; # All
                   halign = "center";
                   valign = "center";
                   position = "0, 0";
 
                   text_align = "center";
                   font_family = font_preferences.name.sans_serif;
-                  # color = ""; # TODO
-                  font_size = 16;
+                  color = hex_code_to_rgba colors.hex.foreground;
+                  font_size = design_factor;
                   text = "$DESC"; # Full Name
                 }
               ];
 
               input-field = [
                 {
-                  monitor = "";
+                  monitor = ""; # All
                   halign = "center";
                   valign = "bottom";
                   position = "0, 128";
 
                   size = "256, 48";
-                  rounding = 16;
+                  rounding = design_factor;
                   outline_thickness = 1;
-                  # outer_color = ""; # TODO
+                  outer_color = hex_code_to_rgba colors.hex.background;
                   shadow_passes = 0;
                   hide_input = false;
-                  # inner_color = ""; # TODO
+                  inner_color = hex_code_to_rgba colors.hex.background;
                   font_family = font_preferences.name.sans_serif;
-                  # font_color = ""; # TODO
-                  placeholder_text = "Password";
+                  font_color = hex_code_to_rgba colors.hex.foreground;
+                  placeholder_text = "Enter Password";
                   dots_center = true;
                   dots_rounding = -1;
 
                   fade_on_empty = true;
 
                   invert_numlock = false;
-                  # capslock_color = ""; # TODO
-                  # numlock_color = ""; # TODO
-                  # bothlock_color = ""; # TODO
+                  capslock_color = hex_code_to_rgba colors.hex.warning;
+                  numlock_color = hex_code_to_rgba colors.hex.warning;
+                  bothlock_color = hex_code_to_rgba colors.hex.warning;
 
-                  # check_color = ""; # TODO
-                  # fail_color = ; # TODO
-                  fail_text = "<i>$FAIL <b>($ATTEMPTS)</b></i>";
+                  check_color = hex_code_to_rgba colors.hex.success;
+                  fail_color = hex_code_to_rgba colors.hex.error;
+                  fail_text = "$FAIL <b>($ATTEMPTS)</b>";
                 }
               ];
             };
