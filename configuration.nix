@@ -16,7 +16,7 @@ let
     kitty-themes-src = null;
   };
 
-  hex_code_to_rgba =
+  convert_hex_color_code_to_rgba_color_code =
     hex_color:
     let
       color_set = nix-rice-lib.color.hexToRgba hex_color;
@@ -61,10 +61,6 @@ let
     ]
   );
   android_sdk_path = "${android_sdk}/share/android-sdk";
-
-  backlight_device = "intel_backlight";
-
-  design_factor = 16;
 
   font_preferences = {
     package = pkgs.nerd-fonts.noto;
@@ -145,11 +141,14 @@ let
     };
   };
 
+  design_factor = 16;
   animation_duration = 200; # ms
 
   wallpaper = builtins.fetchurl {
     url = "https://raw.githubusercontent.com/JaKooLit/Wallpaper-Bank/refs/heads/main/wallpapers/Dark_Nature.png";
   };
+
+  backlight_device = "intel_backlight";
 
   secrets = import ./secrets.nix;
 in
@@ -590,7 +589,7 @@ in
 
           ReverseServiceDiscovery = true;
           NameResolving = true;
-          RemoteNameRequestRetryDelay = 60; # Seconds
+          RemoteNameRequestRetryDelay = 60; # 1 Minute
           RefreshDiscovery = true;
           TemporaryTimeout = 0; # 0 = Disabled
 
@@ -2906,7 +2905,7 @@ in
             ];
 
             bind = [
-              "SUPER, L, exec, hyprlock --immediate"
+              "SUPER, L, exec, loginctl lock-session"
               "SUPER CTRL, L, exec, uwsm stop"
               "SUPER CTRL, P, exec, systemctl poweroff"
               "SUPER CTRL, R, exec, systemctl reboot"
@@ -3396,6 +3395,30 @@ in
             '';
           };
 
+          hypridle = {
+            enable = true;
+            package = pkgs.hypridle;
+
+            settings = {
+              general = {
+                ignore_systemd_inhibit = false;
+                ignore_wayland_inhibit = false;
+                ignore_dbus_inhibit = false;
+
+                lock_cmd = "pidof hyprlock || hyprlock --immediate";
+              };
+
+              listener = [
+                {
+                  ignore_inhibit = false;
+
+                  timeout = 300; # 5 Minutes
+                  on-timeout = "loginctl lock-session";
+                }
+              ];
+            };
+          };
+
           hyprpaper = {
             enable = true;
             package = pkgs.hyprpaper;
@@ -3453,34 +3476,34 @@ in
 
               background = [
                 {
-                  monitor = ""; # All
+                  monitor = ""; # "" = All
                   path = wallpaper;
                 }
               ];
 
               label = [
                 {
-                  monitor = ""; # All
+                  monitor = ""; # "" = All
                   halign = "center";
                   valign = "top";
                   position = "0, -128";
 
                   text_align = "center";
                   font_family = font_preferences.name.sans_serif;
-                  color = hex_code_to_rgba colors.hex.foreground;
+                  color = convert_hex_color_code_to_rgba_color_code colors.hex.foreground;
                   font_size = design_factor * 4;
                   text = "$TIME12";
                 }
 
                 {
-                  monitor = ""; # All
+                  monitor = ""; # "" = All
                   halign = "center";
                   valign = "center";
                   position = "0, 0";
 
                   text_align = "center";
                   font_family = font_preferences.name.sans_serif;
-                  color = hex_code_to_rgba colors.hex.foreground;
+                  color = convert_hex_color_code_to_rgba_color_code colors.hex.foreground;
                   font_size = design_factor;
                   text = "$DESC"; # Full Name
                 }
@@ -3488,7 +3511,7 @@ in
 
               input-field = [
                 {
-                  monitor = ""; # All
+                  monitor = ""; # "" = All
                   halign = "center";
                   valign = "bottom";
                   position = "0, 128";
@@ -3496,12 +3519,12 @@ in
                   size = "256, 48";
                   rounding = design_factor;
                   outline_thickness = 1;
-                  outer_color = hex_code_to_rgba colors.hex.background;
+                  outer_color = convert_hex_color_code_to_rgba_color_code colors.hex.background;
                   shadow_passes = 0;
                   hide_input = false;
-                  inner_color = hex_code_to_rgba colors.hex.background;
+                  inner_color = convert_hex_color_code_to_rgba_color_code colors.hex.background;
                   font_family = font_preferences.name.sans_serif;
-                  font_color = hex_code_to_rgba colors.hex.foreground;
+                  font_color = convert_hex_color_code_to_rgba_color_code colors.hex.foreground;
                   placeholder_text = "Enter Password";
                   dots_center = true;
                   dots_rounding = -1;
@@ -3509,12 +3532,12 @@ in
                   fade_on_empty = true;
 
                   invert_numlock = false;
-                  capslock_color = hex_code_to_rgba colors.hex.warning;
-                  numlock_color = hex_code_to_rgba colors.hex.warning;
-                  bothlock_color = hex_code_to_rgba colors.hex.warning;
+                  capslock_color = convert_hex_color_code_to_rgba_color_code colors.hex.warning;
+                  numlock_color = convert_hex_color_code_to_rgba_color_code colors.hex.warning;
+                  bothlock_color = convert_hex_color_code_to_rgba_color_code colors.hex.warning;
 
-                  check_color = hex_code_to_rgba colors.hex.success;
-                  fail_color = hex_code_to_rgba colors.hex.error;
+                  check_color = convert_hex_color_code_to_rgba_color_code colors.hex.success;
+                  fail_color = convert_hex_color_code_to_rgba_color_code colors.hex.error;
                   fail_text = "$FAIL <b>($ATTEMPTS)</b>";
                 }
               ];

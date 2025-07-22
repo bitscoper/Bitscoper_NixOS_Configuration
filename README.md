@@ -31,7 +31,8 @@ My NixOS Configuration
 - **Status Bar:** [Waybar](https://github.com/Alexays/Waybar/)
 - **Notification Daemon and Center:** [Sway Notification Center](https://github.com/ErikReider/SwayNotificationCenter/)
 - **Input Method (IM) Framework:** [Fcitx 5](https://github.com/fcitx/fcitx5/)
-- **Lock Screen:** [gtklock](https://github.com/jovanlanik/gtklock/)
+- **Idle Daemon:** [hypridle](https://github.com/hyprwm/hypridle/)
+- **Screen Locker:** [hyprlock](https://github.com/hyprwm/hyprlock/)
 - **Menu / Launcher:** [wofi](https://hg.sr.ht/~scoopta/wofi)
 - **Clipboard History Manager:** [cliphist](https://github.com/sentriz/cliphist/)
 - **On-Screen Display (OSD):** [Syshud](https://github.com/System64fumo/syshud/)
@@ -40,8 +41,8 @@ My NixOS Configuration
 
 - **Font Family:** [Noto Nerd](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Noto/)
 - **Cursor:** [Bibata Modern Classic](https://github.com/ful1e5/Bibata_Cursor/)
-- **GTK Theme:** [Jasper Grey Dark](https://github.com/vinceliuice/Jasper-gtk-theme/)
-- **Wallpaper Utility:** [Hyprpaper](https://github.com/hyprwm/hyprpaper/)
+- **GTK Theme:** [Adwaita Dark](https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/gtk-contained-dark.css)
+- **Wallpaper Utility:** [hyprpaper](https://github.com/hyprwm/hyprpaper/)
 
 ---
 
