@@ -443,6 +443,23 @@ in
           };
         };
 
+        hyprlock = {
+          unixAuth = true;
+          nodelay = false;
+
+          fprintAuth = true;
+
+          logFailures = true;
+
+          enableGnomeKeyring = true;
+
+          gnupg = {
+            enable = true;
+            storeOnly = false;
+            noAutostart = false;
+          };
+        };
+
         sudo = {
           unixAuth = true;
           nodelay = false;
@@ -1249,33 +1266,6 @@ in
     };
 
     xwayland.enable = true;
-
-    gtklock = {
-      enable = true;
-      # package = pkgs.gtklock;
-      package = (pkgs.callPackage ./Custom_gtklock.nix { });
-      modules = with pkgs; [
-        gtklock-playerctl-module
-        gtklock-powerbar-module
-      ];
-
-      config = {
-        main = {
-          time-format = "%I:%M %p";
-          gtk-theme = "Adwaita-dark";
-        };
-      };
-
-      style = ''
-        window {
-          background-image: url("${wallpaper}");
-          background-repeat: no-repeat;
-          background-position: center;
-          background-size: cover;
-          background-color: ${colors.hex.background};
-        }
-      '';
-    };
 
     bash = {
       completion = {
@@ -2898,7 +2888,7 @@ in
             ];
 
             bind = [
-              "SUPER, L, exec, gtklock"
+              "SUPER, L, exec, hyprlock --immediate"
               "SUPER CTRL, L, exec, uwsm stop"
               "SUPER CTRL, P, exec, systemctl poweroff"
               "SUPER CTRL, R, exec, systemctl reboot"
@@ -3409,6 +3399,99 @@ in
         };
 
         programs = {
+          hyprlock = {
+            enable = true;
+            package = pkgs.hyprlock;
+
+            sourceFirst = true;
+
+            settings = {
+              general = {
+                immediate_render = true;
+                fractional_scaling = 2; # 2 = Automatic
+
+                hide_cursor = false;
+                text_trim = false;
+
+                ignore_empty_input = true;
+              };
+
+              auth = {
+                pam = {
+                  enabled = true;
+                };
+              };
+
+              background = [
+                {
+                  monitor = "";
+                  path = wallpaper;
+                }
+              ];
+
+              label = [
+                {
+                  monitor = "";
+                  halign = "center";
+                  valign = "top";
+                  position = "0, -128";
+
+                  text_align = "center";
+                  font_family = font_preferences.name.sans_serif;
+                  # color = ""; # TODO
+                  font_size = 64;
+                  text = "$TIME12";
+                }
+
+                {
+                  monitor = "";
+                  halign = "center";
+                  valign = "center";
+                  position = "0, 0";
+
+                  text_align = "center";
+                  font_family = font_preferences.name.sans_serif;
+                  # color = ""; # TODO
+                  font_size = 16;
+                  text = "$DESC"; # Full Name
+                }
+              ];
+
+              input-field = [
+                {
+                  monitor = "";
+                  halign = "center";
+                  valign = "bottom";
+                  position = "0, 128";
+
+                  size = "256, 48";
+                  rounding = 16;
+                  outline_thickness = 1;
+                  # outer_color = ""; # TODO
+                  shadow_passes = 0;
+                  hide_input = false;
+                  # inner_color = ""; # TODO
+                  font_family = font_preferences.name.sans_serif;
+                  # font_color = ""; # TODO
+                  placeholder_text = "Password";
+                  dots_center = true;
+                  dots_rounding = -1;
+
+                  fade_on_empty = true;
+
+                  invert_numlock = false;
+                  # capslock_color = ""; # TODO
+                  # numlock_color = ""; # TODO
+                  # bothlock_color = ""; # TODO
+
+                  # check_color = ""; # TODO
+                  # fail_color = ; # TODO
+                  fail_text = "<i>$FAIL <b>($ATTEMPTS)</b></i>";
+                }
+              ];
+            };
+          };
+
           waybar = {
             enable = true;
             package = pkgs.waybar;
