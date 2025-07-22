@@ -1745,6 +1745,7 @@ in
         # virt-v2v # Temporary
         above
         acl
+        agi # Cannot find libswt
         aircrack-ng
         alac
         alpaca
@@ -1765,7 +1766,6 @@ in
         binary
         binwalk
         bleachbit
-        blender
         bluez-tools
         brightnessctl
         btop
@@ -1938,6 +1938,7 @@ in
         logdy
         logtop
         lrzip
+        lsb-release
         lshw
         lsof
         lsscsi
@@ -1995,6 +1996,7 @@ in
         patchelf
         pciutils
         pcre
+        pdfarranger
         pg_top
         php84
         pkg-config
@@ -2030,6 +2032,7 @@ in
         share-preview
         shared-mime-info
         sherlock
+        shotcut
         sipvicious
         sleuthkit
         smartmontools

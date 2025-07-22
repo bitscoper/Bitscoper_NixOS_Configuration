@@ -62,11 +62,13 @@ My NixOS Configuration
 
 - **Text Editors:** [VSCodium](https://github.com/VSCodium/vscodium/), and [nano](https://cgit.git.savannah.gnu.org/cgit/nano.git/)
 - **Subtitle Editor:** [Subtitle Edit](https://github.com/SubtitleEdit/subtitleedit/)
-- **Screenshot Utility:** [slurp](https://github.com/emersion/slurp/) + [grim](https://github.com/emersion/grim/)
+- **Screenshot Utility:** [Flameshot](https://github.com/flameshot-org/flameshot/)
+- **Webcam Utility:** [Webcamoid](https://github.com/webcamoid/webcamoid/)
 - **Image Editor:** [GNU Image Manipulation Program (GIMP)](https://gitlab.gnome.org/GNOME/gimp/)
+- **PDF Rearranger:** [PDF Arranger](https://github.com/pdfarranger/pdfarranger/)
 - **Audio Recorder and Editor:** [Audacity](https://github.com/audacity/audacity/)
 - **Video Recorder and Streamer:** [OBS Studio](https://github.com/obsproject/obs-studio/)
-- **3D Amination Tool and Video Editor:** [Blender](https://projects.blender.org/blender/blender.git)
+- **Video Editor:** [Shotcut](https://github.com/mltframework/shotcut/)
 - **Office Suite:** [LibreOffice](https://git.libreoffice.org/core/)
 - **Electronics Designers:** [KiCad EDA](https://gitlab.com/kicad/code/kicad/), and [Fritzing](https://github.com/fritzing/fritzing-app/)
 
@@ -97,7 +99,7 @@ My NixOS Configuration
 ---
 
 - **Virtual Machine (VM) Hypervisor:** [QEMU](https://github.com/qemu/qemu/)  -> KVM
-- **Container Engine:** [Podman](https://github.com/containers/podman/) -> with Docker Compatibility
+- **Container Engine:** [Podman](https://github.com/containers/podman/) (with Docker Compatibility)
 - **Android Container Environment:** [Waydroid](https://github.com/waydroid/waydroid/)
 
 ---
