@@ -527,8 +527,8 @@ in
   };
 
   hardware = {
-    enableAllFirmware = true;
-    enableRedistributableFirmware = true;
+    enableAllFirmware = true; # Unfree
+    enableRedistributableFirmware = true; # Unfree
 
     cpu = {
       intel = {
@@ -1736,10 +1736,10 @@ in
     systemPackages =
       with pkgs;
       [
-        # celestia # Temporary
-        # darktable # Temporary
-        # gimp-with-plugins # Temporary
+        # audacity # Temporary
+        # darktable # Marked Insecure
         # gpredicts # Temporary
+        # platformio # Temporary
         # reiser4progs # Marked Broken
         # virt-top # Temporary
         # virt-v2v # Temporary
@@ -1758,7 +1758,6 @@ in
         aribb24
         aribb25
         arj
-        audacity
         autopsy
         avrdude
         baobab
@@ -1776,6 +1775,7 @@ in
         bzip2
         bzip3
         cabextract
+        celestia
         celt
         certbot-full
         clang
@@ -1833,7 +1833,7 @@ in
         gcc
         gdb
         ghidra
-        gimp
+        gimp-with-plugins
         git-doc
         git-filter-repo
         glib
@@ -2000,7 +2000,6 @@ in
         pg_top
         php84
         pkg-config
-        platformio
         playerctl
         podman-compose
         podman-desktop
@@ -4258,7 +4257,10 @@ in
                     albymor.increment-selection
                     alefragnani.bookmarks
                     alexisvt.flutter-snippets
+                    antfu.slidev
                     anweber.vscode-httpyac
+                    arrterian.nix-env-selector
+                    bierner.color-info
                     bierner.comment-tagged-templates
                     bierner.docs-view
                     bierner.emojisense
@@ -4268,16 +4270,17 @@ in
                     bierner.markdown-footnotes
                     bierner.markdown-mermaid
                     bierner.markdown-preview-github-styles
+                    bmalehorn.vscode-fish
                     bradgashler.htmltagwrap
                     chanhx.crabviz
                     christian-kohler.path-intellisense
                     codezombiech.gitignore
                     coolbear.systemd-unit-file
+                    cweijan.vscode-database-client2
                     dart-code.dart-code
                     dart-code.flutter
                     davidanson.vscode-markdownlint
                     dendron.adjust-heading-level
-                    devsense.phptools-vscode
                     dotenv.dotenv-vscode
                     ecmel.vscode-html-css
                     edonet.vscode-command-runner
@@ -4288,6 +4291,7 @@ in
                     formulahendry.auto-rename-tag
                     formulahendry.code-runner
                     foxundermoon.shell-format
+                    funkyremi.vscode-google-translate
                     github.vscode-github-actions
                     github.vscode-pull-request-github
                     grapecity.gc-excelviewer
@@ -4298,22 +4302,23 @@ in
                     ibm.output-colorizer
                     iciclesoft.workspacesort
                     iliazeus.vscode-ansi
-                    illixion.vscode-vibrancy-continued
                     james-yu.latex-workshop
                     jbockle.jbockle-format-files
                     jellyedwards.gitsweep
                     jkillian.custom-local-formatters
                     jnoortheen.nix-ide
                     jock.svg
-                    kamikillerto.vscode-colorize
                     llvm-vs-code-extensions.vscode-clangd
+                    lokalise.i18n-ally
                     mads-hartmann.bash-ide-vscode
                     mechatroner.rainbow-csv
                     meganrogge.template-string-converter
                     mishkinf.goto-next-previous-member
                     mkhl.direnv
                     moshfeu.compare-folders
+                    ms-azuretools.vscode-containers
                     ms-azuretools.vscode-docker
+                    ms-kubernetes-tools.vscode-kubernetes-tools
                     ms-python.black-formatter
                     ms-python.debugpy
                     ms-python.isort
@@ -4324,18 +4329,15 @@ in
                     ms-toolsai.jupyter-renderers
                     ms-toolsai.vscode-jupyter-cell-tags
                     ms-toolsai.vscode-jupyter-slideshow
-                    ms-vscode-remote.remote-containers
-                    ms-vscode-remote.remote-ssh
-                    ms-vscode-remote.remote-ssh-edit
+                    ms-vscode.anycode
                     ms-vscode.cmake-tools
-                    ms-vscode.cpptools
                     ms-vscode.hexeditor
                     ms-vscode.live-server
                     ms-vscode.makefile-tools
                     ms-vscode.test-adapter-converter
-                    ms-vsliveshare.vsliveshare
-                    ms-windows-ai-studio.windows-ai-studio
+                    njpwerner.autodocstring
                     oderwat.indent-rainbow
+                    piousdeer.adwaita-theme
                     platformio.platformio-vscode-ide
                     quicktype.quicktype
                     redhat.vscode-xml
@@ -4345,20 +4347,22 @@ in
                     ryu1kn.partial-diff
                     sanaajani.taskrunnercode
                     shardulm94.trailing-spaces
-                    skyapps.fish-vscode
                     slevesque.vscode-multiclip
                     spywhere.guides
                     stylelint.vscode-stylelint
                     tailscale.vscode-tailscale
                     tamasfe.even-better-toml
                     timonwong.shellcheck
+                    twxs.cmake
                     usernamehw.errorlens
                     vincaslt.highlight-matching-tag
                     visualstudioexptteam.intellicode-api-usage-examples
                     visualstudioexptteam.vscodeintellicode
                     vscjava.vscode-gradle
                     vscode-icons-team.vscode-icons
+                    vspacecode.whichkey
                     wmaurer.change-case
+                    xdebug.php-debug
                     zainchen.json
                   ]
                   ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
@@ -4413,7 +4417,7 @@ in
                 # };
               };
             };
-          }; # Unfree
+          };
 
           matplotlib = {
             enable = true;
@@ -4570,4 +4574,5 @@ in
 # FIXME: hardinfo2
 # FIXME: MariaDB > Login
 # FIXME: Unified Greeter and Lockscreen Themes
+# FIXME: Wofi > Not Launching
 # FIXME: Wofi > Window > Border Radius > Transperant Background
