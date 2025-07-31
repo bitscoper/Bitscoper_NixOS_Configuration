@@ -192,6 +192,7 @@ in
 
     extraModulePackages = with config.boot.kernelPackages; [
       akvcam
+      v4l2loopback
     ];
 
     kernelModules = [
@@ -201,7 +202,10 @@ in
       "spd5118"
     ];
 
-    extraModprobeConfig = "options kvm_intel nested=1";
+    extraModprobeConfig = ''
+      options kvm_intel nested=1
+      options v4l2loopback devices=1 video_nr=1 card_label="OBS Camera" exclusive_caps=1
+    '';
 
     kernelParams = [
       "intel_iommu=on"
@@ -1448,11 +1452,6 @@ in
 
     file-roller.enable = true;
 
-    virt-manager = {
-      enable = true;
-      package = pkgs.virt-manager;
-    };
-
     thunderbird = {
       enable = true;
       package = pkgs.thunderbird-latest;
@@ -1468,11 +1467,44 @@ in
       usbmon.enable = true;
     };
 
+    obs-studio = {
+      enable = true;
+      package = pkgs.obs-studio;
+
+      enableVirtualCamera = true;
+
+      plugins = with pkgs.obs-studio-plugins; [
+        obs-3d-effect
+        obs-backgroundremoval
+        obs-composite-blur
+        obs-gradient-source
+        obs-gstreamer
+        obs-move-transition
+        obs-multi-rtmp
+        obs-mute-filter
+        obs-pipewire-audio-capture
+        obs-scale-to-sound
+        obs-source-clone
+        obs-source-record
+        obs-source-switcher
+        obs-text-pthread
+        obs-transition-table
+        obs-vaapi
+        obs-vertical-canvas
+        obs-vkcapture
+      ];
+    };
+
     localsend = {
       enable = true;
       package = pkgs.localsend;
 
       openFirewall = true;
+    };
+
+    virt-manager = {
+      enable = true;
+      package = pkgs.virt-manager;
     };
 
     dconf = {
@@ -1824,6 +1856,7 @@ in
         ffmpegthumbnailer
         fh
         file
+        fileinfo
         flake-checker
         flightgear
         flutter
@@ -1887,6 +1920,7 @@ in
         johnny
         jxrlib
         keepassxc
+        kernel-hardening-checker
         kernelshark
         kicad
         killall
@@ -1934,7 +1968,10 @@ in
         libwebp
         libxfs
         libzip
+        linux-doc
+        linux-manual
         linuxConsoleTools
+        linuxHeaders
         logdy
         logtop
         lrzip
@@ -1958,6 +1995,7 @@ in
         media-player-info
         meld
         mesa-demos
+        metadata-cleaner
         mfcuk
         mfoc
         mission-center
@@ -2003,6 +2041,7 @@ in
         playerctl
         podman-compose
         podman-desktop
+        profile-cleaner
         progress
         pwvucontrol
         python313Full
@@ -2657,6 +2696,7 @@ in
         "video/vnd.youtube.yt" = "vlc.desktop";
         "video/VP8" = "vlc.desktop";
         "video/VP9" = "vlc.desktop";
+        "video/x-matroska" = "vlc.desktop"; # https://mime.wcode.net/mkv
 
         "application/vnd.oasis.opendocument.text" = "writer.desktop"; # .odt
         "application/msword" = "writer.desktop"; # .doc
@@ -2865,16 +2905,12 @@ in
             enable = false;
             enableXdgAutostart = true;
 
-            # extraCommands = [
-            # ];
-
             variables = [
               "--all"
             ];
           };
 
           plugins = with pkgs.hyprlandPlugins; [
-            # hypr-dynamic-cursors
           ];
 
           xwayland.enable = true;
@@ -3179,32 +3215,28 @@ in
               first_launch_animation = true;
 
               bezier = [
-                "easeOutQuint, 0.23, 1, 0.32, 1"
-                "easeInOutCubic, 0.65, 0.05, 0.36, 1"
-                "linear, 0, 0, 1, 1"
-                "almostLinear, 0.5, 0.5, 0.75, 1.0"
-                "quick, 0.15, 0, 0.1, 1"
+                "linear, 0, 0, 1, 1" # https://www.cssportal.com/css-cubic-bezier-generator/#0,0,1,1
               ];
 
               animation = [
-                "global, 1, 10, default"
-                "border, 1, 5.39, easeOutQuint"
-                "windows, 1, 4.79, easeOutQuint"
-                "windowsIn, 1, 4.1, easeOutQuint, popin 87%"
-                "windowsOut, 1, 1.49, linear, popin 87%"
-                "fadeIn, 1, 1.73, almostLinear"
-                "fadeOut, 1, 1.46, almostLinear"
-                "fade, 1, 3.03, quick"
-                "layers, 1, 3.81, easeOutQuint"
-                "layersIn, 1, 4, easeOutQuint, fade"
-                "layersOut, 1, 1.5, linear, fade"
-                "fadeLayersIn, 1, 1.79, almostLinear"
-                "fadeLayersOut, 1, 1.39, almostLinear"
-                "workspaces, 1, 1.94, almostLinear, fade"
-                "workspacesIn, 1, 1.21, almostLinear, fade"
-                "workspacesOut, 1, 1.94, almostLinear, fade"
+                "global, 1, 1.0, linear"
+                "border, 1, 1.0, linear"
+                "windows, 1, 1.0, linear"
+                "windowsIn, 1, 1.0, linear"
+                "windowsOut, 1, 1.0, linear"
+                "fadeIn, 1, 1.0, linear"
+                "fadeOut, 1, 1.0, linear"
+                "fade, 1, 1.0, linear"
+                "layers, 1, 1.0, linear"
+                "layersIn, 1, 1.0, linear"
+                "layersOut, 1, 1.0, linear"
+                "fadeLayersIn, 1, 1.0, linear"
+                "fadeLayersOut, 1, 1.0, linear"
+                "workspaces, 1, 1.0, linear"
+                "workspacesIn, 1, 1.0, linear"
+                "workspacesOut, 1, 1.0, linear"
               ];
-              # Name, On/Off, Speed, Curve [, Style]
+              # Name, On/Off, Speed, Bezier
             };
           };
         };
@@ -3550,10 +3582,7 @@ in
             enable = true;
             package = pkgs.waybar;
 
-            systemd = {
-              enable = true;
-              # target = ;
-            };
+            systemd.enable = true;
 
             settings = {
               top_bar = {
@@ -4184,7 +4213,8 @@ in
               gtk_dark = true;
               columns = 2;
               dynamic_lines = false;
-              lines = 9; # 9 -1 = 8
+              # lines = 9; # 9 -1 = 8 # Seems Broken
+              height = "50%";
               hide_scroll = false;
 
               hide_search = false;
@@ -4291,7 +4321,6 @@ in
                     formulahendry.auto-rename-tag
                     formulahendry.code-runner
                     foxundermoon.shell-format
-                    funkyremi.vscode-google-translate
                     github.vscode-github-actions
                     github.vscode-pull-request-github
                     grapecity.gc-excelviewer
@@ -4517,38 +4546,13 @@ in
                 # "Tab Disguiser"
                 id = "goaelnlldimhbhipidknnkijnmfgddoc";
               }
-            ]; # It does not work with Ungoogled Chromium. I currently install the extensions manually.
+            ]; # Does not work with Ungoogled Chromium. I currently install the extensions manually.
 
             commandLineArgs = [
               "--ozone-platform=wayland"
               "--password-store=gnome"
               "--proxy-auto-detect"
               "--extension-mime-request-handling=always-prompt-for-install"
-            ];
-          };
-
-          obs-studio = {
-            enable = true;
-            package = pkgs.obs-studio;
-            plugins = with pkgs.obs-studio-plugins; [
-              # obs-vertical-canvas # Temporary
-              obs-3d-effect
-              obs-backgroundremoval
-              obs-composite-blur
-              obs-gradient-source
-              obs-gstreamer
-              obs-move-transition
-              obs-multi-rtmp
-              obs-mute-filter
-              obs-pipewire-audio-capture
-              obs-scale-to-sound
-              obs-source-clone
-              obs-source-record
-              obs-source-switcher
-              obs-text-pthread
-              obs-transition-table
-              obs-vaapi
-              obs-vkcapture
             ];
           };
 
@@ -4574,5 +4578,4 @@ in
 # FIXME: hardinfo2
 # FIXME: MariaDB > Login
 # FIXME: Unified Greeter and Lockscreen Themes
-# FIXME: Wofi > Not Launching
 # FIXME: Wofi > Window > Border Radius > Transperant Background
