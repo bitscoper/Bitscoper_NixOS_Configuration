@@ -63,7 +63,6 @@ My NixOS Configuration
 - **Text Editors:** [VSCodium](https://github.com/VSCodium/vscodium/), and [nano](https://cgit.git.savannah.gnu.org/cgit/nano.git/)
 - **Subtitle Editor:** [Subtitle Edit](https://github.com/SubtitleEdit/subtitleedit/)
 - **Screenshot Utility:** [Flameshot](https://github.com/flameshot-org/flameshot/)
-- **Webcam Utility:** [Webcamoid](https://github.com/webcamoid/webcamoid/)
 - **Image Editor:** [GNU Image Manipulation Program (GIMP)](https://gitlab.gnome.org/GNOME/gimp/)
 - **PDF Rearranger:** [PDF Arranger](https://github.com/pdfarranger/pdfarranger/)
 - **Audio Recorder and Editor:** [Audacity](https://github.com/audacity/audacity/)

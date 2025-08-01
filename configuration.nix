@@ -173,6 +173,45 @@ in
       };
     };
 
+    kernel = {
+      enable = true;
+
+      sysctl = {
+        "net.ipv4.tcp_syncookies" = true;
+      };
+    };
+
+    kernelPackages = pkgs.linuxKernel.packages.linux_zen;
+
+    extraModulePackages = with config.boot.kernelPackages; [
+      mm-tools
+      shufflecake
+      turbostat
+      usbip
+    ];
+
+    kernelModules = [
+      "at24"
+      "ee1004"
+      "kvm-intel"
+      "spd5118"
+    ];
+
+    extraModprobeConfig = ''
+      options kvm_intel nested=1
+    '';
+
+    kernelParams = [
+      "intel_iommu=on"
+      "iommu=pt"
+      "kvm.ignore_msrs=1"
+      "boot.shell_on_fail"
+      "rd.systemd.show_status=true"
+      "rd.udev.log_level=err"
+      "udev.log_level=err"
+      "udev.log_priority=err"
+    ];
+
     initrd = {
       enable = true;
 
@@ -187,36 +226,6 @@ in
 
       verbose = true;
     };
-
-    kernelPackages = pkgs.linuxPackages_zen;
-
-    extraModulePackages = with config.boot.kernelPackages; [
-      akvcam
-      v4l2loopback
-    ];
-
-    kernelModules = [
-      "at24"
-      "ee1004"
-      "kvm-intel"
-      "spd5118"
-    ];
-
-    extraModprobeConfig = ''
-      options kvm_intel nested=1
-      options v4l2loopback devices=1 video_nr=1 card_label="OBS Camera" exclusive_caps=1
-    '';
-
-    kernelParams = [
-      "intel_iommu=on"
-      "iommu=pt"
-      "kvm.ignore_msrs=1"
-      "boot.shell_on_fail"
-      "rd.systemd.show_status=true"
-      "rd.udev.log_level=err"
-      "udev.log_level=err"
-      "udev.log_priority=err"
-    ];
 
     consoleLogLevel = 4; # 4 = KERN_WARNING
 
@@ -294,7 +303,7 @@ in
       auto-optimise-store = true;
 
       cores = 0; # 0 = All
-      # max-jobs = 1;
+      max-jobs = 1;
     };
 
     gc = {
@@ -642,6 +651,11 @@ in
 
     sane = {
       enable = true;
+      backends-package = pkgs.sane-backends;
+      extraBackends = with pkgs; [
+      ];
+      snapshot = false;
+
       openFirewall = true;
     };
   };
@@ -915,13 +929,26 @@ in
         };
       };
 
+      extraConfig.pipewire."92-low-latency" = {
+        "context.properties" = {
+          "default.clock.rate" = 48000;
+          "default.clock.quantum" = 32;
+          "default.clock.min-quantum" = 32;
+          "default.clock.max-quantum" = 32;
+        };
+      };
+
       raopOpenFirewall = true;
     };
 
     pulseaudio.enable = false;
 
     phpfpm = {
-      settings = { };
+      phpPackage = pkgs.php;
+
+      settings = {
+        log_level = "warning";
+      };
 
       phpOptions = ''
         default_charset = "UTF-8"
@@ -1064,6 +1091,10 @@ in
     };
     ipp-usb.enable = true;
     system-config-printer.enable = true;
+
+    saned = {
+      enable = true;
+    };
 
     bind = {
       enable = false;
@@ -1459,14 +1490,6 @@ in
       preferences = { };
     };
 
-    wireshark = {
-      enable = true;
-      package = pkgs.wireshark;
-
-      dumpcap.enable = true;
-      usbmon.enable = true;
-    };
-
     obs-studio = {
       enable = true;
       package = pkgs.obs-studio;
@@ -1493,6 +1516,20 @@ in
         obs-vertical-canvas
         obs-vkcapture
       ];
+    };
+
+    ghidra = {
+      enable = true;
+      package = pkgs.ghidra;
+      gdb = true;
+    };
+
+    wireshark = {
+      enable = true;
+      package = pkgs.wireshark;
+
+      dumpcap.enable = true;
+      usbmon.enable = true;
     };
 
     localsend = {
@@ -1807,6 +1844,7 @@ in
         bzip2
         bzip3
         cabextract
+        cameractrls-gtk4
         celestia
         celt
         certbot-full
@@ -1852,7 +1890,6 @@ in
         f2fs-tools
         faad2
         fdk_aac
-        ffmpeg-full
         ffmpegthumbnailer
         fh
         file
@@ -1865,7 +1902,6 @@ in
         fwupd-efi
         gcc
         gdb
-        ghidra
         gimp-with-plugins
         git-doc
         git-filter-repo
@@ -2036,7 +2072,7 @@ in
         pcre
         pdfarranger
         pg_top
-        php84
+        php
         pkg-config
         playerctl
         podman-compose
@@ -2058,7 +2094,6 @@ in
         rtl-sdr-librtlsdr
         rtl-sdr-osmocom
         rzip
-        sane-backends
         sbc
         scalpel
         schroedinger
@@ -2066,11 +2101,13 @@ in
         screen
         sdrangel
         sdrpp
+        selectdefaultapplication
         serial-studio
         share-preview
         shared-mime-info
         sherlock
         shotcut
+        simple-scan
         sipvicious
         sleuthkit
         smartmontools
@@ -2109,6 +2146,7 @@ in
         unix-privesc-check
         unzip
         upnp-router-control
+        usbip-ssh
         usbutils
         util-linux
         video-downloader
@@ -2125,7 +2163,6 @@ in
         wayland-utils
         waylevel
         wayvnc
-        webcamoid
         webfontkitgenerator
         wev
         wget
@@ -2149,10 +2186,20 @@ in
         xz
         yara
         zenity
+        zenmap
         zip
         zlib
         zpaq
         zstd
+        (
+          (ffmpeg-full.override {
+            withUnfree = true;
+            withOpengl = true;
+          }).overrideAttrs
+          (_: {
+            doCheck = false;
+          })
+        )
         (flameshot.override {
           enableWlrSupport = true;
         })
