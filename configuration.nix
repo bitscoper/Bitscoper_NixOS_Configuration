@@ -706,8 +706,6 @@ in
   systemd = {
     package = pkgs.systemd;
 
-    enableCgroupAccounting = true;
-
     packages = with pkgs; [
       cloudflare-warp # Unfree
       hardinfo2
@@ -842,7 +840,6 @@ in
       enable = true;
       package = pkgs.greetd.greetd;
 
-      vt = 1;
       restart = true;
 
       settings = {
@@ -1823,7 +1820,6 @@ in
         android-tools
         apkeep
         apkleaks
-        aria2
         aribb24
         aribb25
         arj
@@ -2005,7 +2001,6 @@ in
         libxfs
         libzip
         linux-doc
-        linux-manual
         linuxConsoleTools
         linuxHeaders
         logdy
@@ -2193,8 +2188,111 @@ in
         zstd
         (
           (ffmpeg-full.override {
-            withUnfree = true;
+            withAlsa = true;
+            withAom = true;
+            withAribb24 = true;
+            withAribcaption = true;
+            withAss = true;
+            withAvisynth = true;
+            withBluray = true;
+            withBs2b = true;
+            withBzlib = true;
+            withCaca = true;
+            withCdio = true;
+            withCelt = true;
+            withChromaprint = true;
+            withCodec2 = true;
+            withDav1d = true;
+            withDavs2 = true;
+            withDc1394 = true;
+            withDrm = true;
+            withDvdnav = true;
+            withDvdread = true;
+            withFdkAac = true;
+            withFlite = true;
+            withFontconfig = true;
+            withFreetype = true;
+            withFrei0r = true;
+            withFribidi = true;
+            withGme = true;
+            withGnutls = true;
+            withGsm = true;
+            withHarfbuzz = true;
+            withIconv = true;
+            withIlbc = true;
+            withJack = true;
+            withJxl = true;
+            withKvazaar = true;
+            withLadspa = true;
+            withLc3 = true;
+            withLcevcdec = true;
+            withLcms2 = true;
+            withLzma = true;
+            withModplug = true;
+            withMp3lame = true;
+            withMysofa = true;
+            withOpenal = true;
+            withOpencl = true;
+            withOpencoreAmrnb = true;
+            withOpencoreAmrwb = true;
             withOpengl = true;
+            withOpenh264 = true;
+            withOpenjpeg = true;
+            withOpenmpt = true;
+            withOpus = true;
+            withPlacebo = true;
+            withPulse = true;
+            withQrencode = true;
+            withQuirc = true;
+            withRav1e = true;
+            withRist = true;
+            withRtmp = true;
+            withRubberband = true;
+            withSamba = true;
+            withSdl2 = true;
+            withShaderc = true;
+            withShine = true;
+            withSnappy = true;
+            withSoxr = true;
+            withSpeex = true;
+            withSrt = true;
+            withSsh = true;
+            withSvg = true;
+            withSvtav1 = true;
+            withTheora = true;
+            withTwolame = true;
+            withUavs3d = true;
+            withV4l2 = true;
+            withV4l2M2m = true;
+            withVaapi = true;
+            withVdpau = true;
+            withVidStab = true;
+            withVmaf = true;
+            withVoAmrwbenc = true;
+            withVorbis = true;
+            withVpx = true;
+            withVulkan = true;
+            withVvenc = true;
+            withWebp = true;
+            withX264 = true;
+            withX265 = true;
+            withXavs = true;
+            withXavs2 = true;
+            withXevd = true;
+            withXeve = true;
+            withXml2 = true;
+            withXvid = true;
+            withZimg = true;
+            withZlib = true;
+            withZmq = true;
+            withZvbi = true;
+
+            withUnfree = true;
+
+            withGrayscale = true;
+            withSwscaleAlpha = true;
+            withMultithread = true;
+            withNetwork = true;
           }).overrideAttrs
           (_: {
             doCheck = false;
