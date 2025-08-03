@@ -184,10 +184,20 @@ in
     kernelPackages = pkgs.linuxKernel.packages.linux_zen;
 
     extraModulePackages = with config.boot.kernelPackages; [
+      acpi_call
+      apfs
+      cpupower
+      cryptodev
       mm-tools
+      nullfs
+      openafs
+      perf
       shufflecake
+      tmon
       turbostat
       usbip
+      vendor-reset
+      zfs_unstable
     ];
 
     kernelModules = [
@@ -1461,7 +1471,7 @@ in
         prettybat
       ];
 
-      settings = { };
+      settings = { }; # TODO
     };
 
     gnome-disks.enable = true;
@@ -1480,11 +1490,67 @@ in
 
     file-roller.enable = true;
 
+    firefox = {
+      enable = true;
+      package = pkgs.librewolf;
+      languagePacks = [
+        "ar"
+        "bn"
+        "en-US"
+      ];
+
+      nativeMessagingHosts = {
+        packages = with pkgs; [
+          keepassxc
+        ];
+      };
+
+      policies = {
+        Extensions = {
+          Install = [
+            "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/languagetool/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/search_by_image/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/simple-mass-downloader/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/single-file/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/tab-disguiser/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/zjm-whatfont/latest.xpi"
+          ];
+
+          Locked = [
+            "gelprec.smd@gmail.com" # "Simple mass download"
+            "jid1-BoFifL9Vbdl2zQ@jetpack" # "Decentraleyes"
+            "uBlock0@raymondhill.net" # "uBlock Origin"
+            "{19b92b95-9cca-4f8d-b364-37a81f7133d5}" # "Tab Disguiser"
+            "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}" # "Search by Image"
+            "{531906d3-e22f-4a6c-a102-8057b88a1a63}" # "SingleFile"
+            "{dcb8caa2-63fa-41aa-a508-a45c5990ebdd}" # "WhatFont"
+          ];
+        };
+      };
+
+      # autoConfig = '''';
+
+      preferences = {
+        "browser.contentblocking.category" = "strict";
+        "browser.search.region" = "BD";
+        "browser.search.suggest.enabled.private" = true;
+        "dom.security.https_only_mode" = true;
+        "privacy.globalprivacycontrol.enabled" = true;
+        "security.warn_submit_secure_to_insecure" = true;
+        # "privacy.fingerprintingProtection" = true;
+        # "privacy.trackingprotection.enabled" = true;
+      };
+      preferencesStatus = "locked";
+    };
+
     thunderbird = {
       enable = true;
       package = pkgs.thunderbird-latest;
 
-      preferences = { };
+      # preferences = { };
     };
 
     obs-studio = {
@@ -1784,7 +1850,6 @@ in
 
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
-      CHROME_EXECUTABLE = "chromium-browser";
     };
 
     shellAliases = {
@@ -1818,6 +1883,7 @@ in
         android_sdk # Custom
         android-backup-extractor
         android-tools
+        apfsprogs
         apkeep
         apkleaks
         aribb24
@@ -1857,6 +1923,8 @@ in
         collision
         coreutils-full
         cpio
+        cramfsprogs
+        cryptodev
         cryptsetup
         ctop
         cups-filters
@@ -1951,7 +2019,6 @@ in
         john
         johnny
         jxrlib
-        keepassxc
         kernel-hardening-checker
         kernelshark
         kicad
@@ -2055,6 +2122,7 @@ in
         ntp
         nuclei
         onionshare-gui
+        openafs
         opencore-amr
         opendmarc
         openh264
@@ -2182,6 +2250,7 @@ in
         yara
         zenity
         zenmap
+        zfs
         zip
         zlib
         zpaq
@@ -2398,7 +2467,8 @@ in
       ++ (with inkscape-extensions; [
         applytransforms
         textext
-      ]);
+      ])
+      ++ config.boot.extraModulePackages;
   };
 
   xdg = {
@@ -2858,7 +2928,7 @@ in
         "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop"; # .pptx
         "application/vnd.openxmlformats-officedocument.presentationml.template" = "impress.desktop"; # .potx
 
-        "application/pdf" = "chromium-browser.desktop";
+        "application/pdf" = "librewolf.desktop";
 
         "font/collection" = "org.gnome.font-viewer.desktop";
         "font/otf" = "org.gnome.font-viewer.desktop";
@@ -2877,8 +2947,8 @@ in
         "application/x-tar" = "org.gnome.FileRoller.desktop";
         "application/zip" = "org.gnome.FileRoller.desktop";
 
-        "x-scheme-handler/http" = "chromium-browser.desktop";
-        "x-scheme-handler/https" = "chromium-browser.desktop";
+        "x-scheme-handler/http" = "librewolf.desktop";
+        "x-scheme-handler/https" = "librewolf.desktop";
 
         "x-scheme-handler/mailto" = "thunderbird.desktop";
       };
@@ -2949,7 +3019,7 @@ in
 
   users = {
     groups = {
-      hardinfo2 = { }; # Creation
+      hardinfo2 = { };
     };
 
     enforceIdUniqueness = true;
@@ -3009,9 +3079,9 @@ in
             enableFishIntegration = true;
           };
 
-          language = { };
+          language = { }; # TODO
 
-          keyboard = { };
+          keyboard = { }; # TODO
 
           pointerCursor = {
             name = cursor.theme.name;
@@ -3155,8 +3225,8 @@ in
 
               "SUPER, U, exec, uwsm app -- missioncenter"
 
-              "SUPER, W, exec, uwsm app -- chromium-browser"
-              "SUPER ALT, W, exec, uwsm app -- chromium-browser --incognito"
+              "SUPER, W, exec, uwsm app -- librewolf"
+              "SUPER ALT, W, exec, uwsm app -- librewolf --private-window"
 
               ", XF86Mail, exec, uwsm app -- thunderbird"
               "SUPER, M, exec, uwsm app -- thunderbird"
@@ -4346,6 +4416,13 @@ in
             '';
           };
 
+          keepassxc = {
+            enable = true;
+            package = pkgs.keepassxc;
+
+            # settings = { };
+          };
+
           wofi = {
             enable = true;
             package = pkgs.wofi;
@@ -4407,7 +4484,7 @@ in
             enableBashIntegration = true;
             enableFishIntegration = true;
 
-            settings = { };
+            settings = { }; # TODO
           };
 
           nix-your-shell = {
@@ -4462,6 +4539,7 @@ in
                     esbenp.prettier-vscode
                     ethansk.restore-terminals
                     fabiospampinato.vscode-open-in-github
+                    firefox-devtools.vscode-firefox-debug
                     formulahendry.auto-close-tag
                     formulahendry.auto-rename-tag
                     formulahendry.code-runner
@@ -4596,7 +4674,7 @@ in
           matplotlib = {
             enable = true;
 
-            config = { };
+            config = { }; # TODO
           };
 
           gh = {
@@ -4636,76 +4714,11 @@ in
             credentials = { };
           };
 
-          chromium = {
-            enable = true;
-            package = pkgs.ungoogled-chromium;
-            dictionaries = with pkgs.hunspellDictsChromium; [
-              en_US
-            ];
-            # nativeMessagingHosts = with pkgs; [
-            #   keepassxc
-            # ];
-
-            extensions = [
-              {
-                # "uBlock Origin Lite"
-                id = "ddkjiahejlhfcafbddmgiahcphecmpfh";
-              }
-              {
-                # "Privacy Badger"
-                id = "pkehgijcmpdhfbdbbnkijodmdjhbjlgp";
-              }
-              {
-                # "Decentraleyes"
-                id = "ldpochfccmkkmhdbclfhpagapcfdljkj";
-              }
-              {
-                # "SponsorBlock for YouTube - Skip Sponsorships"
-                id = "mnjggcdmjocbbbhaepdhchncahnbgone";
-              }
-              {
-                # "KeePassXC-Browser"
-                id = "oboonakemofpalcgghocfoadofidjkkk";
-              }
-              {
-                # "Flutter Widget Catcher"
-                id = "fmodefdejfdmjjlfdodklhkoichndcgg";
-              }
-              {
-                # "WhatFont"
-                id = "jabopobgcpjmedljpbcaablpmlmfcogm";
-              }
-              {
-                # "Search by Image"
-                id = "cnojnbdhbhnkbcieeekonklommdnndci";
-              }
-              {
-                # "SingleFile"
-                id = "mpiodijhokgodhhofbcjdecpffjipkle";
-              }
-              {
-                # "AI Grammar Checker & Paraphraser – LanguageTool"
-                id = "oldceeleldhonbafppcapldpdifcinji";
-              }
-              {
-                # "Tab Disguiser"
-                id = "goaelnlldimhbhipidknnkijnmfgddoc";
-              }
-            ]; # Does not work with Ungoogled Chromium. I currently install the extensions manually.
-
-            commandLineArgs = [
-              "--ozone-platform=wayland"
-              "--password-store=gnome"
-              "--proxy-auto-detect"
-              "--extension-mime-request-handling=always-prompt-for-install"
-            ];
-          };
-
           yt-dlp = {
             enable = true;
             package = pkgs.yt-dlp;
 
-            settings = { };
+            settings = { }; # TODO
           };
         };
       }
