@@ -773,7 +773,7 @@ in
         withLogind = true;
         withOpenSSL = true;
         withPam = true;
-        withPolki = true;
+        withPolkit = true;
       }
     );
 
