@@ -696,7 +696,33 @@ in
       package = pkgs.libvirt;
 
       qemu = {
-        package = pkgs.qemu_kvm;
+        package = (
+          pkgs.qemu_kvm.override {
+            guestAgentSupport = true;
+            alsaSupport = true;
+            pulseSupport = true;
+            pipewireSupport = true;
+            sdlSupport = true;
+            jackSupport = true;
+            gtkSupport = true;
+            vncSupport = true;
+            smartcardSupport = true;
+            spiceSupport = true;
+            usbredirSupport = true;
+            glusterfsSupport = true;
+            openGLSupport = true;
+            rutabagaSupport = true;
+            virglSupport = true;
+            libiscsiSupport = true;
+            smbdSupport = true;
+            tpmSupport = true;
+            uringSupport = true;
+            pluginsSupport = true;
+            enableDocs = true;
+            enableTools = true;
+            enableBlobs = true;
+          }
+        );
 
         swtpm = {
           enable = true;
@@ -708,7 +734,9 @@ in
           packages = [
             (pkgs.OVMFFull.override {
               secureBoot = true;
+              httpSupport = true;
               tpmSupport = true;
+              tlsSupport = true;
             }).fd
           ];
         };
@@ -730,11 +758,24 @@ in
 
     oci-containers.backend = "podman";
 
-    waydroid.enable = true;
+    waydroid = {
+      enable = true;
+      package = pkgs.waydroid;
+    };
   };
 
   systemd = {
-    package = pkgs.systemd;
+    package = (
+      pkgs.systemd.override {
+        withAcl = true;
+        withCryptsetup = true;
+        withDocumentation = true;
+        withLogind = true;
+        withOpenSSL = true;
+        withPam = true;
+        withPolki = true;
+      }
+    );
 
     packages = with pkgs; [
       cloudflare-warp # Unfree
@@ -1414,16 +1455,11 @@ in
       enable = true;
       package = (
         pkgs.hyprland.override {
-          debug = false;
           enableXWayland = true;
           wrapRuntimeDeps = true;
         }
       );
-      portalPackage = (
-        pkgs.xdg-desktop-portal-hyprland.override {
-          debug = false;
-        }
-      );
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
 
       withUWSM = true;
       xwayland.enable = true;
@@ -2108,7 +2144,7 @@ in
         fwupd-efi
         gcc
         gdb
-        gimp-with-plugins
+        gimp3-with-plugins
         git-doc
         git-filter-repo
         glib
@@ -2129,7 +2165,6 @@ in
         gnutls
         gource
         gparted
-        gradle
         gradle-completion
         graphs # Needs Description
         gsm
@@ -2289,7 +2324,6 @@ in
         pwvucontrol
         python313Full
         qalculate-gtk
-        qbittorrent
         qemu-utils
         qpwgraph
         radare2
@@ -2362,7 +2396,6 @@ in
         virt-viewer
         virtio-win
         virtiofsd
-        vlc
         vlc-bittorrent
         vulkan-caps-viewer
         vulkan-tools
@@ -2513,9 +2546,19 @@ in
           withMultithread = true;
           withNetwork = true;
         })
-
         (flameshot.override {
           enableWlrSupport = true;
+        })
+        (vlc.override {
+          chromecastSupport = true;
+          jackSupport = true;
+          skins2Support = true;
+          waylandSupport = true;
+        })
+        (qbittorrent.override {
+          guiSupport = true;
+          trackerSearch = true;
+          webuiSupport = false;
         })
       ]
       ++ (with unixtools; [
@@ -2537,13 +2580,46 @@ in
         sponge
       ])
       ++ (with gst_all_1; [
-        gst-libav
-        gst-plugins-bad
-        gst-plugins-base
-        gst-plugins-good
-        gst-plugins-ugly
-        gst-vaapi
-        gstreamer
+        (gst-libav.override {
+          enableDocumentation = true;
+        })
+        (gst-plugins-bad.override {
+          enableZbar = true;
+          faacSupport = true;
+          opencvSupport = true;
+          ldacbtSupport = true;
+          webrtcAudioProcessingSupport = true;
+          ajaSupport = true;
+          openh264Support = true;
+          enableGplPlugins = true;
+          bluezSupport = true;
+          microdnsSupport = true;
+          enableDocumentation = true;
+          guiSupport = true;
+        })
+        (gst-plugins-base.override {
+          enableWayland = true;
+          enableAlsa = true;
+          enableCdparanoia = true;
+          enableDocumentation = true;
+        })
+        (gst-plugins-good.override {
+          gtkSupport = true;
+          qt6Support = true;
+          enableJack = true;
+          enableWayland = true;
+          enableDocumentation = true;
+        })
+        (gst-plugins-ugly.override {
+          enableGplPlugins = true;
+          enableDocumentation = true;
+        })
+        (gst-vaapi.override {
+          enableDocumentation = true;
+        })
+        (gstreamer.override {
+          enableDocumentation = true;
+        })
       ])
       ++ (with php84Extensions; [
         bz2
@@ -3264,7 +3340,6 @@ in
           enable = true;
           package = (
             pkgs.hyprland.override {
-              debug = false;
               enableXWayland = true;
               wrapRuntimeDeps = true;
             }
@@ -4856,6 +4931,11 @@ in
                 # };
               };
             };
+          };
+
+          gradle = {
+            enable = true;
+            package = pkgs.gradle;
           };
 
           matplotlib = {
