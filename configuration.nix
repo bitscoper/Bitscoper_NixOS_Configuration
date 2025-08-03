@@ -385,7 +385,11 @@ in
 
     networkmanager = {
       enable = true;
-      package = pkgs.networkmanager;
+      package = (
+        pkgs.networkmanager.override {
+          withSystemd = true;
+        }
+      );
 
       ethernet.macAddress = "permanent";
 
@@ -522,7 +526,11 @@ in
 
     sudo = {
       enable = true;
-      package = pkgs.sudo;
+      package = (
+        pkgs.sudo.override {
+          withInsults = true;
+        }
+      );
 
       execWheelOnly = true;
       wheelNeedsPassword = true;
@@ -530,7 +538,11 @@ in
 
     polkit = {
       enable = true;
-      package = pkgs.polkit;
+      package = (
+        pkgs.polkit.override {
+          useSystemd = true;
+        }
+      );
     };
 
     soteria = {
@@ -581,7 +593,11 @@ in
 
     bluetooth = {
       enable = true;
-      package = pkgs.bluez;
+      package = (
+        pkgs.bluez.override {
+          enableExperimental = true;
+        }
+      );
 
       hsphfpd.enable = false; # Conflicts wwth WirePlumber
 
@@ -661,7 +677,11 @@ in
 
     sane = {
       enable = true;
-      backends-package = pkgs.sane-backends;
+      backends-package = (
+        pkgs.sane-backends.override {
+          withSystemd = true;
+        }
+      );
       extraBackends = with pkgs; [
       ];
       snapshot = false;
@@ -733,7 +753,11 @@ in
   services = {
     dbus = {
       enable = true;
-      dbusPackage = pkgs.dbus;
+      dbusPackage = (
+        pkgs.dbus.override {
+          enableSystemd = true;
+        }
+      );
 
       implementation = "broker";
 
@@ -750,7 +774,11 @@ in
 
     fwupd = {
       enable = true;
-      package = pkgs.fwupd;
+      package = (
+        pkgs.fwupd.override {
+          enableFlashrom = true;
+        }
+      );
     };
 
     btrfs.autoScrub = {
@@ -867,7 +895,11 @@ in
 
     gvfs = {
       enable = true;
-      package = pkgs.gvfs;
+      package = (
+        pkgs.gvfs.override {
+          udevSupport = true;
+        }
+      );
     };
 
     udisks2 = {
@@ -879,7 +911,16 @@ in
 
     pipewire = {
       enable = true;
-      package = pkgs.pipewire;
+      package = (
+        pkgs.pipewire.override {
+          enableSystemd = true;
+          vulkanSupport = true;
+          bluezSupport = true;
+          zeroconfSupport = true;
+          raopSupport = true;
+          rocSupport = true;
+        }
+      );
       systemWide = false;
 
       audio.enable = true;
@@ -893,7 +934,11 @@ in
 
       wireplumber = {
         enable = true;
-        package = pkgs.wireplumber;
+        package = (
+          pkgs.wireplumber.override {
+            enableDocs = true;
+          }
+        );
 
         extraConfig.bluetoothEnhancements = {
           "monitor.bluez.properties" = {
@@ -951,7 +996,27 @@ in
     pulseaudio.enable = false;
 
     phpfpm = {
-      phpPackage = pkgs.php;
+      phpPackage = (
+        pkgs.php.override {
+          cgiSupport = true;
+          cliSupport = true;
+          fpmSupport = true;
+          pearSupport = true;
+          pharSupport = true;
+          phpdbgSupport = true;
+          apxs2Support = true;
+          argon2Support = true;
+          cgotoSupport = true;
+          embedSupport = true;
+          staticSupport = true;
+          ipv6Support = true;
+          zendSignalsSupport = true;
+          zendMaxExecutionTimersSupport = false;
+          systemdSupport = true;
+          valgrindSupport = true;
+          ztsSupport = true;
+        }
+      );
 
       settings = {
         log_level = "warning";
@@ -981,7 +1046,11 @@ in
 
     avahi = {
       enable = true;
-      package = pkgs.avahi;
+      package = (
+        pkgs.avahi.override {
+          gtk3Support = true;
+        }
+      );
 
       ipv4 = true;
       ipv6 = true;
@@ -1008,7 +1077,13 @@ in
 
     openssh = {
       enable = true;
-      package = pkgs.openssh;
+      package = (
+        pkgs.openssh.override {
+          withPAM = true;
+          linkOpenssl = true;
+          isNixos = true;
+        }
+      );
 
       listenAddresses = [
         {
@@ -1052,7 +1127,11 @@ in
 
     printing = {
       enable = true;
-      package = pkgs.cups;
+      package = (
+        pkgs.cups.override {
+          enableSystemd = true;
+        }
+      );
 
       drivers = with pkgs; [
         gutenprint
@@ -1136,7 +1215,13 @@ in
 
     postgresql = {
       enable = true;
-      package = pkgs.postgresql;
+      package = (
+        pkgs.postgresql.override {
+          curlSupport = true;
+          pamSupport = true;
+          systemdSupport = true;
+        }
+      );
 
       enableTCPIP = true;
 
@@ -1164,7 +1249,7 @@ in
 
     mysql = {
       enable = true;
-      package = pkgs.mariadb_114;
+      package = pkgs.mariadb_118;
 
       settings = {
         mysqld = {
@@ -1291,7 +1376,11 @@ in
 
     java = {
       enable = true;
-      package = pkgs.jdk24;
+      package = (
+        pkgs.jdk24.override {
+          enableGtk = true;
+        }
+      );
 
       binfmt = true;
     };
@@ -1312,13 +1401,29 @@ in
 
     uwsm = {
       enable = true;
-      package = pkgs.uwsm;
+      package = (
+        pkgs.uwsm.override {
+          fumonSupport = true;
+          uuctlSupport = true;
+          uwsmAppSupport = true;
+        }
+      );
     };
 
     hyprland = {
       enable = true;
-      package = pkgs.hyprland;
-      portalPackage = pkgs.xdg-desktop-portal-hyprland;
+      package = (
+        pkgs.hyprland.override {
+          debug = false;
+          enableXWayland = true;
+          wrapRuntimeDeps = true;
+        }
+      );
+      portalPackage = (
+        pkgs.xdg-desktop-portal-hyprland.override {
+          debug = false;
+        }
+      );
 
       withUWSM = true;
       xwayland.enable = true;
@@ -1394,7 +1499,12 @@ in
     };
 
     gnupg = {
-      package = pkgs.gnupg;
+      package = (
+        pkgs.gnupg.override {
+          guiSupport = true;
+          withTpm2Tss = true;
+        }
+      );
 
       agent = {
         enable = true;
@@ -1403,14 +1513,24 @@ in
         enableExtraSocket = true;
         enableSSHSupport = false;
 
-        pinentryPackage = pkgs.pinentry-gtk2;
+        pinentryPackage = (
+          pkgs.pinentry-gtk2.override {
+            withLibsecret = true;
+          }
+        );
       };
 
       dirmngr.enable = true;
     };
 
     ssh = {
-      package = pkgs.openssh;
+      package = (
+        pkgs.openssh.override {
+          withPAM = true;
+          linkOpenssl = true;
+          isNixos = true;
+        }
+      );
 
       startAgent = false; # `services.gnome.gcr-ssh-agent.enable' and `programs.ssh.startAgent' cannot both be enabled at the same time.
       agentTimeout = null;
@@ -1418,7 +1538,17 @@ in
 
     git = {
       enable = true;
-      package = pkgs.gitFull;
+      package = (
+        pkgs.gitFull.override {
+          svnSupport = true;
+          guiSupport = true;
+          withManual = true;
+          withpcre2 = true;
+          sendEmailSupport = true;
+          withLibsecret = true;
+          withSsh = true;
+        }
+      );
 
       lfs = {
         enable = true;
@@ -1492,7 +1622,7 @@ in
 
     firefox = {
       enable = true;
-      package = pkgs.librewolf;
+      package = pkgs.firefox-devedition;
       languagePacks = [
         "ar"
         "bn"
@@ -1555,7 +1685,17 @@ in
 
     obs-studio = {
       enable = true;
-      package = pkgs.obs-studio;
+      package = (
+        pkgs.obs-studio.override {
+          scriptingSupport = true;
+          alsaSupport = true;
+          pulseaudioSupport = true;
+          browserSupport = true;
+          pipewireSupport = true;
+          withFdk = true;
+          decklinkSupport = true;
+        }
+      );
 
       enableVirtualCamera = true;
 
@@ -1604,7 +1744,11 @@ in
 
     virt-manager = {
       enable = true;
-      package = pkgs.virt-manager;
+      package = (
+        pkgs.virt-manager.override {
+          spiceSupport = true;
+        }
+      );
     };
 
     dconf = {
@@ -1867,10 +2011,8 @@ in
     systemPackages =
       with pkgs;
       [
-        # audacity # Temporary
         # darktable # Marked Insecure
         # gpredicts # Temporary
-        # platformio # Temporary
         # reiser4progs # Marked Broken
         # virt-top # Temporary
         # virt-v2v # Temporary
@@ -1889,6 +2031,7 @@ in
         aribb24
         aribb25
         arj
+        audacity
         autopsy
         avrdude
         baobab
@@ -1921,7 +2064,6 @@ in
         cmake
         codec2
         collision
-        coreutils-full
         cpio
         cramfsprogs
         cryptodev
@@ -2061,6 +2203,7 @@ in
         libuuid
         libuvc
         libva-utils
+        libvirt-glib
         libvncserver
         libvpx
         libwebcam
@@ -2137,6 +2280,7 @@ in
         pg_top
         php
         pkg-config
+        platformio
         playerctl
         podman-compose
         podman-desktop
@@ -2185,6 +2329,7 @@ in
         subtitleedit
         switcheroo
         syshud
+        systemdLibs
         szyszka
         telegram-desktop
         telegraph
@@ -2195,6 +2340,7 @@ in
         thermald
         tilix
         time
+        tmpmail # jq Error
         tor-browser
         tpm2-tools
         tree
@@ -2238,6 +2384,7 @@ in
         wvkbd # wvkbd-mobintl
         x264
         x265
+        x2goclient
         xdg-user-dirs
         xdg-utils
         xfsdump
@@ -2255,118 +2402,118 @@ in
         zlib
         zpaq
         zstd
-        (
-          (ffmpeg-full.override {
-            withAlsa = true;
-            withAom = true;
-            withAribb24 = true;
-            withAribcaption = true;
-            withAss = true;
-            withAvisynth = true;
-            withBluray = true;
-            withBs2b = true;
-            withBzlib = true;
-            withCaca = true;
-            withCdio = true;
-            withCelt = true;
-            withChromaprint = true;
-            withCodec2 = true;
-            withDav1d = true;
-            withDavs2 = true;
-            withDc1394 = true;
-            withDrm = true;
-            withDvdnav = true;
-            withDvdread = true;
-            withFdkAac = true;
-            withFlite = true;
-            withFontconfig = true;
-            withFreetype = true;
-            withFrei0r = true;
-            withFribidi = true;
-            withGme = true;
-            withGnutls = true;
-            withGsm = true;
-            withHarfbuzz = true;
-            withIconv = true;
-            withIlbc = true;
-            withJack = true;
-            withJxl = true;
-            withKvazaar = true;
-            withLadspa = true;
-            withLc3 = true;
-            withLcevcdec = true;
-            withLcms2 = true;
-            withLzma = true;
-            withModplug = true;
-            withMp3lame = true;
-            withMysofa = true;
-            withOpenal = true;
-            withOpencl = true;
-            withOpencoreAmrnb = true;
-            withOpencoreAmrwb = true;
-            withOpengl = true;
-            withOpenh264 = true;
-            withOpenjpeg = true;
-            withOpenmpt = true;
-            withOpus = true;
-            withPlacebo = true;
-            withPulse = true;
-            withQrencode = true;
-            withQuirc = true;
-            withRav1e = true;
-            withRist = true;
-            withRtmp = true;
-            withRubberband = true;
-            withSamba = true;
-            withSdl2 = true;
-            withShaderc = true;
-            withShine = true;
-            withSnappy = true;
-            withSoxr = true;
-            withSpeex = true;
-            withSrt = true;
-            withSsh = true;
-            withSvg = true;
-            withSvtav1 = true;
-            withTheora = true;
-            withTwolame = true;
-            withUavs3d = true;
-            withV4l2 = true;
-            withV4l2M2m = true;
-            withVaapi = true;
-            withVdpau = true;
-            withVidStab = true;
-            withVmaf = true;
-            withVoAmrwbenc = true;
-            withVorbis = true;
-            withVpx = true;
-            withVulkan = true;
-            withVvenc = true;
-            withWebp = true;
-            withX264 = true;
-            withX265 = true;
-            withXavs = true;
-            withXavs2 = true;
-            withXevd = true;
-            withXeve = true;
-            withXml2 = true;
-            withXvid = true;
-            withZimg = true;
-            withZlib = true;
-            withZmq = true;
-            withZvbi = true;
+        (pkgs.coreutils-full.override {
+          aclSupport = true;
+          withOpenssl = true;
+        })
+        (ffmpeg-full.override {
+          withAlsa = true;
+          withAom = true;
+          withAribb24 = true;
+          withAribcaption = true;
+          withAss = true;
+          withAvisynth = true;
+          withBluray = true;
+          withBs2b = true;
+          withBzlib = true;
+          withCaca = true;
+          withCdio = true;
+          withCelt = true;
+          withChromaprint = true;
+          withCodec2 = true;
+          withDav1d = true;
+          withDavs2 = true;
+          withDc1394 = true;
+          withDrm = true;
+          withDvdnav = true;
+          withDvdread = true;
+          withFdkAac = true;
+          withFlite = true;
+          withFontconfig = true;
+          withFreetype = true;
+          withFrei0r = true;
+          withFribidi = true;
+          withGme = true;
+          withGnutls = true;
+          withGsm = true;
+          withHarfbuzz = true;
+          withIconv = true;
+          withIlbc = true;
+          withJack = true;
+          withJxl = true;
+          withKvazaar = true;
+          withLadspa = true;
+          withLc3 = true;
+          withLcevcdec = true;
+          withLcms2 = true;
+          withLzma = true;
+          withModplug = true;
+          withMp3lame = true;
+          withMysofa = true;
+          withOpenal = true;
+          withOpencl = true;
+          withOpencoreAmrnb = true;
+          withOpencoreAmrwb = true;
+          withOpengl = true;
+          withOpenh264 = true;
+          withOpenjpeg = true;
+          withOpenmpt = true;
+          withOpus = true;
+          withPlacebo = true;
+          withPulse = true;
+          withQrencode = true;
+          withQuirc = true;
+          withRav1e = true;
+          withRist = true;
+          withRtmp = true;
+          withRubberband = true;
+          withSamba = true;
+          withSdl2 = true;
+          withShaderc = true;
+          withShine = true;
+          withSnappy = true;
+          withSoxr = true;
+          withSpeex = true;
+          withSrt = true;
+          withSsh = true;
+          withSvg = true;
+          withSvtav1 = true;
+          withTheora = true;
+          withTwolame = true;
+          withUavs3d = true;
+          withV4l2 = true;
+          withV4l2M2m = true;
+          withVaapi = true;
+          withVdpau = true;
+          withVidStab = true;
+          withVmaf = true;
+          withVoAmrwbenc = true;
+          withVorbis = true;
+          withVpx = true;
+          withVulkan = true;
+          withVvenc = true;
+          withWebp = true;
+          withX264 = true;
+          withX265 = true;
+          withXavs = true;
+          withXavs2 = true;
+          withXevd = true;
+          withXeve = true;
+          withXml2 = true;
+          withXvid = true;
+          withZimg = true;
+          withZlib = true;
+          withZmq = true;
+          withZvbi = true;
 
-            withUnfree = true;
+          withUnfree = true;
 
-            withGrayscale = true;
-            withSwscaleAlpha = true;
-            withMultithread = true;
-            withNetwork = true;
-          }).overrideAttrs
-          (_: {
-            doCheck = false;
-          })
-        )
+          withGrayscale = true;
+          withSwscaleAlpha = true;
+          withMultithread = true;
+          withNetwork = true;
+        })
+
         (flameshot.override {
           enableWlrSupport = true;
         })
@@ -2430,6 +2577,7 @@ in
         session
         sockets
         sodium
+        systemd
         xml
         xmlreader
         xmlwriter
@@ -2928,7 +3076,7 @@ in
         "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop"; # .pptx
         "application/vnd.openxmlformats-officedocument.presentationml.template" = "impress.desktop"; # .potx
 
-        "application/pdf" = "librewolf.desktop";
+        "application/pdf" = "firefox-devedition.desktop";
 
         "font/collection" = "org.gnome.font-viewer.desktop";
         "font/otf" = "org.gnome.font-viewer.desktop";
@@ -2947,8 +3095,8 @@ in
         "application/x-tar" = "org.gnome.FileRoller.desktop";
         "application/zip" = "org.gnome.FileRoller.desktop";
 
-        "x-scheme-handler/http" = "librewolf.desktop";
-        "x-scheme-handler/https" = "librewolf.desktop";
+        "x-scheme-handler/http" = "firefox-devedition.desktop";
+        "x-scheme-handler/https" = "firefox-devedition.desktop";
 
         "x-scheme-handler/mailto" = "thunderbird.desktop";
       };
@@ -3114,7 +3262,13 @@ in
 
         wayland.windowManager.hyprland = {
           enable = true;
-          package = pkgs.hyprland;
+          package = (
+            pkgs.hyprland.override {
+              debug = false;
+              enableXWayland = true;
+              wrapRuntimeDeps = true;
+            }
+          );
 
           systemd = {
             enable = false;
@@ -3225,8 +3379,8 @@ in
 
               "SUPER, U, exec, uwsm app -- missioncenter"
 
-              "SUPER, W, exec, uwsm app -- librewolf"
-              "SUPER ALT, W, exec, uwsm app -- librewolf --private-window"
+              "SUPER, W, exec, uwsm app -- firefox-devedition"
+              "SUPER ALT, W, exec, uwsm app -- firefox-devedition --private-window"
 
               ", XF86Mail, exec, uwsm app -- thunderbird"
               "SUPER, M, exec, uwsm app -- thunderbird"
@@ -3795,7 +3949,25 @@ in
 
           waybar = {
             enable = true;
-            package = pkgs.waybar;
+            package = (
+              pkgs.waybar.override {
+                enableManpages = true;
+                evdevSupport = true;
+                gpsSupport = true;
+                inputSupport = true;
+                jackSupport = true;
+                mprisSupport = true;
+                pipewireSupport = true;
+                pulseSupport = true;
+                rfkillSupport = true;
+                sndioSupport = true;
+                systemdSupport = true;
+                traySupport = true;
+                udevSupport = true;
+                wireplumberSupport = true;
+                withMediaPlayer = true;
+              }
+            );
 
             systemd.enable = true;
 
@@ -4418,7 +4590,17 @@ in
 
           keepassxc = {
             enable = true;
-            package = pkgs.keepassxc;
+            package = (
+              pkgs.keepassxc.override {
+                withKeePassBrowser = true;
+                withKeePassBrowserPasskeys = true;
+                withKeePassFDOSecrets = true;
+                withKeePassKeeShare = true;
+                withKeePassNetworking = true;
+                withKeePassSSHAgent = true;
+                withKeePassYubiKey = true;
+              }
+            );
 
             # settings = { };
           };
@@ -4479,7 +4661,12 @@ in
 
           dircolors = {
             enable = true;
-            package = pkgs.coreutils-full;
+            package = (
+              pkgs.coreutils-full.override {
+                aclSupport = true;
+                withOpenssl = true;
+              }
+            );
 
             enableBashIntegration = true;
             enableFishIntegration = true;
@@ -4716,7 +4903,14 @@ in
 
           yt-dlp = {
             enable = true;
-            package = pkgs.yt-dlp;
+            package = (
+              pkgs.yt-dlp.override {
+                atomicparsleySupport = true;
+                ffmpegSupport = true;
+                rtmpSupport = true;
+                withAlias = true;
+              }
+            );
 
             settings = { }; # TODO
           };

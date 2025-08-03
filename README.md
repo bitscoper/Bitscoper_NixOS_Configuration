@@ -73,7 +73,7 @@ My NixOS Configuration
 
 ---
 
-- **Web Browsers:** [Ungoogled Chromium](https://github.com/ungoogled-software/ungoogled-chromium/), and [Tor Browser](https://gitlab.torproject.org/tpo/applications/tor-browser/)
+- **Web Browsers:** [Firefox Developer Edition](https://github.com/mozilla-firefox/firefox/), and [Tor Browser](https://gitlab.torproject.org/tpo/applications/tor-browser/)
 - **Email Client:** [Thunderbird](https://hg-edge.mozilla.org/comm-central/)
 - **Database Client:** [DBeaver](https://github.com/dbeaver/dbeaver/)
 - **Torrent Client:** [qBittorrent](https://github.com/qbittorrent/qBittorrent/)
