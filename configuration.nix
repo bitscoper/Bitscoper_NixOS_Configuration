@@ -778,17 +778,14 @@ in
     );
 
     packages = with pkgs; [
-      cloudflare-warp # Unfree
-      hardinfo2
+      (hardinfo2.override {
+        printingSupport = true;
+      })
     ];
 
     globalEnvironment = { };
 
-    targets = {
-      multi-user.wants = [
-        "warp-svc.service"
-      ];
-    };
+    targets = { };
   };
 
   services = {
@@ -1175,7 +1172,9 @@ in
       );
 
       drivers = with pkgs; [
-        gutenprint
+        (gutenprint.override {
+          cupsSupport = true;
+        })
         gutenprintBin
       ];
 
@@ -1261,6 +1260,7 @@ in
           curlSupport = true;
           pamSupport = true;
           systemdSupport = true;
+          uringSupport = true;
         }
       );
 
@@ -1636,8 +1636,6 @@ in
         batwatch
         prettybat
       ];
-
-      settings = { }; # TODO
     };
 
     gnome-disks.enable = true;
@@ -1665,11 +1663,19 @@ in
         "en-US"
       ];
 
-      nativeMessagingHosts = {
-        packages = with pkgs; [
-          keepassxc
-        ];
-      };
+      # nativeMessagingHosts = {
+      #   packages = with pkgs; [
+      #     (pkgs.keepassxc.override {
+      #       withKeePassBrowser = true;
+      #       withKeePassBrowserPasskeys = true;
+      #       withKeePassFDOSecrets = true;
+      #       withKeePassKeeShare = true;
+      #       withKeePassNetworking = true;
+      #       withKeePassSSHAgent = true;
+      #       withKeePassYubiKey = true;
+      #     })
+      #   ];
+      # };
 
       policies = {
         Extensions = {
@@ -2064,6 +2070,7 @@ in
         apfsprogs
         apkeep
         apkleaks
+        arduino-language-server
         aribb24
         aribb25
         arj
@@ -2071,6 +2078,7 @@ in
         autopsy
         avrdude
         baobab
+        bash-language-server
         bcachefs-tools
         binary
         binwalk
@@ -2085,6 +2093,7 @@ in
         bzip2
         bzip3
         cabextract
+        calyx-vpn
         cameractrls-gtk4
         celestia
         celt
@@ -2096,8 +2105,8 @@ in
         clinfo
         cliphist
         cloc
-        cloudflare-warp # Unfree
         cmake
+        cmake-language-server
         codec2
         collision
         cpio
@@ -2108,7 +2117,6 @@ in
         cups-filters
         cups-pdf-to-pdf
         cups-printers
-        curlFull
         curtail
         d-spy
         dart
@@ -2120,6 +2128,7 @@ in
         dmg2img
         dmidecode
         dnsrecon
+        docker-language-server
         dosfstools
         e2fsprogs
         efibootmgr
@@ -2136,13 +2145,15 @@ in
         fh
         file
         fileinfo
+        fish-lsp
         flake-checker
         flightgear
         flutter
         fontfor
         fritzing
+        fstl
         fwupd-efi
-        gcc
+        gcc15
         gdb
         gimp3-with-plugins
         git-doc
@@ -2171,7 +2182,6 @@ in
         gtk-vnc
         guestfs-tools
         gzip
-        hardinfo2
         hdparm
         hfsprogs
         hidapi
@@ -2186,8 +2196,9 @@ in
         i2c-tools
         iaito
         iftop
-        inkscape
+        inkscape-with-extensions
         inotify-tools
+        input-leap
         inspectrum
         isocodes
         jellyfin-media-player
@@ -2198,7 +2209,6 @@ in
         jxrlib
         kernel-hardening-checker
         kernelshark
-        kicad
         killall
         kmod
         letterpress
@@ -2226,6 +2236,7 @@ in
         libheif
         libilbc
         liblc3
+        libmtp
         libnotify
         libogg
         libopus
@@ -2268,6 +2279,7 @@ in
         masscan
         massdns
         mattermost-desktop
+        md-lsp
         media-player-info
         meld
         mesa-demos
@@ -2319,16 +2331,17 @@ in
         playerctl
         podman-compose
         podman-desktop
+        postgres-lsp
         profile-cleaner
         progress
         pwvucontrol
-        python313Full
         qalculate-gtk
         qemu-utils
         qpwgraph
         radare2
         readline
         reiserfsprogs
+        riseup-vpn
         rpi-imager
         rpmextract
         rpPPPoE
@@ -2341,7 +2354,6 @@ in
         scrcpy
         screen
         sdrangel
-        sdrpp
         selectdefaultapplication
         serial-studio
         share-preview
@@ -2363,6 +2375,7 @@ in
         subtitleedit
         switcheroo
         syshud
+        systemd-lsp
         systemdLibs
         szyszka
         telegram-desktop
@@ -2375,7 +2388,6 @@ in
         tilix
         time
         tmpmail # jq Error
-        tor-browser
         tpm2-tools
         tree
         trufflehog
@@ -2407,7 +2419,6 @@ in
         wayvnc
         webfontkitgenerator
         wev
-        wget
         whatfiles
         which
         whois
@@ -2427,6 +2438,7 @@ in
         xoscope
         xvidcore
         xz
+        yaml-language-server
         yara
         zenity
         zenmap
@@ -2435,9 +2447,25 @@ in
         zlib
         zpaq
         zstd
-        (pkgs.coreutils-full.override {
+        (coreutils-full.override {
           aclSupport = true;
           withOpenssl = true;
+        })
+        (curlFull.override {
+          brotliSupport = true;
+          c-aresSupport = true;
+          gsaslSupport = true;
+          gssSupport = true;
+          http2Support = true;
+          http3Support = true;
+          websocketSupport = true;
+          idnSupport = true;
+          opensslSupport = true;
+          pslSupport = true;
+          rtmpSupport = true;
+          scpSupport = true;
+          zlibSupport = true;
+          zstdSupport = true;
         })
         (ffmpeg-full.override {
           withAlsa = true;
@@ -2549,16 +2577,76 @@ in
         (flameshot.override {
           enableWlrSupport = true;
         })
+        (hardinfo2.override {
+          printingSupport = true;
+        })
+        (kicad.override {
+          addons = with pkgs.kicadAddons; [
+            kikit
+            kikit-library
+          ];
+          stable = true;
+          withNgspice = true;
+          withScripting = true;
+          with3d = true;
+          withI18n = true;
+        })
+        (python313Full.override {
+          bluezSupport = true;
+          mimetypesSupport = true;
+          withReadline = true;
+        })
+        (qbittorrent.override {
+          guiSupport = true;
+          trackerSearch = true;
+          webuiSupport = false;
+        })
+        (sdrpp.override {
+          airspy_source = true;
+          airspyhf_source = true;
+          bladerf_source = true;
+          file_source = true;
+          hackrf_source = true;
+          limesdr_source = true;
+          plutosdr_source = true;
+          rfspace_source = true;
+          rtl_sdr_source = true;
+          rtl_tcp_source = true;
+          sdrplay_source = true;
+          soapy_source = true;
+          spyserver_source = true;
+          usrp_source = true;
+
+          audio_sink = true;
+          network_sink = true;
+          portaudio_sink = true;
+
+          m17_decoder = true;
+          meteor_demodulator = true;
+
+          frequency_manager = true;
+          recorder = true;
+          rigctl_server = true;
+          scanner = true;
+        })
+        (tor-browser.override {
+          libnotifySupport = true;
+          waylandSupport = true;
+          mediaSupport = true;
+          audioSupport = true;
+          pipewireSupport = true;
+          pulseaudioSupport = true;
+          libvaSupport = true;
+        })
         (vlc.override {
           chromecastSupport = true;
           jackSupport = true;
           skins2Support = true;
           waylandSupport = true;
         })
-        (qbittorrent.override {
-          guiSupport = true;
-          trackerSearch = true;
-          webuiSupport = false;
+        (wget.override {
+          withLibpsl = true;
+          withOpenssl = true;
         })
       ]
       ++ (with unixtools; [
@@ -2676,6 +2764,10 @@ in
       ++ (with texlivePackages; [
         latexmk
       ])
+      ++ (with inkscape-extensions; [
+        applytransforms
+        textext
+      ])
       ++ (with ghidra-extensions; [
         findcrypt
         ghidra-delinker-extension
@@ -2687,10 +2779,6 @@ in
         ret-sync
         sleighdevtools
         wasm
-      ])
-      ++ (with inkscape-extensions; [
-        applytransforms
-        textext
       ])
       ++ config.boot.extraModulePackages;
   };
@@ -3303,10 +3391,6 @@ in
             enableFishIntegration = true;
           };
 
-          language = { }; # TODO
-
-          keyboard = { }; # TODO
-
           pointerCursor = {
             name = cursor.theme.name;
             package = cursor.theme.package;
@@ -3381,7 +3465,6 @@ in
               "uwsm app -- wl-paste --type image --watch cliphist store"
               "uwsm app -- syshud"
               "uwsm app -- udiskie --tray --appindicator --automount --notify --file-manager nautilus"
-              "systemctl --user start warp-taskbar"
 
               "rm -rf ~/.local/share/applications/waydroid.*"
             ];
@@ -4745,8 +4828,6 @@ in
 
             enableBashIntegration = true;
             enableFishIntegration = true;
-
-            settings = { }; # TODO
           };
 
           nix-your-shell = {
@@ -4941,13 +5022,20 @@ in
           matplotlib = {
             enable = true;
 
-            config = { }; # TODO
+            config = {
+              axes = {
+                grid = true;
+              };
+            };
           };
 
           gh = {
             enable = true;
             package = pkgs.gh;
             extensions = with pkgs; [
+              gh-contribs
+              gh-notify
+              gh-skyline
             ];
 
             gitCredentialHelper = {
@@ -4992,7 +5080,9 @@ in
               }
             );
 
-            settings = { }; # TODO
+            settings = {
+              no-embed-thumbnail = true;
+            };
           };
         };
       }
@@ -5009,5 +5099,6 @@ in
 # FIXME: ELAN7001 SPI Fingerprint Sensor
 # FIXME: hardinfo2
 # FIXME: MariaDB > Login
+# FIXME: RiseupVPN and CalyxVPN: QQmlApplicationEngine failed to load component \n qrc:/main.qml: module "adwaita-dark" is not installed
 # FIXME: Unified Greeter and Lockscreen Themes
 # FIXME: Wofi > Window > Border Radius > Transperant Background
