@@ -209,13 +209,15 @@ in
 
     extraModprobeConfig = ''
       options kvm_intel nested=1
+      options kvm report_ignored_msrs=0
     '';
 
     kernelParams = [
+      "boot.shell_on_fail"
       "intel_iommu=on"
       "iommu=pt"
       "kvm.ignore_msrs=1"
-      "boot.shell_on_fail"
+      "mitigations=auto"
       "rd.systemd.show_status=true"
       "rd.udev.log_level=err"
       "udev.log_level=err"
@@ -248,13 +250,6 @@ in
         pkgs.nixos-bgrt-plymouth
       ];
       theme = "nixos-bgrt";
-
-      # theme = "black_hud";
-      # themePackages = [
-      #   (pkgs.adi1090x-plymouth-themes.override {
-      #     selected_themes = [ config.boot.plymouth.theme ];
-      #   })
-      # ];
 
       font = "${pkgs.nerd-fonts.noto}/share/fonts/truetype/NerdFonts/Noto/NotoSansNerdFont-Regular.ttf";
 
@@ -290,9 +285,8 @@ in
       allowReboot = false;
     };
 
-    activationScripts = { };
-
-    userActivationScripts = { };
+    # activationScripts = { };
+    # userActivationScripts = { };
 
     stateVersion = "24.11";
   };
@@ -331,8 +325,7 @@ in
       android_sdk.accept_license = true;
     };
 
-    overlays = [
-    ];
+    # overlays = [ ];
   };
 
   appstream.enable = true;
@@ -553,7 +546,11 @@ in
     rtkit.enable = true;
 
     wrappers = {
-      spice-client-glib-usb-acl-helper.source = "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
+      spice-client-glib-usb-acl-helper.source = "${
+        (pkgs.spice-gtk.override {
+          withPolkit = true;
+        })
+      }/bin/spice-client-glib-usb-acl-helper";
     };
 
     audit = {
@@ -682,8 +679,7 @@ in
           withSystemd = true;
         }
       );
-      extraBackends = with pkgs; [
-      ];
+      # extraBackends = with pkgs; [ ];
       snapshot = false;
 
       openFirewall = true;
@@ -783,9 +779,20 @@ in
       })
     ];
 
-    globalEnvironment = { };
+    services = {
+      hardinfo2_custom = {
+        description = "Hardinfo2 support for root access";
+        wantedBy = [ "basic.target" ];
 
-    targets = { };
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.hardinfo2}/bin/hwinfo2_fetch_sysdata"; # The ${pkgs.hardinfo2}/lib/systemd/system/hardinfo2.service file intends to run ${pkgs.hardinfo2}/bin/hwinfo2_fetch_sysdata oneshot which calls ${pkgs.hardinfo2}/bin/.hwinfo2_fetch_sysdata-wrapped
+        };
+
+        enable = true;
+      };
+    }; # Custom Service Unit File due to Errors
+
   };
 
   services = {
@@ -799,8 +806,7 @@ in
 
       implementation = "broker";
 
-      packages = with pkgs; [
-      ];
+      # packages = with pkgs; [ ];
     };
 
     timesyncd = {
@@ -819,21 +825,12 @@ in
       );
     };
 
-    btrfs.autoScrub = {
-      enable = true;
-
-      interval = "weekly";
-      fileSystems = [
-        "/"
-      ];
-    };
-
     acpid = {
       enable = true;
 
-      powerEventCommands = '''';
-      acEventCommands = '''';
-      lidEventCommands = '''';
+      # powerEventCommands = '''';
+      # acEventCommands = '''';
+      # lidEventCommands = '''';
 
       logEvents = false;
     };
@@ -920,7 +917,7 @@ in
 
       settings = {
         default_session = {
-          command = "${lib.getExe pkgs.greetd.tuigreet} --greet-align center --time --greeting Welcome --user-menu --asterisks --asterisks-char \"*\" --cmd \"${lib.getExe config.programs.uwsm.package} start hyprland-uwsm.desktop\"";
+          command = "${pkgs.lib.getExe pkgs.greetd.tuigreet} --greet-align center --time --greeting Welcome --user-menu --asterisks --asterisks-char \"*\" --cmd \"${pkgs.lib.getExe config.programs.uwsm.package} start hyprland-uwsm.desktop\"";
           user = "bitscoper";
         };
       };
@@ -1019,14 +1016,14 @@ in
         };
       };
 
-      extraConfig.pipewire."92-low-latency" = {
-        "context.properties" = {
-          "default.clock.rate" = 48000;
-          "default.clock.quantum" = 32;
-          "default.clock.min-quantum" = 32;
-          "default.clock.max-quantum" = 32;
-        };
-      };
+      # extraConfig.pipewire."92-low-latency" = {
+      #   "context.properties" = {
+      #     "default.clock.rate" = 48000;
+      #     "default.clock.quantum" = 32;
+      #     "default.clock.min-quantum" = 32;
+      #     "default.clock.max-quantum" = 32;
+      #   };
+      # };
 
       raopOpenFirewall = true;
     };
@@ -1078,7 +1075,7 @@ in
         session.gc_maxlifetime = 43200
         session.use_trans_sid = O
         session.cache_limiter = nocache
-        session.sid_length = 248
+        session.sid_length = 64
       '';
     };
 
@@ -1158,6 +1155,19 @@ in
       package = pkgs.cockpit;
 
       port = 9090;
+      allowed-origins = [
+        "*"
+      ];
+
+      settings = {
+        WebService = {
+          AllowUnencrypted = false;
+
+          LoginTo = true;
+          AllowMultiHost = true;
+        };
+      };
+
       openFirewall = true;
     };
 
@@ -1315,17 +1325,19 @@ in
       enableSubmission = true;
       enableSubmissions = true;
 
-      domain = config.networking.fqdn;
-      hostname = config.networking.fqdn;
-      origin = config.networking.fqdn;
-
       virtualMapType = "pcre";
       aliasMapType = "pcre";
       enableHeaderChecks = true;
 
       setSendmail = true;
 
-      config = { };
+      settings = {
+        main = {
+          mydomain = config.networking.fqdn;
+          myhostname = config.networking.fqdn;
+          myorigin = config.networking.fqdn;
+        };
+      };
     };
 
     opendkim = {
@@ -1334,7 +1346,7 @@ in
       domains = "csl:${config.networking.fqdn}";
       selector = "default";
 
-      settings = { };
+      # settings = { };
     };
 
     dovecot2 = {
@@ -1358,7 +1370,7 @@ in
       enablePAM = true;
       showPAMFailure = true;
 
-      pluginSettings = { };
+      # pluginSettings = { };
     };
 
     jellyfin = {
@@ -1375,10 +1387,6 @@ in
       host = "0.0.0.0";
       port = 11434;
       openFirewall = true;
-    };
-
-    wordpress = {
-      sites = { };
     };
 
     tailscale = {
@@ -1475,11 +1483,10 @@ in
 
       enableLsColors = true;
 
-      shellAliases = { };
+      # shellAliases = { };
 
-      loginShellInit = '''';
-
-      shellInit = '''';
+      # loginShellInit = '''';
+      # shellInit = '''';
 
       interactiveShellInit = ''
         PROMPT_COMMAND="history -a"
@@ -1496,14 +1503,12 @@ in
         completions.enable = true;
       };
 
-      shellAbbrs = { };
-      shellAliases = { };
+      # shellAbbrs = { };
+      # shellAliases = { };
 
-      promptInit = '''';
-
-      loginShellInit = '''';
-
-      shellInit = '''';
+      # promptInit = '''';
+      # loginShellInit = '''';
+      # shellInit = '''';
 
       interactiveShellInit = ''
         if command -q nix-your-shell
@@ -1521,8 +1526,6 @@ in
 
       enableBashIntegration = true;
       enableFishIntegration = true;
-
-      direnvrcExtra = '''';
 
       silent = false;
     };
@@ -2042,22 +2045,19 @@ in
       clean_build = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --install-bootloader --upgrade-all";
     };
 
-    extraInit = '''';
-
-    loginShellInit = '''';
-
-    shellInit = '''';
-
-    interactiveShellInit = '''';
+    # extraInit = '''';
+    # loginShellInit = '''';
+    # shellInit = '''';
+    # interactiveShellInit = '''';
 
     systemPackages =
       with pkgs;
       [
         # darktable # Marked Insecure
-        # gpredicts # Temporary
+        # gpredicts # Build Failure
         # reiser4progs # Marked Broken
-        # virt-top # Temporary
-        # virt-v2v # Temporary
+        # virt-top # Build Failure
+        # virt-v2v # Build Failure
         above
         acl
         agi # Cannot find libswt
@@ -2299,7 +2299,6 @@ in
         ninja
         nix-bash-completions
         nix-diff
-        nix-index
         nix-info
         nixd
         nixdoc
@@ -2332,6 +2331,7 @@ in
         podman-compose
         podman-desktop
         postgres-lsp
+        prctl
         profile-cleaner
         progress
         pwvucontrol
@@ -2367,7 +2367,6 @@ in
         songrec
         soundconverter
         spice
-        spice-gtk
         spice-protocol
         spooftooph
         sslscan
@@ -2405,7 +2404,6 @@ in
         usbutils
         util-linux
         video-downloader
-        virt-viewer
         virtio-win
         virtiofsd
         vlc-bittorrent
@@ -2414,6 +2412,7 @@ in
         wafw00f
         wavpack
         waycheck
+        waydroid-helper
         wayland-utils
         waylevel
         wayvnc
@@ -2629,6 +2628,9 @@ in
           rigctl_server = true;
           scanner = true;
         })
+        (spice-gtk.override {
+          withPolkit = true;
+        })
         (tor-browser.override {
           libnotifySupport = true;
           waylandSupport = true;
@@ -2637,6 +2639,9 @@ in
           pipewireSupport = true;
           pulseaudioSupport = true;
           libvaSupport = true;
+        })
+        (virt-viewer.override {
+          spiceSupport = true;
         })
         (vlc.override {
           chromecastSupport = true;
@@ -2789,7 +2794,7 @@ in
 
       addedAssociations = config.xdg.mime.defaultApplications;
 
-      removedAssociations = { };
+      # removedAssociations = { };
 
       # https://www.iana.org/assignments/media-types/media-types.xhtml
       defaultApplications = {
@@ -3406,14 +3411,7 @@ in
 
           preferXdgDirectories = true;
 
-          packages = with pkgs; [
-          ];
-
-          sessionVariables = { };
-
-          sessionSearchVariables = { };
-
-          shellAliases = { };
+          # sessionSearchVariables = { };
 
           enableDebugInfo = false;
 
@@ -5008,8 +5006,7 @@ in
                 enableUpdateCheck = true;
                 enableExtensionUpdateCheck = true;
 
-                # userSettings = {
-                # };
+                # userSettings = { };
               };
             };
           };
@@ -5052,7 +5049,7 @@ in
 
               editor = "nano";
 
-              aliases = { };
+              # aliases = { };
             };
           };
 
@@ -5066,7 +5063,7 @@ in
               };
             };
 
-            credentials = { };
+            # credentials = { };
           };
 
           yt-dlp = {
@@ -5096,8 +5093,8 @@ in
 }
 
 # FIXME: 05ac-033e-Gamepad > Rumble
+# FIXME: Cockpit > Login
 # FIXME: ELAN7001 SPI Fingerprint Sensor
-# FIXME: hardinfo2
 # FIXME: MariaDB > Login
 # FIXME: RiseupVPN and CalyxVPN: QQmlApplicationEngine failed to load component \n qrc:/main.qml: module "adwaita-dark" is not installed
 # FIXME: Unified Greeter and Lockscreen Themes
