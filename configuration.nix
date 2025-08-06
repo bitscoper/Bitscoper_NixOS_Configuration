@@ -97,14 +97,14 @@ let
     builtins.map (
       line:
       let
-        m = builtins.match "@define-color ([^ ]+) ([^;]+);" line;
+        mapping = builtins.match "@define-color ([^ ]+) ([^;]+);" line;
       in
-      if m == null then
+      if mapping == null then
         null
       else
         {
-          name = builtins.elemAt m 0;
-          value = builtins.elemAt m 1;
+          name = builtins.elemAt mapping 0;
+          value = builtins.elemAt mapping 1;
         }
     ) gtk_css_color_lines
   );
@@ -358,6 +358,7 @@ in
         waylandFrontend = true;
 
         addons = with pkgs; [
+          fcitx5-gtk
           fcitx5-openbangla-keyboard
         ];
       };
@@ -835,6 +836,15 @@ in
       logEvents = false;
     };
 
+    thermald = {
+      enable = true;
+      package = pkgs.thermald;
+
+      ignoreCpuidCheck = false;
+
+      debug = false;
+    };
+
     power-profiles-daemon = {
       enable = true;
       package = pkgs.power-profiles-daemon;
@@ -1266,11 +1276,11 @@ in
     postgresql = {
       enable = true;
       package = (
-        pkgs.postgresql.override {
-          curlSupport = true;
-          pamSupport = true;
-          systemdSupport = true;
-          uringSupport = true;
+        pkgs.postgresql_17_jit.override {
+          # curlSupport = true;
+          # pamSupport = true;
+          # systemdSupport = true;
+          # uringSupport = true;
         }
       );
 
@@ -1371,6 +1381,43 @@ in
       showPAMFailure = true;
 
       # pluginSettings = { };
+    };
+
+    icecast = {
+      enable = true;
+
+      hostname = config.networking.fqdn;
+      listen = {
+        address = "0.0.0.0";
+        port = 17101;
+      };
+
+      user = "nobody";
+      group = "nogroup";
+
+      admin = {
+        user = "bitscoper";
+        password = secrets.password_1_of_bitscoper;
+      };
+
+      extraConf = ''
+        <location>${config.networking.fqdn}</location>
+        <admin>bitscoper@${config.networking.fqdn}</admin>
+        <authentication>
+          <source-password>${secrets.password_2_of_bitscoper}</source-password>
+          <relay-password>${secrets.password_2_of_bitscoper}</relay-password>
+        </authentication>
+        <directory>
+          <yp-url-timeout>15</yp-url-timeout>
+          <yp-url>http://dir.xiph.org/cgi-bin/yp-cgi</yp-url>
+        </directory>
+        <logging>
+          <loglevel>2</loglevel>
+        </logging>
+        <server-id>${config.networking.fqdn}</server-id>
+      ''; # <loglevel>2</loglevel> = Warn
+
+      logDir = "/var/log/icecast/";
     };
 
     jellyfin = {
@@ -2090,6 +2137,7 @@ in
         btrfs-progs
         bulk_extractor
         bustle
+        butt
         bzip2
         bzip3
         cabextract
@@ -2147,6 +2195,7 @@ in
         fileinfo
         fish-lsp
         flake-checker
+        flare-floss
         flightgear
         flutter
         fontfor
@@ -2383,7 +2432,6 @@ in
         terminaltexteffects
         texliveFull
         theharvester
-        thermald
         tilix
         time
         tmpmail # jq Error
@@ -2438,7 +2486,7 @@ in
         xvidcore
         xz
         yaml-language-server
-        yara
+        yara-x
         zenity
         zenmap
         zfs
