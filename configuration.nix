@@ -1107,6 +1107,7 @@ in
 
       publish = {
         enable = true;
+
         domain = true;
         addresses = true;
         workstation = true;
@@ -2117,10 +2118,14 @@ in
         apfsprogs
         apkeep
         apkleaks
+        arduino-cli
+        arduino-core
+        arduino-ide
         arduino-language-server
         aribb24
         aribb25
         arj
+        armitage
         audacity
         autopsy
         avrdude
@@ -2166,6 +2171,8 @@ in
         cups-pdf-to-pdf
         cups-printers
         curtail
+        cve-bin-tool
+        cvehound
         d-spy
         dart
         dbeaver-bin
@@ -2178,6 +2185,7 @@ in
         dnsrecon
         docker-language-server
         dosfstools
+        dropwatch
         e2fsprogs
         efibootmgr
         eog
@@ -2185,7 +2193,7 @@ in
         evtest
         evtest-qt
         exfatprogs
-        eyedropper
+        exploitdb
         f2fs-tools
         faad2
         fdk_aac
@@ -2242,6 +2250,7 @@ in
         hyprland-qt-support
         hyprland-qtutils
         hyprls
+        hyprpicker
         i2c-tools
         iaito
         iftop
@@ -2258,6 +2267,7 @@ in
         jxrlib
         kernel-hardening-checker
         kernelshark
+        keyutils
         killall
         kmod
         letterpress
@@ -2306,8 +2316,10 @@ in
         libxfs
         libzip
         linux-doc
+        linux-exploit-suggester
         linuxConsoleTools
         linuxHeaders
+        linuxquota
         logdy
         logtop
         lrzip
@@ -2333,6 +2345,7 @@ in
         meld
         mesa-demos
         metadata-cleaner
+        metasploit
         mfcuk
         mfoc
         mission-center
@@ -2359,6 +2372,7 @@ in
         ntfs3g
         ntp
         nuclei
+        nvme-cli
         onionshare-gui
         openafs
         opencore-amr
@@ -2436,6 +2450,7 @@ in
         time
         tmpmail # jq Error
         tpm2-tools
+        traitor
         tree
         trufflehog
         trustymail
@@ -2700,6 +2715,10 @@ in
         (wget.override {
           withLibpsl = true;
           withOpenssl = true;
+        })
+        (xyce-parallel.override {
+          withMPI = true;
+          enableDocs = true;
         })
       ]
       ++ (with unixtools; [
@@ -5040,14 +5059,14 @@ in
                     {
                       name = "vscode-serial-monitor";
                       publisher = "ms-vscode";
-                      version = "0.13.250720001";
-                      sha256 = "5q4QPfUyIsI2Ux6q/nz/IkQVPR3TcJn+B8oaKuVCd7c=";
+                      version = "0.13.250807001";
+                      sha256 = "JnwsJ4zYWn6mzck1hedBErj4ofUAtp07njIMXq6D8nY=";
                     }
                     {
                       name = "vscode-print";
                       publisher = "pdconsec";
-                      version = "1.5.1";
-                      sha256 = "jx6PfXPbjF05B5lk3bTq8CDlkMh6E0PIFOalTnszF+o=";
+                      version = "1.6.0";
+                      sha256 = "Z35K9rwp8lXpIWnCineF1Bsoxy2GwXMgVg/avCS2/h8=";
                     }
                   ];
 
