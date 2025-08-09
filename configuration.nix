@@ -921,13 +921,13 @@ in
 
     greetd = {
       enable = true;
-      package = pkgs.greetd.greetd;
+      package = pkgs.greetd;
 
       restart = true;
 
       settings = {
         default_session = {
-          command = "${pkgs.lib.getExe pkgs.greetd.tuigreet} --greet-align center --time --greeting Welcome --user-menu --asterisks --asterisks-char \"*\" --cmd \"${pkgs.lib.getExe config.programs.uwsm.package} start hyprland-uwsm.desktop\"";
+          command = "${pkgs.lib.getExe pkgs.tuigreet} --greet-align center --time --greeting Welcome --user-menu --asterisks --asterisks-char \"*\" --cmd \"${pkgs.lib.getExe config.programs.uwsm.package} start hyprland-uwsm.desktop\"";
           user = "bitscoper";
         };
       };
@@ -1734,6 +1734,7 @@ in
             "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/languagetool/latest.xpi"
+            "https://addons.mozilla.org/firefox/downloads/latest/multi-account-containers/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/search_by_image/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/simple-mass-downloader/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/single-file/latest.xpi"
@@ -1743,13 +1744,9 @@ in
           ];
 
           Locked = [
-            "gelprec.smd@gmail.com" # "Simple mass download"
+            "@testpilot-containers" # "Firefox Multi-Account Containers"
             "jid1-BoFifL9Vbdl2zQ@jetpack" # "Decentraleyes"
             "uBlock0@raymondhill.net" # "uBlock Origin"
-            "{19b92b95-9cca-4f8d-b364-37a81f7133d5}" # "Tab Disguiser"
-            "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}" # "Search by Image"
-            "{531906d3-e22f-4a6c-a102-8057b88a1a63}" # "SingleFile"
-            "{dcb8caa2-63fa-41aa-a508-a45c5990ebdd}" # "WhatFont"
           ];
         };
       };
@@ -5013,7 +5010,6 @@ in
                     tailscale.vscode-tailscale
                     tamasfe.even-better-toml
                     timonwong.shellcheck
-                    twxs.cmake
                     usernamehw.errorlens
                     vincaslt.highlight-matching-tag
                     visualstudioexptteam.intellicode-api-usage-examples
