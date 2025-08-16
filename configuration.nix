@@ -2111,7 +2111,6 @@ in
         acl
         agi # Cannot find libswt
         aircrack-ng
-        alac
         alpaca
         android_sdk # Custom
         android-backup-extractor
@@ -2120,11 +2119,8 @@ in
         apkeep
         apkleaks
         arduino-cli
-        arduino-core
         arduino-ide
         arduino-language-server
-        aribb24
-        aribb25
         arj
         armitage
         audacity
@@ -2144,31 +2140,24 @@ in
         bulk_extractor
         bustle
         butt
-        bzip2
         bzip3
-        cabextract
         cameractrls-gtk4
         celestia
-        celt
         certbot-full
         clang
         clang-analyzer
-        clang-manpages
         clang-tools
         clinfo
         cliphist
         cloc
         cmake
         cmake-language-server
-        codec2
         collision
         cpio
         cramfsprogs
-        cryptodev
         cryptsetup
         ctop
         cups-filters
-        cups-pdf-to-pdf
         cups-printers
         curtail
         cve-bin-tool
@@ -2193,10 +2182,7 @@ in
         evtest
         evtest-qt
         exfatprogs
-        exploitdb
         f2fs-tools
-        faad2
-        fdk_aac
         ffmpegthumbnailer
         fh
         file
@@ -2209,14 +2195,10 @@ in
         fontfor
         fritzing
         fstl
-        fwupd-efi
         gcc15
         gdb
         gimp3-with-plugins
-        git-doc
         git-filter-repo
-        glib
-        glibc
         gnome-characters
         gnome-clocks
         gnome-decoder
@@ -2226,29 +2208,20 @@ in
         gnome-logs
         gnome-nettool
         gnugrep
-        gnulib
         gnumake
         gnused
         gnutar
-        gnutls
         gource
         gparted
         gradle-completion
-        graphs # Needs Description
-        gsm
-        gtk-vnc
         guestfs-tools
         gzip
         hdparm
         hfsprogs
-        hidapi
         hieroglyphic
         host
         hw-probe
         hydra-check
-        hyprland-protocols
-        hyprland-qt-support
-        hyprland-qtutils
         hyprls
         hyprpicker
         i2c-tools
@@ -2257,19 +2230,17 @@ in
         inkscape-with-extensions
         inotify-tools
         input-leap
-        inspectrum
-        isocodes
         jellyfin-media-player
         jfsutils
         jmol
         john
         johnny
         jq
-        jxrlib
         kernel-hardening-checker
         kernelshark
         keyutils
         killall
+        kind
         kmod
         kubectl
         kubectl-graph
@@ -2278,53 +2249,8 @@ in
         kubernetes-helm
         letterpress
         lhasa
-        libaom
-        libappimage
-        libass
-        libbluray
-        libbtbb
-        libcamera
-        libcdio
-        libde265
-        libdvdcss
-        libdvdnav
-        libdvdread
-        libepoxy
-        libfreeaptx
-        libfreefare
-        libftdi1 # Update of libftdi
-        libgcc
-        libGL
-        libGLU
-        libgpg-error
-        libguestfs
-        libheif
-        libilbc
-        liblc3
-        libmtp
-        libnotify
-        libogg
-        libopus
-        libosinfo
-        libraw
-        libreoffice-fresh
-        libsamplerate
-        libserialport
-        libusb1
-        libuuid
-        libuvc
-        libva-utils
-        libvirt-glib
-        libvncserver
-        libvpx
-        libwebcam
-        libwebp
-        libxfs
-        libzip
-        linux-doc
         linux-exploit-suggester
         linuxConsoleTools
-        linuxHeaders
         linuxquota
         logdy
         logtop
@@ -2337,25 +2263,20 @@ in
         lynis
         lyto
         lz4
-        lzham
         lzip
-        lzlib
         lzop
         macchanger
-        mailutils
         masscan
         massdns
         mattermost-desktop
         md-lsp
-        media-player-info
         meld
-        mesa-demos
         metadata-cleaner
         metasploit
         mfcuk
         mfoc
+        minikube
         mission-center
-        monkeysAudio
         mousam
         mtools
         mtr-gui
@@ -2369,29 +2290,23 @@ in
         nix-diff
         nix-info
         nixd
-        nixdoc
         nixfmt-rfc-style
-        nixos-icons
         nixpkgs-lint
         nixpkgs-review
         nmap
         ntfs3g
-        ntp
         nuclei
         nvme-cli
         onionshare-gui
         openafs
         openboard
-        opencore-amr
         opendmarc
         openh264
-        openjpeg
         openssl
         p7zip
         paper-clip
         patchelf
         pciutils
-        pcre
         pdfarranger
         pg_top
         php
@@ -2410,7 +2325,6 @@ in
         qemu-utils
         qpwgraph
         radare2
-        readline
         reiserfsprogs
         rpi-imager
         rpmextract
@@ -2418,16 +2332,13 @@ in
         rtl-sdr-librtlsdr
         rtl-sdr-osmocom
         rzip
-        sbc
         scalpel
-        schroedinger
         scrcpy
         screen
         sdrangel
         selectdefaultapplication
         serial-studio
         share-preview
-        shared-mime-info
         sherlock
         shotcut
         simple-scan
@@ -2436,8 +2347,6 @@ in
         smartmontools
         songrec
         soundconverter
-        spice
-        spice-protocol
         spooftooph
         sslscan
         subfinder
@@ -2445,7 +2354,6 @@ in
         switcheroo
         syshud
         systemd-lsp
-        systemdLibs
         szyszka
         telegram-desktop
         telegraph
@@ -2464,8 +2372,6 @@ in
         udftools
         udiskie
         unar
-        unicode-character-database
-        unicode-emoji
         universal-android-debloater # uad-ng
         unix-privesc-check
         unzip
@@ -2474,13 +2380,10 @@ in
         usbutils
         util-linux
         video-downloader
-        virtio-win
         virtiofsd
-        vlc-bittorrent
         vulkan-caps-viewer
         vulkan-tools
         wafw00f
-        wavpack
         waycheck
         waydroid-helper
         wayland-utils
@@ -2491,12 +2394,8 @@ in
         whatfiles
         which
         whois
-        win-spice
         wl-clipboard
-        woff2
         wvkbd # wvkbd-mobintl
-        x264
-        x265
         x2goclient
         xdg-user-dirs
         xdg-utils
@@ -2505,7 +2404,6 @@ in
         xfstests
         xorg.xhost
         xoscope
-        xvidcore
         xz
         yaml-language-server
         yara-x
@@ -2513,7 +2411,6 @@ in
         zenmap
         zfs
         zip
-        zlib
         zpaq
         zstd
         (coreutils-full.override {
