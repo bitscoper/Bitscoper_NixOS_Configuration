@@ -1447,6 +1447,10 @@ in
       openFirewall = true;
     };
 
+    kubernetes = {
+      package = pkgs.kubernetes;
+    };
+
     logrotate = {
       enable = true;
 
@@ -2143,7 +2147,6 @@ in
         bzip2
         bzip3
         cabextract
-        calyx-vpn
         cameractrls-gtk4
         celestia
         celt
@@ -2261,12 +2264,18 @@ in
         jmol
         john
         johnny
+        jq
         jxrlib
         kernel-hardening-checker
         kernelshark
         keyutils
         killall
         kmod
+        kubectl
+        kubectl-graph
+        kubectl-tree
+        kubectl-view-secret
+        kubernetes-helm
         letterpress
         lhasa
         libaom
@@ -2372,6 +2381,7 @@ in
         nvme-cli
         onionshare-gui
         openafs
+        openboard
         opencore-amr
         opendmarc
         openh264
@@ -2394,6 +2404,7 @@ in
         prctl
         profile-cleaner
         progress
+        protonvpn-gui
         pwvucontrol
         qalculate-gtk
         qemu-utils
@@ -2401,7 +2412,6 @@ in
         radare2
         readline
         reiserfsprogs
-        riseup-vpn
         rpi-imager
         rpmextract
         rpPPPoE
@@ -4063,6 +4073,38 @@ in
         };
 
         programs = {
+          nix-your-shell = {
+            enable = true;
+            package = pkgs.nix-your-shell;
+
+            enableFishIntegration = true;
+          };
+
+          dircolors = {
+            enable = true;
+            package = (
+              pkgs.coreutils-full.override {
+                aclSupport = true;
+                withOpenssl = true;
+              }
+            );
+
+            enableBashIntegration = true;
+            enableFishIntegration = true;
+          };
+
+          kubecolor = {
+            enable = true;
+            package = pkgs.kubecolor;
+
+            enableAlias = true;
+
+            settings = {
+              kubectl = pkgs.lib.getExe pkgs.kubectl;
+              preset = "dark";
+            };
+          };
+
           hyprlock = {
             enable = true;
             package = pkgs.hyprlock;
@@ -4808,6 +4850,21 @@ in
             '';
           };
 
+          gradle = {
+            enable = true;
+            package = pkgs.gradle;
+          };
+
+          matplotlib = {
+            enable = true;
+
+            config = {
+              axes = {
+                grid = true;
+              };
+            };
+          };
+
           keepassxc = {
             enable = true;
             package = (
@@ -4823,6 +4880,46 @@ in
             );
 
             # settings = { };
+          };
+
+          gh = {
+            enable = true;
+            package = pkgs.gh;
+            extensions = with pkgs; [
+              gh-contribs
+              gh-notify
+              gh-skyline
+            ];
+
+            gitCredentialHelper = {
+              enable = true;
+
+              hosts = [
+                "https://github.com"
+                "https://gist.github.com"
+              ];
+            };
+
+            settings = {
+              git_protocol = "https";
+
+              editor = "nano";
+
+              # aliases = { };
+            };
+          };
+
+          awscli = {
+            enable = true;
+            package = pkgs.awscli2;
+
+            settings = {
+              default = {
+                output = "json";
+              };
+            };
+
+            # credentials = { };
           };
 
           wofi = {
@@ -4877,26 +4974,6 @@ in
                 margin-right: 4px;
               }
             '';
-          };
-
-          dircolors = {
-            enable = true;
-            package = (
-              pkgs.coreutils-full.override {
-                aclSupport = true;
-                withOpenssl = true;
-              }
-            );
-
-            enableBashIntegration = true;
-            enableFishIntegration = true;
-          };
-
-          nix-your-shell = {
-            enable = true;
-            package = pkgs.nix-your-shell;
-
-            enableFishIntegration = true;
           };
 
           vscode = {
@@ -5055,8 +5132,8 @@ in
                     {
                       name = "vscode-serial-monitor";
                       publisher = "ms-vscode";
-                      version = "0.13.250807001";
-                      sha256 = "JnwsJ4zYWn6mzck1hedBErj4ofUAtp07njIMXq6D8nY=";
+                      version = "0.13.250815001";
+                      sha256 = "Fw4n3U3qIdl65qTG1ra/YXgF0zk1NgaV/vFaq/xxZKs=";
                     }
                     {
                       name = "vscode-print";
@@ -5072,61 +5149,6 @@ in
                 # userSettings = { };
               };
             };
-          };
-
-          gradle = {
-            enable = true;
-            package = pkgs.gradle;
-          };
-
-          matplotlib = {
-            enable = true;
-
-            config = {
-              axes = {
-                grid = true;
-              };
-            };
-          };
-
-          gh = {
-            enable = true;
-            package = pkgs.gh;
-            extensions = with pkgs; [
-              gh-contribs
-              gh-notify
-              gh-skyline
-            ];
-
-            gitCredentialHelper = {
-              enable = true;
-
-              hosts = [
-                "https://github.com"
-                "https://gist.github.com"
-              ];
-            };
-
-            settings = {
-              git_protocol = "https";
-
-              editor = "nano";
-
-              # aliases = { };
-            };
-          };
-
-          awscli = {
-            enable = true;
-            package = pkgs.awscli2;
-
-            settings = {
-              default = {
-                output = "json";
-              };
-            };
-
-            # credentials = { };
           };
 
           yt-dlp = {
@@ -5159,6 +5181,5 @@ in
 # FIXME: Cockpit > Login
 # FIXME: ELAN7001 SPI Fingerprint Sensor
 # FIXME: MariaDB > Login
-# FIXME: RiseupVPN and CalyxVPN: QQmlApplicationEngine failed to load component \n qrc:/main.qml: module "adwaita-dark" is not installed
 # FIXME: Unified Greeter and Lockscreen Themes
 # FIXME: Wofi > Window > Border Radius > Transperant Background
