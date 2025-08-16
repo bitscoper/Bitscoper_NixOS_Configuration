@@ -562,6 +562,10 @@ in
   hardware = {
     enableAllFirmware = true; # Unfree
     enableRedistributableFirmware = true; # Unfree
+    firmware = with pkgs; [
+      linux-firmware
+      sof-firmware
+    ];
 
     cpu = {
       intel = {
@@ -1026,33 +1030,22 @@ in
         };
       };
 
-      # extraConfig.pipewire."92-low-latency" = {
-      #   "context.properties" = {
-      #     "default.clock.rate" = 48000;
-      #     "default.clock.quantum" = 32;
-      #     "default.clock.min-quantum" = 32;
-      #     "default.clock.max-quantum" = 32;
-      #   };
-      # };
-
       raopOpenFirewall = true;
     };
 
     pulseaudio.enable = false;
 
     phpfpm = {
-      phpPackage = (
-        pkgs.php.override {
+      phpPackage =
+        (pkgs.php.override {
           cgiSupport = true;
           cliSupport = true;
           fpmSupport = true;
           pearSupport = true;
           pharSupport = true;
           phpdbgSupport = true;
-          apxs2Support = true;
           argon2Support = true;
           cgotoSupport = true;
-          embedSupport = true;
           staticSupport = true;
           ipv6Support = true;
           zendSignalsSupport = true;
@@ -1060,8 +1053,57 @@ in
           systemdSupport = true;
           valgrindSupport = true;
           ztsSupport = true;
-        }
-      );
+        }).buildEnv
+          {
+            extensions =
+              {
+                enabled,
+                all,
+              }:
+              enabled
+              ++ (with all; [
+                bz2
+                calendar
+                ctype
+                curl
+                dba
+                dom
+                exif
+                ffi
+                fileinfo
+                filter
+                ftp
+                gd
+                iconv
+                imagick
+                imap
+                mailparse
+                memcached
+                mysqli
+                mysqlnd
+                opcache
+                openssl
+                pcntl
+                pdo
+                pdo_mysql
+                pdo_pgsql
+                pgsql
+                posix
+                session
+                sockets
+                sodium
+                systemd
+                xdebug
+                xml
+                xmlreader
+                xmlwriter
+                xsl
+                zip
+                zlib
+              ]);
+
+            extraConfig = config.services.phpfpm.phpOptions;
+          };
 
       settings = {
         log_level = "warning";
@@ -1073,7 +1115,7 @@ in
         display_errors = Off
         log_errors = On
         cgi.force_redirect = 1
-        expose_php = On
+        expose_php = Off
         file_uploads = On
         session.cookie_lifetime = 0
         session.use_cookies = 1
@@ -1085,7 +1127,7 @@ in
         session.gc_maxlifetime = 43200
         session.use_trans_sid = O
         session.cache_limiter = nocache
-        session.sid_length = 64
+        xdebug.mode=debug
       '';
     };
 
@@ -1534,6 +1576,11 @@ in
       };
 
       enableLsColors = true;
+
+      undistractMe = {
+        enable = true;
+        playSound = true;
+      };
 
       # shellAliases = { };
 
@@ -2213,7 +2260,6 @@ in
         gnutar
         gource
         gparted
-        gradle-completion
         guestfs-tools
         gzip
         hdparm
@@ -2227,7 +2273,6 @@ in
         i2c-tools
         iaito
         iftop
-        inkscape-with-extensions
         inotify-tools
         input-leap
         jellyfin-media-player
@@ -2286,7 +2331,6 @@ in
         nikto
         nilfs-utils
         ninja
-        nix-bash-completions
         nix-diff
         nix-info
         nixd
@@ -2309,7 +2353,6 @@ in
         pciutils
         pdfarranger
         pg_top
-        php
         pkg-config
         platformio
         playerctl
@@ -2320,6 +2363,7 @@ in
         profile-cleaner
         progress
         protonvpn-gui
+        psmisc
         pwvucontrol
         qalculate-gtk
         qemu-utils
@@ -2345,6 +2389,7 @@ in
         sipvicious
         sleuthkit
         smartmontools
+        sof-tools
         songrec
         soundconverter
         spooftooph
@@ -2363,7 +2408,6 @@ in
         theharvester
         tilix
         time
-        tmpmail # jq Error
         tpm2-tools
         traitor
         tree
@@ -2402,7 +2446,6 @@ in
         xfsdump
         xfsprogs
         xfstests
-        xorg.xhost
         xoscope
         xz
         yaml-language-server
@@ -2624,6 +2667,7 @@ in
           withMPI = true;
           enableDocs = true;
         })
+        config.services.phpfpm.phpPackage
       ]
       ++ (with unixtools; [
         arp
@@ -2685,64 +2729,11 @@ in
           enableDocumentation = true;
         })
       ])
-      ++ (with php84Extensions; [
-        bz2
-        calendar
-        ctype
-        curl
-        dba
-        dom
-        exif
-        ffi
-        fileinfo
-        filter
-        ftp
-        gd
-        iconv
-        imagick
-        imap
-        mailparse
-        memcached
-        mysqli
-        mysqlnd
-        opcache
-        openssl
-        pcntl
-        pdo
-        pdo_mysql
-        pdo_pgsql
-        pgsql
-        posix
-        readline
-        session
-        sockets
-        sodium
-        systemd
-        xml
-        xmlreader
-        xmlwriter
-        xsl
-        zip
-        zlib
-      ])
       ++ (with php84Packages; [
         psysh
       ])
-      ++ (with python313Packages; [
-        black
-        numpy
-        pandas
-        pillow
-        pip
-        pyserial
-        seaborn
-      ])
       ++ (with texlivePackages; [
         latexmk
-      ])
-      ++ (with inkscape-extensions; [
-        applytransforms
-        textext
       ])
       ++ (with ghidra-extensions; [
         findcrypt
