@@ -2262,6 +2262,9 @@ in
         gparted
         guestfs-tools
         gzip
+        hashcat
+        hashcat-utils
+        hashes
         hdparm
         hfsprogs
         hieroglyphic
@@ -2273,6 +2276,7 @@ in
         i2c-tools
         iaito
         iftop
+        indent
         inotify-tools
         input-leap
         jellyfin-media-player
@@ -2368,6 +2372,7 @@ in
         qalculate-gtk
         qemu-utils
         qpwgraph
+        qr-backup
         radare2
         reiserfsprogs
         rpi-imager
@@ -2394,6 +2399,7 @@ in
         soundconverter
         spooftooph
         sslscan
+        stegseek
         subfinder
         subtitleedit
         switcheroo
@@ -2439,6 +2445,7 @@ in
         which
         whois
         wl-clipboard
+        wpprobe
         wvkbd # wvkbd-mobintl
         x2goclient
         xdg-user-dirs
@@ -3399,6 +3406,7 @@ in
           };
 
           plugins = with pkgs.hyprlandPlugins; [
+            hyprexpo
           ];
 
           xwayland.enable = true;
@@ -3406,15 +3414,15 @@ in
           sourceFirst = true;
 
           settings = {
+            env = [
+              "XCURSOR_SIZE, ${toString cursor.size}"
+            ];
+
             monitor = [
               # Name, Resolution, Position, Scale, Transform-Parameter, Transform
               ", highres, auto, 1, transform, 0"
               "eDP-1, highres, auto, 1, transform, 0"
               "HDMI-A-1, highres, auto, 1, transform, 0"
-            ];
-
-            env = [
-              "XCURSOR_SIZE, ${toString cursor.size}"
             ];
 
             exec-once = [
@@ -3434,6 +3442,8 @@ in
               "SUPER CTRL, L, exec, uwsm stop"
               "SUPER CTRL, P, exec, systemctl poweroff"
               "SUPER CTRL, R, exec, systemctl reboot"
+
+              "SUPER, O, hyprexpo:expo, toggle"
 
               "SUPER, 1, workspace, 1"
               "SUPER, 2, workspace, 2"
@@ -3615,6 +3625,7 @@ in
             windowrule = [
               "suppressevent maximize, class:.*"
               "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
+              "bordercolor rgba(ff0000ff), xwayland:1" # TODO: Test and Adjust
             ];
 
             input = {
@@ -3724,6 +3735,22 @@ in
                 "workspacesOut, 1, 1.0, linear"
               ];
               # Name, On/Off, Speed, Bezier
+            };
+
+            plugin = {
+              hyprexpo = {
+                skip_empty = true;
+                workspace_method = "center current";
+
+                columns = 3;
+                gap_size = 4;
+                bg_col = convert_hex_color_code_to_rgba_color_code colors.hex.background;
+
+                enable_gesture = true;
+                gesture_fingers = 3;
+                gesture_positive = false;
+                gesture_distance = 200;
+              };
             };
           };
         };
