@@ -184,8 +184,9 @@ in
     kernelPackages = pkgs.linuxKernel.packages.linux_zen;
 
     extraModulePackages = with config.boot.kernelPackages; [
+      # apfs # Build Failure
+      # zfs_unstable # Build Failure
       acpi_call
-      apfs
       cpupower
       cryptodev
       mm-tools
@@ -197,7 +198,6 @@ in
       turbostat
       usbip
       vendor-reset
-      zfs_unstable
     ];
 
     kernelModules = [
@@ -1611,9 +1611,28 @@ in
 
       interactiveShellInit = ''
         if command -q nix-your-shell
-        nix-your-shell fish | source
+          nix-your-shell fish | source
+        end
+        function save_history --on-event fish_prompt
+          history --save
         end
       '';
+    };
+
+    zoxide = {
+      enable = true;
+      package = (
+        pkgs.zoxide.override {
+          withFzf = true;
+        }
+      );
+
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+
+      flags = [
+        "--cmd cd"
+      ];
     };
 
     direnv = {
@@ -2149,6 +2168,7 @@ in
     systemPackages =
       with pkgs;
       [
+        # cvehound # Build Failure
         # darktable # Marked Insecure
         # gpredicts # Build Failure
         # reiser4progs # Marked Broken
@@ -2208,7 +2228,6 @@ in
         cups-printers
         curtail
         cve-bin-tool
-        cvehound
         d-spy
         dart
         dbeaver-bin
@@ -2246,6 +2265,7 @@ in
         gdb
         gimp3-with-plugins
         git-filter-repo
+        github-changelog-generator
         gnome-characters
         gnome-clocks
         gnome-decoder
@@ -2308,6 +2328,7 @@ in
         lshw
         lsof
         lsscsi
+        lssecret
         lvm2
         lynis
         lyto
@@ -2337,6 +2358,7 @@ in
         ninja
         nix-diff
         nix-info
+        nix-prefetch-github
         nixd
         nixfmt-rfc-style
         nixpkgs-lint
@@ -2604,7 +2626,7 @@ in
           stable = true;
           withNgspice = true;
           withScripting = true;
-          with3d = true;
+          with3d = false; # Build Failure
           withI18n = true;
         })
         (python313Full.override {
