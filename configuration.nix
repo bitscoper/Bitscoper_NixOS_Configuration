@@ -2318,6 +2318,7 @@ in
         kubernetes-helm
         letterpress
         lhasa
+        libreoffice-fresh
         linux-exploit-suggester
         linuxConsoleTools
         linuxquota
