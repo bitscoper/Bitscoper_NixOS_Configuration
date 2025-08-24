@@ -2157,7 +2157,9 @@ in
     };
 
     shellAliases = {
-      clean_build = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --install-bootloader --upgrade-all";
+      upgrade = "sudo nix-channel --update && sudo nix-env -u --always && sudo nixos-rebuild switch --refresh --install-bootloader --upgrade-all";
+
+      clean_upgrade = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --refresh --install-bootloader --upgrade-all";
     };
 
     # extraInit = '''';
@@ -2253,6 +2255,7 @@ in
         fh
         file
         fileinfo
+        filezilla
         fish-lsp
         flake-checker
         flare-floss
@@ -2453,6 +2456,7 @@ in
         usbutils
         util-linux
         video-downloader
+        video-trimmer
         virtiofsd
         vulkan-caps-viewer
         vulkan-tools
