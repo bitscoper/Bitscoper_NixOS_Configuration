@@ -2381,6 +2381,7 @@ in
         paper-clip
         patchelf
         pciutils
+        pdf4qt
         pdfarranger
         pg_top
         pkg-config
@@ -5074,14 +5075,8 @@ in
                     {
                       name = "vscode-serial-monitor";
                       publisher = "ms-vscode";
-                      version = "0.13.250815001";
-                      sha256 = "Fw4n3U3qIdl65qTG1ra/YXgF0zk1NgaV/vFaq/xxZKs=";
-                    }
-                    {
-                      name = "vscode-print";
-                      publisher = "pdconsec";
-                      version = "1.6.0";
-                      sha256 = "Z35K9rwp8lXpIWnCineF1Bsoxy2GwXMgVg/avCS2/h8=";
+                      version = "0.13.250826001";
+                      sha256 = "zK/Q4tQkwrUzsn0FhnoWLfoR6+OYXKB2fnuimpiBfcI=";
                     }
                   ];
 
