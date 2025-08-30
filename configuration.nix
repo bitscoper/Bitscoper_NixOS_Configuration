@@ -5008,6 +5008,7 @@ in
                     ms-toolsai.vscode-jupyter-slideshow
                     ms-vscode.anycode
                     ms-vscode.cmake-tools
+                    ms-vscode.cpptools # Unfree
                     ms-vscode.hexeditor
                     ms-vscode.live-server
                     ms-vscode.makefile-tools
