@@ -185,6 +185,7 @@ in
 
     extraModulePackages = with config.boot.kernelPackages; [
       # apfs # Build Failure
+      # shufflecake # Build Failure
       # zfs_unstable # Build Failure
       acpi_call
       cpupower
@@ -193,7 +194,6 @@ in
       nullfs
       openafs
       perf
-      shufflecake
       tmon
       turbostat
       usbip
@@ -359,7 +359,7 @@ in
 
         addons = with pkgs; [
           fcitx5-gtk
-          fcitx5-openbangla-keyboard
+          # fcitx5-openbangla-keyboard # Build Failure
         ];
       };
     };
@@ -855,23 +855,27 @@ in
     };
 
     logind = {
-      killUserProcesses = true;
+      settings = {
+        Login = {
+          killUserProcesses = true;
 
-      lidSwitch = "ignore";
-      lidSwitchDocked = "ignore";
-      lidSwitchExternalPower = "ignore";
+          lidSwitch = "ignore";
+          lidSwitchDocked = "ignore";
+          lidSwitchExternalPower = "ignore";
 
-      powerKey = "poweroff";
-      powerKeyLongPress = "poweroff";
+          powerKey = "poweroff";
+          powerKeyLongPress = "poweroff";
 
-      rebootKey = "reboot";
-      rebootKeyLongPress = "reboot";
+          rebootKey = "reboot";
+          rebootKeyLongPress = "reboot";
 
-      suspendKey = "ignore";
-      suspendKeyLongPress = "ignore";
+          suspendKey = "ignore";
+          suspendKeyLongPress = "ignore";
 
-      hibernateKey = "ignore";
-      hibernateKeyLongPress = "ignore";
+          hibernateKey = "ignore";
+          hibernateKeyLongPress = "ignore";
+        };
+      };
     };
 
     udev = {
@@ -2159,7 +2163,7 @@ in
     shellAliases = {
       upgrade = "sudo nix-channel --update && sudo nix-env -u --always && sudo nixos-rebuild switch --refresh --install-bootloader --upgrade-all";
 
-      clean_upgrade = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-collect-garbage -d && nix-collect-garbage -d && sudo nix-store --gc && sudo nixos-rebuild switch --refresh --install-bootloader --upgrade-all";
+      clean_upgrade = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-env --delete-generations old && sudo nix-collect-garbage -d && sudo nix-store --gc && sudo nix-store --optimise && sudo nixos-rebuild switch --refresh --install-bootloader --upgrade-all";
     };
 
     # extraInit = '''';
@@ -2173,6 +2177,7 @@ in
         # cvehound # Build Failure
         # darktable # Marked Insecure
         # gpredicts # Build Failure
+        # metadata-cleaner # Build Failure
         # reiser4progs # Marked Broken
         # virt-top # Build Failure
         # virt-v2v # Build Failure
@@ -2302,7 +2307,6 @@ in
         indent
         inotify-tools
         input-leap
-        jellyfin-media-player
         jfsutils
         jmol
         john
@@ -2345,7 +2349,6 @@ in
         mattermost-desktop
         md-lsp
         meld
-        metadata-cleaner
         metasploit
         mfcuk
         mfoc
@@ -2634,6 +2637,11 @@ in
           withScripting = true;
           with3d = false; # Build Failure
           withI18n = true;
+        })
+        (python312Full.override {
+          bluezSupport = true;
+          mimetypesSupport = true;
+          withReadline = true;
         })
         (python313Full.override {
           bluezSupport = true;
