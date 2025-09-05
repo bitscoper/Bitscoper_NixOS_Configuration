@@ -186,7 +186,6 @@ in
     extraModulePackages = with config.boot.kernelPackages; [
       # apfs # Build Failure
       # shufflecake # Build Failure
-      # zfs_unstable # Build Failure
       acpi_call
       cpupower
       cryptodev
@@ -198,6 +197,7 @@ in
       turbostat
       usbip
       vendor-reset
+      zfs_unstable # Build Failure
     ];
 
     kernelModules = [
@@ -563,6 +563,7 @@ in
     enableAllFirmware = true; # Unfree
     enableRedistributableFirmware = true; # Unfree
     firmware = with pkgs; [
+      alsa-firmware
       linux-firmware
       sof-firmware
     ];
@@ -2161,6 +2162,8 @@ in
     };
 
     shellAliases = {
+      fetch_upgrade_data = "sudo nix-channel --update && sudo nix-env -u --always";
+
       upgrade = "sudo nix-channel --update && sudo nix-env -u --always && sudo nixos-rebuild switch --refresh --install-bootloader --upgrade-all";
 
       clean_upgrade = "sudo nix-channel --update && sudo nix-env -u --always && sudo rm -rf /nix/var/nix/gcroots/auto/* && sudo nix-env --delete-generations old && sudo nix-collect-garbage -d && sudo nix-store --gc && sudo nix-store --optimise && sudo nixos-rebuild switch --refresh --install-bootloader --upgrade-all";
@@ -2174,18 +2177,19 @@ in
     systemPackages =
       with pkgs;
       [
-        # cvehound # Build Failure
-        # darktable # Marked Insecure
         # gpredicts # Build Failure
         # metadata-cleaner # Build Failure
         # reiser4progs # Marked Broken
-        # virt-top # Build Failure
-        # virt-v2v # Build Failure
         above
         acl
+        acpidump-all
         agi # Cannot find libswt
         aircrack-ng
         alpaca
+        alsa-plugins
+        alsa-tools
+        alsa-utils
+        alsa-utils-nhlt
         android_sdk # Custom
         android-backup-extractor
         android-tools
@@ -2235,7 +2239,9 @@ in
         cups-printers
         curtail
         cve-bin-tool
+        cvehound
         d-spy
+        darktable
         dart
         dbeaver-bin
         dconf-editor
@@ -2307,6 +2313,7 @@ in
         indent
         inotify-tools
         input-leap
+        iotop-c
         jfsutils
         jmol
         john
@@ -2344,6 +2351,7 @@ in
         lzip
         lzop
         macchanger
+        mailcap
         masscan
         massdns
         mattermost-desktop
@@ -2427,12 +2435,14 @@ in
         sof-tools
         songrec
         soundconverter
+        sox
         spooftooph
         sslscan
         stegseek
         subfinder
         subtitleedit
         switcheroo
+        symlinks
         syshud
         systemd-lsp
         szyszka
@@ -2461,6 +2471,8 @@ in
         util-linux
         video-downloader
         video-trimmer
+        virt-top
+        virt-v2v
         virtiofsd
         vulkan-caps-viewer
         vulkan-tools
