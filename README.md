@@ -47,13 +47,17 @@ My NixOS Configuration
 ---
 
 - **Terminal Emulator:** [Tilix](https://github.com/gnunn1/tilix/)
-- **Font Viewer**: [Fonts](https://gitlab.gnome.org/GNOME/gnome-font-viewer/)
-- **Disk Partition Editors:** [GNOME Disks](https://gitlab.gnome.org/GNOME/gnome-disk-utility/), and [GParted](https://gitlab.gnome.org/GNOME/gparted/)
+- **Calculator:** [Qalculate!](https://github.com/Qalculate/qalculate-gtk/)
+
+---
+
+- **Disk Partition Managers:** [Disks](https://gitlab.gnome.org/GNOME/gnome-disk-utility/), and [GParted](https://gitlab.gnome.org/GNOME/gparted/)
 - **File Manager:** [Nautilus](https://gitlab.gnome.org/GNOME/nautilus/)
 - **Archive Manager:** [File Roller](https://gitlab.gnome.org/GNOME/file-roller/)
 
 ---
 
+- **Font Viewer**: [Fonts](https://gitlab.gnome.org/GNOME/gnome-font-viewer/)
 - **Image Viewer:** [Eye of GNOME (EOG)](https://gitlab.gnome.org/GNOME/eog/)
 - **Media Player:** [VLC media player](https://code.videolan.org/videolan/vlc/)
 - **Software Defined Radio (SDR) Clients:** [SDRangel](https://github.com/f4exb/sdrangel/), and [SDR++](https://github.com/AlexandreRouma/SDRPlusPlus/)
@@ -62,14 +66,30 @@ My NixOS Configuration
 
 - **Text Editors:** [VSCodium](https://github.com/VSCodium/vscodium/), and [nano](https://cgit.git.savannah.gnu.org/cgit/nano.git/)
 - **Subtitle Editor:** [Subtitle Edit](https://github.com/SubtitleEdit/subtitleedit/)
+
+---
+
+- **Color Picker:** [hyprpicker](https://github.com/hyprwm/hyprpicker/)
 - **Screenshot Utility:** [Flameshot](https://github.com/flameshot-org/flameshot/)
+- **Raw Image Editor:** [Darktable](https://github.com/darktable-org/darktable/)
 - **Image Editor:** [GNU Image Manipulation Program (GIMP)](https://gitlab.gnome.org/GNOME/gimp/)
-- **PDF Rearranger:** [PDF Arranger](https://github.com/pdfarranger/pdfarranger/)
+
+---
+
+- **Office Suite:** [LibreOffice](https://git.libreoffice.org/core/)
+- **PDF Editors:** [PDF Arranger](https://github.com/pdfarranger/pdfarranger/), and [PDF4QT](https://github.com/JakubMelka/PDF4QT/)
+
+---
+
+- **Electronics Designers:** [KiCad EDA](https://gitlab.com/kicad/code/kicad/), and [Fritzing](https://github.com/fritzing/fritzing-app/)
+- **3D CAD Modeler:** [FreeCAD](https://github.com/FreeCAD/FreeCAD/)
+
+---
+
 - **Audio Recorder and Editor:** [Audacity](https://github.com/audacity/audacity/)
 - **Video Recorder and Streamer:** [OBS Studio](https://github.com/obsproject/obs-studio/)
-- **Video Editor:** [Shotcut](https://github.com/mltframework/shotcut/)
-- **Office Suite:** [LibreOffice](https://git.libreoffice.org/core/)
-- **Electronics Designers:** [KiCad EDA](https://gitlab.com/kicad/code/kicad/), and [Fritzing](https://github.com/fritzing/fritzing-app/)
+- **Video Compositor:** [Natron](https://github.com/NatronGitHub/Natron/)
+- **3D Creation Suite and Video Editor:** [Blender](https://github.com/blender/blender/)
 
 ---
 
@@ -77,11 +97,6 @@ My NixOS Configuration
 - **Email Client:** [Thunderbird](https://hg-edge.mozilla.org/comm-central/)
 - **Database Client:** [DBeaver](https://github.com/dbeaver/dbeaver/)
 - **Torrent Client:** [qBittorrent](https://github.com/qbittorrent/qBittorrent/)
-
----
-
-- **Calculator:** [Qalculate!](https://github.com/Qalculate/qalculate-gtk/)
-- **Color Picker and Formatter:** [Eyedropper](https://github.com/FineFindus/eyedropper/)
 
 ---
 
