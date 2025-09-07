@@ -561,7 +561,7 @@ in
 
   hardware = {
     enableAllFirmware = true; # Unfree
-    enableRedistributableFirmware = true; # Unfree
+    enableRedistributableFirmware = true;
     firmware = with pkgs; [
       alsa-firmware
       linux-firmware
@@ -690,6 +690,8 @@ in
 
       openFirewall = true;
     };
+
+    steam-hardware.enable = true;
   };
 
   virtualisation = {
@@ -886,6 +888,7 @@ in
         game-devices-udev-rules
         libmtp.out
         rtl-sdr
+        steam-devices-udev-rules
       ];
     };
 
@@ -1858,7 +1861,6 @@ in
           browserSupport = true;
           pipewireSupport = true;
           withFdk = true;
-          decklinkSupport = true;
         }
       );
 
@@ -1906,6 +1908,19 @@ in
 
       openFirewall = true;
     };
+
+    steam = {
+      enable = true;
+      package = pkgs.steam;
+
+      extraCompatPackages = with pkgs; [
+        proton-ge-bin
+      ];
+
+      localNetworkGameTransfers.openFirewall = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+    }; # Unfree
 
     virt-manager = {
       enable = true;
@@ -2179,10 +2194,12 @@ in
       [
         # gpredicts # Build Failure
         # metadata-cleaner # Build Failure
+        # natron # Marked Broken
         # reiser4progs # Marked Broken
         above
         acl
         acpidump-all
+        addlicense
         agi # Cannot find libswt
         aircrack-ng
         alpaca
@@ -2311,6 +2328,7 @@ in
         iaito
         iftop
         indent
+        inkscape-with-extensions
         inotify-tools
         input-leap
         iotop-c
@@ -2333,6 +2351,7 @@ in
         letterpress
         lhasa
         libreoffice-fresh
+        libva-utils
         linux-exploit-suggester
         linuxConsoleTools
         linuxquota
@@ -2427,7 +2446,6 @@ in
         serial-studio
         share-preview
         sherlock
-        shotcut
         simple-scan
         sipvicious
         sleuthkit
@@ -2469,8 +2487,6 @@ in
         usbip-ssh
         usbutils
         util-linux
-        video-downloader
-        video-trimmer
         virt-top
         virt-v2v
         virtiofsd
@@ -2506,6 +2522,13 @@ in
         zip
         zpaq
         zstd
+        (blender.override {
+          colladaSupport = true;
+          jackaudioSupport = true;
+          openUsdSupport = true;
+          spaceNavSupport = true;
+          waylandSupport = true;
+        })
         (coreutils-full.override {
           aclSupport = true;
           withOpenssl = true;
@@ -2547,7 +2570,6 @@ in
           withDrm = true;
           withDvdnav = true;
           withDvdread = true;
-          withFdkAac = true;
           withFlite = true;
           withFontconfig = true;
           withFreetype = true;
@@ -2626,7 +2648,7 @@ in
           withZmq = true;
           withZvbi = true;
 
-          withUnfree = true;
+          withUnfree = false;
 
           withGrayscale = true;
           withSwscaleAlpha = true;
@@ -2635,6 +2657,9 @@ in
         })
         (flameshot.override {
           enableWlrSupport = true;
+        })
+        (freecad.override {
+          spaceNavSupport = true;
         })
         (hardinfo2.override {
           printingSupport = true;
@@ -2676,7 +2701,6 @@ in
           rfspace_source = true;
           rtl_sdr_source = true;
           rtl_tcp_source = true;
-          sdrplay_source = true;
           soapy_source = true;
           spyserver_source = true;
           usrp_source = true;
@@ -2718,10 +2742,6 @@ in
           withLibpsl = true;
           withOpenssl = true;
         })
-        (xyce-parallel.override {
-          withMPI = true;
-          enableDocs = true;
-        })
         config.services.phpfpm.phpPackage
       ]
       ++ (with unixtools; [
@@ -2748,7 +2768,6 @@ in
         })
         (gst-plugins-bad.override {
           enableZbar = true;
-          faacSupport = true;
           opencvSupport = true;
           ldacbtSupport = true;
           webrtcAudioProcessingSupport = true;
