@@ -2170,6 +2170,8 @@ in
     variables = {
       ANDROID_SDK_ROOT = android_sdk_path;
       ANDROID_HOME = android_sdk_path;
+
+      LD_LIBRARY_PATH = lib.mkForce "${pkgs.lib.makeLibraryPath (with pkgs; [ sqlite ])}:$LD_LIBRARY_PATH";
     };
 
     sessionVariables = {
@@ -2403,7 +2405,6 @@ in
         nvme-cli
         onionshare-gui
         openafs
-        openboard
         opendmarc
         openh264
         openssl
@@ -2414,6 +2415,7 @@ in
         pdf4qt
         pdfarranger
         pg_top
+        pinta
         pkg-config
         platformio
         playerctl

@@ -69,8 +69,9 @@ My NixOS Configuration
 
 ---
 
-- **Color Picker:** [hyprpicker](https://github.com/hyprwm/hyprpicker/)
 - **Screenshot Utility:** [Flameshot](https://github.com/flameshot-org/flameshot/)
+- **Color Picker:** [hyprpicker](https://github.com/hyprwm/hyprpicker/)
+- **Paint Application:** [Pinta](https://github.com/PintaProject/Pinta/)
 - **Raw Image Editor:** [Darktable](https://github.com/darktable-org/darktable/)
 - **Image Editor:** [GNU Image Manipulation Program (GIMP)](https://gitlab.gnome.org/GNOME/gimp/)
 
@@ -112,7 +113,7 @@ My NixOS Configuration
 
 ---
 
-- **Virtual Machine (VM) Hypervisor:** [QEMU](https://github.com/qemu/qemu/)  -> KVM
+- **Virtual Machine (VM) Hypervisor:** [QEMU](https://github.com/qemu/qemu/) -> KVM
 - **Container Engine:** [Podman](https://github.com/containers/podman/) (with Docker Compatibility)
 - **Android Container Environment:** [Waydroid](https://github.com/waydroid/waydroid/)
 
