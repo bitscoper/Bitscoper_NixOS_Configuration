@@ -2281,6 +2281,7 @@ in
         evtest-qt
         exfatprogs
         f2fs-tools
+        ferrishot
         ffmpegthumbnailer
         fh
         file
@@ -2656,9 +2657,6 @@ in
           withSwscaleAlpha = true;
           withMultithread = true;
           withNetwork = true;
-        })
-        (flameshot.override {
-          enableWlrSupport = true;
         })
         (freecad.override {
           spaceNavSupport = true;
@@ -3564,7 +3562,7 @@ in
 
               "SUPER, C, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
 
-              ", PRINT, exec, uwsm app -- flameshot gui"
+              ", PRINT, exec, uwsm app -- ferrishot"
 
               "SUPER, A, exec, uwsm app -- wofi --show drun --disable-history | xargs -r uwsm app --"
               "SUPER, R, exec, uwsm app -- wofi --show run --disable-history | xargs -r uwsm app --"

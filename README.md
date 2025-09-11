@@ -69,7 +69,7 @@ My NixOS Configuration
 
 ---
 
-- **Screenshot Utility:** [Flameshot](https://github.com/flameshot-org/flameshot/)
+- **Screenshot Utility:** [ferrishot](https://github.com/nik-rev/ferrishot/)
 - **Color Picker:** [hyprpicker](https://github.com/hyprwm/hyprpicker/)
 - **Paint Application:** [Pinta](https://github.com/PintaProject/Pinta/)
 - **Raw Image Editor:** [Darktable](https://github.com/darktable-org/darktable/)
