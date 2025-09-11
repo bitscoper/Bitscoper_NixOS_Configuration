@@ -74,6 +74,7 @@ My NixOS Configuration
 - **Paint Application:** [Pinta](https://github.com/PintaProject/Pinta/)
 - **Raw Image Editor:** [Darktable](https://github.com/darktable-org/darktable/)
 - **Image Editor:** [GNU Image Manipulation Program (GIMP)](https://gitlab.gnome.org/GNOME/gimp/)
+- **Image Upscaler:** [Upscayl](https://github.com/upscayl/upscayl/)
 
 ---
 

@@ -2487,6 +2487,7 @@ in
         unix-privesc-check
         unzip
         upnp-router-control
+        upscayl
         usbip-ssh
         usbutils
         util-linux
