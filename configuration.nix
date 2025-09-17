@@ -192,12 +192,11 @@ in
       mm-tools
       nullfs
       openafs
-      perf
       tmon
       turbostat
       usbip
       vendor-reset
-      zfs_unstable # Build Failure
+      zfs_unstable
     ];
 
     kernelModules = [
@@ -2195,7 +2194,6 @@ in
       with pkgs;
       [
         # gpredicts # Build Failure
-        # metadata-cleaner # Build Failure
         # natron # Marked Broken
         # reiser4progs # Marked Broken
         above
@@ -2379,6 +2377,7 @@ in
         mattermost-desktop
         md-lsp
         meld
+        metadata-cleaner
         metasploit
         mfcuk
         mfoc
@@ -2428,6 +2427,7 @@ in
         progress
         protonvpn-gui
         psmisc
+        psysh
         pwvucontrol
         qalculate-gtk
         qemu-utils
@@ -2673,15 +2673,15 @@ in
           stable = true;
           withNgspice = true;
           withScripting = true;
-          with3d = false; # Build Failure
+          with3d = true;
           withI18n = true;
         })
-        (python312Full.override {
+        (python312.override {
           bluezSupport = true;
           mimetypesSupport = true;
           withReadline = true;
         })
-        (python313Full.override {
+        (python313FreeThreading.override {
           bluezSupport = true;
           mimetypesSupport = true;
           withReadline = true;
@@ -2803,9 +2803,6 @@ in
         (gstreamer.override {
           enableDocumentation = true;
         })
-      ])
-      ++ (with php84Packages; [
-        psysh
       ])
       ++ (with texlivePackages; [
         latexmk
@@ -3474,7 +3471,7 @@ in
           };
 
           plugins = with pkgs.hyprlandPlugins; [
-            hyprexpo
+            # hyprexpo # Build Failure
           ];
 
           xwayland.enable = true;
@@ -3511,7 +3508,7 @@ in
               "SUPER CTRL, P, exec, systemctl poweroff"
               "SUPER CTRL, R, exec, systemctl reboot"
 
-              "SUPER, O, hyprexpo:expo, toggle"
+              # "SUPER, O, hyprexpo:expo, toggle" # Build Failure
 
               "SUPER, 1, workspace, 1"
               "SUPER, 2, workspace, 2"
@@ -3573,6 +3570,9 @@ in
               ", XF86Explorer, exec, uwsm app -- nautilus"
               "SUPER, F, exec, uwsm app -- nautilus"
 
+              "SUPER, K, exec, uwsm app -- keepassxc"
+              "SUPER ALT, K, exec, uwsm app -- keepassxc --lock"
+
               "SUPER, U, exec, uwsm app -- missioncenter"
 
               "SUPER, W, exec, uwsm app -- firefox-devedition"
@@ -3582,6 +3582,7 @@ in
               "SUPER, M, exec, uwsm app -- thunderbird"
 
               "SUPER, E, exec, uwsm app -- codium"
+
               "SUPER, D, exec, uwsm app -- dbeaver"
 
               "SUPER, V, exec, uwsm app -- vlc"
@@ -3806,19 +3807,19 @@ in
             };
 
             plugin = {
-              hyprexpo = {
-                skip_empty = true;
-                workspace_method = "center current";
+              # hyprexpo = {
+              #   skip_empty = true;
+              #   workspace_method = "center current";
 
-                columns = 3;
-                gap_size = 4;
-                bg_col = convert_hex_color_code_to_rgba_color_code colors.hex.background;
+              #   columns = 3;
+              #   gap_size = 4;
+              #   bg_col = convert_hex_color_code_to_rgba_color_code colors.hex.background;
 
-                enable_gesture = true;
-                gesture_fingers = 3;
-                gesture_positive = false;
-                gesture_distance = 200;
-              };
+              #   enable_gesture = true;
+              #   gesture_fingers = 3;
+              #   gesture_positive = false;
+              #   gesture_distance = 200;
+              # }; # Build Failure
             };
           };
         };
