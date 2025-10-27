@@ -181,11 +181,11 @@ in
       };
     };
 
-    kernelPackages = pkgs.linuxKernel.packages.linux_6_16;
+    kernelPackages = pkgs.linuxKernel.packages.linux_6_17;
     # kernelPackages = pkgs.linuxKernel.packages.linux_zen;
 
     extraModulePackages = with config.boot.kernelPackages; [
-      apfs
+      # apfs # Build Failure
       cpupower
       mm-tools
       openafs
@@ -879,7 +879,6 @@ in
     udev = {
       enable = true;
       packages = with pkgs; [
-        android-udev-rules
         game-devices-udev-rules
         libmtp.out
         rtl-sdr
@@ -1753,8 +1752,8 @@ in
       enable = true;
       package = pkgs.bat;
       extraPackages = with pkgs.bat-extras; [
+        # batgrep # Build Failure
         batdiff
-        batgrep
         batman
         batpipe
         batwatch
@@ -1862,6 +1861,7 @@ in
       enableVirtualCamera = true;
 
       plugins = with pkgs.obs-studio-plugins; [
+        # obs-vertical-canvas # Build Failure
         obs-3d-effect
         obs-backgroundremoval
         obs-composite-blur
@@ -1878,7 +1878,6 @@ in
         obs-text-pthread
         obs-transition-table
         obs-vaapi
-        obs-vertical-canvas
         obs-vkcapture
       ];
     };
@@ -2189,8 +2188,11 @@ in
     systemPackages =
       with pkgs;
       [
+        # btrfs-assistant # Build Failure
+        # certbot-full # Build Failure
         # gpredicts # Build Failure
         # reiser4progs # Marked Broken
+        # rpi-imager # Build Failure
         above
         acl
         acpidump-all
@@ -2211,7 +2213,6 @@ in
         arduino-cli
         arduino-ide
         arduino-language-server
-        arj
         armitage
         audacity
         autopsy
@@ -2225,15 +2226,12 @@ in
         bluez-tools
         brightnessctl
         btop
-        btrfs-assistant
         btrfs-progs
         bulk_extractor
         bustle
         butt
-        bzip3
         cameractrls-gtk4
         celestia
-        certbot-full
         clang
         clang-analyzer
         clang-tools
@@ -2243,7 +2241,6 @@ in
         cmake
         cmake-language-server
         collision
-        cpio
         cramfsprogs
         cryptsetup
         ctop
@@ -2251,7 +2248,6 @@ in
         cups-printers
         curtail
         cve-bin-tool
-        cvehound
         d-spy
         darktable
         dart
@@ -2331,10 +2327,8 @@ in
         jmol
         john
         johnny
-        jq
         kernel-hardening-checker
         kernelshark
-        keyutils
         killall
         kind
         kmod
@@ -2344,15 +2338,12 @@ in
         kubectl-view-secret
         kubernetes-helm
         letterpress
-        lhasa
         libreoffice-fresh
         libva-utils
         linux-exploit-suggester
         linuxConsoleTools
-        linuxquota
         logdy
         logtop
-        lrzip
         lsb-release
         lshw
         lsof
@@ -2361,12 +2352,8 @@ in
         lvm2
         lynis
         lyto
-        lz4
-        lzip
-        lzop
         macchanger
         mailcap
-        masscan
         massdns
         md-lsp
         meld
@@ -2393,16 +2380,12 @@ in
         nixpkgs-review
         nmap
         ntfs3g
-        nuclei
         nvme-cli
         onionshare-gui
         openafs
         opendmarc
-        openh264
         openssl
-        p7zip
         paper-clip
-        patchelf
         pciutils
         pdf4qt
         pdfarranger
@@ -2414,26 +2397,20 @@ in
         podman-compose
         podman-desktop# Uses Electron
         postgres-lsp
-        prctl
         profile-cleaner
         progress
         protonvpn-gui
         psmisc
-        psysh
         pwvucontrol
         qalculate-gtk
         qemu-utils
         qpwgraph
-        qr-backup
         radare2
         reiserfsprogs
-        rpi-imager
         rpmextract
         rpPPPoE
         rtl-sdr-librtlsdr
         rtl-sdr-osmocom
-        rzip
-        scalpel
         scrcpy
         screen
         sdrangel
@@ -2449,7 +2426,6 @@ in
         songrec
         soundconverter
         sox
-        spooftooph
         sslscan
         stegseek
         subfinder
@@ -2464,17 +2440,14 @@ in
         terminal-colors
         terminaltexteffects
         texliveFull
-        theharvester
         tilix
         time
         tpm2-tools
         traitor
         tree
         trufflehog
-        trustymail
         udftools
         udiskie
-        unar
         universal-android-debloater # uad-ng
         unix-privesc-check
         unzip
@@ -2509,15 +2482,12 @@ in
         xfsprogs
         xfstests
         xoscope
-        xz
         yaml-language-server
         yara-x
         zenity
         zenmap
         zfs
         zip
-        zpaq
-        zstd
         (blender.override {
           colladaSupport = true;
           jackaudioSupport = true;
@@ -2668,7 +2638,7 @@ in
           with3d = true;
           withI18n = true;
         })
-        (python313FreeThreading.override {
+        (python314.override {
           bluezSupport = true;
           mimetypesSupport = true;
           withReadline = true;
@@ -3321,12 +3291,12 @@ in
     };
   };
 
-  qt = {
-    enable = true;
+  # qt = {
+  #   enable = true;
 
-    platformTheme = "gnome";
-    style = "adwaita-dark";
-  };
+  #   platformTheme = "gnome";
+  #   style = "adwaita-dark";
+  # }; # Build Failure
 
   documentation = {
     enable = true;
