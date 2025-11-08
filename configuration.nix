@@ -48,8 +48,8 @@ let
 
   cursor = {
     theme = {
-      name = "Bibata-Modern-Classic";
-      package = pkgs.bibata-cursors;
+      name = "Adwaita";
+      package = pkgs.adwaita-icon-theme;
     };
   };
 
@@ -1808,8 +1808,106 @@ in
           lockAll = true;
 
           settings = {
+            "com/github/huluti/Curtail" = {
+              file-attributes = true;
+              metadata = false;
+              new-file = true;
+              recursive = true;
+            };
+
+            "com/github/tenderowl/frog" = {
+              telemetry = false;
+            };
+
+            "io/gitlab/adhami3310/Converter" = {
+              show-less-popular = true;
+            };
+
+            "io/github/amit9838/mousam" = {
+              unit = "metric";
+              use-24h-clock = false;
+              use-gradient-bg = true;
+            };
+
+            "org/gnome/desktop/background" = {
+              picture-options = "zoom";
+            };
+
+            "org/gnome/desktop/input-sources" = {
+              show-all-sources = true;
+            };
+
             "org/gnome/desktop/interface" = {
               color-scheme = "prefer-dark";
+              document-font-name = "${font_preferences.name.sans_serif} 11";
+              font-antialiasing = "grayscale";
+              font-hinting = "slight";
+              gtk-enable-primary-paste = true;
+              gtk-key-theme = "Default";
+              monospace-font-name = "${font_preferences.name.mono} 11";
+              text-scaling-factor = 1.0;
+            };
+
+            "org/gnome/desktop/privacy" = {
+              remember-app-usage = false;
+              remember-recent-files = false;
+              remove-old-temp-files = true;
+              remove-old-trash-files = true;
+              report-technical-problems = false;
+              send-software-usage-stats = false;
+              usb-protection = true;
+            };
+
+            "org/gnome/desktop/wm/preferences" = {
+              action-double-click-titlebar = "toggle-maximize";
+              action-middle-click-titlebar = "toggle-maximize-vertically";
+              action-right-click-titlebar = "menu";
+              auto-raise = false;
+              button-layout = "appmenu:minimize,maximize,close";
+              focus-mode = "mouse";
+              mouse-button-modifier = "<Super>";
+              resize-with-right-button = true;
+            };
+
+            "org/gnome/file-roller/ui" = {
+              view-sidebar = true;
+            };
+
+            "org/gnome/meld" = {
+              enable-space-drawer = true;
+              highlight-current-line = true;
+              highlight-syntax = true;
+              prefer-dark-theme = true;
+              show-line-numbers = true;
+              show-overview-map = true;
+              wrap-mode = "word";
+            };
+
+            "org/gnome/mutter" = {
+              attach-modal-dialogs = false;
+              center-new-windows = true;
+            };
+
+            "org/gnome/nautilus/icon-view" = {
+              captions = [
+                "size"
+                "date_modified"
+                "none"
+              ];
+            };
+
+            "org/gnome/nautilus/preferences" = {
+              click-policy = "double";
+              recursive-search = "always";
+              show-create-link = true;
+              show-delete-permanently = true;
+              show-directory-item-counts = "always";
+              show-image-thumbnails = "always";
+              date-time-format = "simple";
+            };
+
+            "org/gnome/settings-daemon/plugins/media-keys" = {
+              volume-step = lib.gvariant.mkInt32 1;
             };
 
             "org/gnome/shell" = {
@@ -1827,73 +1925,14 @@ in
               ];
             };
 
-            "org/gnome/desktop/privacy" = {
-              remember-app-usage = false;
-              remember-recent-files = false;
-              remove-old-temp-files = true;
-              remove-old-trash-files = true;
-              report-technical-problems = false;
-              send-software-usage-stats = false;
-              usb-protection = true;
-            };
             "org/gtk/gtk4/settings/file-chooser" = {
               sort-directories-first = true;
-            };
-            "org/gnome/nautilus/preferences" = {
-              click-policy = "double";
-              recursive-search = "always";
-              show-create-link = true;
-              show-delete-permanently = true;
-              show-directory-item-counts = "always";
-              show-image-thumbnails = "always";
-              date-time-format = "simple";
-            };
-            "org/gnome/nautilus/icon-view" = {
-              captions = [
-                "size"
-                "date_modified"
-                "none"
-              ];
-            };
-
-            "org/gnome/file-roller/ui" = {
-              view-sidebar = true;
-            };
-
-            "com/github/huluti/Curtail" = {
-              file-attributes = true;
-              metadata = false;
-              new-file = true;
-              recursive = true;
-            };
-
-            "com/github/tenderowl/frog" = {
-              telemetry = false;
-            };
-
-            "org/gnome/meld" = {
-              enable-space-drawer = true;
-              highlight-current-line = true;
-              highlight-syntax = true;
-              prefer-dark-theme = true;
-              show-line-numbers = true;
-              show-overview-map = true;
-              wrap-mode = "word";
-            };
-
-            "io/gitlab/adhami3310/Converter" = {
-              show-less-popular = true;
-            };
-
-            "io/github/amit9838/mousam" = {
-              unit = "metric";
-              use-24h-clock = false;
-              use-gradient-bg = true;
             };
 
             "org/virt-manager/virt-manager" = {
               xmleditor-enabled = true;
             };
+
             "org/virt-manager/virt-manager/connections" = {
               autoconnect = [
                 "qemu:///system"
@@ -1902,19 +1941,23 @@ in
                 "qemu:///system"
               ];
             };
+
             "org/virt-manager/virt-manager/new-vm" = {
               cpu-default = "host-passthrough";
             };
+
             "org/virt-manager/virt-manager/console" = {
               auto-redirect = false;
               autoconnect = true;
             };
+
             "org/virt-manager/virt-manager/stats" = {
               enable-cpu-poll = true;
               enable-disk-poll = true;
               enable-memory-poll = true;
               enable-net-poll = true;
             };
+
             "org/virt-manager/virt-manager/vmlist-fields" = {
               cpu-usage = true;
               disk-usage = true;
@@ -1922,6 +1965,7 @@ in
               memory-usage = true;
               network-traffic = true;
             };
+
             "org/virt-manager/virt-manager/confirm" = {
               delete-storage = true;
               forcepoweroff = true;
