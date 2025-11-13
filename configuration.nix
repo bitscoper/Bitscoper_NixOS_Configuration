@@ -1157,6 +1157,7 @@ in
           cupsSupport = true;
         })
         gutenprintBin
+        hplip
       ];
 
       cups-pdf.enable = true;
@@ -1833,11 +1834,22 @@ in
               picture-options = "zoom";
             };
 
+            "org/gnome/desktop/calendar" = {
+              show-weekdate = true;
+            };
+
+            "org/gnome/desktop/datetime" = {
+              automatic-timezone = false;
+            };
+
             "org/gnome/desktop/input-sources" = {
               show-all-sources = true;
             };
 
             "org/gnome/desktop/interface" = {
+              clock-show-date = true;
+              clock-show-seconds = true;
+              clock-show-weekday = true;
               color-scheme = "prefer-dark";
               document-font-name = "${font_preferences.name.sans_serif} 11";
               font-antialiasing = "grayscale";
@@ -1848,7 +1860,13 @@ in
               text-scaling-factor = 1.0;
             };
 
+            "org/gnome/desktop/notifications" = {
+              show-in-lock-screen = true;
+            };
+
             "org/gnome/desktop/privacy" = {
+              disable-camera = false;
+              old-files-age = lib.gvariant.mkUint32 0;
               remember-app-usage = false;
               remember-recent-files = false;
               remove-old-temp-files = true;
@@ -1856,6 +1874,19 @@ in
               report-technical-problems = false;
               send-software-usage-stats = false;
               usb-protection = true;
+            };
+
+            "org/gnome/desktop/remote-desktop/rdp" = {
+              view-only = false;
+            };
+
+            "org/gnome/desktop/screensaver" = {
+              lock-enabled = true;
+              lock-delay = lib.gvariant.mkUint32 0;
+            };
+
+            "org/gnome/desktop/session" = {
+              idle-delay = lib.gvariant.mkUint32 0;
             };
 
             "org/gnome/desktop/wm/preferences" = {
@@ -1871,6 +1902,18 @@ in
 
             "org/gnome/file-roller/ui" = {
               view-sidebar = true;
+            };
+
+            "org/gnome/Geary" = {
+              autoselect = false;
+              display-preview = false;
+              run-in-background = true;
+              images-trusted-domains = [ "*" ];
+              optional-plugins = [
+                "sent-sound"
+                "email-templates"
+                "mail-merge"
+              ];
             };
 
             "org/gnome/meld" = {
@@ -1925,8 +1968,13 @@ in
               ];
             };
 
+            "org/gnome/system/location" = {
+              enabled = true;
+            };
+
             "org/gtk/gtk4/settings/file-chooser" = {
               sort-directories-first = true;
+              clock-format = "12h";
             };
 
             "org/virt-manager/virt-manager" = {
@@ -1973,6 +2021,10 @@ in
               poweroff = true;
               removedev = true;
               unapplied-dev = true;
+            };
+
+            "system/locale" = {
+              region = "en_US.UTF-8";
             };
           };
         }
@@ -2070,6 +2122,7 @@ in
     systemPackages =
       with pkgs;
       [
+        # alpaca # Build Failure
         # btrfs-assistant # Build Failure
         # certbot-full # Build Failure
         # docker-language-server # Build Failure
@@ -2082,7 +2135,6 @@ in
         addlicense
         agi # Cannot find libswt
         aircrack-ng
-        alpaca
         alsa-plugins
         alsa-tools
         alsa-utils
@@ -2165,6 +2217,7 @@ in
         flutter
         fontfor
         fragments
+        freecad
         fritzing
         fstl
         gcc15
@@ -2337,7 +2390,6 @@ in
         systemd-lsp
         szyszka
         tangram
-        telegram-desktop
         telegraph
         terminal-colors
         terminaltexteffects
@@ -2522,9 +2574,6 @@ in
           withSwscaleAlpha = true;
           withMultithread = true;
           withNetwork = true;
-        })
-        (freecad.override {
-          spaceNavSupport = true;
         })
         (hardinfo2.override {
           printingSupport = true;
