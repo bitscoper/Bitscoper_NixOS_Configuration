@@ -618,15 +618,38 @@ in
 
     containers.enable = true;
 
-    podman = {
+    docker = {
       enable = true;
-      package = pkgs.podman;
-      dockerCompat = true;
+      package = (
+        pkgs.docker.override {
+          buildxSupport = true;
+          composeSupport = true;
+          sbomSupport = true;
+          initSupport = true;
 
-      defaultNetwork.settings.dns_enabled = true;
+          withSystemd = true;
+          withBtrfs = true;
+          withLvm = true;
+          withSeccomp = true;
+        }
+      );
+
+      logDriver = "journald";
+
+      listenOptions = [
+        "/run/docker.sock"
+      ];
+
+      daemon.settings = {
+        ipv6 = true;
+
+        live-restore = true;
+      };
+
+      enableOnBoot = true;
     };
 
-    oci-containers.backend = "podman";
+    oci-containers.backend = "docker";
 
     waydroid = {
       enable = true;
@@ -2161,7 +2184,6 @@ in
         binwalk
         bleachbit
         bluez-tools
-        bottles
         btop
         btrfs-progs
         bulk_extractor
@@ -2193,9 +2215,11 @@ in
         dconf2nix
         debase
         dig
+        dive
         dmg2img
         dmidecode
         dnsrecon
+        docker-compose
         dosfstools
         dropwatch
         e2fsprogs
@@ -2348,8 +2372,6 @@ in
         pinta
         pkg-config
         platformio
-        podman-compose
-        podman-desktop # Uses Electron
         postgres-language-server
         profile-cleaner
         progress
@@ -2425,6 +2447,7 @@ in
         whatfiles
         which
         whois
+        winboat
         wl-clipboard
         wordbook
         wpprobe
@@ -2848,6 +2871,7 @@ in
         "adbusers"
         "audio"
         "dialout"
+        "docker"
         "hardinfo2"
         "input"
         "jellyfin"
@@ -2856,7 +2880,6 @@ in
         "lp"
         "networkmanager"
         "plugdev"
-        "podman"
         "qemu-libvirtd"
         "scanner"
         "seat"
