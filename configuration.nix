@@ -89,7 +89,7 @@ in
     kernelPackages = pkgs.linuxKernel.packages.linux_6_17;
 
     extraModulePackages = with config.boot.kernelPackages; [
-      # apfs # Build Failure
+      apfs
       cpupower
       mm-tools
       openafs
@@ -205,7 +205,7 @@ in
       sandbox = true;
       auto-optimise-store = true;
 
-      cores = 0; # 0 = All
+      cores = 1;
       max-jobs = 1;
     };
 
@@ -262,7 +262,7 @@ in
       type = "ibus";
       ibus = {
         engines = with pkgs.ibus-engines; [
-          # openbangla-keyboard # Build Failure
+          openbangla-keyboard
         ];
       };
     };
@@ -598,18 +598,6 @@ in
           enable = true;
           package = pkgs.swtpm;
         };
-
-        # ovmf = {
-        #   enable = true;
-        #   packages = [
-        #     (pkgs.OVMFFull.override {
-        #       secureBoot = true;
-        #       httpSupport = true;
-        #       tpmSupport = true;
-        #       tlsSupport = true;
-        #     }).fd
-        #   ];
-        # };
 
         runAsRoot = true;
       };
@@ -1260,14 +1248,7 @@ in
 
     postgresql = {
       enable = true;
-      package = (
-        pkgs.postgresql_17_jit.override {
-          # curlSupport = true;
-          # pamSupport = true;
-          # systemdSupport = true;
-          # uringSupport = true;
-        }
-      );
+      package = pkgs.postgresql_18_jit;
 
       enableTCPIP = true;
 
@@ -1364,8 +1345,6 @@ in
 
       enablePAM = true;
       showPAMFailure = true;
-
-      # pluginSettings = { };
     };
 
     icecast = {
@@ -1667,7 +1646,7 @@ in
       enable = true;
       package = pkgs.bat;
       extraPackages = with pkgs.bat-extras; [
-        # batgrep # Build Failure
+        batgrep
         batdiff
         batman
         batpipe
@@ -1688,24 +1667,9 @@ in
       enable = true;
       package = pkgs.firefox-devedition;
       languagePacks = [
-        "ar"
         "bn"
         "en-US"
       ];
-
-      # nativeMessagingHosts = {
-      #   packages = with pkgs; [
-      #     (pkgs.keepassxc.override {
-      #       withKeePassBrowser = true;
-      #       withKeePassBrowserPasskeys = true;
-      #       withKeePassFDOSecrets = true;
-      #       withKeePassKeeShare = true;
-      #       withKeePassNetworking = true;
-      #       withKeePassSSHAgent = true;
-      #       withKeePassYubiKey = true;
-      #     })
-      #   ];
-      # };
 
       policies = {
         Extensions = {
@@ -1761,7 +1725,6 @@ in
       enableVirtualCamera = true;
 
       plugins = with pkgs.obs-studio-plugins; [
-        # obs-vertical-canvas # Build Failure
         obs-3d-effect
         obs-backgroundremoval
         obs-composite-blur
@@ -1782,11 +1745,11 @@ in
       ];
     };
 
-    ghidra = {
-      enable = true;
-      package = pkgs.ghidra;
-      gdb = true;
-    };
+    # ghidra = {
+    #   enable = true;
+    #   package = pkgs.ghidra;
+    #   gdb = true;
+    # }; # Build Failure
 
     wireshark = {
       enable = true;
@@ -2145,19 +2108,17 @@ in
     systemPackages =
       with pkgs;
       [
-        # alpaca # Build Failure
-        # btrfs-assistant # Build Failure
-        # certbot-full # Build Failure
-        # docker-language-server # Build Failure
-        # gpredicts # Build Failure
+        # autopsy # Build Failure
+        # protonvpn-gui # Build Failure
         # reiser4progs # Marked Broken
-        # rpi-imager # Build Failure
+        # winboat # Build Failure
         above
         acl
         acpidump-all
         addlicense
         agi # Cannot find libswt
         aircrack-ng
+        alpaca
         alsa-plugins
         alsa-tools
         alsa-utils
@@ -2175,7 +2136,6 @@ in
         armitage
         audacity
         audio-sharing
-        autopsy
         avrdude
         baobab
         bash-language-server
@@ -2185,12 +2145,14 @@ in
         bleachbit
         bluez-tools
         btop
+        btrfs-assistant
         btrfs-progs
         bulk_extractor
         bustle
         butt
         cameractrls-gtk4
         celestia
+        certbot-full
         clang
         clang-analyzer
         clang-tools
@@ -2220,6 +2182,7 @@ in
         dmidecode
         dnsrecon
         docker-compose
+        docker-language-server
         dosfstools
         dropwatch
         e2fsprogs
@@ -2279,6 +2242,7 @@ in
         gnutar
         gource
         gparted
+        gpredict
         guestfs-tools
         gzip
         hashcat
@@ -2375,7 +2339,6 @@ in
         postgres-language-server
         profile-cleaner
         progress
-        protonvpn-gui
         psmisc
         qemu-utils
         qpwgraph
@@ -2384,6 +2347,7 @@ in
         raider
         refine
         reiserfsprogs
+        rpi-imager
         rpmextract
         rpPPPoE
         rtl-sdr-librtlsdr
@@ -2447,7 +2411,6 @@ in
         whatfiles
         which
         whois
-        winboat
         wl-clipboard
         wordbook
         wpprobe
@@ -2617,33 +2580,33 @@ in
           mimetypesSupport = true;
           withReadline = true;
         })
-        # (sdrpp.override {
-        #   airspy_source = true;
-        #   airspyhf_source = true;
-        #   bladerf_source = true;
-        #   file_source = true;
-        #   hackrf_source = true;
-        #   limesdr_source = true;
-        #   plutosdr_source = true;
-        #   rfspace_source = true;
-        #   rtl_sdr_source = true;
-        #   rtl_tcp_source = true;
-        #   soapy_source = true;
-        #   spyserver_source = true;
-        #   usrp_source = true;
+        (sdrpp.override {
+          airspy_source = true;
+          airspyhf_source = true;
+          bladerf_source = true;
+          file_source = true;
+          hackrf_source = true;
+          limesdr_source = true;
+          plutosdr_source = true;
+          rfspace_source = true;
+          rtl_sdr_source = true;
+          rtl_tcp_source = true;
+          soapy_source = true;
+          spyserver_source = true;
+          usrp_source = true;
 
-        #   audio_sink = true;
-        #   network_sink = true;
-        #   portaudio_sink = true;
+          audio_sink = true;
+          network_sink = true;
+          portaudio_sink = true;
 
-        #   m17_decoder = true;
-        #   meteor_demodulator = true;
+          m17_decoder = true;
+          meteor_demodulator = true;
 
-        #   frequency_manager = true;
-        #   recorder = true;
-        #   rigctl_server = true;
-        #   scanner = true;
-        # }) # Build Failure
+          frequency_manager = true;
+          recorder = true;
+          rigctl_server = true;
+          scanner = true;
+        })
         (tor-browser.override {
           libnotifySupport = true;
           waylandSupport = true;
@@ -2676,18 +2639,18 @@ in
         fish-you-should-use
         sponge
       ])
-      ++ (with ghidra-extensions; [
-        findcrypt
-        ghidra-delinker-extension
-        ghidra-golanganalyzerextension
-        ghidraninja-ghidra-scripts
-        gnudisassembler
-        lightkeeper
-        machinelearning
-        ret-sync
-        sleighdevtools
-        wasm
-      ])
+      # ++ (with ghidra-extensions; [
+      #   findcrypt
+      #   ghidra-delinker-extension
+      #   ghidra-golanganalyzerextension
+      #   ghidraninja-ghidra-scripts
+      #   gnudisassembler
+      #   lightkeeper
+      #   machinelearning
+      #   ret-sync
+      #   sleighdevtools
+      #   wasm
+      # ]) # Build Failure
       ++ (with gnomeExtensions; [
         appindicator
         blur-my-shell
@@ -2818,12 +2781,12 @@ in
     };
   };
 
-  # qt = {
-  #   enable = true;
+  qt = {
+    enable = true;
 
-  #   platformTheme = "gnome";
-  #   style = "adwaita-dark";
-  # }; # Build Failure
+    platformTheme = "gnome";
+    style = "adwaita-dark";
+  };
 
   documentation = {
     enable = true;
@@ -3086,59 +3049,6 @@ in
             };
 
             # credentials = { };
-          };
-
-          wofi = {
-            enable = true;
-            package = pkgs.wofi;
-
-            settings = {
-              normal_window = false;
-              layer = "overlay";
-              location = "center";
-
-              gtk_dark = true;
-              columns = 2;
-              dynamic_lines = false;
-              height = "50%";
-              hide_scroll = false;
-
-              hide_search = false;
-              prompt = "Search";
-              show_all = true;
-              allow_markup = true;
-              allow_images = true;
-              image_size = 32;
-              no_actions = true;
-
-              insensitive = true;
-
-              single_click = true;
-              term = "kgx"; # GNOME Console
-            };
-
-            style = ''
-              window {
-                border-radius: ${toString design_factor}px;
-              }
-
-              #outer-box {
-                padding: 16px;
-              }
-
-              #inner-box {
-                margin-top: 16px;
-              }
-
-              #entry {
-                margin-top: 4px;
-                margin-bottom: 4px;
-              }
-
-              #img {
-                margin-right: 4px;
-              }
-            '';
           };
 
           vscode = {
