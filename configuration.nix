@@ -1428,6 +1428,8 @@ in
     xwayland.enable = true;
 
     bash = {
+      blesh.enable = true;
+
       completion = {
         enable = true;
         package = pkgs.bash-completion;
@@ -1450,33 +1452,6 @@ in
       '';
     };
 
-    fish = {
-      enable = true;
-      package = pkgs.fish;
-
-      vendor = {
-        config.enable = true;
-        functions.enable = true;
-        completions.enable = true;
-      };
-
-      # shellAbbrs = { };
-      # shellAliases = { };
-
-      # promptInit = '''';
-      # loginShellInit = '''';
-      # shellInit = '''';
-
-      interactiveShellInit = ''
-        if command -q nix-your-shell
-          nix-your-shell fish | source
-        end
-        function save_history --on-event fish_prompt
-          history --save
-        end
-      '';
-    };
-
     zoxide = {
       enable = true;
       package = (
@@ -1486,7 +1461,6 @@ in
       );
 
       enableBashIntegration = true;
-      enableFishIntegration = true;
 
       flags = [
         "--cmd cd"
@@ -1501,7 +1475,6 @@ in
       loadInNixShell = true;
 
       enableBashIntegration = true;
-      enableFishIntegration = true;
 
       silent = false;
     };
@@ -1510,7 +1483,6 @@ in
       package = pkgs.nix-index;
 
       enableBashIntegration = true;
-      enableFishIntegration = true;
     };
 
     gnupg = {
@@ -1998,7 +1970,6 @@ in
                 blur-my-shell.extensionUuid
                 clipboard-indicator.extensionUuid
                 desktop-cube.extensionUuid
-                flickernaut.extensionUuid
                 gsconnect.extensionUuid
                 lockscreen-extension.extensionUuid
                 vitals.extensionUuid
@@ -2008,6 +1979,48 @@ in
 
             "org/gnome/shell/app-switcher" = {
               current-workspace-only = false;
+            };
+
+            "org/gnome/shell/extensions/appindicator" = {
+              legacy-tray-enabled = true;
+            };
+
+            "org/gnome/shell/extensions/blur-my-shell/appfolder" = {
+              blur = true;
+            };
+
+            "org/gnome/shell/extensions/blur-my-shell/applications" = {
+              blur = true;
+            };
+
+            "org/gnome/shell/extensions/blur-my-shell/lockscreen" = {
+              blur = true;
+            };
+
+            "org/gnome/shell/extensions/blur-my-shell/overview" = {
+              blur = true;
+            };
+
+            "org/gnome/shell/extensions/blur-my-shell/panel" = {
+              blur = true;
+            };
+
+            "org/gnome/shell/extensions/clipboard-indicator" = {
+              cache-images = true;
+              cache-only-favorites = false;
+              case-sensitive-search = false;
+              clear-on-boot = false;
+              confirm-clear = true;
+              disable-down-arrow = true;
+              keep-selected-on-clear = false;
+              move-item-first = false;
+              notify-on-copy = false;
+              notify-on-cycle = true;
+              paste-button = false;
+              paste-on-select = false;
+              pinned-on-bottom = false;
+              regex-search = true;
+              strip-text = false;
             };
 
             "org/gnome/system/location" = {
@@ -2194,7 +2207,6 @@ in
         arduino-language-server
         armitage
         audacity
-        audio-sharing
         avrdude
         baobab
         bash-language-server
@@ -2257,7 +2269,6 @@ in
         file
         fileinfo
         filezilla
-        fish-lsp
         flake-checker
         flare-floss
         flutter
@@ -2690,12 +2701,6 @@ in
         config.services.phpfpm.phpPackage
       ]
       ++ config.boot.extraModulePackages
-      ++ (with fishPlugins; [
-        async-prompt
-        autopair
-        done
-        fish-you-should-use
-      ])
       # ++ (with ghidra-extensions; [
       #   findcrypt
       #   ghidra-delinker-extension
@@ -2713,7 +2718,6 @@ in
         blur-my-shell
         clipboard-indicator
         desktop-cube
-        flickernaut
         gsconnect
         lockscreen-extension
         vitals
@@ -2878,7 +2882,7 @@ in
     enforceIdUniqueness = true;
     mutableUsers = true;
 
-    defaultUserShell = pkgs.fish;
+    defaultUserShell = pkgs.bash;
 
     motd = "Welcome";
 
@@ -2931,7 +2935,6 @@ in
           shell = {
             enableShellIntegration = true;
             enableBashIntegration = true;
-            enableFishIntegration = true;
           };
 
           pointerCursor = {
@@ -3005,13 +3008,6 @@ in
         };
 
         programs = {
-          nix-your-shell = {
-            enable = true;
-            package = pkgs.nix-your-shell;
-
-            enableFishIntegration = true;
-          };
-
           dircolors = {
             enable = true;
             package = (
@@ -3022,7 +3018,6 @@ in
             );
 
             enableBashIntegration = true;
-            enableFishIntegration = true;
           };
 
           kubecolor = {
@@ -3137,7 +3132,6 @@ in
                     bierner.markdown-footnotes
                     bierner.markdown-mermaid
                     bierner.markdown-preview-github-styles
-                    bmalehorn.vscode-fish
                     bradgashler.htmltagwrap
                     chanhx.crabviz
                     christian-kohler.path-intellisense
