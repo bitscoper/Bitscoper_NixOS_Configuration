@@ -222,10 +222,6 @@ in
     config = {
       allowUnfree = true;
       android_sdk.accept_license = true;
-
-      permittedInsecurePackages = [
-        "gradle-7.6.6"
-      ];
     };
 
     # overlays = [ ];
@@ -698,10 +694,6 @@ in
       );
 
       implementation = "broker";
-
-      packages = with pkgs; [
-        gnome2.GConf
-      ];
     };
 
     timesyncd = {
@@ -848,36 +840,6 @@ in
       package = pkgs.udisks2;
 
       mountOnMedia = false;
-    };
-
-    libinput = {
-      enable = true;
-
-      mouse = {
-        leftHanded = false;
-        disableWhileTyping = false;
-        tapping = true;
-        middleEmulation = true;
-        clickMethod = "buttonareas";
-        scrollMethod = "twofinger";
-        naturalScrolling = true;
-        horizontalScrolling = true;
-        tappingDragLock = true;
-        sendEventsMode = "enabled";
-      };
-
-      touchpad = {
-        leftHanded = false;
-        disableWhileTyping = false;
-        tapping = true;
-        middleEmulation = true;
-        clickMethod = "buttonareas";
-        scrollMethod = "twofinger";
-        naturalScrolling = true;
-        horizontalScrolling = true;
-        tappingDragLock = true;
-        sendEventsMode = "enabled";
-      };
     };
 
     fprintd = {
@@ -1816,6 +1778,21 @@ in
               use-gradient-bg = true;
             };
 
+            "org/gnome/desktop/a11y/interface" = {
+              show-status-shapes = true;
+            };
+
+            "org/gnome/desktop/a11y/keyboard" = {
+              bouncekeys-enable = false;
+              slowkeys-enable = false;
+              stickykeys-enable = false;
+              togglekeys-enable = true;
+            };
+
+            "org/gnome/desktop/a11y/mouse" = {
+              dwell-click-enabled = false;
+            };
+
             "org/gnome/desktop/background" = {
               picture-options = "zoom";
             };
@@ -1829,7 +1806,30 @@ in
             };
 
             "org/gnome/desktop/input-sources" = {
+              per-window = false;
               show-all-sources = true;
+              sources = with lib.gvariant; [
+                (mkTuple [
+                  "xkb"
+                  "us"
+                ])
+                (mkTuple [
+                  "xkb"
+                  "bd"
+                ])
+                (mkTuple [
+                  "xkb"
+                  "ara"
+                ])
+                (mkTuple [
+                  "xkb"
+                  "ru"
+                ])
+                (mkTuple [
+                  "ibus"
+                  "OpenBangla"
+                ])
+              ];
             };
 
             "org/gnome/desktop/interface" = {
@@ -1837,17 +1837,51 @@ in
               clock-show-seconds = true;
               clock-show-weekday = true;
               color-scheme = "prefer-dark";
+              cursor-blink = true;
               document-font-name = "${font_preferences.name.sans_serif} 11";
+              enable-animations = true;
+              enable-hot-corners = true;
               font-antialiasing = "grayscale";
               font-hinting = "slight";
               gtk-enable-primary-paste = true;
               gtk-key-theme = "Default";
+              locate-pointer = true;
               monospace-font-name = "${font_preferences.name.mono} 11";
+              overlay-scrolling = true;
+              show-battery-percentage = true;
               text-scaling-factor = 1.0;
+            };
+
+            "org/gnome/desktop/media-handling" = {
+              autorun-never = false;
             };
 
             "org/gnome/desktop/notifications" = {
               show-in-lock-screen = true;
+            };
+
+            "org/gnome/desktop/peripherals/keyboard" = {
+              repeat = true;
+            };
+
+            "org/gnome/desktop/peripherals/mouse" = {
+              accel-profile = "default";
+              left-handed = false;
+              natural-scroll = false;
+            };
+
+            "org/gnome/desktop/peripherals/pointingstick" = {
+              accel-profile = "default";
+            };
+
+            "org/gnome/desktop/peripherals/touchpad" = {
+              click-method = "areas";
+              disable-while-typing = true;
+              edge-scrolling-enabled = false;
+              natural-scroll = true;
+              send-events = "enabled";
+              tap-to-click = true;
+              two-finger-scrolling-enabled = true;
             };
 
             "org/gnome/desktop/privacy" = {
@@ -1866,9 +1900,18 @@ in
               view-only = false;
             };
 
+            "org/gnome/desktop/search-providers" = {
+              disable-external = false;
+            };
+
+            "org/gnome/desktop/sound" = {
+              allow-volume-above-100-percent = true;
+              event-sounds = true;
+            };
+
             "org/gnome/desktop/screensaver" = {
-              lock-enabled = true;
               lock-delay = lib.gvariant.mkUint32 0;
+              lock-enabled = true;
             };
 
             "org/gnome/desktop/session" = {
@@ -1894,7 +1937,9 @@ in
               autoselect = false;
               display-preview = false;
               run-in-background = true;
-              images-trusted-domains = [ "*" ];
+              images-trusted-domains = [
+                "*"
+              ];
               optional-plugins = [
                 "sent-sound"
                 "email-templates"
@@ -1915,6 +1960,9 @@ in
             "org/gnome/mutter" = {
               attach-modal-dialogs = false;
               center-new-windows = true;
+              dynamic-workspaces = true;
+              edge-tiling = true;
+              workspaces-only-on-primary = true;
             };
 
             "org/gnome/nautilus/icon-view" = {
@@ -1927,16 +1975,20 @@ in
 
             "org/gnome/nautilus/preferences" = {
               click-policy = "double";
+              date-time-format = "simple";
               recursive-search = "always";
               show-create-link = true;
               show-delete-permanently = true;
               show-directory-item-counts = "always";
               show-image-thumbnails = "always";
-              date-time-format = "simple";
             };
 
             "org/gnome/settings-daemon/plugins/media-keys" = {
               volume-step = lib.gvariant.mkInt32 1;
+            };
+
+            "org/gnome/settings-daemon/plugins/power" = {
+              power-button-action = "interactive";
             };
 
             "org/gnome/shell" = {
@@ -1954,13 +2006,20 @@ in
               ];
             };
 
+            "org/gnome/shell/app-switcher" = {
+              current-workspace-only = false;
+            };
+
             "org/gnome/system/location" = {
               enabled = true;
             };
 
+            "org/gtk/settings/file-chooser" = {
+              clock-format = "12h";
+            };
+
             "org/gtk/gtk4/settings/file-chooser" = {
               sort-directories-first = true;
-              clock-format = "12h";
             };
 
             "org/virt-manager/virt-manager" = {
@@ -2414,7 +2473,6 @@ in
         wl-clipboard
         wordbook
         wpprobe
-        wvkbd # wvkbd-mobintl
         x2goclient
         xdg-user-dirs
         xdg-utils
@@ -2637,7 +2695,6 @@ in
         autopair
         done
         fish-you-should-use
-        sponge
       ])
       # ++ (with ghidra-extensions; [
       #   findcrypt
@@ -2728,6 +2785,7 @@ in
         gnome-text-editor
         gnome-tour
         gnome-weather
+        showtime
         snapshot
         totem
         yelp
