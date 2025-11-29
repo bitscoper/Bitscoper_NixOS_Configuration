@@ -8,7 +8,7 @@
   ...
 }:
 let
-  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/master.tar.gz";
+  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/refs/heads/release-25.11.tar.gz";
 
   android_nixpkgs =
     pkgs.callPackage
@@ -177,13 +177,6 @@ in
       nixos-version.enable = true;
     };
 
-    autoUpgrade = {
-      enable = false;
-      channel = "https://nixos.org/channels/nixos-unstable";
-      operation = "boot";
-      allowReboot = false;
-    };
-
     # activationScripts = { };
 
     userActivationScripts = {
@@ -198,7 +191,7 @@ in
       };
     };
 
-    stateVersion = "24.11";
+    stateVersion = "25.11";
   };
 
   nix = {
@@ -263,9 +256,6 @@ in
     inputMethod = {
       enable = true;
 
-      enableGtk2 = true;
-      enableGtk3 = true;
-
       type = "ibus";
       ibus = {
         engines = with pkgs.ibus-engines; [
@@ -315,12 +305,8 @@ in
       allowPing = true;
 
       allowedTCPPorts = [
-        3389 # GNOME Remote Desktop - Remote Login
-        3390 # GNOME Remote Desktop - Desktop Sharing
       ];
       allowedUDPPorts = [
-        3389 # GNOME Remote Desktop - Remote Login
-        3390 # GNOME Remote Desktop - Desktop Sharing
       ];
     };
 
@@ -366,8 +352,6 @@ in
           # fprintAuth = true;
 
           logFailures = true;
-
-          enableGnomeKeyring = true;
 
           gnupg = {
             enable = true;
@@ -579,7 +563,6 @@ in
             pipewireSupport = true;
             sdlSupport = true;
             jackSupport = true;
-            gtkSupport = true;
             vncSupport = true;
             smartcardSupport = true;
             spiceSupport = true;
@@ -670,12 +653,6 @@ in
     ];
 
     services = {
-      gnome-remote-desktop = {
-        wantedBy = [
-          "graphical.target"
-        ];
-      };
-
       hardinfo2_custom = {
         description = "Hardinfo2 support for root access";
         wantedBy = [ "basic.target" ];
@@ -769,66 +746,16 @@ in
       };
     };
 
-    displayManager.gdm = {
-      enable = true;
-      wayland = true;
+    displayManager.sddm.enable = true;
+    displayManager.sddm.wayland.enable = true;
 
-      banner = config.networking.fqdn;
-      autoSuspend = false;
-
-      settings = {
-        security = {
-          DisallowTCP = false;
-        };
-
-        xdmcp = {
-          Enable = true;
-          HonorIndirect = true;
-        };
-
-        greeter = {
-          IncludeAll = true;
-        };
-      };
-
-      debug = false;
-    };
-
-    desktopManager.gnome = {
-      enable = true;
-
-      debug = false;
-    };
-
-    gnome = {
-      at-spi2-core.enable = true;
-      core-apps.enable = true;
-      core-os-services.enable = true;
-      core-shell.enable = true;
-      games.enable = false;
-      gcr-ssh-agent.enable = true;
-      glib-networking.enable = true;
-      gnome-browser-connector.enable = true;
-      gnome-initial-setup.enable = false;
-      gnome-keyring.enable = true;
-      gnome-online-accounts.enable = true;
-      gnome-remote-desktop.enable = true;
-      gnome-settings-daemon.enable = true;
-      gnome-user-share.enable = true;
-      localsearch.enable = true;
-      sushi.enable = true;
-      tinysparql.enable = true;
-      rygel = {
-        enable = true;
-        package = pkgs.rygel;
-      };
-    };
+    desktopManager.plasma6.enable = true;
+    desktopManager.plasma6.enableQt5Integration = true;
 
     udev = {
       enable = true;
       packages = with pkgs; [
         game-devices-udev-rules
-        gnome-settings-daemon
         libmtp.out
         rtl-sdr
       ];
@@ -1034,11 +961,7 @@ in
 
     avahi = {
       enable = true;
-      package = (
-        pkgs.avahi.override {
-          gtk3Support = true;
-        }
-      );
+      package = pkgs.avahi;
 
       ipv4 = true;
       ipv6 = true;
@@ -1410,12 +1333,7 @@ in
 
     java = {
       enable = true;
-      package = (
-        pkgs.jdk25.override {
-          enableGtk = true;
-        }
-      );
-
+      package = pkgs.jdk25;
       binfmt = true;
     };
 
@@ -1509,7 +1427,7 @@ in
         enableSSHSupport = false;
 
         pinentryPackage = (
-          pkgs.pinentry-gnome3.override {
+          pkgs.pinentry-qt.override {
             withLibsecret = true;
           }
         );
@@ -1527,7 +1445,7 @@ in
         }
       );
 
-      startAgent = false; # `services.gnome.gcr-ssh-agent.enable' and `programs.ssh.startAgent' cannot both be enabled at the same time.
+      startAgent = false;
       agentTimeout = null;
     };
 
@@ -1597,11 +1515,14 @@ in
       ];
     };
 
-    gnome-disks.enable = true;
+    partition-manager.enable = true;
+
     system-config-printer.enable = true;
-    seahorse.enable = true;
-    calls.enable = true;
-    geary.enable = true;
+
+    kdeconnect = {
+      enable = true;
+      # package = pkgs.kdePackages.kdeconnect-kde;
+    };
 
     firefox = {
       enable = true;
@@ -1615,7 +1536,6 @@ in
         Extensions = {
           Install = [
             "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi"
-            "https://addons.mozilla.org/firefox/downloads/latest/gnome-shell-integration/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/languagetool/latest.xpi"
             "https://addons.mozilla.org/firefox/downloads/latest/multi-account-containers/latest.xpi"
@@ -1740,310 +1660,6 @@ in
               unit = "metric";
               use-24h-clock = false;
               use-gradient-bg = true;
-            };
-
-            "org/gnome/desktop/a11y/interface" = {
-              show-status-shapes = true;
-            };
-
-            "org/gnome/desktop/a11y/keyboard" = {
-              bouncekeys-enable = false;
-              slowkeys-enable = false;
-              stickykeys-enable = false;
-              togglekeys-enable = true;
-            };
-
-            "org/gnome/desktop/a11y/mouse" = {
-              dwell-click-enabled = false;
-            };
-
-            "org/gnome/desktop/background" = {
-              picture-options = "zoom";
-            };
-
-            "org/gnome/desktop/calendar" = {
-              show-weekdate = true;
-            };
-
-            "org/gnome/desktop/datetime" = {
-              automatic-timezone = false;
-            };
-
-            "org/gnome/desktop/input-sources" = {
-              per-window = false;
-              show-all-sources = true;
-              sources = with lib.gvariant; [
-                (mkTuple [
-                  "xkb"
-                  "us"
-                ])
-                (mkTuple [
-                  "xkb"
-                  "bd"
-                ])
-                (mkTuple [
-                  "xkb"
-                  "ara"
-                ])
-                (mkTuple [
-                  "xkb"
-                  "ru"
-                ])
-                (mkTuple [
-                  "ibus"
-                  "OpenBangla"
-                ])
-              ];
-            };
-
-            "org/gnome/desktop/interface" = {
-              clock-show-date = true;
-              clock-show-seconds = true;
-              clock-show-weekday = true;
-              color-scheme = "prefer-dark";
-              cursor-blink = true;
-              document-font-name = "${font_preferences.name.sans_serif} 11";
-              enable-animations = true;
-              enable-hot-corners = true;
-              font-antialiasing = "grayscale";
-              font-hinting = "slight";
-              gtk-enable-primary-paste = true;
-              gtk-key-theme = "Default";
-              locate-pointer = true;
-              monospace-font-name = "${font_preferences.name.mono} 11";
-              overlay-scrolling = true;
-              show-battery-percentage = true;
-              text-scaling-factor = 1.0;
-            };
-
-            "org/gnome/desktop/media-handling" = {
-              autorun-never = false;
-            };
-
-            "org/gnome/desktop/notifications" = {
-              show-in-lock-screen = true;
-            };
-
-            "org/gnome/desktop/peripherals/keyboard" = {
-              repeat = true;
-            };
-
-            "org/gnome/desktop/peripherals/mouse" = {
-              accel-profile = "default";
-              left-handed = false;
-              natural-scroll = false;
-            };
-
-            "org/gnome/desktop/peripherals/pointingstick" = {
-              accel-profile = "default";
-            };
-
-            "org/gnome/desktop/peripherals/touchpad" = {
-              click-method = "areas";
-              disable-while-typing = true;
-              edge-scrolling-enabled = false;
-              natural-scroll = true;
-              send-events = "enabled";
-              tap-to-click = true;
-              two-finger-scrolling-enabled = true;
-            };
-
-            "org/gnome/desktop/privacy" = {
-              disable-camera = false;
-              old-files-age = lib.gvariant.mkUint32 0;
-              remember-app-usage = false;
-              remember-recent-files = false;
-              remove-old-temp-files = true;
-              remove-old-trash-files = true;
-              report-technical-problems = false;
-              send-software-usage-stats = false;
-              usb-protection = true;
-            };
-
-            "org/gnome/desktop/remote-desktop/rdp" = {
-              view-only = false;
-            };
-
-            "org/gnome/desktop/search-providers" = {
-              disable-external = false;
-            };
-
-            "org/gnome/desktop/sound" = {
-              allow-volume-above-100-percent = true;
-              event-sounds = true;
-            };
-
-            "org/gnome/desktop/screensaver" = {
-              lock-delay = lib.gvariant.mkUint32 0;
-              lock-enabled = true;
-            };
-
-            "org/gnome/desktop/session" = {
-              idle-delay = lib.gvariant.mkUint32 0;
-            };
-
-            "org/gnome/desktop/wm/preferences" = {
-              action-double-click-titlebar = "toggle-maximize";
-              action-middle-click-titlebar = "toggle-maximize-vertically";
-              action-right-click-titlebar = "menu";
-              auto-raise = false;
-              button-layout = "appmenu:minimize,maximize,close";
-              focus-mode = "mouse";
-              mouse-button-modifier = "<Super>";
-              resize-with-right-button = true;
-            };
-
-            "org/gnome/file-roller/ui" = {
-              view-sidebar = true;
-            };
-
-            "org/gnome/Geary" = {
-              autoselect = false;
-              display-preview = false;
-              run-in-background = true;
-              images-trusted-domains = [
-                "*"
-              ];
-              optional-plugins = [
-                "sent-sound"
-                "email-templates"
-                "mail-merge"
-              ];
-            };
-
-            "org/gnome/meld" = {
-              enable-space-drawer = true;
-              highlight-current-line = true;
-              highlight-syntax = true;
-              prefer-dark-theme = true;
-              show-line-numbers = true;
-              show-overview-map = true;
-              wrap-mode = "word";
-            };
-
-            "org/gnome/mutter" = {
-              attach-modal-dialogs = false;
-              center-new-windows = true;
-              dynamic-workspaces = true;
-              edge-tiling = true;
-              workspaces-only-on-primary = true;
-            };
-
-            "org/gnome/nautilus/icon-view" = {
-              captions = [
-                "size"
-                "date_modified"
-                "none"
-              ];
-            };
-
-            "org/gnome/nautilus/preferences" = {
-              click-policy = "double";
-              date-time-format = "simple";
-              recursive-search = "always";
-              show-create-link = true;
-              show-delete-permanently = true;
-              show-directory-item-counts = "always";
-              show-image-thumbnails = "always";
-            };
-
-            "org/gnome/settings-daemon/plugins/media-keys" = {
-              volume-step = lib.gvariant.mkInt32 1;
-            };
-
-            "org/gnome/settings-daemon/plugins/power" = {
-              power-button-action = "interactive";
-            };
-
-            "org/gnome/shell" = {
-              disable-user-extensions = false;
-              enabled-extensions = with pkgs.gnomeExtensions; [
-                appindicator.extensionUuid
-                blur-my-shell.extensionUuid
-                clipboard-indicator.extensionUuid
-                desktop-cube.extensionUuid
-                gsconnect.extensionUuid
-                vitals.extensionUuid
-                xwayland-indicator.extensionUuid
-              ];
-            };
-
-            "org/gnome/shell/app-switcher" = {
-              current-workspace-only = false;
-            };
-
-            "org/gnome/shell/extensions/appindicator" = {
-              legacy-tray-enabled = true;
-            };
-
-            "org/gnome/shell/extensions/blur-my-shell/appfolder" = {
-              blur = true;
-            };
-
-            "org/gnome/shell/extensions/blur-my-shell/applications" = {
-              blur = true;
-            };
-
-            "org/gnome/shell/extensions/blur-my-shell/lockscreen" = {
-              blur = true;
-            };
-
-            "org/gnome/shell/extensions/blur-my-shell/overview" = {
-              blur = true;
-            };
-
-            "org/gnome/shell/extensions/blur-my-shell/panel" = {
-              blur = true;
-            };
-
-            "org/gnome/shell/extensions/clipboard-indicator" = {
-              cache-images = true;
-              cache-only-favorites = false;
-              case-sensitive-search = false;
-              clear-on-boot = false;
-              confirm-clear = true;
-              disable-down-arrow = true;
-              keep-selected-on-clear = false;
-              move-item-first = false;
-              notify-on-copy = false;
-              notify-on-cycle = true;
-              paste-button = false;
-              paste-on-select = false;
-              pinned-on-bottom = false;
-              regex-search = true;
-              strip-text = false;
-            };
-
-            "org/gnome/shell/extensions/vitals" = {
-              alphabetize = true;
-              fixed-widths = false;
-              hide-zeros = true;
-              include-static-gpu-info = true;
-              include-static-info = true;
-              menu-centered = true;
-              show-battery = true;
-              show-fan = true;
-              show-gpu = true;
-              show-memory = true;
-              show-network = true;
-              show-processor = true;
-              show-storage = true;
-              show-system = true;
-              show-temperature = true;
-              show-voltage = true;
-              use-higher-precision = true;
-            };
-
-            "org/gnome/system/location" = {
-              enabled = true;
-            };
-
-            "org/gtk/settings/file-chooser" = {
-              clock-format = "12h";
-            };
-
-            "org/gtk/gtk4/settings/file-chooser" = {
-              sort-directories-first = true;
             };
 
             "org/virt-manager/virt-manager" = {
@@ -2191,9 +1807,10 @@ in
     systemPackages =
       with pkgs;
       [
-        # autopsy # Build Failure
-        # protonvpn-gui # Build Failure
+        # elf-dissector # Build Failure
+        # fritzing # Build Failure
         # reiser4progs # Marked Broken
+        # sdrangel # Build Failure
         # winboat # Build Failure
         above
         acl
@@ -2201,7 +1818,6 @@ in
         addlicense
         agi # Cannot find libswt
         aircrack-ng
-        alpaca
         android_sdk # Custom
         android-backup-extractor
         android-tools
@@ -2214,6 +1830,7 @@ in
         arduino-language-server
         armitage
         audacity
+        autopsy
         avrdude
         baobab
         bash-language-server
@@ -2228,7 +1845,7 @@ in
         bulk_extractor
         bustle
         butt
-        cameractrls-gtk4
+        cameractrls
         celestia
         certbot-full
         clang
@@ -2238,9 +1855,11 @@ in
         cloc
         cmake
         cmake-language-server
+        codevis
         collision
         coppwr
         cramfsprogs
+        crow-translate
         cryptsetup
         ctop
         cups-filters
@@ -2269,57 +1888,33 @@ in
         evtest
         evtest-qt
         exfatprogs
-        eyedropper
         f2fs-tools
         ffmpegthumbnailer
         fh
         file
-        file-roller
         fileinfo
         filezilla
         flake-checker
         flare-floss
         flutter
         fontfor
-        fragments
         freecad
-        fritzing
         fstl
         gcc15
         gdb
-        ghex
         gimp3-with-plugins
         git-filter-repo
         github-changelog-generator
-        gnome-calculator
-        gnome-calendar
-        gnome-characters
-        gnome-clocks
-        gnome-connections
-        gnome-console
-        gnome-contacts
-        gnome-decoder
-        gnome-feeds
         gnome-firmware
+        glaxnimate
         gnome-font-viewer
         gnome-frog
-        gnome-graphs
-        gnome-logs
-        gnome-mahjongg
-        gnome-multi-writer
         gnome-nettool
-        gnome-network-displays
-        gnome-power-manager
-        gnome-system-monitor
-        gnome-tecla
-        gnome-tweaks
-        gnomecast
         gnugrep
         gnumake
         gnused
         gnutar
         gource
-        gparted
         gpredict
         guestfs-tools
         gzip
@@ -2327,6 +1922,7 @@ in
         hashcat-utils
         hashes
         hdparm
+        heaptrack
         hfsprogs
         hieroglyphic
         host
@@ -2335,7 +1931,6 @@ in
         i2c-tools
         iaito
         iftop
-        impression
         indent
         inkscape-with-extensions
         inotify-tools
@@ -2345,17 +1940,23 @@ in
         jmol
         john
         johnny
-        junction
+        karp
+        kdiff3
         kernel-hardening-checker
         kernelshark
+        kgeotag
         killall
         kind
         kmod
+        krename
+        krita
+        kstars
         kubectl
         kubectl-graph
         kubectl-tree
         kubectl-view-secret
         kubernetes-helm
+        labplot
         letterpress
         libreoffice-fresh
         libva-utils
@@ -2363,7 +1964,6 @@ in
         linuxConsoleTools
         logdy
         logtop
-        loupe
         lsb-release
         lshw
         lsof
@@ -2376,16 +1976,13 @@ in
         mailcap
         massdns
         md-lsp
-        meld
         metadata-cleaner
         metasploit
         mfcuk
         mfoc
         minikube
-        mousam
         mtools
         mtr-gui
-        nautilus
         nethogs
         nikto
         nilfs-utils
@@ -2399,30 +1996,27 @@ in
         nixpkgs-review
         nmap
         ntfs3g
-        nucleus
         nvme-cli
+        okteta
         onionshare-gui
         onlyoffice-desktopeditors
         openafs
         opendmarc
         openssl
         paper-clip
-        papers
         pciutils
-        pdfarranger
         pg_top
-        pinta
         pkg-config
         platformio
         postgres-language-server
         profile-cleaner
         progress
+        protonvpn-gui
         psmisc
         qemu-utils
         qr-backup
         radare2
         raider
-        refine
         reiserfsprogs
         rpi-imager
         rpmextract
@@ -2431,12 +2025,10 @@ in
         rtl-sdr-osmocom
         scrcpy
         screen
-        sdrangel
         selectdefaultapplication
         serial-studio
         share-preview
         sherlock
-        simple-scan
         sipvicious
         sleuthkit
         smartmontools
@@ -2447,11 +2039,11 @@ in
         sslscan
         stegseek
         subfinder
-        subtitleedit
+        subtitlecomposer
         switcheroo
         symlinks
         systemd-lsp
-        szyszka
+        systemdgenie
         telegraph
         terminal-colors
         terminaltexteffects
@@ -2472,6 +2064,7 @@ in
         usbip-ssh
         usbutils
         util-linux
+        valgrind
         virt-top
         virt-v2v
         virtiofsd
@@ -2503,13 +2096,6 @@ in
         zenmap
         zfs
         zip
-        (blender.override {
-          colladaSupport = true;
-          jackaudioSupport = true;
-          openUsdSupport = true;
-          spaceNavSupport = true;
-          waylandSupport = true;
-        })
         (coreutils-full.override {
           aclSupport = true;
           withOpenssl = true;
@@ -2530,112 +2116,117 @@ in
           zlibSupport = true;
           zstdSupport = true;
         })
-        (ffmpeg-full.override {
-          withAlsa = true;
-          withAom = true;
-          withAribb24 = true;
-          withAribcaption = true;
-          withAss = true;
-          withAvisynth = true;
-          withBluray = true;
-          withBs2b = true;
-          withBzlib = true;
-          withCaca = true;
-          withCdio = true;
-          withCelt = true;
-          withChromaprint = true;
-          withCodec2 = true;
-          withDav1d = true;
-          withDavs2 = true;
-          withDc1394 = true;
-          withDrm = true;
-          withDvdnav = true;
-          withDvdread = true;
-          withFlite = true;
-          withFontconfig = true;
-          withFreetype = true;
-          withFrei0r = true;
-          withFribidi = true;
-          withGme = true;
-          withGnutls = true;
-          withGsm = true;
-          withHarfbuzz = true;
-          withIconv = true;
-          withIlbc = true;
-          withJack = true;
-          withJxl = true;
-          withKvazaar = true;
-          withLadspa = true;
-          withLc3 = true;
-          withLcevcdec = true;
-          withLcms2 = true;
-          withLzma = true;
-          withModplug = true;
-          withMp3lame = true;
-          withMysofa = true;
-          withOpenal = true;
-          withOpencl = true;
-          withOpencoreAmrnb = true;
-          withOpencoreAmrwb = true;
-          withOpengl = true;
-          withOpenh264 = true;
-          withOpenjpeg = true;
-          withOpenmpt = true;
-          withOpus = true;
-          withPlacebo = true;
-          withPulse = true;
-          withQrencode = true;
-          withQuirc = true;
-          withRav1e = true;
-          withRist = true;
-          withRtmp = true;
-          withRubberband = true;
-          withSamba = true;
-          withSdl2 = true;
-          withShaderc = true;
-          withShine = true;
-          withSnappy = true;
-          withSoxr = true;
-          withSpeex = true;
-          withSrt = true;
-          withSsh = true;
-          withSvg = true;
-          withSvtav1 = true;
-          withTheora = true;
-          withTwolame = true;
-          withUavs3d = true;
-          withV4l2 = true;
-          withV4l2M2m = true;
-          withVaapi = true;
-          withVdpau = true;
-          withVidStab = true;
-          withVmaf = true;
-          withVoAmrwbenc = true;
-          withVorbis = true;
-          withVpx = true;
-          withVulkan = true;
-          withVvenc = true;
-          withWebp = true;
-          withX264 = true;
-          withX265 = true;
-          withXavs = true;
-          withXavs2 = true;
-          withXevd = true;
-          withXeve = true;
-          withXml2 = true;
-          withXvid = true;
-          withZimg = true;
-          withZlib = true;
-          withZmq = true;
-          withZvbi = true;
+        (
+          (ffmpeg-full.override {
+            withAlsa = true;
+            withAom = true;
+            withAribb24 = true;
+            withAribcaption = true;
+            withAss = true;
+            withAvisynth = true;
+            withBluray = true;
+            withBs2b = true;
+            withBzlib = true;
+            withCaca = true;
+            withCdio = true;
+            withCelt = true;
+            withChromaprint = true;
+            withCodec2 = true;
+            withDav1d = true;
+            withDavs2 = true;
+            withDc1394 = true;
+            withDrm = true;
+            withDvdnav = true;
+            withDvdread = true;
+            withFlite = true;
+            withFontconfig = true;
+            withFreetype = true;
+            withFrei0r = true;
+            withFribidi = true;
+            withGme = true;
+            withGnutls = true;
+            withGsm = true;
+            withHarfbuzz = true;
+            withIconv = true;
+            withIlbc = true;
+            withJack = true;
+            withJxl = true;
+            withKvazaar = true;
+            withLadspa = true;
+            withLc3 = true;
+            withLcevcdec = true;
+            withLcms2 = true;
+            withLzma = true;
+            withModplug = true;
+            withMp3lame = true;
+            withMysofa = true;
+            withOpenal = true;
+            withOpencl = true;
+            withOpencoreAmrnb = true;
+            withOpencoreAmrwb = true;
+            withOpengl = true;
+            withOpenh264 = true;
+            withOpenjpeg = true;
+            withOpenmpt = true;
+            withOpus = true;
+            withPlacebo = true;
+            withPulse = true;
+            withQrencode = true;
+            withQuirc = true;
+            withRav1e = true;
+            withRist = true;
+            withRtmp = true;
+            withRubberband = true;
+            withSamba = true;
+            withSdl2 = true;
+            withShaderc = true;
+            withShine = true;
+            withSnappy = true;
+            withSoxr = true;
+            withSpeex = true;
+            withSrt = true;
+            withSsh = true;
+            withSvg = true;
+            withSvtav1 = true;
+            withTheora = true;
+            withTwolame = true;
+            withUavs3d = true;
+            withV4l2 = true;
+            withV4l2M2m = true;
+            withVaapi = true;
+            withVdpau = true;
+            withVidStab = true;
+            withVmaf = true;
+            withVoAmrwbenc = true;
+            withVorbis = true;
+            withVpx = true;
+            withVulkan = true;
+            withVvenc = true;
+            withWebp = true;
+            withX264 = true;
+            withX265 = true;
+            withXavs = true;
+            withXavs2 = true;
+            withXevd = true;
+            withXeve = true;
+            withXml2 = true;
+            withXvid = true;
+            withZimg = true;
+            withZlib = true;
+            withZmq = true;
+            withZvbi = true;
 
-          withUnfree = false;
+            withUnfree = false;
 
-          withGrayscale = true;
-          withSwscaleAlpha = true;
-          withMultithread = true;
-          withNetwork = true;
-        })
+            withGrayscale = true;
+            withSwscaleAlpha = true;
+            withMultithread = true;
+            withNetwork = true;
+          }).overrideAttrs
+          (_: {
+            doCheck = false;
+          })
+        )
         (hardinfo2.override {
           printingSupport = true;
         })
@@ -2719,15 +2310,6 @@ in
       #   sleighdevtools
       #   wasm
       # ]) # Build Failure
-      ++ (with gnomeExtensions; [
-        appindicator
-        blur-my-shell
-        clipboard-indicator
-        desktop-cube
-        gsconnect
-        vitals
-        xwayland-indicator
-      ])
       ++ (with gst_all_1; [
         (gst-libav.override {
           enableDocumentation = true;
@@ -2752,7 +2334,6 @@ in
           enableDocumentation = true;
         })
         (gst-plugins-good.override {
-          gtkSupport = true;
           qt6Support = true;
           enableJack = true;
           enableWayland = true;
@@ -2769,6 +2350,68 @@ in
           enableDocumentation = true;
         })
       ])
+      ++ (with kdePackages; [
+        # step # Build Failure
+        accessibility-inspector
+        akregator
+        alpaka
+        ark
+        audiotube
+        dolphin
+        filelight
+        gwenview
+        isoimagewriter
+        kaddressbook
+        kalgebra
+        kalzium
+        kcachegrind
+        kcalc
+        kcharselect
+        kclock
+        kcmutils
+        kcolorchooser
+        kdebugsettings
+        kdenlive
+        kfind
+        kget
+        kgpg
+        kig
+        kimagemapeditor
+        kjournald
+        kleopatra
+        kmag
+        kmahjongg
+        kmousetool
+        kmouth
+        kmplot
+        konsole
+        kontrast
+        krdc
+        krfb
+        kruler
+        ksshaskpass
+        ksystemlog
+        ktorrent
+        kwallet
+        kwallet-pam
+        kwalletmanager
+        kweather
+        marble
+        massif-visualizer
+        okular
+        plasma-dialer
+        plasma-systemmonitor
+        plasmatube
+        plymouth-kcm
+        qrca
+        sddm-kcm
+        signon-kwallet-extension
+        skanpage
+        spacebar
+        spectacle
+        sweeper
+        yakuake
+      ])
       ++ (with texlivePackages; [
         latexmk
       ])
@@ -2784,20 +2427,11 @@ in
         whereis
       ]);
 
-    gnome.excludePackages = (
-      with pkgs;
+    plasma6.excludePackages = (
+      with pkgs.kdePackages;
       [
-        decibels
-        epiphany
-        gnome-maps
-        gnome-music
-        gnome-text-editor
-        gnome-tour
-        gnome-weather
-        showtime
-        snapshot
-        totem
-        yelp
+        elisa
+        kate
       ]
     );
   };
@@ -2812,7 +2446,7 @@ in
 
       # https://www.iana.org/assignments/media-types/media-types.xhtml
       defaultApplications = {
-        "inode/directory" = "nautilus.desktop";
+        "inode/directory" = "org.kde.dolphin.desktop";
 
         "text/1d-interleaved-parityfec" = "codium.desktop";
         "text/cache-manifest" = "codium.desktop";
@@ -2909,87 +2543,87 @@ in
         "text/xml-external-parsed-entity" = "codium.desktop";
         "text/xml" = "codium.desktop";
 
-        "image/aces" = "org.gnome.Loupe.desktop";
-        "image/apng" = "org.gnome.Loupe.desktop";
-        "image/avci" = "org.gnome.Loupe.desktop";
-        "image/avcs" = "org.gnome.Loupe.desktop";
-        "image/avif" = "org.gnome.Loupe.desktop";
-        "image/bmp" = "org.gnome.Loupe.desktop";
-        "image/cgm" = "org.gnome.Loupe.desktop";
-        "image/dicom-rle" = "org.gnome.Loupe.desktop";
-        "image/dpx" = "org.gnome.Loupe.desktop";
-        "image/emf" = "org.gnome.Loupe.desktop";
-        "image/fits" = "org.gnome.Loupe.desktop";
-        "image/g3fax" = "org.gnome.Loupe.desktop";
-        "image/gif" = "org.gnome.Loupe.desktop";
-        "image/heic-sequence" = "org.gnome.Loupe.desktop";
-        "image/heic" = "org.gnome.Loupe.desktop";
-        "image/heif-sequence" = "org.gnome.Loupe.desktop";
-        "image/heif" = "org.gnome.Loupe.desktop";
-        "image/hej2k" = "org.gnome.Loupe.desktop";
-        "image/hsj2" = "org.gnome.Loupe.desktop";
-        "image/ief" = "org.gnome.Loupe.desktop";
-        "image/j2c" = "org.gnome.Loupe.desktop";
-        "image/jaii" = "org.gnome.Loupe.desktop";
-        "image/jais" = "org.gnome.Loupe.desktop";
-        "image/jls" = "org.gnome.Loupe.desktop";
-        "image/jp2" = "org.gnome.Loupe.desktop";
-        "image/jpeg" = "org.gnome.Loupe.desktop";
-        "image/jph" = "org.gnome.Loupe.desktop";
-        "image/jphc" = "org.gnome.Loupe.desktop";
-        "image/jpm" = "org.gnome.Loupe.desktop";
-        "image/jpx" = "org.gnome.Loupe.desktop";
-        "image/jxl" = "org.gnome.Loupe.desktop";
-        "image/jxr" = "org.gnome.Loupe.desktop";
-        "image/jxrA" = "org.gnome.Loupe.desktop";
-        "image/jxrS" = "org.gnome.Loupe.desktop";
-        "image/jxs" = "org.gnome.Loupe.desktop";
-        "image/jxsc" = "org.gnome.Loupe.desktop";
-        "image/jxsi" = "org.gnome.Loupe.desktop";
-        "image/jxss" = "org.gnome.Loupe.desktop";
-        "image/ktx" = "org.gnome.Loupe.desktop";
-        "image/ktx2" = "org.gnome.Loupe.desktop";
-        "image/naplps" = "org.gnome.Loupe.desktop";
-        "image/png" = "org.gnome.Loupe.desktop";
-        "image/prs.btif" = "org.gnome.Loupe.desktop";
-        "image/prs.pti" = "org.gnome.Loupe.desktop";
-        "image/pwg-raster" = "org.gnome.Loupe.desktop";
-        "image/svg+xml" = "org.gnome.Loupe.desktop";
-        "image/t38" = "org.gnome.Loupe.desktop";
-        "image/tiff-fx" = "org.gnome.Loupe.desktop";
-        "image/tiff" = "org.gnome.Loupe.desktop";
-        "image/vnd.adobe.photoshop" = "org.gnome.Loupe.desktop";
-        "image/vnd.airzip.accelerator.azv" = "org.gnome.Loupe.desktop";
-        "image/vnd.cns.inf2" = "org.gnome.Loupe.desktop";
-        "image/vnd.dece.graphic" = "org.gnome.Loupe.desktop";
-        "image/vnd.djvu" = "org.gnome.Loupe.desktop";
-        "image/vnd.dvb.subtitle" = "org.gnome.Loupe.desktop";
-        "image/vnd.dwg" = "org.gnome.Loupe.desktop";
-        "image/vnd.dxf" = "org.gnome.Loupe.desktop";
-        "image/vnd.fastbidsheet" = "org.gnome.Loupe.desktop";
-        "image/vnd.fpx" = "org.gnome.Loupe.desktop";
-        "image/vnd.fst" = "org.gnome.Loupe.desktop";
-        "image/vnd.fujixerox.edmics-mmr" = "org.gnome.Loupe.desktop";
-        "image/vnd.fujixerox.edmics-rlc" = "org.gnome.Loupe.desktop";
-        "image/vnd.globalgraphics.pgb" = "org.gnome.Loupe.desktop";
-        "image/vnd.microsoft.icon" = "org.gnome.Loupe.desktop";
-        "image/vnd.mix" = "org.gnome.Loupe.desktop";
-        "image/vnd.mozilla.apng" = "org.gnome.Loupe.desktop";
-        "image/vnd.ms-modi" = "org.gnome.Loupe.desktop";
-        "image/vnd.net-fpx" = "org.gnome.Loupe.desktop";
-        "image/vnd.pco.b16" = "org.gnome.Loupe.desktop";
-        "image/vnd.radiance" = "org.gnome.Loupe.desktop";
-        "image/vnd.sealed.png" = "org.gnome.Loupe.desktop";
-        "image/vnd.sealedmedia.softseal.gif" = "org.gnome.Loupe.desktop";
-        "image/vnd.sealedmedia.softseal.jpg" = "org.gnome.Loupe.desktop";
-        "image/vnd.svf" = "org.gnome.Loupe.desktop";
-        "image/vnd.tencent.tap" = "org.gnome.Loupe.desktop";
-        "image/vnd.valve.source.texture" = "org.gnome.Loupe.desktop";
-        "image/vnd.wap.wbmp" = "org.gnome.Loupe.desktop";
-        "image/vnd.xiff" = "org.gnome.Loupe.desktop";
-        "image/vnd.zbrush.pcx" = "org.gnome.Loupe.desktop";
-        "image/webp" = "org.gnome.Loupe.desktop";
-        "image/wmf" = "org.gnome.Loupe.desktop";
+        "image/aces" = "org.kde.gwenview.desktop";
+        "image/apng" = "org.kde.gwenview.desktop";
+        "image/avci" = "org.kde.gwenview.desktop";
+        "image/avcs" = "org.kde.gwenview.desktop";
+        "image/avif" = "org.kde.gwenview.desktop";
+        "image/bmp" = "org.kde.gwenview.desktop";
+        "image/cgm" = "org.kde.gwenview.desktop";
+        "image/dicom-rle" = "org.kde.gwenview.desktop";
+        "image/dpx" = "org.kde.gwenview.desktop";
+        "image/emf" = "org.kde.gwenview.desktop";
+        "image/fits" = "org.kde.gwenview.desktop";
+        "image/g3fax" = "org.kde.gwenview.desktop";
+        "image/gif" = "org.kde.gwenview.desktop";
+        "image/heic-sequence" = "org.kde.gwenview.desktop";
+        "image/heic" = "org.kde.gwenview.desktop";
+        "image/heif-sequence" = "org.kde.gwenview.desktop";
+        "image/heif" = "org.kde.gwenview.desktop";
+        "image/hej2k" = "org.kde.gwenview.desktop";
+        "image/hsj2" = "org.kde.gwenview.desktop";
+        "image/ief" = "org.kde.gwenview.desktop";
+        "image/j2c" = "org.kde.gwenview.desktop";
+        "image/jaii" = "org.kde.gwenview.desktop";
+        "image/jais" = "org.kde.gwenview.desktop";
+        "image/jls" = "org.kde.gwenview.desktop";
+        "image/jp2" = "org.kde.gwenview.desktop";
+        "image/jpeg" = "org.kde.gwenview.desktop";
+        "image/jph" = "org.kde.gwenview.desktop";
+        "image/jphc" = "org.kde.gwenview.desktop";
+        "image/jpm" = "org.kde.gwenview.desktop";
+        "image/jpx" = "org.kde.gwenview.desktop";
+        "image/jxl" = "org.kde.gwenview.desktop";
+        "image/jxr" = "org.kde.gwenview.desktop";
+        "image/jxrA" = "org.kde.gwenview.desktop";
+        "image/jxrS" = "org.kde.gwenview.desktop";
+        "image/jxs" = "org.kde.gwenview.desktop";
+        "image/jxsc" = "org.kde.gwenview.desktop";
+        "image/jxsi" = "org.kde.gwenview.desktop";
+        "image/jxss" = "org.kde.gwenview.desktop";
+        "image/ktx" = "org.kde.gwenview.desktop";
+        "image/ktx2" = "org.kde.gwenview.desktop";
+        "image/naplps" = "org.kde.gwenview.desktop";
+        "image/png" = "org.kde.gwenview.desktop";
+        "image/prs.btif" = "org.kde.gwenview.desktop";
+        "image/prs.pti" = "org.kde.gwenview.desktop";
+        "image/pwg-raster" = "org.kde.gwenview.desktop";
+        "image/svg+xml" = "org.kde.gwenview.desktop";
+        "image/t38" = "org.kde.gwenview.desktop";
+        "image/tiff-fx" = "org.kde.gwenview.desktop";
+        "image/tiff" = "org.kde.gwenview.desktop";
+        "image/vnd.adobe.photoshop" = "org.kde.gwenview.desktop";
+        "image/vnd.airzip.accelerator.azv" = "org.kde.gwenview.desktop";
+        "image/vnd.cns.inf2" = "org.kde.gwenview.desktop";
+        "image/vnd.dece.graphic" = "org.kde.gwenview.desktop";
+        "image/vnd.djvu" = "org.kde.gwenview.desktop";
+        "image/vnd.dvb.subtitle" = "org.kde.gwenview.desktop";
+        "image/vnd.dwg" = "org.kde.gwenview.desktop";
+        "image/vnd.dxf" = "org.kde.gwenview.desktop";
+        "image/vnd.fastbidsheet" = "org.kde.gwenview.desktop";
+        "image/vnd.fpx" = "org.kde.gwenview.desktop";
+        "image/vnd.fst" = "org.kde.gwenview.desktop";
+        "image/vnd.fujixerox.edmics-mmr" = "org.kde.gwenview.desktop";
+        "image/vnd.fujixerox.edmics-rlc" = "org.kde.gwenview.desktop";
+        "image/vnd.globalgraphics.pgb" = "org.kde.gwenview.desktop";
+        "image/vnd.microsoft.icon" = "org.kde.gwenview.desktop";
+        "image/vnd.mix" = "org.kde.gwenview.desktop";
+        "image/vnd.mozilla.apng" = "org.kde.gwenview.desktop";
+        "image/vnd.ms-modi" = "org.kde.gwenview.desktop";
+        "image/vnd.net-fpx" = "org.kde.gwenview.desktop";
+        "image/vnd.pco.b16" = "org.kde.gwenview.desktop";
+        "image/vnd.radiance" = "org.kde.gwenview.desktop";
+        "image/vnd.sealed.png" = "org.kde.gwenview.desktop";
+        "image/vnd.sealedmedia.softseal.gif" = "org.kde.gwenview.desktop";
+        "image/vnd.sealedmedia.softseal.jpg" = "org.kde.gwenview.desktop";
+        "image/vnd.svf" = "org.kde.gwenview.desktop";
+        "image/vnd.tencent.tap" = "org.kde.gwenview.desktop";
+        "image/vnd.valve.source.texture" = "org.kde.gwenview.desktop";
+        "image/vnd.wap.wbmp" = "org.kde.gwenview.desktop";
+        "image/vnd.xiff" = "org.kde.gwenview.desktop";
+        "image/vnd.zbrush.pcx" = "org.kde.gwenview.desktop";
+        "image/webp" = "org.kde.gwenview.desktop";
+        "image/wmf" = "org.kde.gwenview.desktop";
 
         "audio/1d-interleaved-parityfec" = "vlc.desktop";
         "audio/32kadpcm" = "vlc.desktop";
@@ -3261,27 +2895,21 @@ in
 
         "application/pdf" = "firefox-devedition.desktop";
 
-        "font/collection" = "org.gnome.font-viewer.desktop";
-        "font/otf" = "org.gnome.font-viewer.desktop";
-        "font/sfnt" = "org.gnome.font-viewer.desktop";
-        "font/ttf" = "org.gnome.font-viewer.desktop";
-        "font/woff" = "org.gnome.font-viewer.desktop";
-        "font/woff2" = "org.gnome.font-viewer.desktop";
 
-        "application/gzip" = "org.gnome.FileRoller.desktop";
-        "application/vnd.rar" = "org.gnome.FileRoller.desktop";
-        "application/x-7z-compressed" = "org.gnome.FileRoller.desktop";
-        "application/x-arj" = "org.gnome.FileRoller.desktop";
-        "application/x-bzip2" = "org.gnome.FileRoller.desktop";
-        "application/x-gtar" = "org.gnome.FileRoller.desktop";
-        "application/x-rar-compressed " = "org.gnome.FileRoller.desktop"; # More common than "application/vnd.rar"
-        "application/x-tar" = "org.gnome.FileRoller.desktop";
-        "application/zip" = "org.gnome.FileRoller.desktop";
+        "application/gzip" = "org.kde.ark.desktop";
+        "application/vnd.rar" = "org.kde.ark.desktop";
+        "application/x-7z-compressed" = "org.kde.ark.desktop";
+        "application/x-arj" = "org.kde.ark.desktop";
+        "application/x-bzip2" = "org.kde.ark.desktop";
+        "application/x-gtar" = "org.kde.ark.desktop";
+        "application/x-rar-compressed " = "org.kde.ark.desktop"; # More common than "application/vnd.rar"
+        "application/x-tar" = "org.kde.ark.desktop";
+        "application/zip" = "org.kde.ark.desktop";
 
         "x-scheme-handler/http" = "firefox-devedition.desktop";
         "x-scheme-handler/https" = "firefox-devedition.desktop";
 
-        "x-scheme-handler/mailto" = "org.gnome.Geary.desktop";
+        # "x-scheme-handler/mailto" = "";
       };
     };
 
@@ -3296,32 +2924,11 @@ in
     portal = {
       enable = true;
       extraPortals = with pkgs; [
-        xdg-desktop-portal-gnome
-        xdg-desktop-portal-gtk
+        kdePackages.xdg-desktop-portal-kde
       ];
 
       xdgOpenUsePortal = false; # Opening Programs
-
-      config = {
-        common = {
-          default = [
-            "gnome"
-            "gtk"
-          ];
-
-          "org.freedesktop.impl.portal.Secret" = [
-            "gnome-keyring"
-          ];
-        };
-      };
     };
-  };
-
-  qt = {
-    enable = true;
-
-    platformTheme = "gnome";
-    style = "adwaita-dark";
   };
 
   documentation = {
@@ -3393,8 +3000,6 @@ in
     };
   };
 
-  gtk.iconCache.enable = true;
-
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -3414,8 +3019,6 @@ in
           pointerCursor = {
             name = cursor.theme.name;
             package = cursor.theme.package;
-
-            gtk.enable = true;
           };
 
           preferXdgDirectories = true;
@@ -3424,7 +3027,7 @@ in
 
           enableDebugInfo = false;
 
-          stateVersion = "24.11";
+          stateVersion = "25.11";
         };
 
         xdg = {
@@ -3445,37 +3048,6 @@ in
           configFile = {
             "mimeapps.list".force = true;
           };
-        };
-
-        gtk = {
-          enable = true;
-
-          theme = {
-            name = "Adwaita-dark";
-            package = pkgs.gnome-themes-extra;
-          };
-
-          iconTheme = {
-            name = "Adwaita";
-            package = pkgs.adwaita-icon-theme;
-          };
-
-          cursorTheme = {
-            name = cursor.theme.name;
-            package = cursor.theme.package;
-          };
-
-          font = {
-            name = font_preferences.name.sans_serif;
-            package = font_preferences.package;
-          };
-        };
-
-        qt = {
-          enable = true;
-
-          platformTheme.name = "adwaita";
-          style.name = "adwaita-dark";
         };
 
         services = {
