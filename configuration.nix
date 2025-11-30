@@ -746,11 +746,24 @@ in
       };
     };
 
-    displayManager.sddm.enable = true;
-    displayManager.sddm.wayland.enable = true;
+    displayManager.sddm = {
+      enable = true;
+      # package = pkgs.kdePackages.sddm;
 
-    desktopManager.plasma6.enable = true;
-    desktopManager.plasma6.enableQt5Integration = true;
+      wayland = {
+        enable = true;
+        compositor = "kwin";
+      };
+
+      enableHidpi = true;
+
+      autoNumlock = true;
+    };
+
+    desktopManager.plasma6 = {
+      enable = true;
+      enableQt5Integration = true;
+    };
 
     udev = {
       enable = true;
@@ -798,6 +811,10 @@ in
           rocSupport = true;
         }
       );
+
+      extraLv2Packages = with pkgs; [
+      ];
+
       systemWide = false;
 
       audio.enable = true;
@@ -816,6 +833,9 @@ in
             enableDocs = true;
           }
         );
+
+        extraLv2Packages = with pkgs; [
+        ];
 
         extraConfig.bluetoothEnhancements = {
           "monitor.bluez.properties" = {
@@ -1656,10 +1676,8 @@ in
               show-less-popular = true;
             };
 
-            "io/github/amit9838/mousam" = {
-              unit = "metric";
-              use-24h-clock = false;
-              use-gradient-bg = true;
+            "org/gnome/desktop/interface" = {
+              color-scheme = "prefer-dark";
             };
 
             "org/virt-manager/virt-manager" = {
@@ -1905,8 +1923,8 @@ in
         gimp3-with-plugins
         git-filter-repo
         github-changelog-generator
-        gnome-firmware
         glaxnimate
+        gnome-firmware
         gnome-font-viewer
         gnome-frog
         gnome-nettool
@@ -1958,7 +1976,7 @@ in
         kubernetes-helm
         labplot
         letterpress
-        libreoffice-fresh
+        libreoffice-qt-fresh
         libva-utils
         linux-exploit-suggester
         linuxConsoleTools
@@ -1976,6 +1994,7 @@ in
         mailcap
         massdns
         md-lsp
+        mesa-demos
         metadata-cleaner
         metasploit
         mfcuk
@@ -2894,7 +2913,6 @@ in
         "application/vnd.openxmlformats-officedocument.presentationml.template" = "impress.desktop"; # .potx
 
         "application/pdf" = "firefox-devedition.desktop";
-
 
         "application/gzip" = "org.kde.ark.desktop";
         "application/vnd.rar" = "org.kde.ark.desktop";
