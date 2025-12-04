@@ -774,15 +774,6 @@ in
       ];
     };
 
-    gvfs = {
-      enable = true;
-      package = (
-        pkgs.gvfs.override {
-          udevSupport = true;
-        }
-      );
-    };
-
     udisks2 = {
       enable = true;
       package = pkgs.udisks2;
@@ -2063,6 +2054,7 @@ in
         symlinks
         systemd-lsp
         systemdgenie
+        telegram-desktop
         telegraph
         terminal-colors
         terminaltexteffects
@@ -2090,6 +2082,7 @@ in
         vulkan-caps-viewer
         vulkan-tools
         wafw00f
+        wakeonlan
         waycheck
         waydroid-helper
         wayland-utils
@@ -2375,7 +2368,6 @@ in
         akregator
         alpaka
         ark
-        audiotube
         dolphin
         filelight
         gwenview
@@ -2418,9 +2410,9 @@ in
         marble
         massif-visualizer
         okular
+        plasma-browser-integration
         plasma-dialer
         plasma-systemmonitor
-        plasmatube
         plymouth-kcm
         qrca
         sddm-kcm
